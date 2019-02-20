@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETStandard,Version=v2.0/",
-    "signature": "c1b10170ed02d1593f36d2d397e5e74ba241d31f"
+    "signature": "2b06d92c27d193849e4fdf64cdf6c890f44c6039"
   },
   "compilationOptions": {},
   "targets": {
@@ -9,7 +9,8 @@
     ".NETStandard,Version=v2.0/": {
       "SYE.Repository/1.0.0": {
         "dependencies": {
-          "Microsoft.Azure.DocumentDB.Core": "2.2.1",
+          "Microsoft.Azure.DocumentDB.Core": "2.2.0",
+          "Microsoft.CSharp": "4.5.0",
           "Microsoft.Extensions.Configuration": "2.2.0",
           "Microsoft.Extensions.Configuration.Abstractions": "2.2.0",
           "Microsoft.Extensions.Configuration.Json": "2.2.0",
@@ -19,7 +20,7 @@
           "SYE.Repository.dll": {}
         }
       },
-      "Microsoft.Azure.DocumentDB.Core/2.2.1": {
+      "Microsoft.Azure.DocumentDB.Core/2.2.0": {
         "dependencies": {
           "NETStandard.Library": "2.0.3",
           "Newtonsoft.Json": "11.0.2",
@@ -40,8 +41,16 @@
         },
         "runtime": {
           "lib/netstandard1.6/Microsoft.Azure.DocumentDB.Core.dll": {
-            "assemblyVersion": "2.2.1.0",
-            "fileVersion": "2.2.1.0"
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.0"
+          }
+        }
+      },
+      "Microsoft.CSharp/4.5.0": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.CSharp.dll": {
+            "assemblyVersion": "4.0.4.0",
+            "fileVersion": "4.6.26515.6"
           }
         }
       },
@@ -1076,12 +1085,19 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.Azure.DocumentDB.Core/2.2.1": {
+    "Microsoft.Azure.DocumentDB.Core/2.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-7VVaoOETig+gQLA2v4ceZbGvO38SfDfq11a8FSxfak7MThgpYgurMb8D5z3dCmCJkJEIYlSed0SzsfA2c0eb3g==",
-      "path": "microsoft.azure.documentdb.core/2.2.1",
-      "hashPath": "microsoft.azure.documentdb.core.2.2.1.nupkg.sha512"
+      "sha512": "sha512-DWhrPlf+HtYcvnv1nTYFZPX2YRJeniElTPlfYsU42Q8MOJT7Uf9NY8ctfzcIF3BW1eAOYYGQPrYcumDLRAa0/A==",
+      "path": "microsoft.azure.documentdb.core/2.2.0",
+      "hashPath": "microsoft.azure.documentdb.core.2.2.0.nupkg.sha512"
+    },
+    "Microsoft.CSharp/4.5.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EGoBmf3Na2ppbhPePDE9PlX81r1HuOZH5twBrq7couJZiPTjUnD3648balerQJO6EJ8Sj+43+XuRwQ7r+3tE3w==",
+      "path": "microsoft.csharp/4.5.0",
+      "hashPath": "microsoft.csharp.4.5.0.nupkg.sha512"
     },
     "Microsoft.Extensions.Configuration/2.2.0": {
       "type": "package",

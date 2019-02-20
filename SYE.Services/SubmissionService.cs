@@ -1,35 +1,54 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using GDSHelpers.Models.SubmissionSchema;
 using Microsoft.Azure.Documents;
 using SYE.Repository;
 
 namespace SYE.Services
 {
-
     public interface ISubmissionService
     {
-        Task<Document> GetItemByIdAsync(string id);
-
-        Task<Document> CreateItemAsync(Document item);
+        Task<Document> CreateAsync(SubmissionVM item);
+        Task DeleteAsync(string id);
+        Task<SubmissionVM> GetByIdAsync(string id);
+        Task<IEnumerable<SubmissionVM>> FindByAsync(Expression<Func<SubmissionVM, bool>> predicate);
+        Task<Document> UpdateAsync(string id, SubmissionVM item);
     }
 
     public class SubmissionService : ISubmissionService
     {
-        private readonly IGenericRepository<Document> _repository;
+        private readonly IGenericRepository<SubmissionVM> _repo;
 
-        public SubmissionService(IGenericRepository<Document> repository)
+        public SubmissionService(IGenericRepository<SubmissionVM> repo)
         {
-            _repository = repository;
+            _repo = repo;
+        }
+        
+        public Task<Document> CreateAsync(SubmissionVM item)
+        {
+            return _repo.CreateAsync(item);
         }
 
-        public Task<Document> GetItemByIdAsync(string id)
+        public Task DeleteAsync(string id)
         {
-            return _repository.GetItemByIdAsync(id);
+            return _repo.DeleteAsync(id);
         }
 
-        public Task<Document> CreateItemAsync(Document item)
+        public Task<SubmissionVM> GetByIdAsync(string id)
         {
-            return _repository.CreateItemAsync(item);
+            return _repo.GetByIdAsync(id);
         }
 
+        public Task<IEnumerable<SubmissionVM>> FindByAsync(Expression<Func<SubmissionVM, bool>> predicate)
+        {
+            return _repo.FindByAsync(predicate);
+        }
+
+        public Task<Document> UpdateAsync(string id, SubmissionVM item)
+        {
+            return _repo.UpdateAsync(id, item);
+        }
     }
 }

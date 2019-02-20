@@ -6,43 +6,41 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
-using SYE.Repository.AppConfig;
 
 namespace SYE.Repository
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<Document> GetItemByIdAsync(string id);
-
-        Task<Document> CreateItemAsync(T item);
-
-        Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> predicate);
-
-        Task DeleteItemAsync(string id);
-
-        Task<Document> UpdateItemAsync(string id, T item);
+        Task<Document> CreateAsync(T item);
+        Task DeleteAsync(string id);
+        Task<T> GetByIdAsync(string id);
+        Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate);
+        Task<Document> UpdateAsync(string id, T item);
     }
 
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-
         private readonly string _databaseId;
         private readonly string _collectionId;
         private readonly DocumentClient _client;
+        private readonly IAppConfiguration _appConfig;
 
-        public GenericRepository()
+        public GenericRepository(IAppConfiguration appConfig)
         {
-            var appSettings = new AppConfiguration();
-            _client = new DocumentClient(new Uri(appSettings.EndPoint), appSettings.Key);
-            _databaseId = appSettings.DatabaseId;
-            _collectionId = appSettings.CollectionId;
+            _appConfig = appConfig;
+
+            _databaseId = _appConfig.DatabaseId;
+            _collectionId = _appConfig.CollectionId;
+
+            _client = new DocumentClient(new Uri(_appConfig.Endpoint), _appConfig.Key);
         }
 
-        public async Task<Document> GetItemByIdAsync(string id)
+        public async Task<T> GetByIdAsync(string id)
         {
             try
             {
-                return await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id));
+                Document document = await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id));
+                return (T)(dynamic)document;
             }
             catch (DocumentClientException e)
             {
@@ -57,15 +55,15 @@ namespace SYE.Repository
             }
         }
 
-        public async Task<IEnumerable<T>> GetItemsAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate)
         {
-            IDocumentQuery<T> query = _client.CreateDocumentQuery<T>(
-                    UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId),
-                    new FeedOptions { MaxItemCount = -1 })
+            var query = _client.CreateDocumentQuery<T>(
+                UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId),
+                new FeedOptions { MaxItemCount = -1 })
                 .Where(predicate)
                 .AsDocumentQuery();
 
-            List<T> results = new List<T>();
+            var results = new List<T>();
             while (query.HasMoreResults)
             {
                 results.AddRange(await query.ExecuteNextAsync<T>());
@@ -74,18 +72,17 @@ namespace SYE.Repository
             return results;
         }
 
-        public async Task<Document> CreateItemAsync(T item)
+        public async Task<Document> CreateAsync(T item)
         {
-            return await _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId),
-                item);
+            return await _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId), item);
         }
 
-        public async Task<Document> UpdateItemAsync(string id, T item)
+        public async Task<Document> UpdateAsync(string id, T item)
         {
             return await _client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id), item);
         }
 
-        public async Task DeleteItemAsync(string id)
+        public async Task DeleteAsync(string id)
         {
             await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id));
         }

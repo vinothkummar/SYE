@@ -1,11 +1,11 @@
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\bin\Debug\netstandard2.0\SYE.Repository.deps.json
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\bin\Debug\netstandard2.0\SYE.Repository.dll
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\bin\Debug\netstandard2.0\SYE.Repository.pdb
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\obj\Debug\netstandard2.0\SYE.Repository.csprojAssemblyReference.cache
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\obj\Debug\netstandard2.0\SYE.Repository.csproj.CoreCompileInputs.cache
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\obj\Debug\netstandard2.0\SYE.Repository.AssemblyInfoInputs.cache
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\obj\Debug\netstandard2.0\SYE.Repository.AssemblyInfo.cs
-D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\bin\Debug\netstandard2.0\Microsoft.Azure.Documents.ServiceInterop.dll
-D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\bin\Debug\netstandard2.0\DocumentDB.Spatial.Sql.dll
-D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\bin\Debug\netstandard2.0\SYE.Repository.pdb
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\obj\Debug\netstandard2.0\SYE.Repository.dll
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\obj\Debug\netstandard2.0\SYE.Repository.pdb
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\bin\Debug\netstandard2.0\Microsoft.Azure.Documents.ServiceInterop.dll
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Repository\bin\Debug\netstandard2.0\DocumentDB.Spatial.Sql.dll

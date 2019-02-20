@@ -58,3 +58,13 @@ D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\obj\Debug\netcoreapp2.2\SYE.Views.
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\obj\Debug\netcoreapp2.2\SYE.dll
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\obj\Debug\netcoreapp2.2\SYE.pdb
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\obj\Debug\netcoreapp2.2\SYE.csproj.CopyComplete
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\Microsoft.Azure.Documents.ServiceInterop.dll
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\DocumentDB.Spatial.Sql.dll
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\GDSHelpers.dll
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\SYE.Models.dll
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\SYE.Repository.dll
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\SYE.Services.dll
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\SYE.Models.pdb
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\SYE.Services.pdb
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\GDSHelpers.pdb
+D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE\bin\Debug\netcoreapp2.2\SYE.Repository.pdb

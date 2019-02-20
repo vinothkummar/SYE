@@ -11,4 +11,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="..\GDSHelpers\GDSHelpers.csproj" />
+    <ProjectReference Include="..\SYE.Models\SYE.Models.csproj" />
+    <ProjectReference Include="..\SYE.Services\SYE.Services.csproj" />
+  </ItemGroup>
+
 </Project>
