@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
 using System.IO;
 
 namespace SYE.Repository
@@ -27,7 +28,10 @@ namespace SYE.Repository
         public AppConfiguration()
         {
             var configurationBuilder = new ConfigurationBuilder();
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+
+            var sitePhysicalPath = Environment.GetEnvironmentVariable("ASPNETCORE_IIS_PHYSICAL_PATH");
+
+            var path = Path.Combine(sitePhysicalPath ?? "D:\\home\\site\\wwwroot\\", "appsettings.json");
             configurationBuilder.AddJsonFile(path, false);
 
             var root = configurationBuilder.Build();
