@@ -3,11 +3,19 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#5f2861" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <title>@ViewData["Title"] - Share Your Experience - Care Quality Commission</title>
-    
+
     <link rel="shortcut icon" href="/favicon.ico">
 
     <link href="~/css/govuk-frontend-2.4.1.min.css" rel="stylesheet" />
+
+    <!--[if lt IE 9]>
+        <link href="~/css/govuk-frontend-ie8-2.4.1.min.css" rel="stylesheet" />
+    <![endif]-->
+
     <link rel="stylesheet" href="~/css/site.css" />
 
 </head>
@@ -42,7 +50,6 @@
             @RenderBody()
 
         </gds-main-wrapper>
-
 
     </gds-container>
 

@@ -8,7 +8,7 @@ namespace GDSHelpers.TagHelpers
     {
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "main";
+            output.TagName = "div";
             output.Attributes.SetAttribute("class", "govuk-width-container");
             output.TagMode = TagMode.StartTagAndEndTag;
         }
