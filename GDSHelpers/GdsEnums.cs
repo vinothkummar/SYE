@@ -75,7 +75,7 @@ namespace GDSHelpers
             Disabled,
         }
 
-        public enum Headers
+        public enum Headings
         {
             [Description("govuk-heading-xl")]
             H1,

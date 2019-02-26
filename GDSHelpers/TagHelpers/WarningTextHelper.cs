@@ -16,11 +16,11 @@ namespace GDSHelpers.TagHelpers
             output.Attributes.SetAttribute("class", "govuk-warning-text");
 
             var sb = new StringBuilder();
-            sb.Append("<span class=\"govuk-warning-text__icon\" aria-hidden=\"true\">!</span>");
-            sb.Append("<strong class=\"govuk-warning-text__text\">");
-            sb.Append("<span class=\"govuk-warning-text__assistive\">Warning</span>");
-            sb.Append(Message);
-            sb.Append("</strong>");
+            sb.AppendLine("<span class=\"govuk-warning-text__icon\" aria-hidden=\"true\">!</span>");
+            sb.AppendLine("<strong class=\"govuk-warning-text__text\">");
+            sb.AppendLine("<span class=\"govuk-warning-text__assistive\">Warning</span>");
+            sb.AppendLine(Message);
+            sb.AppendLine("</strong>");
             
             output.PostContent.SetHtmlContent(sb.ToString());
         }

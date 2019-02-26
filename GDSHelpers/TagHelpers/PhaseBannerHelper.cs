@@ -19,15 +19,15 @@ namespace GDSHelpers.TagHelpers
             output.Attributes.SetAttribute("class", "govuk-phase-banner");
 
             var sb = new StringBuilder();
-            sb.Append("<p class=\"govuk-phase-banner__content\">");
+            sb.AppendLine("<p class=\"govuk-phase-banner__content\">");
 
-            sb.Append($"<strong class=\"govuk-tag govuk-phase-banner__content__tag\">{Phase.ToString()}</strong>");
+            sb.AppendLine($"<strong class=\"govuk-tag govuk-phase-banner__content__tag\">{Phase.ToString()}</strong>");
 
-            sb.Append("<span class=\"govuk-phase-banner__text\">This is a new service – your ");
-            sb.Append($"<a class=\"govuk-link\" href=\"{Url}\">feedback</a>");
-            sb.Append(" will help us to improve it.</span>");
+            sb.AppendLine("<span class=\"govuk-phase-banner__text\">This is a new service – your ");
+            sb.AppendLine($"<a class=\"govuk-link\" href=\"{Url}\">feedback</a>");
+            sb.AppendLine(" will help us to improve it.</span>");
 
-            sb.Append("</p>");
+            sb.AppendLine("</p>");
             
             output.PostContent.SetHtmlContent(sb.ToString());
 
