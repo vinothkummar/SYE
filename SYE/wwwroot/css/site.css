@@ -14,7 +14,12 @@
 }
 
 .govuk-header__link--homepage:hover {
-    border-bottom: none;
+    border-bottom: 1px #5f2861;
+    margin-bottom: 0;
+}
+
+.govuk-header__link:focus {
+    color: #ffffff;
 }
 
 .govuk-header__logotype-crown-fallback-image {
@@ -24,4 +29,18 @@
 
 .govuk-footer__copyright-logo {
     background-image: url('../images/govuk-crest.png');
+}
+
+.govuk-header__navigation-item--active a:hover,
+.govuk-header__navigation-item--active a:link,
+.govuk-header__navigation-item--active a:visited {
+    color: #ffffff;
+}
+
+
+.govuk-header__navigation-item {
+    border-bottom: 1px solid #ffffff;
+}
+.govuk-header__navigation-item:last-child {
+    border-bottom: none;
 }
