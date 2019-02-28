@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Search";
+}
+
+<gds-row>
+
+    <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+
+        <gds-header header="H2" text="Find the care service you want to tell us about"></gds-header>
+
+        <gds-header header="H3" text="Search by service name or address"></gds-header>
+
+        <gds-row>
+            <gds-column desktop-size="OneHalf" tablet-size="FullWidth">
+
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="event-name">
+                        For example, Cherry Tree London SW1V. You do not need to use the whole name or address.
+                    </label>
+                    <input class="govuk-input" id="event-name" name="event-name" type="text">
+                </div>
+
+                <gds-button button-type="Button" button-text="Search"></gds-button>
+            </gds-column>
+        </gds-row>
+
+    </gds-column>
+
+</gds-row>
+
+<gds-row>
+
+    <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+
+        <gds-header header="H3" text="Facets go here..."></gds-header>
+
+    </gds-column>
+
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+
+        <div id="search-results">
+            <gds-row>
+                <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+                    <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
+                    <p class="govuk-body">
+                        154 High Road, Leytonstone<br />
+                        London<br />
+                        E15 1UA
+                    </p>
+                </gds-column>
+                <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+                    <p class="govuk-body category">Dentist</p>
+                    <gds-button button-type="Button" button-text="Give Feedback" class="float-right"></gds-button>
+                </gds-column>
+            </gds-row>
+
+            <gds-row>
+                <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+                    <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
+                    <p class="govuk-body">
+                        154 High Road, Leytonstone<br />
+                        London<br />
+                        E15 1UA
+                    </p>
+                </gds-column>
+                <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+                    <p class="govuk-body category">Dentist</p>
+                    <gds-button button-type="Button" button-text="Give Feedback" class="float-right"></gds-button>
+                </gds-column>
+            </gds-row>
+
+            <gds-row>
+                <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+                    <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
+                    <p class="govuk-body">
+                        154 High Road, Leytonstone<br />
+                        London<br />
+                        E15 1UA
+                    </p>
+                </gds-column>
+                <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+                    <p class="govuk-body category">Dentist</p>
+                    <gds-button button-type="Button" button-text="Give Feedback" class="float-right"></gds-button>
+                </gds-column>
+            </gds-row>
+
+        </div>
+
+    </gds-column>
+
+</gds-row>
