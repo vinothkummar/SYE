@@ -7,3 +7,12 @@ D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Models\obj\Debug\netstandard2.0\SY
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.AssemblyInfo.cs
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.dll
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.pdb
+C:\AzureDevOps\SYE-Project\SYE.Models\bin\Debug\netstandard2.0\SYE.Models.deps.json
+C:\AzureDevOps\SYE-Project\SYE.Models\bin\Debug\netstandard2.0\SYE.Models.dll
+C:\AzureDevOps\SYE-Project\SYE.Models\bin\Debug\netstandard2.0\SYE.Models.pdb
+C:\AzureDevOps\SYE-Project\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.csprojAssemblyReference.cache
+C:\AzureDevOps\SYE-Project\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.csproj.CoreCompileInputs.cache
+C:\AzureDevOps\SYE-Project\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.AssemblyInfoInputs.cache
+C:\AzureDevOps\SYE-Project\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.AssemblyInfo.cs
+C:\AzureDevOps\SYE-Project\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.dll
+C:\AzureDevOps\SYE-Project\SYE.Models\obj\Debug\netstandard2.0\SYE.Models.pdb

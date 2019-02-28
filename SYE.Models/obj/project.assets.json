@@ -30,7 +30,7 @@
   },
   "libraries": {
     "Microsoft.NETCore.Platforms/1.1.0": {
-      "sha512": "a/iSwnRZb+LHFk49hQOyThh/ZNC3vsbZsF65XwQIb863qF6msmhdQtxGXFL28Ob2NsCz/drEj28BJd/YPpLRBg==",
+      "sha512": "bLpT1f/SFlO1CzqXG12KnJzpZs6lv24uX2Rzi4Fmm0noJpNlnWRVryuO3yK18Ca04t/YHcO1e1Z0WDfjseqNzw==",
       "type": "package",
       "path": "microsoft.netcore.platforms/1.1.0",
       "files": [
@@ -179,31 +179,32 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Paul Senior\\.nuget\\packages\\": {},
+    "C:\\Users\\Matth\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.Net Projects\\Azure Devops\\SYE-PROJECT\\SYE.Models\\SYE.Models.csproj",
+      "projectUniqueName": "C:\\AzureDevOps\\SYE-Project\\SYE.Models\\SYE.Models.csproj",
       "projectName": "SYE.Models",
-      "projectPath": "D:\\.Net Projects\\Azure Devops\\SYE-PROJECT\\SYE.Models\\SYE.Models.csproj",
-      "packagesPath": "C:\\Users\\Paul Senior\\.nuget\\packages\\",
-      "outputPath": "D:\\.Net Projects\\Azure Devops\\SYE-PROJECT\\SYE.Models\\obj\\",
+      "projectPath": "C:\\AzureDevOps\\SYE-Project\\SYE.Models\\SYE.Models.csproj",
+      "packagesPath": "C:\\Users\\Matth\\.nuget\\packages\\",
+      "outputPath": "C:\\AzureDevOps\\SYE-Project\\SYE.Models\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Paul Senior\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Matth\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
       ],
       "sources": {
+        "C:\\NuGet": {},
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "D:\\.Net Projects\\NuGet": {},
+        "https://api.bintray.com/nuget/gov-uk-notify/nuget": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {

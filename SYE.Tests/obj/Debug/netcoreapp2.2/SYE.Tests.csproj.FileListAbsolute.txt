@@ -26,3 +26,17 @@ D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.AssemblyInfo.cs
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.dll
 D:\.Net Projects\Azure Devops\SYE-PROJECT\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.pdb
+C:\AzureDevOps\SYE-Project\SYE.Tests\bin\Debug\netcoreapp2.2\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+C:\AzureDevOps\SYE-Project\SYE.Tests\bin\Debug\netcoreapp2.2\xunit.runner.reporters.netcoreapp10.dll
+C:\AzureDevOps\SYE-Project\SYE.Tests\bin\Debug\netcoreapp2.2\xunit.runner.utility.netcoreapp10.dll
+C:\AzureDevOps\SYE-Project\SYE.Tests\bin\Debug\netcoreapp2.2\SYE.Tests.deps.json
+C:\AzureDevOps\SYE-Project\SYE.Tests\bin\Debug\netcoreapp2.2\SYE.Tests.runtimeconfig.json
+C:\AzureDevOps\SYE-Project\SYE.Tests\bin\Debug\netcoreapp2.2\SYE.Tests.runtimeconfig.dev.json
+C:\AzureDevOps\SYE-Project\SYE.Tests\bin\Debug\netcoreapp2.2\SYE.Tests.dll
+C:\AzureDevOps\SYE-Project\SYE.Tests\bin\Debug\netcoreapp2.2\SYE.Tests.pdb
+C:\AzureDevOps\SYE-Project\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.csprojAssemblyReference.cache
+C:\AzureDevOps\SYE-Project\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.csproj.CoreCompileInputs.cache
+C:\AzureDevOps\SYE-Project\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.AssemblyInfoInputs.cache
+C:\AzureDevOps\SYE-Project\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.AssemblyInfo.cs
+C:\AzureDevOps\SYE-Project\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.dll
+C:\AzureDevOps\SYE-Project\SYE.Tests\obj\Debug\netcoreapp2.2\SYE.Tests.pdb

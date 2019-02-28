@@ -16,3 +16,12 @@ D:\.Net Projects\Azure Devops\SYE-PROJECT\GDSHelpers\obj\Debug\netstandard2.0\GD
 D:\.Net Projects\Azure Devops\SYE-PROJECT\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.AssemblyInfo.cs
 D:\.Net Projects\Azure Devops\SYE-PROJECT\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.dll
 D:\.Net Projects\Azure Devops\SYE-PROJECT\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.pdb
+C:\AzureDevOps\SYE-Project\GDSHelpers\bin\Debug\netstandard2.0\GDSHelpers.deps.json
+C:\AzureDevOps\SYE-Project\GDSHelpers\bin\Debug\netstandard2.0\GDSHelpers.dll
+C:\AzureDevOps\SYE-Project\GDSHelpers\bin\Debug\netstandard2.0\GDSHelpers.pdb
+C:\AzureDevOps\SYE-Project\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.csprojAssemblyReference.cache
+C:\AzureDevOps\SYE-Project\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.csproj.CoreCompileInputs.cache
+C:\AzureDevOps\SYE-Project\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.AssemblyInfoInputs.cache
+C:\AzureDevOps\SYE-Project\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.AssemblyInfo.cs
+C:\AzureDevOps\SYE-Project\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.dll
+C:\AzureDevOps\SYE-Project\GDSHelpers\obj\Debug\netstandard2.0\GDSHelpers.pdb
