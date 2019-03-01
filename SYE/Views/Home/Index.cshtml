@@ -6,37 +6,29 @@
 
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
-        <gds-heading heading="H1" text="Share a concern, get help with a complaint or give feedback care"></gds-heading>
-        <gds-paragraph>
-            Use this form to tell us about:
-        </gds-paragraph>
+        <gds-header header="H2" text="Share Your Experience"></gds-header>
+
+        <p class="govuk-body">Use this form to:</p>
 
         <ul class="govuk-list govuk-list--bullet">
-            <li>an experience of care from a service like a care home, care agency, hospital or GP - it can be good or bad</li>
-            <li>a concern you have about a care service you work for</li>
-            <li>a complaint you've made where you're not happy with the way it's been dealt with</li>
+            <li>share an experience of good or bad care</li>
+            <li>tell us about a complaint you have made that you would like to take further</li>
         </ul>
 
-        <gds-paragraph>
-            Before you tell us, there are 4 things you need to know.
-        </gds-paragraph>
+        <gds-header header="H2" text="How we will use the information you give us"></gds-header>
+        <p class="govuk-body">What you tell us can help us understand the quality of care people get from the service you're telling us about. It can help us decide if we need to take action, like carrying out an inspection. We can't always tell you what action we've taken.</p>
+        <p class="govuk-body">You don't have to give your name.</p>
+        <p class="govuk-body">We won't share the information you have given us with the care service unless either:</p>
 
-        <gds-paragraph>
-            <gds-button button-status="Enabled" button-text="Start Now" start-now="true" button-type="Button"></gds-button>
-        </gds-paragraph>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>you say we can</li>
+            <li>we need to act on serious concerns, like to protect someone's safety</li>
+        </ul>
 
-        <gds-heading heading="H2" text="Get help with this form"></gds-heading>
-
-        <gds-paragraph>
-            What you tell us can help us understand the quality of care people get from the service you're telling us about. It can help us decide if we need to take action, like carrying out an inspection. We can't always tell you what action we've taken.
-        </gds-paragraph>
-
-        <gds-paragraph>
-            Telephone: 03000 616161<br />
-            Monday to Friday, 8:30am to 5pm<br />
-            Excluding bank holidays
-        </gds-paragraph>
+        <form asp-controller="Search" asp-action="Index" method="get">
+            <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start Now" button-type="Submit"></gds-button></p>
+        </form>
 
     </gds-column>
-    
+
 </gds-row>

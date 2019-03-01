@@ -14,12 +14,7 @@
 }
 
 .govuk-header__link--homepage:hover {
-    border-bottom: 1px #5f2861;
-    margin-bottom: 0;
-}
-
-.govuk-header__link:focus {
-    color: #ffffff;
+    border-bottom: none;
 }
 
 .govuk-header__logotype-crown-fallback-image {
@@ -31,16 +26,51 @@
     background-image: url('../images/govuk-crest.png');
 }
 
-.govuk-header__navigation-item--active a:hover,
-.govuk-header__navigation-item--active a:link,
-.govuk-header__navigation-item--active a:visited {
-    color: #ffffff;
-}
 
 
-.govuk-header__navigation-item {
-    border-bottom: 1px solid #ffffff;
+/*
+    SEARCH RESULTS
+*/
+#search-results {
 }
-.govuk-header__navigation-item:last-child {
-    border-bottom: none;
+
+    #search-results .govuk-grid-row {
+        border-bottom: solid 1px #ccc;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    #search-results h4 {
+        font-size: 19px;
+        text-decoration: underline;
+        color: #005EA5;
+        margin-bottom: 10px;
+    }
+
+    #search-results .category {
+        text-align: right;
+    }
+
+    #search-results button {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+
+
+
+
+@media (max-width: 48.0525em) {
+
+    #search-results .category {
+        text-align: left;
+    }
+
+    #search-results button {
+        position: inherit;
+    }
+}
+
+@media (min-width: 48.0625em) {
+
 }

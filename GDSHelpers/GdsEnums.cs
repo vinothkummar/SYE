@@ -47,7 +47,7 @@ namespace GDSHelpers
             [Description("govuk-grid-column-one-half-from-desktop")]
             OneHalf,
 
-            [Description("govuk-grid-column-one-third-from-deskto")]
+            [Description("govuk-grid-column-one-third-from-desktop")]
             OneThird,
 
             [Description("govuk-grid-column-two-thirds-from-desktop")]
