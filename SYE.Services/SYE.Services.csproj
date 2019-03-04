@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GDSHelpers\GDSHelpers.csproj" />
+    <PackageReference Include="GDSHelpers" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SYE.Models\SYE.Models.csproj" />
     <ProjectReference Include="..\SYE.Repository\SYE.Repository.csproj" />
   </ItemGroup>
