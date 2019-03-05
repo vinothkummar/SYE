@@ -25,5 +25,9 @@ namespace GDSHelpers.Models.FormSchema
         public IEnumerable<ButtonVM> Buttons { get; set; }
 
 
+        [JsonProperty("next_page_id")]
+        public string NextPageId { get; set; }
+
+
     }
 }

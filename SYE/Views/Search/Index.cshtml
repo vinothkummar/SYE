@@ -13,14 +13,19 @@
         <gds-row>
             <gds-column desktop-size="OneHalf" tablet-size="FullWidth">
 
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="event-name">
-                        For example, Cherry Tree London SW1V. You do not need to use the whole name or address.
-                    </label>
-                    <input class="govuk-input" id="event-name" name="event-name" type="text">
-                </div>
+                <form asp-controller="Search" asp-action="Index" method="Post">
 
-                <gds-button button-type="Button" button-text="Search"></gds-button>
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="event-name">
+                            For example, Cherry Tree London SW1V. You do not need to use the whole name or address.
+                        </label>
+                        <input class="govuk-input" id="event-name" name="event-name" type="text">
+                    </div>
+
+                    <gds-button button-type="Submit" button-text="Search"></gds-button>
+
+                </form>
+
             </gds-column>
         </gds-row>
 
@@ -28,64 +33,126 @@
 
 </gds-row>
 
-<gds-row>
+@if (ViewBag.ShowResults == true)
+{
+    <gds-row>
+        <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+            
+            <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        I can't find the service I want to tell you about'
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                   
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="more-detail">
+                            Tell us anything you can about the name of the service and where it is
+                        </label>
+                        <span id="more-detail-hint" class="govuk-hint">
+                           We will use what you tel us to try to identify it
+                        </span>
+                        <textarea class="govuk-textarea" id="more-detail" name="more-detail" rows="5" aria-describedby="more-detail-hint"></textarea>
+                        
+                        <gds-button button-type="Button" button-text="Continue"></gds-button>
 
-    <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+                    </div>
 
-        <gds-header header="H3" text="Facets go here..."></gds-header>
 
-    </gds-column>
+                </div>
+            </details>
 
-    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+        </gds-column>
+    </gds-row>
 
-        <div id="search-results">
-            <gds-row>
-                <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-                    <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
-                    <p class="govuk-body">
-                        154 High Road, Leytonstone<br />
-                        London<br />
-                        E15 1UA
-                    </p>
-                </gds-column>
-                <gds-column desktop-size="OneThird" tablet-size="FullWidth">
-                    <p class="govuk-body category">Dentist</p>
-                    <gds-button button-type="Button" button-text="Give Feedback" class="float-right"></gds-button>
-                </gds-column>
-            </gds-row>
+    <gds-row>
 
-            <gds-row>
-                <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-                    <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
-                    <p class="govuk-body">
-                        154 High Road, Leytonstone<br />
-                        London<br />
-                        E15 1UA
-                    </p>
-                </gds-column>
-                <gds-column desktop-size="OneThird" tablet-size="FullWidth">
-                    <p class="govuk-body category">Dentist</p>
-                    <gds-button button-type="Button" button-text="Give Feedback" class="float-right"></gds-button>
-                </gds-column>
-            </gds-row>
+        <gds-column desktop-size="OneThird" tablet-size="FullWidth">
 
-            <gds-row>
-                <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-                    <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
-                    <p class="govuk-body">
-                        154 High Road, Leytonstone<br />
-                        London<br />
-                        E15 1UA
-                    </p>
-                </gds-column>
-                <gds-column desktop-size="OneThird" tablet-size="FullWidth">
-                    <p class="govuk-body category">Dentist</p>
-                    <gds-button button-type="Button" button-text="Give Feedback" class="float-right"></gds-button>
-                </gds-column>
-            </gds-row>
+            <div id="filter-wrapper">
+                <gds-header header="H3" text="Refine search"></gds-header>
 
-        </div>
+                <div class="filters">
 
-    </gds-column>
+                    <div class="filter">
+                        <gds-header header="H4" text="Type of service"></gds-header>
+                        <select class="govuk-select">
+                            <option>All care services</option>
+                        </select>
+                    </div>
 
-</gds-row>
+                    <div class="filter">
+                        <gds-header header="H4" text="Region"></gds-header>
+                        <select class="govuk-select">
+                            <option>All regions</option>
+                        </select>
+                    </div>
+
+                    <div class="filter">
+                        <gds-header header="H4" text="Town of city"></gds-header>
+                        <select class="govuk-select">
+                            <option>All towns or cities</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+
+        </gds-column>
+
+        <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+
+            <div id="search-results">
+                <gds-row>
+                    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+                        <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
+                        <p class="govuk-body">
+                            154 High Road, Leytonstone<br />
+                            London<br />
+                            E15 1UA
+                        </p>
+                    </gds-column>
+                    <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+                        <p class="govuk-body category">Dentist</p>
+                        <gds-button button-type="Button" button-text="Give Feedback" class="float-right" onclick="location.href='@Url.Action("Index", "Form")'"></gds-button>
+                    </gds-column>
+                </gds-row>
+
+                <gds-row>
+                    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+                        <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
+                        <p class="govuk-body">
+                            154 High Road, Leytonstone<br />
+                            London<br />
+                            E15 1UA
+                        </p>
+                    </gds-column>
+                    <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+                        <p class="govuk-body category">Dentist</p>
+                        <gds-button button-type="Button" button-text="Give Feedback" class="float-right" onclick="location.href='@Url.Action("Index", "Form")'"></gds-button>
+                    </gds-column>
+                </gds-row>
+
+                <gds-row>
+                    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+                        <gds-header header="H4" text="The Thatched House dental Practice"></gds-header>
+                        <p class="govuk-body">
+                            154 High Road, Leytonstone<br />
+                            London<br />
+                            E15 1UA
+                        </p>
+                    </gds-column>
+                    <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+                        <p class="govuk-body category">Dentist</p>
+                        <gds-button button-type="Button" button-text="Give Feedback" class="float-right" onclick="location.href='@Url.Action("Index", "Form")'"></gds-button>
+                    </gds-column>
+                </gds-row>
+
+            </div>
+
+        </gds-column>
+
+    </gds-row>
+
+}

@@ -7182,7 +7182,8 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "D:\\.Net Projects\\NuGet": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://pkgs.dev.azure.com/CQCDigital/_packaging/GdsHelpers/nuget/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.0": {

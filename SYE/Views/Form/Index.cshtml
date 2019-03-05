@@ -1,0 +1,33 @@
+﻿@using GDSHelpers
+@model GDSHelpers.Models.FormSchema.PageVM
+
+<gds-row>
+
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+
+        <form asp-action="Index" asp-controller="Form" method="post">
+
+            @*@Html.HiddenFor(m => m.PageId)*@
+
+            @Html.TextBoxFor(m => m.PageId)
+
+            @*@Html.Raw(ViewBag.PageId)*@
+
+            <gds-header header="H2" text="@Model.PageName" caption="@Model.PreAmble"></gds-header>
+
+
+            @foreach (var question in Model.Questions)
+            {
+                @Html.GdsQuestion(question)
+            }
+
+            @foreach (var button in Model.Buttons)
+            {
+                @Html.GdsButton(button.ButtonType, button.ButtonText)
+            }
+
+        </form>
+
+    </gds-column>
+
+</gds-row>

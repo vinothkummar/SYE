@@ -26,6 +26,9 @@
     background-image: url('../images/govuk-crest.png');
 }
 
+.govuk-button:active {
+    top: auto;
+}
 
 
 /*
@@ -34,18 +37,20 @@
 #search-results {
 }
 
+
+
     #search-results .govuk-grid-row {
         border-bottom: solid 1px #ccc;
         margin-bottom: 10px;
         position: relative;
     }
 
-    #search-results h4 {
-        font-size: 19px;
-        text-decoration: underline;
-        color: #005EA5;
-        margin-bottom: 10px;
-    }
+        #search-results h4 {
+            font-size: 19px;
+            text-decoration: underline;
+            color: #005EA5;
+            margin-bottom: 10px;
+        }
 
     #search-results .category {
         text-align: right;
@@ -73,4 +78,37 @@
 
 @media (min-width: 48.0625em) {
 
+}
+
+
+#filter-wrapper {
+    border: solid 5px #ccc;
+    background-color: #fff;
+}
+
+#filter-wrapper h3 {
+    font-size: 24px;
+    background-color: #ccc;
+    padding: 10px;
+}
+
+#filter-wrapper .filters {
+    padding: 10px;
+}
+
+#filter-wrapper .filters .filter {
+    margin-bottom: 20px;
+}
+
+#filter-wrapper .filters .filter h4 {
+    font-size: 19px;
+    line-height: 25px;
+    margin: 0;
+    font-weight: 700;
+}
+
+#filter-wrapper .filters .filter select {
+    width: 100%;
+    padding: 5px;
+    border: 2px solid #0b0c0c;
 }

@@ -19,4 +19,9 @@
     <ProjectReference Include="..\SYE.Services\SYE.Services.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="Content\" />
+  </ItemGroup>
+
 </Project>
