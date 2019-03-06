@@ -71,6 +71,8 @@ namespace GDSHelpers
         {
             var elementId = question.QuestionId;
             var showCounter = question.Validation?.MaxLength != null;
+            var counterCount = question.Validation?.MaxLength?.Max;
+            var counterType = question.Validation?.MaxLength?.Type == "words" ? "maxwords" : "maxlength";
             var counterCss = showCounter ? "js-character-count" : "";
 
             var isErrored = question.Validation?.IsErrored == true;
@@ -81,7 +83,7 @@ namespace GDSHelpers
             var sb = new StringBuilder();
 
             if (showCounter)
-                sb.AppendLine("<div class=\"govuk-character-count\" data-module=\"character-count\" data-maxlength=\"200\">");
+                sb.AppendLine($"<div class=\"govuk-character-count\" data-module=\"character-count\" data-{counterType}=\"{counterCount}\">");
 
             sb.AppendLine($"<div class=\"govuk-form-group {erroredCss}\">");
             sb.AppendLine($"<label class=\"govuk-label\"  for=\"{elementId}\">{question.Question}</label>");
@@ -94,15 +96,16 @@ namespace GDSHelpers
 
             sb.AppendLine($"<textarea class=\"govuk-textarea {erroredInputCss} {counterCss}\" id=\"{elementId}\" " +
                       $"name=\"{elementId}\" rows=\"5\" aria-describedby=\"{elementId}-hint\">{question.Answer}</textarea>");
-
-            if (showCounter)
-                sb.AppendLine($"<span id=\"{elementId}-info\" class=\"govuk-hint govuk-character-count__message\" aria-live=\"polite\"></span>");
-
+            
             sb.AppendLine("</div>");
 
-            if (showCounter)
-                sb.AppendLine("</div>");
 
+            if (showCounter)
+            {
+                sb.AppendLine($"<span id=\"{elementId}-info\" class=\"govuk-hint govuk-character-count__message\" aria-live=\"polite\"></span>");
+                sb.AppendLine("</div>");
+            }
+            
             return new HtmlString(sb.ToString());
         }
 
@@ -131,7 +134,8 @@ namespace GDSHelpers
 
 
             var list = question.Options.Split(';');
-            var inlineCSS = list.Length < 3 ? "govuk-radios--inline" : "";
+            var inlineCSS = "";
+            //list.Length < 3 ? "govuk-radios--inline" : "";
             sb.AppendLine($"<div class=\"govuk-radios {inlineCSS}\">");
 
 

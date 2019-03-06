@@ -7,14 +7,9 @@
 
         <form asp-action="Index" asp-controller="Form" method="post">
 
-            @*@Html.HiddenFor(m => m.PageId)*@
+            @Html.HiddenFor(m => m.PageId)
 
-            @Html.TextBoxFor(m => m.PageId)
-
-            @*@Html.Raw(ViewBag.PageId)*@
-
-            <gds-header header="H2" text="@Model.PageName" caption="@Model.PreAmble"></gds-header>
-
+            <gds-heading heading-type="H2" text="@Model.PageName" caption="@Model.PreAmble"></gds-heading>
 
             @foreach (var question in Model.Questions)
             {

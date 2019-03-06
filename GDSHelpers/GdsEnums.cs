@@ -75,7 +75,7 @@ namespace GDSHelpers
             Disabled,
         }
 
-        public enum Headers
+        public enum Headings
         {
             [Description("govuk-heading-xl")]
             H1,
@@ -109,7 +109,7 @@ namespace GDSHelpers
         public static string GetCssClassFromEnum(Enum value)
         {
             var fi = value.GetType().GetField(value.ToString());
-            var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute),false);
+            var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (attributes.Length > 0) return attributes[0].Description;
 

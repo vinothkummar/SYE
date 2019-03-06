@@ -4,15 +4,13 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace GDSHelpers.TagHelpers
 {
 
-    [HtmlTargetElement("gds-header")]
-    public class HeaderHelper : TagHelper
+    [HtmlTargetElement("gds-header-container", ParentTag = "gds-header")]
+    public class HeaderContainerHelper : TagHelper
     {
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "header";
-            output.Attributes.SetAttribute("class", "govuk-header");
-            output.Attributes.SetAttribute("role", "banner");
-            output.Attributes.SetAttribute("data-module", "header");
+            output.TagName = "div";
+            output.Attributes.SetAttribute("class", "govuk-header__container govuk-width-container");
 
             var children = await output.GetChildContentAsync();
             output.Content.SetHtmlContent(children);

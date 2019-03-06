@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace GDSHelpers.TagHelpers
@@ -21,10 +22,16 @@ namespace GDSHelpers.TagHelpers
         [HtmlAttributeName("button-status")]
         public GdsEnums.Status ButtonStatus { get; set; }
 
+        [HtmlAttributeName("start-now")]
+        public bool StartNow { get; set; }
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             output.TagName = "button ";
-            output.Attributes.SetAttribute("class", "govuk-button");
+
+            var btnClass = StartNow ? "govuk-button govuk-button--start" : "govuk-button";
+            output.Attributes.SetAttribute("class", btnClass);
+
             output.Attributes.SetAttribute("type", ButtonType.ToString().ToLower());
 
             if (ButtonStatus == GdsEnums.Status.Disabled)

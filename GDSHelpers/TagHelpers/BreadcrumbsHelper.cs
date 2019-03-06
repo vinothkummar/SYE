@@ -18,19 +18,19 @@ namespace GDSHelpers.TagHelpers
             output.Attributes.SetAttribute("class", "govuk-breadcrumbs");
 
             var sb = new StringBuilder();
-            sb.Append("<ol class=\"govuk-breadcrumbs__list\">");
+            sb.AppendLine("<ol class=\"govuk-breadcrumbs__list\">");
 
             var last = Breadcrumbs.Crumbs.Last();
             foreach (var crumb in Breadcrumbs.Crumbs)
             {
-                sb.Append($"<li class=\"govuk-breadcrumbs__list-item\" { (crumb.Equals(last) ? "aria-current=\"page\"" : "")}>");
-                if (!crumb.Equals(last)) sb.Append($"<a class=\"govuk-breadcrumbs__link\" href=\"{crumb.Url}\">");
-                sb.Append($"{crumb.Text}");
-                if (!crumb.Equals(last)) sb.Append("</a>");
-                sb.Append("</li>");
+                sb.AppendLine($"<li class=\"govuk-breadcrumbs__list-item\" { (crumb.Equals(last) ? "aria-current=\"page\"" : "")}>");
+                if (!crumb.Equals(last)) sb.AppendLine($"<a class=\"govuk-breadcrumbs__link\" href=\"{crumb.Url}\">");
+                sb.AppendLine($"{crumb.Text}");
+                if (!crumb.Equals(last)) sb.AppendLine("</a>");
+                sb.AppendLine("</li>");
             }
 
-            sb.Append("</ol>");
+            sb.AppendLine("</ol>");
 
             output.Content.SetHtmlContent(sb.ToString());
 

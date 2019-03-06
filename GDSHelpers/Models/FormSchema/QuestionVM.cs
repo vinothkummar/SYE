@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace GDSHelpers.Models.FormSchema
 {
@@ -26,6 +27,9 @@ namespace GDSHelpers.Models.FormSchema
 
         [JsonProperty("options")]
         public string Options { get; set; }
+
+        [JsonProperty("answer_logic")]
+        public IEnumerable<AnswerLogicVM> AnswerLogic { get; set; }
 
 
         [JsonProperty("show_when")]

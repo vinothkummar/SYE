@@ -18,42 +18,37 @@ namespace SYE.Controllers
 
 
         [HttpGet]
-        [ResponseCache(NoStore = true, Duration = 0)]
-        public IActionResult Index(string pageId = "")
+        public IActionResult Index(string id = "")
         {
-            var pageVm = GetPageById(pageId);
+            var pageVm = GetPageById(id);
             return View(pageVm);
         }
 
 
         [HttpPost]
-        [ResponseCache(NoStore = true, Duration = 0)]
         public IActionResult Index(PageVM vm)
         {
             //Get the page we are validating
             var pageVm = GetPageById(vm.PageId);
 
             //Validate the Response against the page json
-            //_gdsValidate.ValidatePage(pageVm, Request.Form);
+            _gdsValidate.ValidatePage(pageVm, Request.Form);
 
-            ////Get the error count
-            //var errorCount = pageVm.Questions.Count(m => m.Validation.IsErrored);
+            //Get the error count
+            var errorCount = pageVm.Questions.Count(m => m.Validation.IsErrored);
 
-            ////Build the submission schema
-            //var submission = _gdsValidate.BuildSubmission(pageVm);
-            ////Todo: Store the submission in our DB
-
-            //if (errorCount > 0)
-            //    return View(pageVm);
+            //Build the submission schema
+            var submission = _gdsValidate.BuildSubmission(pageVm);
+            //Todo: Store the submission in our DB
 
 
+            //If we have errors return to the View
+            if (errorCount > 0) return View(pageVm);
+
+
+            //No errors redirect to the Index page with our new PageId
             var nextPageId = pageVm.NextPageId;
-            var nextPageVm = GetPageById(nextPageId);
-
-            ViewBag.PageId = nextPageVm.PageId;
-
-
-            return View(nextPageVm);
+            return RedirectToAction("Index", new { id = nextPageId });
         }
 
 
