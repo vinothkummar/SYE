@@ -57,7 +57,7 @@
         {
           "question_id": "bbbbbbbbb101",
           "question": "",
-          "additional_text": "<p class=\"govuk-heading-s\">Give your feedback about The Thatched Dental Practice</p><p class=\"govuk-body\">Clearly explain what was good or bad. Give examples if you can. The more detail you can give us, the better. But if you want to stay anonymous, be careful not to say anything that could identify you.</p>",
+          "additional_text": "<p class=\"govuk-heading-s\">Give your feedback about !!location_name!!</p><p class=\"govuk-body\">Clearly explain what was good or bad. Give examples if you can. The more detail you can give us, the better. But if you want to stay anonymous, be careful not to say anything that could identify you.</p>",
           "data_type": "string",
           "input_type": "textarea",
           "validation": {
@@ -86,7 +86,7 @@
     },
     {
       "page_id": "aaaaaaaaa004",
-      "page_name": "Can we share the information you have given us with {{location_name}}?",
+      "page_name": "Can we share the information you have given us with !!location_name!!?",
       "questions": [
         {
           "question_id": "bbbbbbbbb004",
@@ -130,7 +130,7 @@
           "additional_text": "<p class=\"govuk-body\">We will always keep your identity confidential unless there is a good reason why we can't. This might be if the information you give us is about a risk to someone's safety or something illegal.</p><p class=\"govuk-body\">You do not have to give us your name. If you decided to stay anonymous, we won't be able to contact you for more information. This means we may not be able to act on your concern.</p>",
           "data_type": "string",
           "input_type": "optionlist",
-          "options": "Yes, I am happy for you to contact me if you need more information;No, I do not want to give my name or contact details",
+          "options": "Yes|I am happy for you to contact me if you need more information;No|I do not want to give my name or contact details",
           "validation": {
             "required": {
               "is_required": true,

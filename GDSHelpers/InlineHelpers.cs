@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System.Linq;
 using System.Text;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Html;
@@ -50,13 +49,7 @@ namespace GDSHelpers
 
             }
 
-            using (var writer = new StringWriter())
-            {
-                content.WriteTo(writer, System.Text.Encodings.Web.HtmlEncoder.Default);
-                var output = writer.ToString();
-                output.Replace("{{location_name}}", "The Thatched House Dental Practice");
-                return new HtmlString(output);
-            }
+            return new HtmlString(content.ToString());
 
         }
 
@@ -67,8 +60,8 @@ namespace GDSHelpers
             
             var sb = new StringBuilder();
 
-            sb.AppendLine($"<div class=\"govuk-body\">{title}</div>");
-            sb.AppendLine($"<div class=\"govuk-body\">{additionalText}</div>");
+            sb.AppendLine($"<p class=\"govuk-body\">{title}</p>");
+            sb.AppendLine($"<p class=\"govuk-body\">{additionalText}</p>");
 
             return new HtmlString(sb.ToString());
 
