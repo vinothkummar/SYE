@@ -68,7 +68,9 @@ namespace SYE.Controllers
             using (var r = new StreamReader("Content/form-schema.json"))
             {
                 var file = r.ReadToEnd();
+
                 file = file.Replace("!!location_name!!", locationName);
+
                 formVm = JsonConvert.DeserializeObject<FormVM>(file);
             }
 
