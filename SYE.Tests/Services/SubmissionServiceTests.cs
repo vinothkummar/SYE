@@ -19,21 +19,17 @@ namespace SYE.Tests.Services
     /// </summary>
     public class SubmissionServiceTests
     {
-        private SubmissionService _sut;
-        private Mock<IGenericRepository<SubmissionVM>> _mockedRepo;
-        public SubmissionServiceTests()
-        {
-            Initialise();
-        }
-
         [Fact]
         public async void CreateAsyncTest()
         {
             const string id = "123";
             //arrange
-            _mockedRepo.Setup(x => x.CreateAsync(It.IsAny<SubmissionVM>())).ReturnsAsync(new Document { Id = id });
+            var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
+            var sut = new SubmissionService(mockedRepo.Object);
+
+            mockedRepo.Setup(x => x.CreateAsync(It.IsAny<SubmissionVM>())).ReturnsAsync(new Document { Id = id });
             //act
-            var result = await _sut.CreateAsync(new SubmissionVM { Id = id });
+            var result = await sut.CreateAsync(new SubmissionVM { Id = id });
             //assert
             result.Should().NotBeNull();
             result.Id.Should().Be(id);
@@ -44,9 +40,12 @@ namespace SYE.Tests.Services
         {
             const string id = "123";
             //arrange
-            _mockedRepo.Setup(x => x.DeleteAsync(It.IsAny<string>()));
+            var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
+            var sut = new SubmissionService(mockedRepo.Object);
+
+            mockedRepo.Setup(x => x.DeleteAsync(It.IsAny<string>()));
             // Act
-            Action action = () => _sut.DeleteAsync(id);
+            Action action = () => sut.DeleteAsync(id);
             // Assert
             action.Should().NotThrow<Exception>();
         }
@@ -56,11 +55,14 @@ namespace SYE.Tests.Services
         {
             const string id = "123";
             //arrange
+            var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
+            var sut = new SubmissionService(mockedRepo.Object);
+
             var submissionVm = new SubmissionVM { Id = id };
             var doc = new DocumentResponse<SubmissionVM>(submissionVm);
-            _mockedRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).ReturnsAsync(doc);
+            mockedRepo.Setup(x => x.GetByIdAsync(It.IsAny<string>())).ReturnsAsync(doc);
             //act
-            var result = await _sut.GetByIdAsync(id);
+            var result = await sut.GetByIdAsync(id);
             //assert
             result.Should().NotBeNull();
             result.Id.Should().Be(id);
@@ -72,11 +74,14 @@ namespace SYE.Tests.Services
         {
             const string id = "123";
             //arrange
+            var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
+            var sut = new SubmissionService(mockedRepo.Object);
+
             var submissionVm = new SubmissionVM {Id = id};
             var query = new List<SubmissionVM> { submissionVm }.AsQueryable();
-            _mockedRepo.Setup(x => x.FindByAsync(m => m.Id == id)).ReturnsAsync(query);
+            mockedRepo.Setup(x => x.FindByAsync(m => m.Id == id)).ReturnsAsync(query);
             //act
-            var result = await _sut.FindByAsync(m => m.Id == id);
+            var result = await sut.FindByAsync(m => m.Id == id);
             //assert
             var submissionVms = result as SubmissionVM[] ?? result.ToArray();
             submissionVms.ToList().Should().NotBeNull();
@@ -89,19 +94,16 @@ namespace SYE.Tests.Services
         {
             const string id = "123";
             //arrange
+            var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
+            var sut = new SubmissionService(mockedRepo.Object);
+
             var submissionVm = new SubmissionVM { Id = id };
             var doc = new Document();
-            _mockedRepo.Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<SubmissionVM>())).ReturnsAsync(doc);
+            mockedRepo.Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<SubmissionVM>())).ReturnsAsync(doc);
             // Act
-            Action action = () => _sut.UpdateAsync(id, submissionVm);
+            Action action = () => sut.UpdateAsync(id, submissionVm);
             // Assert
             action.Should().NotThrow<Exception>();
-        }
-
-        private void Initialise()
-        {
-            _mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            _sut = new SubmissionService(_mockedRepo.Object);
         }
     }
 }
