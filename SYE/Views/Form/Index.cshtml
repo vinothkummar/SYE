@@ -9,16 +9,22 @@
 
             @Html.HiddenFor(m => m.PageId)
 
-            <gds-heading heading-type="H2" text="@Model.PageName" caption="@Model.PreAmble"></gds-heading>
+            <gds-heading heading-type="H2" text="@Model.PageName.Replace("{{location_name}}", "The Thatched House Dental Practice")" caption="@Model.PreAmble"></gds-heading>
 
-            @foreach (var question in Model.Questions)
+            @if (Model.Questions != null)
             {
-                @Html.GdsQuestion(question)
+                foreach (var question in Model.Questions)
+                {
+                    @Html.GdsQuestion(question)
+                }
             }
 
-            @foreach (var button in Model.Buttons)
+            @if (Model.Buttons != null)
             {
-                @Html.GdsButton(button.ButtonType, button.ButtonText)
+                foreach (var button in Model.Buttons)
+                {
+                    @Html.GdsButton(button.ButtonType, button.ButtonText)
+                }
             }
 
         </form>

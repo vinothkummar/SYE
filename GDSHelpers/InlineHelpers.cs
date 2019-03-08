@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Text;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Html;
@@ -19,27 +20,59 @@ namespace GDSHelpers
         /// <returns>Returns the HTML for GDS compliant questions</returns>
         public static IHtmlContent GdsQuestion(this IHtmlHelper helper, QuestionVM question, object htmlAttributes = null)
         {
+            IHtmlContent content;
+
             switch (question.InputType)
             {
                 case "textbox":
-                    return BuildTextBox(question);
+                    content = BuildTextBox(question);
+                    break;
 
                 case "textarea":
-                    return BuildTextArea(question);
+                    content = BuildTextArea(question);
+                    break;
 
                 case "optionlist":
-                    return BuildOptionList(question);
+                    content = BuildOptionList(question);
+                    break;
 
                 case "selectlist":
-                    return BuildSelectList(question);
+                    content = BuildSelectList(question);
+                    break;
 
                 case "checkboxlist":
-                    return BuildCheckboxList(question);
+                    content = BuildCheckboxList(question);
+                    break;
+
+                default:
+                    content = BuildInfoPage(question);
+                    break;
+
             }
-            return new TagBuilder("span");
+
+            using (var writer = new StringWriter())
+            {
+                content.WriteTo(writer, System.Text.Encodings.Web.HtmlEncoder.Default);
+                var output = writer.ToString();
+                output.Replace("{{location_name}}", "The Thatched House Dental Practice");
+                return new HtmlString(output);
+            }
+
         }
 
+        private static IHtmlContent BuildInfoPage(QuestionVM question)
+        {
+            var title = question.Question;
+            var additionalText = question.AdditionalText;
+            
+            var sb = new StringBuilder();
 
+            sb.AppendLine($"<div class=\"govuk-body\">{title}</div>");
+            sb.AppendLine($"<div class=\"govuk-body\">{additionalText}</div>");
+
+            return new HtmlString(sb.ToString());
+
+        }
 
         private static IHtmlContent BuildTextBox(QuestionVM question)
         {
@@ -282,7 +315,7 @@ namespace GDSHelpers
 
 
 
-
+    
 
         private static void MergeHtmlAttributes(this TagBuilder tagBuilder, object htmlAttributes)
         {
