@@ -1,4 +1,5 @@
-﻿using GDSHelpers;
+﻿using System;
+using GDSHelpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,9 +39,10 @@ namespace SYE
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
             var appConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration>();
-            
             services.AddSingleton<IAppConfiguration>(appConfig);
+
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IGdsValidation, GdsValidation>();
