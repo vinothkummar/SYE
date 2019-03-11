@@ -1,0 +1,35 @@
+﻿@using GDSHelpers
+@model GDSHelpers.Models.FormSchema.PageVM
+
+<gds-row>
+
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+
+        <form asp-action="Index" asp-controller="Form" method="post">
+
+            @Html.HiddenFor(m => m.PageId)
+            @Html.AntiForgeryToken()
+
+            <gds-heading heading-type="H2" text="@Model.PageName.Replace("!!location_name!!", "The Thatched House Dental Practice")" caption="@Model.PreAmble"></gds-heading>
+
+            @if (Model.Questions != null)
+            {
+                foreach (var question in Model.Questions)
+                {
+                    @Html.GdsQuestion(question)
+                }
+            }
+
+            @if (Model.Buttons != null)
+            {
+                foreach (var button in Model.Buttons)
+                {
+                    @Html.GdsButton(button.ButtonType, button.ButtonText)
+                }
+            }
+
+        </form>
+
+    </gds-column>
+
+</gds-row>

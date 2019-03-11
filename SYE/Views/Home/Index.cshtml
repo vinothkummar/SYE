@@ -6,29 +6,25 @@
 
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
-        <gds-header header="H2" text="Share Your Experience"></gds-header>
-
-        <p class="govuk-body">Use this form to:</p>
-
+        <gds-heading heading-type="H2" text="Share Your Experience"></gds-heading>
+        <gds-paragraph>Use this form to tell us about:</gds-paragraph>
         <ul class="govuk-list govuk-list--bullet">
-            <li>share an experience of good or bad care</li>
-            <li>tell us about a complaint you have made that you would like to take further</li>
+            <li>an experience of care from a service like a care home, care agency, hospital or GP it can be good or bad</li>
+            <li>a concern you have about a care service you work for</li>
+            <li>a complaint you've made where you're not happy with the way it's been dealt with</li>
         </ul>
-
-        <gds-header header="H2" text="How we will use the information you give us"></gds-header>
-        <p class="govuk-body">What you tell us can help us understand the quality of care people get from the service you're telling us about. It can help us decide if we need to take action, like carrying out an inspection. We can't always tell you what action we've taken.</p>
-        <p class="govuk-body">You don't have to give your name.</p>
-        <p class="govuk-body">We won't share the information you have given us with the care service unless either:</p>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>you say we can</li>
-            <li>we need to act on serious concerns, like to protect someone's safety</li>
-        </ul>
-
+        
+        <gds-paragraph>Before you tell us, there are 4 things you need to know.</gds-paragraph>
+        
         <form asp-controller="Search" asp-action="Index" method="get">
-            <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start Now" button-type="Submit"></gds-button></p>
+            <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start Now" button-type="Submit" start-now="true"></gds-button></p>
         </form>
 
+        
+        <gds-heading heading-type="H3" text="Get help with this form"></gds-heading>
+        <gds-paragraph>You can get help on the phone if it's hard for you to do things online.</gds-paragraph>
+        <gds-paragraph>Telephone: 03000 616161<br/>Monday to Friday, 8:30am to 5pm<br/>Excluding bank holidays</gds-paragraph>
+        
     </gds-column>
 
 </gds-row>

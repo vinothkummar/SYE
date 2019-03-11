@@ -20,6 +20,5 @@
 
         public string CollectionId { get; set; }
 
-        
     }
 }
