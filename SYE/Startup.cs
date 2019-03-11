@@ -40,8 +40,9 @@ namespace SYE
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            var appConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration>();
+            services.AddSingleton<IAppConfiguration>(appConfig);
 
-            services.AddScoped(typeof(IAppConfiguration), typeof(AppConfiguration));
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IGdsValidation, GdsValidation>();
