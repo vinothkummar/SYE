@@ -13,6 +13,7 @@ using Xunit;
 
 namespace SYE.Tests.Services
 {
+    //TODO Discuss how will we handle exceptions/edge cases and add tests accordingly
     /// <summary>
     /// This class tests the submission service is talking to the repository correctl
     /// To achieve this the repository needs to be mocked with faked return data
