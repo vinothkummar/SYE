@@ -7,7 +7,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="GDSHelpers" Version="1.0.0" />
+    <PackageReference Include="GDSHelpers" Version="2019.3.8.3" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
@@ -17,6 +17,12 @@
   <ItemGroup>
     <ProjectReference Include="..\SYE.Models\SYE.Models.csproj" />
     <ProjectReference Include="..\SYE.Services\SYE.Services.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Content\" />
+    <Folder Include="wwwroot\assets\images\" />
   </ItemGroup>
 
 </Project>

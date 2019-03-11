@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#5f2861" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>@ViewData["Title"] - Share Your Experience - Care Quality Commission</title>
+    <title>Share Your Experience - Care Quality Commission</title>
 
     <link rel="shortcut icon" href="/favicon.ico">
 
@@ -45,7 +45,7 @@
 
         <gds-phase-banner phase="Beta" url="#"></gds-phase-banner>
 
-        <gds-back-link link-text="Back" url="#"></gds-back-link>
+        <gds-back-link link-text="Back" url="#" onclick="history.go(-1);return false;"></gds-back-link>
 
         <gds-main-wrapper>
 
@@ -104,6 +104,7 @@
 
 
     <script src="~/js/govuk-frontend-2.4.1.min.js" asp-append-version="true"></script>
+    <script>window.GOVUKFrontend.initAll()</script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)

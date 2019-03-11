@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GDSHelpers" Version="1.0.0" />
+    <PackageReference Include="GDSHelpers" Version="2019.3.8.3" />
   </ItemGroup>
 
   <ItemGroup>
