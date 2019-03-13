@@ -22,24 +22,25 @@ namespace SYE.Repository
     {
         private readonly string _databaseId;
         private readonly string _collectionId;
-        private readonly DocumentClient _client;
+        private readonly IDocumentClient _client;
         private readonly IAppConfiguration _appConfig;
 
-        public GenericRepository(IAppConfiguration appConfig)
+        public GenericRepository(IAppConfiguration appConfig, IDocumentClient client)
         {
             _appConfig = appConfig;
 
             _databaseId = _appConfig.DatabaseId;
             _collectionId = _appConfig.CollectionId;
 
-            _client = new DocumentClient(new Uri(_appConfig.Endpoint), _appConfig.Key);
+            _client = client;
         }
 
         public async Task<T> GetByIdAsync(string id)
         {
             try
             {
-                Document document = await _client.ReadDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id));
+                var param = UriFactory.CreateDocumentUri(_databaseId, _collectionId, id);
+                Document document = await _client.ReadDocumentAsync(param);
                 return (T)(dynamic)document;
             }
             catch (DocumentClientException e)
