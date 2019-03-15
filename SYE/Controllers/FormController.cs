@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Http;
@@ -22,13 +24,33 @@ namespace SYE.Controllers
         [HttpGet]
         public IActionResult Index(string id = "")
         {
-            HttpContext.Session.SetString("LocationId", "1-100000001");
-            HttpContext.Session.SetString("LocationName", "The Thatched House Dental Practise");
+            var locationName = string.Empty;
+            if (HttpContext != null)
+            {
+                HttpContext.Session.SetString("LocationId", "1-100000001");
+                HttpContext.Session.SetString("LocationName", "The Thatched House Dental Practise");
 
-            var locationName = HttpContext.Session.GetString("LocationName");
+                locationName = HttpContext.Session.GetString("LocationName");
+            }
 
-            var pageVm = _pageService.GetPageById(id, "Content/form-schema.json", locationName);
-            return View(pageVm);
+            try
+            {
+                var pageVm = _pageService.GetPageById(id, "Content/form-schema.json", locationName);
+                if (pageVm == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(pageVm);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                //log error
+                return StatusCode(500);
+            }            
         }
 
 
@@ -36,7 +58,12 @@ namespace SYE.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Index(PageVM vm)
         {
-            var locationName = HttpContext.Session.GetString("LocationName");
+            var locationName = string.Empty;
+
+            if (HttpContext != null)
+            {
+                locationName = HttpContext.Session.GetString("LocationName");
+            }            
 
             //Get the page we are validating
             var pageVm = _pageService.GetPageById(vm.PageId, "Content/form-schema.json", locationName);
