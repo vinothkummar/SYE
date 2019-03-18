@@ -79,34 +79,4 @@ namespace SYE.Tests.Controllers
             mockPageService.Verify();
         }
     }
-    #region CodeToMockHttpContext
-    //Mock mockHttpContext = new Mock(); Mock mockSession = new Mock().As();
-
-    //Mock<HttpContext> mockHttpContext = new Mock<HttpContext>();
-    //Mock<ISession> mockSession = new Mock<ISession>();
-    //mockSession["Key"] = "123";
-    //mockHttpContext.Setup(s => s.Session).Returns(mockSession.Object);
-
-    //var mockHttpContext = new Mock<DefaultHttpContext>();
-    //var mockSession = new Mock<ISession>();
-    //IEnumerable<string> sessionKeys = new string[] { };
-    ////Convert to list.
-    //List<string> listSessionKeys = sessionKeys.ToList();
-    //listSessionKeys.Add("ModuleId");
-    //sessionKeys = listSessionKeys;
-    //mockSession.Setup(s => s.Keys).Returns(sessionKeys);
-    //mockSession.Setup(s => s.Id).Returns("89eca97a-872a-4ba2-06fe-ba715c3f32be");
-    //mockSession.Setup(s => s.IsAvailable).Returns(true);
-    //mockHttpContext.Setup(s => s.Session).Returns(mockSession.Object);
-    //mockSession.Setup(s => s.GetString("ModuleId")).Returns("1");
-    //sut.ControllerContext = new ControllerContext();
-    //sut.ControllerContext.HttpContext = new DefaultHttpContext();
-    //sut.ControllerContext.HttpContext.Request.Headers["device-id"] = "20317";
-    //mockHttpContext.Setup(s => s.Session).Returns(mockSession.Object);
-    //mockSession.Setup(s => s.GetString("LocationName")).Returns("1");
-
-    //mockSession.Setup(x => x.GetString("LocationName")).Returns("The Thatched House Dental Practise");
-    //sut.ControllerContext.HttpContext.Session = mockSession.Object;
-
-    #endregion
 }
