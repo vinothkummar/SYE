@@ -17,7 +17,6 @@ namespace SYE.Tests.Services
         [InlineData(null, "What do you want to tell us about?")]
         [InlineData("", "What do you want to tell us about?")]
         [InlineData("aaaaaaaaa001", "What do you want to tell us about?")]
-        [InlineData("aaaaaaaaa002", "Negative Path")]
         [InlineData("aaaaaaaaa101", "Tell us what happened")]
         [InlineData("aaaaaaaaa004", "Can we share the information you have given us with test location?")]
         [InlineData("aaaaaaaaa005", "Can we contact you")]
