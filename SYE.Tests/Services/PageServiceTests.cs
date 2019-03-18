@@ -21,7 +21,7 @@ namespace SYE.Tests.Services
         [InlineData("Pos004", "Pos004")]
         [InlineData("Pos005", "Pos005")]
         [InlineData("Pos006", "Pos006")]
-        public void GetPageById_Should_Return_Correct_Data(string searchPageId, string expectedPageId)
+        public void GetPageById_Should_Return_Correct_Page(string searchPageId, string expectedPageId)
         {
             //arrange
             var sut = new PageService();
@@ -39,7 +39,7 @@ namespace SYE.Tests.Services
         [InlineData(2, false)]
         [InlineData(3, false)]
         [InlineData(4, false)]
-        public void GetPageById_Should_Return_Correct_Page(int pageIndex, bool getPageFromAnswerLogic)
+        public void GetPageById_Should_Return_Correct_Next_Page(int pageIndex, bool getPageFromAnswerLogic)
         {
             //arrange
             var sut = new PageService();
