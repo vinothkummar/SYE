@@ -55,7 +55,6 @@ namespace SYE
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IGdsValidation, GdsValidation>();
-
             services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(appConfig.Endpoint), appConfig.Key));//TODO dont like these parameters set here!!
             
             //services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(appConfig.Endpoint), appConfig.Key, connectionPolicy, ConsistencyLevel.Strong));
