@@ -50,15 +50,12 @@ namespace SYE
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // TODO: Move all sensitive information to Azure Key Valut (using Managed Service Identity)
             var appConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration>();
+            var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
             services.AddSingleton<IAppConfiguration>(appConfig);
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IGdsValidation, GdsValidation>();
-
-            var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
-
             services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(appConfig.Endpoint), appConfig.Key, connectionPolicy, ConsistencyLevel.Strong));
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
