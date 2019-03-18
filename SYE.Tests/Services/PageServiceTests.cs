@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using SYE.Services;
 using Xunit;
@@ -34,27 +35,36 @@ namespace SYE.Tests.Services
         }
 
         [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        //[InlineData(2)] this is null so leave out
-        [InlineData(3)]
-        [InlineData(4)]
-        [InlineData(5)]
-        [InlineData(6)]
-        public void GetPageById_Should_Return_Correct_Page(int pageIndex)
+        [InlineData(0, true)]
+        [InlineData(1, false)]
+        [InlineData(2, false)]
+        [InlineData(3, false)]
+        [InlineData(4, false)]
+        public void GetPageById_Should_Return_Correct_Page(int pageIndex, bool getPageFromAnswerLogic)
         {
             //arrange
             var sut = new PageService();
             var happyPathPageList = GenerateHappyPathPageList();
             //act            
             var thisPageId = happyPathPageList[pageIndex];
-            var nextPageId = happyPathPageList[pageIndex + 1];
+            var expectedPageId = happyPathPageList[pageIndex + 1];
 
             //TODO this will need to change to call the method to get from the cache
             var result = sut.GetPageById(thisPageId, _dir + _fileName, _location);
 
+            string next;
+
+            if (getPageFromAnswerLogic)
+            {
+                next = result.Questions.ToList()[0].AnswerLogic.ToList()[0].NextPageId;
+            }
+            else
+            {
+                next = result.NextPageId;
+            }
+
             //assert
-            result.NextPageId.Should().Be(nextPageId);
+            next.Should().Be(expectedPageId);
         }
         [Theory]
         [InlineData("aaaaaaaaa007")]
@@ -76,7 +86,7 @@ namespace SYE.Tests.Services
         private List<string> GenerateHappyPathPageList()
         {
             var happyPath = new List<string>
-                {"aaaaaaaaa001", "aaaaaaaaa002", null, "aaaaaaaaa101", "aaaaaaaaa004", "aaaaaaaaa005", "aaaaaaaaa006", "aaaaaaaaa007"};
+                {"aaaaaaaaa001", "aaaaaaaaa101", "aaaaaaaaa004", "aaaaaaaaa005", "aaaaaaaaa006", "aaaaaaaaa007"};
             return happyPath;
         }
  
