@@ -7,6 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\form-schema.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\form-schema.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
     <PackageReference Include="GDSHelpers" Version="2019.3.8.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
@@ -18,11 +28,15 @@
   <ItemGroup>
     <ProjectReference Include="..\SYE.Repository\SYE.Repository.csproj" />
     <ProjectReference Include="..\SYE.Services\SYE.Services.csproj" />
+    <ProjectReference Include="..\SYE\SYE.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="GDSHelpers">
       <HintPath>..\..\..\..\Users\cex\.nuget\packages\gdshelpers\1.0.0\lib\netstandard2.0\GDSHelpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Session">
+      <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.session\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Session.dll</HintPath>
     </Reference>
   </ItemGroup>
 

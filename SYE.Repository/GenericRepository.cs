@@ -37,23 +37,9 @@ namespace SYE.Repository
 
         public async Task<T> GetByIdAsync(string id)
         {
-            try
-            {
-                var param = UriFactory.CreateDocumentUri(_databaseId, _collectionId, id);
-                Document document = await _client.ReadDocumentAsync(param);
-                return (T)(dynamic)document;
-            }
-            catch (DocumentClientException e)
-            {
-                if (e.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var param = UriFactory.CreateDocumentUri(_databaseId, _collectionId, id);
+            Document document = await _client.ReadDocumentAsync(param);
+            return (T)(dynamic)document;
         }
 
         public async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate)

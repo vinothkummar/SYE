@@ -1,34 +1,56 @@
-﻿using System.IO;
+﻿using System;
 using System.Linq;
+using System.Net;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Session;
-using Newtonsoft.Json;
+using SYE.Services;
 
 namespace SYE.Controllers
 {
     public class FormController : Controller
     {
         private readonly IGdsValidation _gdsValidate;
+        private readonly IPageService _pageService;
 
-        public FormController(IGdsValidation gdsValidate)
+        public FormController(IGdsValidation gdsValidate, IPageService pageService)
         {
             _gdsValidate = gdsValidate;
+            _pageService = pageService;
         }
 
 
         [HttpGet]
         public IActionResult Index(string id = "")
         {
-            HttpContext.Session.SetString("LocationId", "1-100000001");
-            HttpContext.Session.SetString("LocationName", "The Thatched House Dental Practise");
+            var locationName = string.Empty;
+            if (HttpContext != null)
+            {
+                HttpContext.Session.SetString("LocationId", "1-100000001");
+                HttpContext.Session.SetString("LocationName", "The Thatched House Dental Practise");
 
-            var locationName = HttpContext.Session.GetString("LocationName");
+                locationName = HttpContext.Session.GetString("LocationName");
+            }
 
-            var pageVm = GetPageById(id, locationName);
-            return View(pageVm);
+            try
+            {
+                var pageVm = _pageService.GetPageById(id, "Content/form-schema.json", locationName);
+                if (pageVm == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return View(pageVm);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                //log error
+                return StatusCode(500);
+            }            
         }
 
 
@@ -36,10 +58,15 @@ namespace SYE.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Index(PageVM vm)
         {
-            var locationName = HttpContext.Session.GetString("LocationName");
+            var locationName = string.Empty;
+
+            if (HttpContext != null)
+            {
+                locationName = HttpContext.Session.GetString("LocationName");
+            }            
 
             //Get the page we are validating
-            var pageVm = GetPageById(vm.PageId, locationName);
+            var pageVm = _pageService.GetPageById(vm.PageId, "Content/form-schema.json", locationName);
 
             //Validate the Response against the page json
             _gdsValidate.ValidatePage(pageVm, Request.Form);
@@ -59,26 +86,6 @@ namespace SYE.Controllers
             //No errors redirect to the Index page with our new PageId
             var nextPageId = pageVm.NextPageId;
             return RedirectToAction("Index", new { id = nextPageId });
-        }
-
-
-        private static PageVM GetPageById(string pageId, string locationName = "")
-        {
-            FormVM formVm;
-            using (var r = new StreamReader("Content/form-schema.json"))
-            {
-                var file = r.ReadToEnd();
-
-                file = file.Replace("!!location_name!!", locationName);
-
-                formVm = JsonConvert.DeserializeObject<FormVM>(file);
-            }
-
-            var pageVm = string.IsNullOrEmpty(pageId)
-                ? formVm.Pages.FirstOrDefault()
-                : formVm.Pages.FirstOrDefault(m => m.PageId == pageId);
-
-            return pageVm;
         }
 
     }
