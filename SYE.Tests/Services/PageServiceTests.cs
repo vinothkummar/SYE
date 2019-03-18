@@ -14,23 +14,23 @@ namespace SYE.Tests.Services
         private string _location = "Test Location";
 
         [Theory]
-        [InlineData(null, "What do you want to tell us about?")]
-        [InlineData("", "What do you want to tell us about?")]
-        [InlineData("aaaaaaaaa001", "What do you want to tell us about?")]
-        [InlineData("aaaaaaaaa101", "Tell us what happened")]
-        [InlineData("aaaaaaaaa004", "Can we share the information you have given us with test location?")]
-        [InlineData("aaaaaaaaa005", "Can we contact you")]
-        [InlineData("aaaaaaaaa006", "Your contact details")]
-        public void GetPageById_Should_Return_Correct_Data(string pageId, string expectedPagerName)
+        [InlineData(null, "Pos001")]
+        [InlineData("", "Pos001")]
+        [InlineData("Pos001", "Pos001")]
+        [InlineData("Pos101", "Pos101")]
+        [InlineData("Pos004", "Pos004")]
+        [InlineData("Pos005", "Pos005")]
+        [InlineData("Pos006", "Pos006")]
+        public void GetPageById_Should_Return_Correct_Data(string searchPageId, string expectedPageId)
         {
             //arrange
             var sut = new PageService();
             //act            
             //TODO this will need to change to call the method to get from the cache            
-            var result = sut.GetPageById(pageId, _dir + _fileName, "test location");
+            var result = sut.GetPageById(searchPageId, _dir + _fileName, "test location");
 
             //assert
-            result.PageName.Should().Be(expectedPagerName);
+            result.PageId.Should().Be(expectedPageId);
         }
 
         [Theory]
@@ -66,7 +66,7 @@ namespace SYE.Tests.Services
             next.Should().Be(expectedPageId);
         }
         [Theory]
-        [InlineData("aaaaaaaaa007")]
+        [InlineData("Pos007")]
         [InlineData("xxxxxxxxxxxxxxxxxxxxx")]
         public void GetPageById_Should_Return_Null_Page(string pageId)
         {
@@ -85,7 +85,7 @@ namespace SYE.Tests.Services
         private List<string> GenerateHappyPathPageList()
         {
             var happyPath = new List<string>
-                {"aaaaaaaaa001", "aaaaaaaaa101", "aaaaaaaaa004", "aaaaaaaaa005", "aaaaaaaaa006", "aaaaaaaaa007"};
+                {"Pos001", "Pos101", "Pos004", "Pos005", "Pos006", "Pos007"};
             return happyPath;
         }
  

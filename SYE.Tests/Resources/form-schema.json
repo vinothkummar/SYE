@@ -5,7 +5,7 @@
   "last_modified": "ISODate(\"2018-11-15T14:20:00.000Z\")",
   "pages": [
     {
-      "page_id": "aaaaaaaaa001",
+      "page_id": "Pos001",
       "page_name": "What do you want to tell us about?",
       "questions": [
         {
@@ -25,7 +25,7 @@
           "answer_logic": [
             {
               "value": "Good care",
-              "next_page_id": "aaaaaaaaa101"
+              "next_page_id": "Pos101"
             }
           ],
           "answer": ""
@@ -37,10 +37,10 @@
           "button_type": "submit"
         }
       ],
-      "next_page_id": "aaaaaaaaa002"
+      "next_page_id": "Neg002"
     },
     {
-      "page_id": "aaaaaaaaa002",
+      "page_id": "Neg002",
       "page_name": "Negative Path",
       "questions": [
         {
@@ -51,7 +51,7 @@
       ]
     },
     {
-      "page_id": "aaaaaaaaa101",  
+      "page_id": "Pos101",  
       "page_name": "Tell us what happened",
       "questions": [
         {
@@ -82,10 +82,10 @@
           "button_type": "submit"
         }
       ],
-      "next_page_id": "aaaaaaaaa004"
+      "next_page_id": "Pos004"
     },
     {
-      "page_id": "aaaaaaaaa004",
+      "page_id": "Pos004",
       "page_name": "Can we share the information you have given us with !!location_name!!?",
       "questions": [
         {
@@ -106,7 +106,7 @@
           "answer_logic": [
             {
               "value": "Yes",
-              "next_page_id": "aaaaaaaaa006"
+              "next_page_id": "Pos006"
             }
           ],
           "answer": "CheckYourAnswers"
@@ -118,10 +118,10 @@
           "button_type": "submit"
         }
       ],
-      "next_page_id": "aaaaaaaaa005"
+      "next_page_id": "Pos005"
     },
     {
-      "page_id": "aaaaaaaaa005",
+      "page_id": "Pos005",
       "page_name": "Can we contact you",
       "questions": [
         {
@@ -148,10 +148,10 @@
           "button_type": "submit"
         }
       ],
-      "next_page_id": "aaaaaaaaa006"
+      "next_page_id": "Pos006"
     },
     {
-      "page_id": "aaaaaaaaa006",
+      "page_id": "Pos006",
       "page_name": "Your contact details",
       "questions": [
         {
@@ -192,7 +192,7 @@
           "button_type": "submit"
         }
       ],
-      "next_page_id": "aaaaaaaaa007"
+      "next_page_id": "Pos007"
     }
   ]
 }
