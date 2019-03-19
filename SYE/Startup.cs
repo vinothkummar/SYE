@@ -56,6 +56,7 @@ namespace SYE
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IGdsValidation, GdsValidation>();
             services.AddScoped<IPageService, PageService>();
+            services.AddScoped<ISearchService, SearchService>();
             services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(appConfig.Endpoint), appConfig.Key, connectionPolicy, ConsistencyLevel.Strong));
         }
 
