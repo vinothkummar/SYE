@@ -7,6 +7,7 @@ namespace SYE.Models
 {
     public class SearchResultsViewModel
     {
+        public string Search { get; set; }
         public List<SearchResult> SearchResults { get; set; }
     }
 }

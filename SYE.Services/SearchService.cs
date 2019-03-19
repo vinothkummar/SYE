@@ -19,7 +19,8 @@ namespace SYE.Services
     {
         private static SearchServiceClient _searchClient;
         private static ISearchIndexClient _indexClient;
-        private static string _indexName = "sye-poc-index";
+        //private static string _indexName = "sye-poc-index";
+        private static string _indexName = "documentdb-index";
 
         private readonly IGenericRepository<SearchResult> _genericRepository;
 
@@ -62,13 +63,13 @@ namespace SYE.Services
                 foreach (var doc in results)
                 {
                     var searchResult = new SearchResult();
-                    searchResult.Id = GetValue(doc, "id");
-                    searchResult.Name = GetValue(doc, "providerName");
+                    searchResult.Id = GetValue(doc, "rid");
+                    searchResult.Name = GetValue(doc, "locationName");
                     searchResult.Address = GetValue(doc, "postalAddressLine1");
                     searchResult.Town = GetValue(doc, "postalAddressTownCity");
-                    searchResult.County = GetValue(doc, "postalAddressCounty");
+                    searchResult.PostCode = GetValue(doc, "postalCode");
                     searchResult.Region = GetValue(doc, "region");
-                    searchResult.Category = GetValue(doc, "primaryInspectionCategory");
+                    searchResult.Category = GetValue(doc, "inspectionDirectorate");
 
                     returnList.Add(searchResult);
                 }

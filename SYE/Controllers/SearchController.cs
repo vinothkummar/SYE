@@ -15,7 +15,7 @@ namespace SYE.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            return View(new SearchResultsViewModel{Search = string.Empty});
         }
 
 
@@ -23,7 +23,7 @@ namespace SYE.Controllers
         public IActionResult Index(string search)
         {
             var results = _searchService.GetServiceProviders(search);
-            var viewModel = new SearchResultsViewModel {SearchResults = results};
+            var viewModel = new SearchResultsViewModel {Search = search, SearchResults = results};
 
             ViewBag.ShowResults = true;
             return View(viewModel);

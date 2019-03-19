@@ -16,7 +16,7 @@ namespace SYE.Models
         public string Category { get; set; }
         public string Address { get; set; }
         public string Town { get; set; }
-        public string County { get; set; }
+        public string PostCode { get; set; }
         public string Region { get; set; }
     }
 }
