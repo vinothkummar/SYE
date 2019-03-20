@@ -19,7 +19,6 @@ namespace SYE.Services
     {
         private static SearchServiceClient _searchClient;
         private static ISearchIndexClient _indexClient;
-        //private static string _indexName = "sye-poc-index";
         private static string _indexName = "documentdb-index";
 
         private readonly IGenericRepository<SearchResult> _genericRepository;
@@ -36,6 +35,8 @@ namespace SYE.Services
 
             var results = _indexClient.Documents.Search(search, sp).Results.Select(m => m.Document).ToList();
 
+            var pagedResults = results.Skip(0).Take(20).ToList();
+
             return ConvertResults(results);
         }
 
@@ -47,37 +48,54 @@ namespace SYE.Services
         private void InitSearch()
         {
             var searchServiceName = "sye-poc-azure-search";
-            //var apiKey = "636F112CE66183702BCB07925E6EBB59";
             var apiKey = "260467EC7EE731A6CCC5CFDBD97D5D99";
 
             _searchClient = new SearchServiceClient(searchServiceName, new SearchCredentials(apiKey));
             _indexClient = _searchClient.Indexes.GetClient(_indexName);
         }
 
-        private List<SearchResult> ConvertResults(List<Document> results)
+        /// <summary>
+        /// Generates a list of SearchResult objects form a list of Document results
+        /// </summary>
+        /// <param name="results"></param>
+        /// <returns></returns>
+        private List<SearchResult> ConvertResults(IReadOnlyCollection<Document> results)
         {
             var returnList = new List<SearchResult>();
             if (results != null)
             {
-                returnList = new List<SearchResult>();
-                foreach (var doc in results)
-                {
-                    var searchResult = new SearchResult();
-                    searchResult.Id = GetValue(doc, "rid");
-                    searchResult.Name = GetValue(doc, "locationName");
-                    searchResult.Address = GetValue(doc, "postalAddressLine1");
-                    searchResult.Town = GetValue(doc, "postalAddressTownCity");
-                    searchResult.PostCode = GetValue(doc, "postalCode");
-                    searchResult.Region = GetValue(doc, "region");
-                    searchResult.Category = GetValue(doc, "inspectionDirectorate");
-
-                    returnList.Add(searchResult);
-                }
+                returnList = results.Select(doc => GetSearchResult(doc)).ToList();
             }
 
             return returnList;
         }
 
+        /// <summary>
+        /// Generates a SearchResult object from a document
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
+        private SearchResult GetSearchResult(Document doc)
+        {
+            var searchResult = new SearchResult
+            {
+                Id = GetValue(doc, "rid"),
+                Name = GetValue(doc, "locationName"),
+                Address = GetValue(doc, "postalAddressLine1"),
+                Town = GetValue(doc, "postalAddressTownCity"),
+                PostCode = GetValue(doc, "postalCode"),
+                Region = GetValue(doc, "region"),
+                Category = GetValue(doc, "inspectionDirectorate")
+            };
+            return searchResult;
+        }
+
+        /// <summary>
+        /// gets a single field value from a document
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
         private string GetValue(Document doc, string key)
         {
             string returnStr = null;
@@ -92,8 +110,8 @@ namespace SYE.Services
             }
             return returnStr;
         }
-        /*
-         
+
+        /*         
 using System.Collections.Generic;
 using System.Linq;
 using LocationImporterApi.Models;

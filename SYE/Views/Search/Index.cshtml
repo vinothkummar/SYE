@@ -1,5 +1,5 @@
 ﻿@using SYE.Models
-@model SearchResultsViewModel
+@model SYE.ViewModels.SearchResultsViewModel
 @{
     ViewData["Title"] = "Search";
 }
@@ -22,7 +22,13 @@
                             For example, Cherry Tree London SW1V. You do not need to use the whole name or address.
                         </label>
                         <input class="govuk-input" id="search" name="search" type="text" value="@Model.Search">
-                    </div>
+                        @if (ViewBag.ShowResults == true)
+                        {
+                            <label class="govuk-label">
+                                @Model.ResultsCount results returned
+                            </label>
+                        }
+                        </div>
 
                     <gds-button button-type="Submit" button-text="Search"></gds-button>
 
@@ -39,8 +45,12 @@
 {
     <gds-row>
         <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-
-            <details class="govuk-details">
+            <details class="govuk-details"> 
+                @*<div class="govuk-form-group">
+                    <label class="govuk-label">
+                        Search has returned @Model.ResultsCount results
+                    </label>
+                </div>*@
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
                         I can't find the service I want to tell you about'
