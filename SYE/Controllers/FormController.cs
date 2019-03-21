@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Linq;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Http;
@@ -13,44 +11,46 @@ namespace SYE.Controllers
     {
         private readonly IGdsValidation _gdsValidate;
         private readonly IPageService _pageService;
+        private readonly ISessionService _sessionService;
 
-        public FormController(IGdsValidation gdsValidate, IPageService pageService)
+        public FormController(IGdsValidation gdsValidate, IPageService pageService, ISessionService sessionService)
         {
             _gdsValidate = gdsValidate;
             _pageService = pageService;
+            _sessionService = sessionService;
         }
 
 
         [HttpGet]
         public IActionResult Index(string id = "")
         {
-            var locationName = string.Empty;
-            if (HttpContext != null)
-            {
-                HttpContext.Session.SetString("LocationId", "1-100000001");
-                HttpContext.Session.SetString("LocationName", "The Thatched House Dental Practise");
+            //Get the form schema from User Session
+            var getUserForm = _sessionService.GetFormVmFromSession();
 
-                locationName = HttpContext.Session.GetString("LocationName");
-            }
 
-            try
-            {
-                var pageVm = _pageService.GetPageById(id, "Content/form-schema.json", locationName);
-                if (pageVm == null)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return View(pageVm);
-                }
-                
-            }
-            catch (Exception e)
-            {
-                //log error
-                return StatusCode(500);
-            }            
+
+            var pageVm = _pageService.GetPageById(getUserForm, id);
+            return View(pageVm);
+
+
+            //try
+            //{
+            //    var pageVm = _pageService.GetPageById(id, "Content/form-schema.json", locationName);
+            //    if (pageVm == null)
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        return View(pageVm);
+            //    }
+
+            //}
+            //catch (Exception e)
+            //{
+            //    //log error
+            //    return StatusCode(500);
+            //}            
         }
 
 

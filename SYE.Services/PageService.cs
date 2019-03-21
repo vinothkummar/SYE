@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using GDSHelpers.Models.FormSchema;
 using Newtonsoft.Json;
 
@@ -10,11 +9,38 @@ namespace SYE.Services
 {
     public interface IPageService
     {
+        FormVM GetFormVm(Dictionary<string, string> replacements = null);
         PageVM GetPageById(string pageId, string path, string locationName = "");
         PageVM GetPageById(string pageId, string locationName = "");
+        PageVM GetPageById(FormVM formVm, string pageId);
     }
     public class PageService : IPageService
     {
+        public FormVM GetFormVm(Dictionary<string, string> replacements = null)
+        {
+            //TODO: Refactor this method to read from Cosmos Db
+            var path = "Content/form-schema.json";
+
+            FormVM formVm;
+            using (var r = new StreamReader(path))
+            {
+                var file = r.ReadToEnd();
+
+                if (replacements != null)
+                {
+                    foreach (var item in replacements)
+                    {
+                        file = file.Replace(item.Key, item.Value);
+                    }
+                }
+                
+                formVm = JsonConvert.DeserializeObject<FormVM>(file);
+            }
+
+            return formVm;
+        }
+
+
         /// <summary>
         /// this method reads a json file from the folder and returns the next page
         /// </summary>
@@ -52,5 +78,16 @@ namespace SYE.Services
         {
             throw new NotImplementedException();
         }
+
+        public PageVM GetPageById(FormVM formVm, string pageId)
+        {
+            var pageVm = string.IsNullOrEmpty(pageId)
+                ? formVm.Pages.FirstOrDefault()
+                : formVm.Pages.FirstOrDefault(m => m.PageId == pageId);
+
+            return pageVm;
+
+        }
+
     }
 }

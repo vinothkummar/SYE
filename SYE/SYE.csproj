@@ -10,6 +10,13 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Helpers\**" />
+    <Content Remove="Helpers\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <None Remove="Helpers\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="GDSHelpers" Version="2019.3.8.3" />
@@ -33,7 +40,6 @@
 
   <ItemGroup>
     <Folder Include="Content\" />
-    <Folder Include="Helpers\" />
     <Folder Include="wwwroot\assets\images\" />
   </ItemGroup>
 

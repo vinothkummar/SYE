@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SYE.Repository;
 using SYE.Services;
 
@@ -28,27 +30,18 @@ namespace SYE
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
                 options.Secure = CookieSecurePolicy.SameAsRequest;
             });
 
-            services.AddDistributedRedisCache(option =>
-            {
-                option.Configuration = Configuration.GetConnectionString("RedisCacheStore");
-                option.InstanceName = "";
-            });
-
             services.AddSession(options =>
             {
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            // TODO: Move all sensitive information to Azure Key Valut (using Managed Service Identity)
+            // TODO: Move all sensitive information to Azure Key Value (using Managed Service Identity)
             var appConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration>();
             var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
             services.AddSingleton<IAppConfiguration>(appConfig);
@@ -56,7 +49,10 @@ namespace SYE
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IGdsValidation, GdsValidation>();
             services.AddScoped<IPageService, PageService>();
+            services.AddScoped<ISessionService, SessionService>();
             services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(appConfig.Endpoint), appConfig.Key, connectionPolicy, ConsistencyLevel.Strong));
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
