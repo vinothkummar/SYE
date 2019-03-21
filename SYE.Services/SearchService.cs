@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using SYE.Models;
@@ -12,37 +13,55 @@ namespace SYE.Services
 {
     public interface ISearchService
     {
-        List<SearchResult> GetServiceProviders(string search);
-        ServiceProvider GetServiceProvider(string id);
+        Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize = 10);
+        long GetCount();
     }
     public class SearchService : ISearchService
     {
         private static SearchServiceClient _searchClient;
         private static ISearchIndexClient _indexClient;
         private static string _indexName = "documentdb-index";
+        private static long _count;
 
         private readonly IGenericRepository<SearchResult> _genericRepository;
 
         public SearchService(IGenericRepository<SearchResult> genericRepository)
         {
             _genericRepository = genericRepository;
-        }
-        public List<SearchResult> GetServiceProviders(string search)
+        }    
+
+        public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize)
         {
-            var sp = new SearchParameters();
+            var data = await GetDataAsync(search, currentPage, pageSize);
+            return data;
+        }
+
+        public long GetCount()
+        {
+            return _count;
+        }
+
+        private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize)
+        {
+            var sp = new SearchParameters
+            {
+                IncludeTotalResultCount = true, Skip = ((currentPage - 1) * pageSize), Top = pageSize
+            };
+
+
 
             InitSearch();
 
-            var results = _indexClient.Documents.Search(search, sp).Results.Select(m => m.Document).ToList();
+            var searchResult = await _indexClient.Documents.SearchAsync(search, sp);
 
-            var pagedResults = results.Skip(0).Take(20).ToList();
-
+            if (searchResult.Count.HasValue)
+            {
+                _count = (long )searchResult.Count;
+            }
+            
+            var results = searchResult.Results.Select(m => m.Document).ToList();
+     
             return ConvertResults(results);
-        }
-
-        public ServiceProvider GetServiceProvider(string id)
-        {
-            throw new NotImplementedException();
         }
 
         private void InitSearch()
@@ -59,7 +78,7 @@ namespace SYE.Services
         /// </summary>
         /// <param name="results"></param>
         /// <returns></returns>
-        private List<SearchResult> ConvertResults(IReadOnlyCollection<Document> results)
+        private List<SearchResult> ConvertResults(List<Document> results)
         {
             var returnList = new List<SearchResult>();
             if (results != null)

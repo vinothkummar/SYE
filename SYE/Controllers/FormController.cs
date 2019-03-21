@@ -22,15 +22,14 @@ namespace SYE.Controllers
 
 
         [HttpGet]
-        public IActionResult Index(string id = "")
+        public IActionResult Index(string id = "", string locationName="")
         {
-            var locationName = string.Empty;
-            if (HttpContext != null)
+            if (HttpContext != null)//TODO this isn't working any more!!
             {
-                HttpContext.Session.SetString("LocationId", "1-100000001");
-                HttpContext.Session.SetString("LocationName", "The Thatched House Dental Practise");
+                HttpContext.Session.SetString("LocationId", id);
+                HttpContext.Session.SetString("LocationName", locationName);
 
-                locationName = HttpContext.Session.GetString("LocationName");
+                //locationName = HttpContext.Session.GetString("LocationName");
             }
 
             try
