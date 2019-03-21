@@ -1,6 +1,8 @@
-﻿namespace SYE.Repository
+﻿using Microsoft.Azure.Documents;
+
+namespace SYE.Repository
 {
-    public interface IAppConfiguration
+    public interface IAppConfiguration<T> where T : class
     {
         string Endpoint { get; set; }
         string Key { get; set; }
@@ -9,16 +11,21 @@
     }
 
 
-    public sealed class AppConfiguration : IAppConfiguration
+    public class AppConfiguration<T> : IAppConfiguration<T> where T : class
     {
-
         public string Endpoint { get; set; }
-
         public string Key { get; set; }
-
         public string DatabaseId { get; set; }
-
         public string CollectionId { get; set; }
+    }
 
+    public interface ICosmosDocumentClient<T> where T : class
+    {
+        IDocumentClient Client { get; set; }
+    }
+
+    public class CosmosDocumentClient<T> : ICosmosDocumentClient<T> where T : class
+    {
+        public IDocumentClient Client { get; set; }
     }
 }

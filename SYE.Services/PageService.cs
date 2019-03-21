@@ -3,33 +3,42 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using GDSHelpers.Models.FormSchema;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
+using SYE.Repository;
 
 namespace SYE.Services
 {
     public interface IPageService
     {
+        Task<FormVM> GetLatestForm();
         PageVM GetPageById(string pageId, string path, string locationName = "");
     }
     public class PageService : IPageService
     {
-        private readonly IDistributedCache _cache;
+        private readonly IGenericRepository<FormVM> _repo;
+
         public PageService()
         {
 
         }
 
-        public PageService(IDistributedCache cache)
+        public PageService(IGenericRepository<FormVM> repo)
         {
-            _cache = cache;
+            _repo = repo;
         }
 
-        //public PageService(IServiceProvider serviceProvider)
-        //{
-        //    _cache = (serviceProvider.GetService(typeof(IDistributedCache)) as IDistributedCache);
-        //}
+        /// <summary>
+        /// This method always returns latest form schema from Cosmos DB based on last modified date stored in form schema document.
+        /// </summary>
+        /// <returns></returns>
+        public Task<FormVM> GetLatestForm()
+        {
+            return _repo.GetAsync<String>(null, null, (x => x.LastModified));
+        }
 
         /// <summary>
         /// this method reads a json file from the folder and returns the next page
@@ -39,46 +48,43 @@ namespace SYE.Services
         /// <param name="locationName"></param>
         /// <returns></returns>
         /// <remarks>
-        /// Please note: This method contains temporary implementation to cache form schema in Redis to unblock developers testing this service
-        /// and will be refactored to implament more robust caching functionality.
-        /// The form schema is still loaded from file system and not from Cosmos DB (this will be available in next iteration).
+        /// Please refactor this function (and all tests consuming this method) so method accepts whole form schema and returns required page.
+        /// If we need to load form from database/cache/session/file-system it has to be done as a seperate function
         /// </remarks>
+        [Obsolete("Please remove all references to this function as this will be removed in next sprint.")]
         public PageVM GetPageById(string pageId, string path, string locationName = "")
         {
             FormVM formVm = null;
             String file = String.Empty;
-            byte[] encodedFormVM = _cache != null ? _cache.Get("_formVM_") ?? null : null;
-            if (encodedFormVM != null)
+
+            if (String.IsNullOrWhiteSpace(path) == true)
             {
-                file = Encoding.UTF8.GetString(encodedFormVM);
-            }
-            if (String.IsNullOrWhiteSpace(file))
-            {
-                using (var r = new StreamReader(path))
-                {
-                    file = r.ReadToEnd();
-                }
-                if (String.IsNullOrWhiteSpace(file) == false)
-                {
-                    file = file.Replace("!!location_name!!", locationName);
-                }
-            }
-            if (String.IsNullOrWhiteSpace(file) == false)
-            {
-                if (encodedFormVM == null)
-                {
-                    encodedFormVM = Encoding.UTF8.GetBytes(file);
-                    _cache.Set("_formVM_", encodedFormVM, new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(30)));
-                }
-                formVm = JsonConvert.DeserializeObject<FormVM>(file);
+                throw new ArgumentException(nameof(path));
             }
 
-            var pageVm = string.IsNullOrEmpty(pageId)
-                ? formVm.Pages.FirstOrDefault()
-                : formVm.Pages.FirstOrDefault(m => m.PageId == pageId);
+            using (var r = new StreamReader(path))
+            {
+                file = r.ReadToEnd();
+            }
 
-            return pageVm;
+            file = file.Replace("!!location_name!!", locationName);
+            formVm = JsonConvert.DeserializeObject<FormVM>(file);
 
+            if (String.IsNullOrWhiteSpace(pageId))
+            {
+                return formVm.Pages.FirstOrDefault();
+            }
+            else
+            {
+                if (formVm.Pages.Any(x => x.PageId == pageId) == true)
+                {
+                    return formVm.Pages.FirstOrDefault(m => m.PageId == pageId);
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
     }
