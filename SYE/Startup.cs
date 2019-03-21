@@ -41,6 +41,7 @@ namespace SYE
             {
                 options.Cookie.HttpOnly = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.IsEssential = true;
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
