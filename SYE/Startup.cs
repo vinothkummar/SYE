@@ -35,7 +35,7 @@ namespace SYE
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDistributedMemoryCache();
+            services.AddMemoryCache();
 
             services.AddSession(options =>
             {
