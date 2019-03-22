@@ -46,7 +46,7 @@ namespace SYE
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            // TODO: Move all sensitive information to Azure Key Valut (using Managed Service Identity)
+            // TODO: Move all sensitive information out of configuration files to a safer place
 
             var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
             var formDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("FormSchemaDb").Get<AppConfiguration<FormVM>>();
