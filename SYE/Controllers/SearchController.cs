@@ -19,26 +19,21 @@ namespace SYE.Controllers
         [Route("")]
         public IActionResult Index([FromQuery] string search, [FromQuery] int pageNo)
         {
-            if (string.IsNullOrEmpty(search))
-            {
-                //called from initial page load
-                return View(new SearchResultsViewModel {Search = string.Empty});
-            }
-            //called from paging
+            var viewModel = GetViewModel(search, pageNo);
+
+            ViewBag.ShowResults = true;
+            return View(viewModel);
+
+        }
+        [HttpGet]
+        [Route("{search},{pageNo}")]
+        public IActionResult GetPaginateResult(string search, int pageNo)
+        {
             var viewModel = GetViewModel(search, pageNo);
 
             ViewBag.ShowResults = true;
             return View("Index", viewModel);
         }
-        //[HttpGet]
-        //[Route("{search},{pageNo}")]
-        //public IActionResult GetPaginateResult(string search, int pageNo)
-        //{
-        //    var viewModel = GetViewModel(search, pageNo);
-
-        //    ViewBag.ShowResults = true;
-        //    return View("Index", viewModel);
-        //}
 
         [HttpPost]
         public IActionResult Index(string search)
@@ -49,21 +44,28 @@ namespace SYE.Controllers
             return View(viewModel);
         }
         /// <summary>
-        /// loads up the view model with paged data
+        /// loads up the view model with paged data when there is a search string and page number
+        /// otherwise it just returns a new view model
         /// </summary>
         /// <param name="search"></param>
         /// <param name="pageNo"></param>
         /// <returns></returns>
         private SearchResultsViewModel GetViewModel(string search, int pageNo)
         {
-            var results = _searchService.GetPaginatedResult(search, pageNo, _pageSize).Result;
+            var returnViewModel = new SearchResultsViewModel();
 
-            var viewModel = new SearchResultsViewModel()
+            if (!string.IsNullOrEmpty(search) && pageNo > 0)
             {
-                Search = search, Data = results, PageSize = _pageSize, Count = _searchService.GetCount(),
-                CurrentPage = pageNo
-            };
-            return viewModel;
+
+                var results = _searchService.GetPaginatedResult(search, pageNo, _pageSize).Result;
+                returnViewModel.ShowResults = true;
+                returnViewModel.Search = search;
+                returnViewModel.Data = results;
+                returnViewModel.PageSize = _pageSize;
+                returnViewModel.Count = _searchService.GetCount();
+                returnViewModel.CurrentPage = pageNo;
+            }
+            return returnViewModel;
         }
     }
 }

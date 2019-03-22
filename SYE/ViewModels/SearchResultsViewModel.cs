@@ -10,7 +10,14 @@ namespace SYE.ViewModels
 {
     public class SearchResultsViewModel : PageModel
     {
+        public SearchResultsViewModel()
+        {
+            Search = string.Empty;
+        }
+
         [BindProperty(SupportsGet = true)]
+
+        public bool ShowResults { get; set; }
         public int CurrentPage { get; set; } = 1;
 
         public long Count { get; set; }

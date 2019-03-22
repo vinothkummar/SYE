@@ -20,14 +20,11 @@ namespace SYE.Services
     {
         private static SearchServiceClient _searchClient;
         private static ISearchIndexClient _indexClient;
-        private static string _indexName = "documentdb-index";
+
         private static long _count;
 
-        private readonly IGenericRepository<SearchResult> _genericRepository;
-
-        public SearchService(IGenericRepository<SearchResult> genericRepository)
+        public SearchService()
         {
-            _genericRepository = genericRepository;
         }    
 
         public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize)
@@ -41,14 +38,13 @@ namespace SYE.Services
             return _count;
         }
 
+        #region Private Methods
         private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize)
         {
             var sp = new SearchParameters
             {
                 IncludeTotalResultCount = true, Skip = ((currentPage - 1) * pageSize), Top = pageSize
             };
-
-
 
             InitSearch();
 
@@ -64,13 +60,18 @@ namespace SYE.Services
             return ConvertResults(results);
         }
 
+        /// <summary>
+        /// initialises the search/index client
+        /// </summary>
         private void InitSearch()
         {
+            //TODO get these settings from config
             var searchServiceName = "sye-poc-azure-search";
             var apiKey = "260467EC7EE731A6CCC5CFDBD97D5D99";
+            var indexName = "documentdb-index";
 
             _searchClient = new SearchServiceClient(searchServiceName, new SearchCredentials(apiKey));
-            _indexClient = _searchClient.Indexes.GetClient(_indexName);
+            _indexClient = _searchClient.Indexes.GetClient(indexName);
         }
 
         /// <summary>
@@ -129,7 +130,9 @@ namespace SYE.Services
             }
             return returnStr;
         }
+        #endregion
 
+        #region commented out code probaly use later
         /*         
 using System.Collections.Generic;
 using System.Linq;
@@ -236,6 +239,7 @@ namespace SYE_POC.Controllers
 }         
 
          */
+        #endregion
 
     }
 }
