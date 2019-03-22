@@ -24,9 +24,8 @@ namespace SYE.Tests.Controllers
             var returnPage = new PageVM {PageId = id};
             var mockValidation = new Mock<IGdsValidation>();
             var mockPageService = new Mock<IPageService>();
-            var mockSessionService = new Mock<ISessionService>();
-            mockPageService.Setup(x => x.GetPageById(id, It.IsAny<string>(), It.IsAny<string>())).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockPageService.Object, mockSessionService.Object);
+            mockPageService.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+            var sut = new FormController(mockValidation.Object, mockPageService.Object);
 
             //act
             var result = sut.Index(id);
@@ -45,9 +44,8 @@ namespace SYE.Tests.Controllers
             PageVM returnPage = null;
             var mockValidation = new Mock<IGdsValidation>();
             var mockPageService = new Mock<IPageService>();
-            var mockSessionService = new Mock<ISessionService>();
-            mockPageService.Setup(x => x.GetPageById(id, It.IsAny<string>(), It.IsAny<string>())).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockPageService.Object, mockSessionService.Object);
+            mockPageService.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+            var sut = new FormController(mockValidation.Object, mockPageService.Object);
 
             //act
             var result = sut.Index(id);
@@ -64,9 +62,8 @@ namespace SYE.Tests.Controllers
             //arrange
             var mockValidation = new Mock<IGdsValidation>();
             var mockPageService = new Mock<IPageService>();
-            var mockSessionService = new Mock<ISessionService>();
-            mockPageService.Setup(x => x.GetPageById(id, It.IsAny<string>(), It.IsAny<string>())).Throws(new Exception()).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockPageService.Object, mockSessionService.Object);
+            mockPageService.Setup(x => x.GetPageById(id)).Throws(new Exception()).Verifiable();
+            var sut = new FormController(mockValidation.Object, mockPageService.Object);
 
             //act
             var result = sut.Index(id);

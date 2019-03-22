@@ -1,7 +1,7 @@
 ﻿
 namespace SYE.Models
 {
-    public class SessionVM
+    public class UserSessionVM
     {
         public string ProviderId { get; set; }
         public string LocationId { get; set; }

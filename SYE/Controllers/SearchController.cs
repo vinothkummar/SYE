@@ -8,12 +8,12 @@ namespace SYE.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly IPageService _pageService;
+        private readonly IFormService _formService;
         private readonly ISessionService _sessionService;
 
-        public SearchController(IPageService pageService, ISessionService sessionService)
+        public SearchController(IFormService formService, ISessionService sessionService)
         {
-            _pageService = pageService;
+            _formService = formService;
             _sessionService = sessionService;
         }
 
@@ -33,26 +33,20 @@ namespace SYE.Controllers
 
 
         [HttpPost]
-        public IActionResult SelectLocation(SessionVM vm)
+        public IActionResult SelectLocation(UserSessionVM vm)
         {
             //Store the location we are giving feedback about
-            _sessionService.SetSessionVars(vm);
-
-            var value = HttpContext.Session.GetString("LocationName");
-
-
+            _sessionService.SetUserSessionVars(vm);
+            
             //Set up our replacement text
             var replacements = new Dictionary<string, string>
             {
                 {"!!location_name!!", vm.LocationName}
             };
 
-            //Read the Schema and apply the replacements
-            var userForm = _pageService.GetFormVm(replacements);
-
-            //Store our schema in user session
-            _sessionService.SaveFormVmToSession(userForm);
-            
+            //Load the Form into Session
+            _sessionService.LoadLatestFormIntoSession(replacements);
+           
             return RedirectToAction("Index", "Form");
         }
 

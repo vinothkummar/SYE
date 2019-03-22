@@ -45,10 +45,9 @@ namespace SYE.Repository
         {
             return await Task.Run(() =>
             {
-                IQueryable<T> query = _client.CreateDocumentQuery<T>(
-                        UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId),
-                        new FeedOptions { MaxItemCount = 1 }
-                    );
+                var endPoint = UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId);
+
+                IQueryable<T> query = _client.CreateDocumentQuery<T>(endPoint, new FeedOptions { MaxItemCount = 1 } );
                 if (predicate != null)
                 {
                     query = query.Where(predicate);
