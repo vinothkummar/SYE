@@ -15,6 +15,7 @@ namespace SYE.Services
     public interface IPageService
     {
         Task<FormVM> GetLatestForm();
+        Task<FormVM> GetFormById(string id);
         PageVM GetPageById(string pageId, string path, string locationName = "");
     }
     public class PageService : IPageService
@@ -40,6 +41,11 @@ namespace SYE.Services
             return _repo.GetAsync<String>(null, null, (x => x.LastModified));
         }
 
+        public Task<FormVM> GetFormById(string id)
+        {
+            return _repo.GetByIdAsync(id);            
+        }
+
         /// <summary>
         /// this method reads a json file from the folder and returns the next page
         /// </summary>
@@ -57,7 +63,7 @@ namespace SYE.Services
             FormVM formVm = null;
             String file = String.Empty;
 
-            if (String.IsNullOrWhiteSpace(path) == true)
+            if (String.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentException(nameof(path));
             }
@@ -76,7 +82,7 @@ namespace SYE.Services
             }
             else
             {
-                if (formVm.Pages.Any(x => x.PageId == pageId) == true)
+                if (formVm.Pages.Any(x => x.PageId == pageId))
                 {
                     return formVm.Pages.FirstOrDefault(m => m.PageId == pageId);
                 }
