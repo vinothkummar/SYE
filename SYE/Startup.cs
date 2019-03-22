@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SYE.Repository;
 using SYE.Services;
+using GDSHelpers.Models.SubmissionSchema;
+using GDSHelpers.Models.FormSchema;
 
 namespace SYE
 {
@@ -32,37 +34,46 @@ namespace SYE
             {
                 options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-                options.Secure = CookieSecurePolicy.SameAsRequest;
             });
+
+            services.AddMemoryCache();
 
             services.AddSession(options =>
             {
+                options.Cookie.HttpOnly = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.IsEssential = true;
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // TODO: Move all sensitive information to Azure Key Value (using Managed Service Identity)
-            var appConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration>();
+
             var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
-            services.AddSingleton<IAppConfiguration>(appConfig);
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<ISubmissionService, SubmissionService>();
+            var formDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("FormSchemaDb").Get<AppConfiguration<FormVM>>();
+            var submissionDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
+
+            services.AddSingleton<IAppConfiguration<FormVM>>(formDatabaseConfig);
+            services.AddSingleton<IAppConfiguration<SubmissionVM>>(submissionDatabaseConfig);
+
+            services.AddSingleton<ICosmosDocumentClient<FormVM>>(new CosmosDocumentClient<FormVM>() { Client = new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy) });
+            services.AddSingleton<ICosmosDocumentClient<SubmissionVM>>(new CosmosDocumentClient<SubmissionVM>() { Client = new DocumentClient(new Uri(submissionDatabaseConfig.Endpoint), submissionDatabaseConfig.Key, connectionPolicy) });
+
+            services.AddScoped(typeof(IGenericRepository<FormVM>), typeof(GenericRepository<FormVM>));
+            services.AddScoped(typeof(IGenericRepository<SubmissionVM>), typeof(GenericRepository<SubmissionVM>));
+
             services.AddScoped<IGdsValidation, GdsValidation>();
             services.AddScoped<IPageService, PageService>();
             services.AddScoped<ISessionService, SessionService>();
-            services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(appConfig.Endpoint), appConfig.Key, connectionPolicy, ConsistencyLevel.Strong));
-
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ISubmissionService, SubmissionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)//, IApplicationLifetime lifetime, IDistributedCache cache)
+        {           
             if (env.IsDevelopment() || env.IsEnvironment("Local"))
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-
             }
             else
             {
