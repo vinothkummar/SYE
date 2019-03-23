@@ -16,62 +16,67 @@ namespace SYE.Tests.Controllers
     /// </summary>    
     public class FormControllerTests
     {
-        [Fact(Skip = "Update tests to include data access.")]
-        public void Index_Should_Return_Data()
-        {
-            const string id = "123";
-            //arrange
-            var returnPage = new PageVM {PageId = id};
-            var mockValidation = new Mock<IGdsValidation>();
-            var mockPageService = new Mock<IPageService>();
-            mockPageService.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockPageService.Object);
+        //[Fact(Skip = "Update tests to include data access.")]
+        //public void Index_Should_Return_Data()
+        //{
+        //    const string id = "123";
+        //    //arrange
+        //    var returnPage = new PageVM {PageId = id};
+        //    var mockValidation = new Mock<IGdsValidation>();
+        //    var mockPageService = new Mock<IPageService>();
+        //    mockPageService.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+        //    var sut = new FormController(mockValidation.Object, mockPageService.Object);
 
-            //act
-            var result = sut.Index(id);
+        //    //act
+        //    var result = sut.Index(id);
 
-            //assert
-            var viewResult = result as ViewResult;
-            var model = viewResult.ViewData.Model as PageVM;
-            model.PageId.Should().Be(id);
-            mockPageService.Verify();
-        }
-        [Fact(Skip = "Update tests to include data access.")]
-        public void Index_Should_Return_Not_Found()
-        {
-            const string id = "123";
-            //arrange
-            PageVM returnPage = null;
-            var mockValidation = new Mock<IGdsValidation>();
-            var mockPageService = new Mock<IPageService>();
-            mockPageService.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockPageService.Object);
+        //    //assert
+        //    var viewResult = result as ViewResult;
+        //    var model = viewResult.ViewData.Model as PageVM;
+        //    model.PageId.Should().Be(id);
+        //    mockPageService.Verify();
+        //}
 
-            //act
-            var result = sut.Index(id);
 
-            //assert
-            var statusResult = result as StatusCodeResult;
-            statusResult.StatusCode.Should().Be(404);
-            mockPageService.Verify();
-        }
-        [Fact(Skip = "Update tests to include data access.")]
-        public void Index_Should_Return_Internal_Error()
-        {
-            const string id = "123";
-            //arrange
-            var mockValidation = new Mock<IGdsValidation>();
-            var mockPageService = new Mock<IPageService>();
-            mockPageService.Setup(x => x.GetPageById(id)).Throws(new Exception()).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockPageService.Object);
+        //[Fact(Skip = "Update tests to include data access.")]
+        //public void Index_Should_Return_Not_Found()
+        //{
+        //    const string id = "123";
+        //    //arrange
+        //    PageVM returnPage = null;
+        //    var mockValidation = new Mock<IGdsValidation>();
+        //    var mockPageService = new Mock<IPageService>();
+        //    mockPageService.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+        //    var sut = new FormController(mockValidation.Object, mockPageService.Object);
 
-            //act
-            var result = sut.Index(id);
+        //    //act
+        //    var result = sut.Index(id);
 
-            //assert
-            var statusResult = result as StatusCodeResult;
-            statusResult.StatusCode.Should().Be(500);
-            mockPageService.Verify();
-        }
+        //    //assert
+        //    var statusResult = result as StatusCodeResult;
+        //    statusResult.StatusCode.Should().Be(404);
+        //    mockPageService.Verify();
+        //}
+
+
+        //[Fact(Skip = "Update tests to include data access.")]
+        //public void Index_Should_Return_Internal_Error()
+        //{
+        //    const string id = "123";
+        //    //arrange
+        //    var mockValidation = new Mock<IGdsValidation>();
+        //    var mockPageService = new Mock<IPageService>();
+        //    mockPageService.Setup(x => x.GetPageById(id)).Throws(new Exception()).Verifiable();
+        //    var sut = new FormController(mockValidation.Object, mockPageService.Object);
+
+        //    //act
+        //    var result = sut.Index(id);
+
+        //    //assert
+        //    var statusResult = result as StatusCodeResult;
+        //    statusResult.StatusCode.Should().Be(500);
+        //    mockPageService.Verify();
+        //}
+
     }
 }

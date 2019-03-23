@@ -13,13 +13,13 @@
         <gds-row>
             <gds-column desktop-size="OneHalf" tablet-size="FullWidth">
 
-                <form asp-controller="Search" asp-action="Index" method="Post">
+                <form asp-controller="Search" asp-action="Index" method="get">
 
                     <div class="govuk-form-group">
                         <label class="govuk-label" for="event-name">
                             For example, Cherry Tree London SW1V. You do not need to use the whole name or address.
                         </label>
-                        <input class="govuk-input" id="event-name" name="event-name" type="text">
+                        <input class="govuk-input" id="query" name="query" type="text">
                     </div>
 
                     <gds-button button-type="Submit" button-text="Search"></gds-button>

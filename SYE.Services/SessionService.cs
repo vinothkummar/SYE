@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -18,6 +16,7 @@ namespace SYE.Services
         UserSessionVM GetUserSession();
         void SaveFormVmToSession(FormVM vm);
         FormVM GetFormVmFromSession();
+        void UpdatePageVmInFormVm(PageVM vm);
     }
 
     public class SessionService : ISessionService
@@ -101,6 +100,22 @@ namespace SYE.Services
             var context = _context.HttpContext;
             var json = context.Session.GetString(schemaKey);
             return json == null ? default(FormVM) : JsonConvert.DeserializeObject<FormVM>(json);
+        }
+
+        public void UpdatePageVmInFormVm(PageVM vm)
+        {
+            var formVm = GetFormVmFromSession();
+
+            var currentPage = formVm.Pages.FirstOrDefault(m => m.PageId == vm.PageId)?.Questions;
+
+            foreach (var question in vm.Questions)
+            {
+                var q = currentPage.FirstOrDefault(m => m.QuestionId == question.QuestionId);
+                q.Answer = question.Answer;
+            }
+
+            SaveFormVmToSession(formVm);
+
         }
 
     }

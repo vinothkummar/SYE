@@ -18,16 +18,13 @@ namespace SYE.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string query)
         {
-            return View();
-        }
-
-
-        [HttpPost]
-        public IActionResult Index(string id)
-        {
-            ViewBag.ShowResults = true;
+            if (!string.IsNullOrEmpty(query))
+            {
+                ViewBag.ShowResults = true;
+            }
+            
             return View();
         }
 
@@ -49,7 +46,6 @@ namespace SYE.Controllers
            
             return RedirectToAction("Index", "Form");
         }
-
-
+        
     }
 }
