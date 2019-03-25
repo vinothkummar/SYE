@@ -7,6 +7,8 @@ using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using SYE.Models;
 using SYE.Repository;
+using SYE.Services.Helpers;
+using SYE.Services.Wrappers;
 using SearchResult = SYE.Models.SearchResult;
 
 namespace SYE.Services
@@ -18,13 +20,18 @@ namespace SYE.Services
     }
     public class SearchService : ISearchService
     {
-        private static SearchServiceClient _searchClient;
-        private static ISearchIndexClient _indexClient;
+        //private static SearchServiceClient _searchClient;
+        private static ICustomSearchIndexClient _indexClientWrapper;
 
         private static long _count;
 
-        public SearchService()
+        public SearchService()//TODO remove this (amend startup.cs)
         {
+
+        }
+        public SearchService(ICustomSearchIndexClient indexClientWrapper)
+        {
+            _indexClientWrapper = indexClientWrapper;
         }    
 
         public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize)
@@ -46,9 +53,7 @@ namespace SYE.Services
                 IncludeTotalResultCount = true, Skip = ((currentPage - 1) * pageSize), Top = pageSize
             };
 
-            InitSearch();
-
-            var searchResult = await _indexClient.Documents.SearchAsync(search, sp);
+            var searchResult = await _indexClientWrapper.SearchAsync(search, sp);
 
             if (searchResult.Count.HasValue)
             {
@@ -57,82 +62,12 @@ namespace SYE.Services
             
             var results = searchResult.Results.Select(m => m.Document).ToList();
      
-            return ConvertResults(results);
+            return SearchHelper.ConvertResults(results);
         }
 
-        /// <summary>
-        /// initialises the search/index client
-        /// </summary>
-        private void InitSearch()
-        {
-            //TODO get these settings from config
-            var searchServiceName = "sye-poc-azure-search";
-            var apiKey = "260467EC7EE731A6CCC5CFDBD97D5D99";
-            var indexName = "documentdb-index";
-
-            _searchClient = new SearchServiceClient(searchServiceName, new SearchCredentials(apiKey));
-            _indexClient = _searchClient.Indexes.GetClient(indexName);
-        }
-
-        /// <summary>
-        /// Generates a list of SearchResult objects form a list of Document results
-        /// </summary>
-        /// <param name="results"></param>
-        /// <returns></returns>
-        private List<SearchResult> ConvertResults(List<Document> results)
-        {
-            var returnList = new List<SearchResult>();
-            if (results != null)
-            {
-                returnList = results.Select(doc => GetSearchResult(doc)).ToList();
-            }
-
-            return returnList;
-        }
-
-        /// <summary>
-        /// Generates a SearchResult object from a document
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <returns></returns>
-        private SearchResult GetSearchResult(Document doc)
-        {
-            var searchResult = new SearchResult
-            {
-                Id = GetValue(doc, "rid"),
-                Name = GetValue(doc, "locationName"),
-                Address = GetValue(doc, "postalAddressLine1"),
-                Town = GetValue(doc, "postalAddressTownCity"),
-                PostCode = GetValue(doc, "postalCode"),
-                Region = GetValue(doc, "region"),
-                Category = GetValue(doc, "inspectionDirectorate")
-            };
-            return searchResult;
-        }
-
-        /// <summary>
-        /// gets a single field value from a document
-        /// </summary>
-        /// <param name="doc"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        private string GetValue(Document doc, string key)
-        {
-            string returnStr = null;
-
-            if (doc.ContainsKey(key))
-            {
-                doc.TryGetValue(key, out var obj);
-                if (obj != null)
-                {
-                    returnStr = obj.ToString();
-                }                
-            }
-            return returnStr;
-        }
         #endregion
 
-        #region commented out code probaly use later
+        #region commented out code probably use later
         /*         
 using System.Collections.Generic;
 using System.Linq;
@@ -147,7 +82,7 @@ namespace SYE_POC.Controllers
     public class AzureSearchController : Controller
     {
         private static SearchServiceClient _searchClient;
-        private static ISearchIndexClient _indexClient;
+        private static ISearchIndexClient _indexClientWrapper;
         private static string _indexName = "sye-poc-index";
 
         public static string errorMessage;
@@ -158,7 +93,7 @@ namespace SYE_POC.Controllers
             var apiKey = "636F112CE66183702BCB07925E6EBB59";
 
             _searchClient = new SearchServiceClient(searchServiceName, new SearchCredentials(apiKey));
-            _indexClient = _searchClient.Indexes.GetClient(_indexName);
+            _indexClientWrapper = _searchClient.Indexes.GetClient(_indexName);
         }
 
 
@@ -181,7 +116,7 @@ namespace SYE_POC.Controllers
             
             var sp = new SearchParameters();
 
-            var results = _indexClient.Documents.Search(vm.SearchTerm, sp).Results.Select(m => m.Document).ToList();
+            var results = _indexClientWrapper.Documents.Search(vm.SearchTerm, sp).Results.Select(m => m.Document).ToList();
 
 
             return View(vm);
@@ -205,7 +140,7 @@ namespace SYE_POC.Controllers
                 sp.HighlightPostTag = "</b>";
             }
 
-            var resp = _indexClient.Documents.Suggest(term, "sg", sp);
+            var resp = _indexClientWrapper.Documents.Suggest(term, "sg", sp);
 
             // Convert the suggest query results to a list that can be displayed in the client.
             var suggestions = resp.Results.Select(x => x.Text).ToList();
@@ -226,7 +161,7 @@ namespace SYE_POC.Controllers
                 UseFuzzyMatching = false,
                 Top = 5
             };
-            var autocompleteResult = _indexClient.Documents.Autocomplete(term, "sg", ap);
+            var autocompleteResult = _indexClientWrapper.Documents.Autocomplete(term, "sg", ap);
 
             // Conver the Suggest results to a list that can be displayed in the client.
             var autocomplete = autocompleteResult.Results.Select(x => x.Text).ToList();

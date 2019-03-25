@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SYE.Repository;
 using SYE.Services;
+using SYE.Services.Wrappers;
 
 namespace SYE
 {
@@ -47,6 +48,11 @@ namespace SYE
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
             });
 
+            //TODO Get config settings here
+            var searchServiceName = "sye-poc-azure-search";
+            var apiKey = "260467EC7EE731A6CCC5CFDBD97D5D99";
+            var indexName = "documentdb-index";
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             // TODO: Move all sensitive information to Azure Key Valut (using Managed Service Identity)
             var appConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration>();
@@ -57,6 +63,8 @@ namespace SYE
             services.AddScoped<IGdsValidation, GdsValidation>();
             services.AddScoped<IPageService, PageService>();
             services.AddScoped<ISearchService, SearchService>();
+            services.AddScoped<ICustomSearchIndexClient, CustomSearchIndexClient>(c => new CustomSearchIndexClient(searchServiceName, indexName, apiKey));
+
             services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(appConfig.Endpoint), appConfig.Key, connectionPolicy, ConsistencyLevel.Strong));
         }
 

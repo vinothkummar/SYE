@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
@@ -19,20 +20,37 @@ namespace SYE.Controllers
         [Route("")]
         public IActionResult Index([FromQuery] string search, [FromQuery] int pageNo)
         {
-            var viewModel = GetViewModel(search, pageNo);
+            try
+            {
+                var viewModel = GetViewModel(search, pageNo);
 
-            ViewBag.ShowResults = true;
-            return View(viewModel);
+                ViewBag.ShowResults = true;
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                //log error
+                return StatusCode(500);
+            }
 
         }
         [HttpGet]
         [Route("{search},{pageNo}")]
         public IActionResult GetPaginateResult(string search, int pageNo)
         {
-            var viewModel = GetViewModel(search, pageNo);
+            try
+            {
+                var viewModel = GetViewModel(search, pageNo);
 
-            ViewBag.ShowResults = true;
-            return View("Index", viewModel);
+                ViewBag.ShowResults = true;
+                return View("Index", viewModel);
+
+            }
+            catch (Exception e)
+            {
+                //log error
+                return StatusCode(500);
+            }
         }
 
         [HttpPost]
