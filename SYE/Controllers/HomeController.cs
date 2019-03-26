@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SYE.Models;
 using SYE.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace SYE.Controllers
 {
@@ -15,9 +16,14 @@ namespace SYE.Controllers
             _submissionService = submissionService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string formid = "")
         {
             _submissionService.FindByAsync(m => m.FormName == "");
+
+            if (!string.IsNullOrWhiteSpace(formid))
+            {
+                HttpContext.Session.SetString("_form_id_", formid);
+            }
 
             return View();
         }
