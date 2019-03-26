@@ -47,23 +47,22 @@ namespace SYE
                 options.Cookie.IsEssential = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
             });
-
-            //TODO Get config settings here
-            var searchServiceName = "sye-poc-azure-search";
-            var apiKey = "260467EC7EE731A6CCC5CFDBD97D5D99";
-            var indexName = "documentdb-index";
-
+           
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            // TODO: Move all sensitive information to Azure Key Valut (using Managed Service Identity)
+            // TODO: Move all sensitive information to Azure Key Value (using Managed Service Identity)
             var appConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration>();
+            var searchConfig = Configuration.GetSection("ConnectionStrings").GetSection("SearchDb").Get<AppConfiguration>();
             var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
+
+            var indexClient = new CustomSearchIndexClient(searchConfig.SearchServiceName, searchConfig.IndexName, searchConfig.SearchApiKey);
+            var searchService = new SearchService(indexClient);
             services.AddSingleton<IAppConfiguration>(appConfig);
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IGdsValidation, GdsValidation>();
             services.AddScoped<IPageService, PageService>();
-            services.AddScoped<ISearchService, SearchService>();
-            services.AddScoped<ICustomSearchIndexClient, CustomSearchIndexClient>(c => new CustomSearchIndexClient(searchServiceName, indexName, apiKey));
+            services.AddScoped<ISearchService, SearchService>(s => searchService);
+            services.AddScoped<ICustomSearchIndexClient, CustomSearchIndexClient>(c => indexClient);
 
             services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(appConfig.Endpoint), appConfig.Key, connectionPolicy, ConsistencyLevel.Strong));
         }

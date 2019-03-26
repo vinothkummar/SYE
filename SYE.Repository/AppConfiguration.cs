@@ -19,6 +19,8 @@
         public string DatabaseId { get; set; }
 
         public string CollectionId { get; set; }
-
+        public string SearchServiceName { get; set; }
+        public string SearchApiKey { get; set; }
+        public string IndexName { get; set; }
     }
 }

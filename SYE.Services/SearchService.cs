@@ -24,11 +24,6 @@ namespace SYE.Services
         private static ICustomSearchIndexClient _indexClientWrapper;
 
         private static long _count;
-
-        public SearchService()//TODO remove this (amend startup.cs)
-        {
-
-        }
         public SearchService(ICustomSearchIndexClient indexClientWrapper)
         {
             _indexClientWrapper = indexClientWrapper;
