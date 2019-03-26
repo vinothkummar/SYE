@@ -32,7 +32,6 @@ namespace SYE.Controllers
                 //log error
                 return StatusCode(500);
             }
-
         }
         [HttpGet]
         [Route("{search},{pageNo}")]
@@ -41,8 +40,6 @@ namespace SYE.Controllers
             try
             {
                 var viewModel = GetViewModel(search, pageNo);
-
-                ViewBag.ShowResults = true;
                 return View("Index", viewModel);
 
             }
@@ -56,10 +53,16 @@ namespace SYE.Controllers
         [HttpPost]
         public IActionResult Index(string search)
         {
-            var viewModel = GetViewModel(search, 1);
-
-            ViewBag.ShowResults = true;
-            return View(viewModel);
+            try
+            {
+                var viewModel = GetViewModel(search, 1);
+                return View(viewModel);
+            }
+            catch (Exception e)
+            {
+                //log error
+                return StatusCode(500);
+            }
         }
         /// <summary>
         /// loads up the view model with paged data when there is a search string and page number
