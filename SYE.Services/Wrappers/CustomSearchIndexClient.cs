@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 
 namespace SYE.Services.Wrappers
 {
+    /// <summary>
+    /// This class wraps the index client for search to allow for testing so this client can be mocked out
+    /// </summary>
     public interface ICustomSearchIndexClient
     {
         //DocumentSearchResult<T> Search<T>(string searchTerm, SearchParameters parameters) where T : class;

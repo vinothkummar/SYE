@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
@@ -99,6 +100,22 @@ namespace SYE.Tests.Services
 
             //assert
             result.Count.Should().Be(1);
+        }
+        [Fact]
+        public void Search_Should_Throw_Exception()
+        {
+            //arrange
+            var mockedIndexClient = new Mock<ICustomSearchIndexClient>();
+
+            mockedIndexClient.Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<SearchParameters>())).Throws(new Exception());
+
+            //act
+            var sut = new SearchService(mockedIndexClient.Object);
+
+            Func<Task> act = async () => { await sut.GetPaginatedResult("searchString", 1, 10); };
+
+            //assert
+            act.Should().Throw<Exception>();
         }
     }
 }

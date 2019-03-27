@@ -26,7 +26,7 @@ namespace SYE.Controllers
         [HttpGet]
         public IActionResult Index(string id = "", string locationName = "")
         {
-            if (HttpContext != null && HttpContext.Session != null) //TODO this isn't working any more!!
+            if (HttpContext != null && HttpContext.Session != null)
             {
                 HttpContext.Session.SetString("LocationId", id);
                 HttpContext.Session.SetString("LocationName", locationName);
