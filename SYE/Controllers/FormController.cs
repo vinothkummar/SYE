@@ -24,28 +24,24 @@ namespace SYE.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string id = "", string locationName="")
+        public IActionResult Index(string id = "", string locationName = "")
         {
-            if (HttpContext != null && HttpContext.Session != null)//TODO this isn't working any more!!
+            if (HttpContext != null && HttpContext.Session != null) //TODO this isn't working any more!!
             {
                 HttpContext.Session.SetString("LocationId", id);
                 HttpContext.Session.SetString("LocationName", locationName);
-
-                //locationName = HttpContext.Session.GetString("LocationName");
             }
 
             try
             {
-                var pageVm = _pageService.GetPageById(id, "Content/form-schema.json", locationName);
-                if (pageVm == null)
-                {
-                    return NotFound();
-                }
-                else
+                PageVM pageVm = GetpageVM(locationName, id);
+
+                if (pageVm != null)
                 {
                     return View(pageVm);
                 }
-                
+
+                return NotFound();
             }
             catch (Exception)
             {
@@ -53,8 +49,6 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(PageVM vm)
@@ -72,28 +66,23 @@ namespace SYE.Controllers
             //Validate the Response against the page json
             _gdsValidate.ValidatePage(pageVm, Request.Form);
 
-                //Get the error count
-                var errorCount = pageVm.Questions.Count(m => m.Validation.IsErrored);
+            //Get the error count
+            var errorCount = pageVm.Questions.Count(m => m.Validation.IsErrored);
 
-                //Build the submission schema
-                //var submission = _gdsValidate.BuildSubmission(pageVm);
-                //Todo: Store the submission in our DB
+            //Build the submission schema
+            //var submission = _gdsValidate.BuildSubmission(pageVm);
+            //Todo: Store the submission in our DB
 
-                //If we have errors return to the View
-                if (errorCount > 0)
-                {
-                    return View(pageVm);
-                }
-
-                //No errors redirect to the Index page with our new PageId
-                var nextPageId = pageVm.NextPageId;
-
-                return RedirectToAction("Index", new { id = nextPageId });
+            //If we have errors return to the View
+            if (errorCount > 0)
+            {
+                return View(pageVm);
             }
 
-            return NotFound();
+            //No errors redirect to the Index page with our new PageId
+            var nextPageId = pageVm.NextPageId;
+            return RedirectToAction("Index", new { id = nextPageId });
         }
-/*
         private FormVM GetFormVM(String locationName)
         {
             FormVM result = null;
@@ -150,6 +139,5 @@ namespace SYE.Controllers
 
             return result;
         }
-        */
     }
 }
