@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SYE.Models;
@@ -8,9 +8,9 @@ using SYE.Services;
 
 namespace SYE.ViewModels
 {
-    public class SearchResultsViewModel : PageModel
+    public class SearchResultsVM    // : PageModel
     {
-        public SearchResultsViewModel()
+        public SearchResultsVM()
         {
             Search = string.Empty;
         }
@@ -26,6 +26,7 @@ namespace SYE.ViewModels
         public bool ShowPrev => CurrentPage > 1;
         public bool ShowNext => CurrentPage < TotalPages;
 
+        [Required(ErrorMessage = "Please enter a search")]
         public string Search { get; set; }
         public List<SearchResult> Data { get; set; }
     }
