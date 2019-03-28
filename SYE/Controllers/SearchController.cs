@@ -9,7 +9,7 @@ namespace SYE.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly int _pageSize = 3;
+        private readonly int _pageSize = 20;
         private readonly ISearchService _searchService;
         private readonly ISessionService _sessionService;
 
