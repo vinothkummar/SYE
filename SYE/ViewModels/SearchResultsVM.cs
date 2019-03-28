@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SYE.Models;
 using SYE.Services;
 
@@ -13,7 +14,7 @@ namespace SYE.ViewModels
         public SearchResultsVM()
         {
             Search = string.Empty;
-            Facets = new List<string>();
+            //Facets = new List<string>();
         }
 
         [BindProperty(SupportsGet = true)]
@@ -30,6 +31,7 @@ namespace SYE.ViewModels
         [Required(ErrorMessage = "Please enter a search")]
         public string Search { get; set; }
         public List<SearchResult> Data { get; set; }
-        public List<String> Facets { get; set; }
+        public IEnumerable<SelectListItem> Facets { get; set; }
+        public IEnumerable<string> TypeOfService { get; set; }
     }
 }

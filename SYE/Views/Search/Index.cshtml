@@ -1,4 +1,5 @@
-﻿@using SYE.Models
+﻿@using Microsoft.Azure.Search.Common
+@using SYE.Models
 @model SYE.ViewModels.SearchResultsVM
 @{
     ViewData["Title"] = "Search";
@@ -69,7 +70,7 @@
             <details class="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
-                        I can't find the service I want to tell you about'
+                        I can't find the service I want to tell you about
                     </span>
                 </summary>
                 <div class="govuk-details__text">
@@ -92,16 +93,57 @@
         </gds-column>
     </gds-row>
 
-    <gds-row>
-
+    <gds-row>        
         <gds-column desktop-size="OneThird" tablet-size="FullWidth">
-            <div class="govuk-form-group">
+            <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                    <select class="govuk-select" style="height: 100%; width: 300px; background-color: #ccc; border: none">
+                        <option>Type of service</option>
+                    </select>
+                </summary>
+                <div class="govuk-details__text">
+                    <div class="govuk-form-group">
+                        <form id="frm_facets" asp-action="SelectFacets" method="post">
+                        @foreach (var facet in Model.Facets)
+                        {
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="facets" checked="@facet.Selected" name="facets" type="checkbox" value="@facet">
+                                <label class="govuk-label govuk-checkboxes__label" for="@facet.Text">
+                                    @facet.Text
+                                </label>
+                            </div>
+                        }
+                        <br />
+                        @*<input type="button" value="Apply" onclick="location.href = '@Url.Action("SelectFacets", "Search", new {facets = Model.Facets})'" />*@
+                        @*<input type="button" value="Apply" onclick="location.href = '@Url.Action("SelectFacets", "Search", new {facets = string.Join(",", Model.Facets.Where(x => x.Selected == false).Select(y => y.Text).ToList())})'"/>*@
+                        <gds-button button-type="Submit"  button-text="Apply"></gds-button>
+                        </form>
+                    </div>
+                </div>
+            </details>
+
+
+            @*<div class="govuk-form-group">
                 <div id="filter-wrapper" style="border: none">
-                    <select class="govuk-select" style="width: 100%; background-color: #ccc; border: none">
-                        <option>Organisations</option>
+                    <select class="govuk-select" style="height: 100%; width: 100%; background-color: #ccc; border: none">
+                        <option>Type of service</option>
+                        @foreach (var facet in Model.Facets)
+                        {
+                            <option aria-checked="True" value="published">@facet.Text</option>
+                        }               
                     </select>
                 </div>
-            </div>
+            </div>*@
+
+            @*<div class="govuk-form-group">
+
+            <div id="filter-wrapper" style="border: none">
+                    <gds-select for="@Model.Facets" option-label="Type of service" class="govuk-select" style="width: 100%; background-color: #ccc; border: none"></gds-select>
+                    @*<select class="govuk-select" style="width: 100%; background-color: #ccc; border: none">
+                        <option>Type of service</option>
+                    </select>
+        </div>
+        </div>*@
         </gds-column>
 
         <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">

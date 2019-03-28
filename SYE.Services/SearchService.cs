@@ -17,14 +17,14 @@ namespace SYE.Services
     {
         Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize = 10);
         long GetCount();
-        List<String> GetFacets();
+        List<string> GetFacets();
     }
     public class SearchService : ISearchService
     {
         private static ICustomSearchIndexClient _indexClientWrapper;
 
         private static long _count;
-        private static List<String> _facets = new List<string>();
+        private static List<string> _facets = new List<string>();
 
         public SearchService(ICustomSearchIndexClient indexClientWrapper)
         {
@@ -56,7 +56,7 @@ namespace SYE.Services
                 IncludeTotalResultCount = true,
                 Skip = ((currentPage - 1) * pageSize),
                 Top = pageSize,
-                //Facets = new List<String> {"inspectionDirectorate"}
+                Facets = new List<String> {"inspectionDirectorate"}
             };
             ;
 

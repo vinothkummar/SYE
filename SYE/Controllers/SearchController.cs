@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
+using SYE.Helpers;
 
 namespace SYE.Controllers
 {
@@ -81,6 +83,21 @@ namespace SYE.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult SelectFacets(IEnumerable<SelectListItem> facets)
+        {
+            try
+            {
+                var viewModel = GetViewModel("", 0);
+                return View("Index", viewModel);
+
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500);
+            }
+        }
 
 
         /// <summary>
@@ -103,6 +120,8 @@ namespace SYE.Controllers
                 returnViewModel.Data = results;
                 returnViewModel.PageSize = _pageSize;
                 returnViewModel.Count = _searchService.GetCount();
+                returnViewModel.Facets = ViewHelper.ConvertList(_searchService.GetFacets());
+                returnViewModel.TypeOfService = _searchService.GetFacets();
                 returnViewModel.CurrentPage = pageNo;
             }
             return returnViewModel;
