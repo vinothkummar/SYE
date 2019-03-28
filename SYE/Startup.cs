@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using SYE.Repository;
 using SYE.Services;
 using GDSHelpers.Models.SubmissionSchema;
@@ -31,8 +31,7 @@ namespace SYE
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
+                options.CheckConsentNeeded = context => false;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -46,8 +45,6 @@ namespace SYE
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            // TODO: Move all sensitive information out of configuration files to a safer place
 
             var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
             var formDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("FormSchemaDb").Get<AppConfiguration<FormVM>>();
@@ -67,11 +64,18 @@ namespace SYE
             services.AddScoped(typeof(IGenericRepository<SubmissionVM>), typeof(GenericRepository<SubmissionVM>));
 
             services.AddScoped<IGdsValidation, GdsValidation>();
+
+            // TODO: Remove PageService, renamed to FormService
             services.AddScoped<IPageService, PageService>();
             services.AddScoped<ISearchService, SearchService>(s => searchService);
             services.AddScoped<ICustomSearchIndexClient, CustomSearchIndexClient>(c => indexClient);
 
+
+            services.AddScoped<IFormService, FormService>();
+            services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISubmissionService, SubmissionService>();
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
