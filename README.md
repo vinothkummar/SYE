@@ -27,6 +27,10 @@
 ### Framework
   * .Net Core 2.2
 
+### NuGet Package Sources
+
+For GDSHelpers add [this](https://pkgs.dev.azure.com/CQCDigital/_packaging/GdsHelpers-Nuget-Feed/nuget/v3/index.json) link to list of NuGet package sources.
+For The GOV.UK Notify client add [this](https://api.bintray.com/nuget/gov-uk-notify/nuget) link to list of NuGet package sources.
 
 
 ### Tools
