@@ -12,6 +12,7 @@ using SYE.Repository;
 using SYE.Services;
 using GDSHelpers.Models.SubmissionSchema;
 using GDSHelpers.Models.FormSchema;
+using SYE.Services.Wrappers;
 
 namespace SYE
 {
@@ -48,7 +49,11 @@ namespace SYE
 
             var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
             var formDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("FormSchemaDb").Get<AppConfiguration<FormVM>>();
+            var searchConfig = Configuration.GetSection("ConnectionStrings").GetSection("SearchDb").Get<SearchConfiguration>();
             var submissionDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
+
+            var indexClient = new CustomSearchIndexClient(searchConfig.SearchServiceName, searchConfig.IndexName, searchConfig.SearchApiKey);
+            var searchService = new SearchService(indexClient);
 
             services.AddSingleton<IAppConfiguration<FormVM>>(formDatabaseConfig);
             services.AddSingleton<IAppConfiguration<SubmissionVM>>(submissionDatabaseConfig);
@@ -63,6 +68,9 @@ namespace SYE
 
             // TODO: Remove PageService, renamed to FormService
             services.AddScoped<IPageService, PageService>();
+            services.AddScoped<ISearchService, SearchService>(s => searchService);
+            services.AddScoped<ICustomSearchIndexClient, CustomSearchIndexClient>(c => indexClient);
+
 
             services.AddScoped<IFormService, FormService>();
             services.AddScoped<ISessionService, SessionService>();
@@ -73,7 +81,7 @@ namespace SYE
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)//, IApplicationLifetime lifetime, IDistributedCache cache)
-        {           
+        {
             if (env.IsDevelopment() || env.IsEnvironment("Local"))
             {
                 app.UseDeveloperExceptionPage();

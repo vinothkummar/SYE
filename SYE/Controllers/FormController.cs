@@ -20,8 +20,17 @@ namespace SYE.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string id = "")
+        public IActionResult Index(string id = "", string locationName = "")
         {
+            var locationName = string.Empty;
+
+            if (HttpContext != null && HttpContext.Session != null)
+            {
+                HttpContext.Session.SetString("LocationId", "1-100000001");
+                HttpContext.Session.SetString("LocationName", "The Thatched House Dental Practise");
+                locationName = HttpContext.Session.GetString("LocationName");
+            }
+
             try
             {
                 var pageVm = _sessionService.GetPageById(id);
@@ -39,8 +48,6 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CurrentPageVM vm)
