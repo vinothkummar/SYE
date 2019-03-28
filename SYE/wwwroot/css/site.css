@@ -40,7 +40,7 @@
 
 
     #search-results .govuk-grid-row {
-        border-bottom: solid 1px #ccc;
+        /*border-bottom: solid 1px #ccc;*/
         margin-bottom: 10px;
         position: relative;
     }
@@ -115,4 +115,11 @@
 .govuk-summary-list__key,
 .govuk-summary-list__value {
     word-break: break-word;
+}
+
+
+.paging-wrapper a {
+    display: block;
+    margin: 0 -15px;
+    padding: 15px;
 }

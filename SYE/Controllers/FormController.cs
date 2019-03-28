@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using GDSHelpers;
-using GDSHelpers.Models.FormSchema;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SYE.Models;
 using SYE.Services;
@@ -20,19 +20,12 @@ namespace SYE.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string id = "", string locationName = "")
+        public IActionResult Index(string id = "")
         {
-            var locationName = string.Empty;
-
-            if (HttpContext != null && HttpContext.Session != null)
-            {
-                HttpContext.Session.SetString("LocationId", "1-100000001");
-                HttpContext.Session.SetString("LocationName", "The Thatched House Dental Practise");
-                locationName = HttpContext.Session.GetString("LocationName");
-            }
-
             try
             {
+                ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
+
                 var pageVm = _sessionService.GetPageById(id);
 
                 if (pageVm != null)
@@ -48,12 +41,16 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CurrentPageVM vm)
         {
             try
             {
+                ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
+
                 //Get the current PageVm from Session
                 var pageVm = _sessionService.GetPageById(vm.PageId);
 

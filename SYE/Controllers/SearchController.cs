@@ -1,33 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
-using SYE.Models;
-using SYE.Services;
 
 namespace SYE.Controllers
 {
-    [Route("[controller]")]
     public class SearchController : Controller
     {
-        private readonly int _pageSize = 10;
+        private readonly int _pageSize = 3;
         private readonly ISearchService _searchService;
-        private readonly IFormService _formService;
         private readonly ISessionService _sessionService;
 
-        public SearchController(ISearchService searchService, IFormService formService, ISessionService sessionService)
+        public SearchController(ISearchService searchService, ISessionService sessionService)
         {
             _searchService = searchService;
-            _formService = formService;
             _sessionService = sessionService;
         }
 
+
         [HttpGet]
-        [Route("")]
-        public IActionResult Index([FromQuery] string search, [FromQuery] int pageNo)
+        public IActionResult Index(string search, int pageNo = 1)
         {
             try
             {
@@ -36,14 +30,15 @@ namespace SYE.Controllers
                 ViewBag.ShowResults = true;
                 return View(viewModel);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 //log error
                 return StatusCode(500);
             }
         }
+
+
         [HttpGet]
-        [Route("{search},{pageNo}")]
         public IActionResult GetPaginateResult(string search, int pageNo)
         {
             try
@@ -52,30 +47,42 @@ namespace SYE.Controllers
                 return View("Index", viewModel);
 
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 //log error
                 return StatusCode(500);
             }
         }
 
+
         [HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
         {
-            //Store the location we are giving feedback about
-            _sessionService.SetUserSessionVars(vm);
-            
-            //Set up our replacement text
-            var replacements = new Dictionary<string, string>
+            try
             {
-                {"!!location_name!!", vm.LocationName}
-            };
+                //Store the location we are giving feedback about
+                _sessionService.SetUserSessionVars(vm);
 
-            //Load the Form into Session
-            _sessionService.LoadLatestFormIntoSession(replacements);
-           
-            return RedirectToAction("Index", "Form");
+                //Set up our replacement text
+                var replacements = new Dictionary<string, string>
+                {
+                    {"!!location_name!!", vm.LocationName}
+                };
+
+                //Load the Form into Session
+                _sessionService.LoadLatestFormIntoSession(replacements);
+
+                return RedirectToAction("Index", "Form");
+            }
+            catch(Exception ex)
+            {
+                //log error
+                return NotFound();
+            }
         }
+
+
+
         /// <summary>
         /// loads up the view model with paged data when there is a search string and page number
         /// otherwise it just returns a new view model
@@ -83,9 +90,9 @@ namespace SYE.Controllers
         /// <param name="search"></param>
         /// <param name="pageNo"></param>
         /// <returns></returns>
-        private SearchResultsViewModel GetViewModel(string search, int pageNo)
+        private SearchResultsVM GetViewModel(string search, int pageNo)
         {
-            var returnViewModel = new SearchResultsViewModel();
+            var returnViewModel = new SearchResultsVM();
 
             if (!string.IsNullOrEmpty(search) && pageNo > 0)
             {

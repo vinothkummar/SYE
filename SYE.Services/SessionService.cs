@@ -72,9 +72,9 @@ namespace SYE.Services
         public void SetUserSessionVars(UserSessionVM vm)
         {
             var context = _context.HttpContext;
-            context.Session.SetString("ProviderId", vm.ProviderId);
-            context.Session.SetString("LocationId", vm.LocationId);
-            context.Session.SetString("LocationName", vm.LocationName);
+            context.Session.SetString("ProviderId", vm.ProviderId ?? "");
+            context.Session.SetString("LocationId", vm.LocationId ?? "");
+            context.Session.SetString("LocationName", vm.LocationName ?? "");
         }
 
         public UserSessionVM GetUserSession()
