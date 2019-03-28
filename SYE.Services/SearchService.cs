@@ -17,13 +17,15 @@ namespace SYE.Services
     {
         Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize = 10);
         long GetCount();
+        List<String> GetFacets();
     }
     public class SearchService : ISearchService
     {
-        //private static SearchServiceClient _searchClient;
         private static ICustomSearchIndexClient _indexClientWrapper;
 
         private static long _count;
+        private static List<String> _facets = new List<string>();
+
         public SearchService(ICustomSearchIndexClient indexClientWrapper)
         {
             _indexClientWrapper = indexClientWrapper;
@@ -40,13 +42,23 @@ namespace SYE.Services
             return _count;
         }
 
+        public List<string> GetFacets()
+        {
+            return _facets;
+        }
+
+
         #region Private Methods
         private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize)
         {
             var sp = new SearchParameters
             {
-                IncludeTotalResultCount = true, Skip = ((currentPage - 1) * pageSize), Top = pageSize
+                IncludeTotalResultCount = true,
+                Skip = ((currentPage - 1) * pageSize),
+                Top = pageSize,
+                //Facets = new List<String> {"inspectionDirectorate"}
             };
+            ;
 
             var searchResult = await _indexClientWrapper.SearchAsync(search, sp);
 
@@ -54,7 +66,16 @@ namespace SYE.Services
             {
                 _count = (long )searchResult.Count;
             }
-            
+
+            if (searchResult.Facets != null && searchResult.Facets.Count == 1)
+            {
+                var facets = (searchResult.Facets).ToList()[0].Value;
+                foreach (var facet in facets)
+                {
+                    _facets.Add(facet.Value.ToString());
+                }        
+            }
+
             var results = searchResult.Results.Select(m => m.Document).ToList();
      
             return SearchHelper.ConvertResults(results);

@@ -9,7 +9,7 @@ namespace SYE.Controllers
     [Route("[controller]")]
     public class SearchController : Controller
     {
-        private readonly int _pageSize = 10;
+        private readonly int _pageSize = 6                                                                                                ;
         private readonly ISearchService _searchService;
 
         public SearchController(ISearchService searchService)
@@ -84,6 +84,7 @@ namespace SYE.Controllers
                 returnViewModel.Data = results;
                 returnViewModel.PageSize = _pageSize;
                 returnViewModel.Count = _searchService.GetCount();
+                returnViewModel.Facets = _searchService.GetFacets();
                 returnViewModel.CurrentPage = pageNo;
             }
             return returnViewModel;

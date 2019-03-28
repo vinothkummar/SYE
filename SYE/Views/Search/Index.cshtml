@@ -69,7 +69,7 @@
             <details class="govuk-details">
                 <summary class="govuk-details__summary">
                     <span class="govuk-details__summary-text">
-                        I can't find the service I want to tell you about'
+                        I can't find the service I want to tell you about
                     </span>
                 </summary>
                 <div class="govuk-details__text">
@@ -131,19 +131,22 @@
                         <div class="govuk-body">
                             <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
                                 <p class="govuk-body">
+                                    <br />
                                     @if (Model.ShowPrev)
                                     {
-                                        <a asp-page="/search" asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" class="govuk-link">← Previous Page</a>
+                                        <a asp-page="/search" asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" style="font-weight: bold" class="govuk-link">→ Previous Page</a>
                                     }
                                     @if (Model.ShowNext)
                                     {
-                                        <a asp-page="/search" asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" class="govuk-link">Next Page →</a>
+                                        <a asp-page="/search" asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" style="font-weight: bold" class="govuk-link">→ Next Page</a>
                                     }
+                                    <br/>
+                                    <label class="govuk-link">@Model.CurrentPage of @Model.TotalPages</label>
                                 </p>
                             </gds-column>
-                            <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+                            @*<gds-column desktop-size="OneThird" tablet-size="FullWidth">                                
                                 <label class="govuk-link">@Model.CurrentPage of @Model.TotalPages</label>
-                            </gds-column>
+                            </gds-column>*@
                         </div>
                     }
                 </div>

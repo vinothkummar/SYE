@@ -13,6 +13,7 @@ namespace SYE.ViewModels
         public SearchResultsViewModel()
         {
             Search = string.Empty;
+            Facets = new List<string>();
         }
 
         [BindProperty(SupportsGet = true)]
@@ -28,5 +29,6 @@ namespace SYE.ViewModels
 
         public string Search { get; set; }
         public List<SearchResult> Data { get; set; }
+        public List<String> Facets { get; set; }
     }
 }
