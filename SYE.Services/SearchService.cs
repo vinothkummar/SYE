@@ -15,7 +15,7 @@ namespace SYE.Services
 {
     public interface ISearchService
     {
-        Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize = 10);
+        Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize = 10, string refinementFacets = "");
         long GetCount();
         List<string> GetFacets();
     }
@@ -31,9 +31,9 @@ namespace SYE.Services
             _indexClientWrapper = indexClientWrapper;
         }    
 
-        public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize)
+        public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets)
         {
-            var data = await GetDataAsync(search, currentPage, pageSize);
+            var data = await GetDataAsync(search, currentPage, pageSize, refinementFacets);
             return data;
         }
 
@@ -49,7 +49,7 @@ namespace SYE.Services
 
 
         #region Private Methods
-        private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize)
+        private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize, string refinementFacets)
         {
             var sp = new SearchParameters
             {
@@ -58,7 +58,11 @@ namespace SYE.Services
                 Top = pageSize,
                 Facets = new List<String> {"inspectionDirectorate"}
             };
-            ;
+
+            if (!string.IsNullOrWhiteSpace(refinementFacets))
+            {
+                sp.Filter = BuildFilter(refinementFacets);
+            }
 
             var searchResult = await _indexClientWrapper.SearchAsync(search, sp);
 
@@ -72,7 +76,11 @@ namespace SYE.Services
                 var facets = (searchResult.Facets).ToList()[0].Value;
                 foreach (var facet in facets)
                 {
-                    _facets.Add(facet.Value.ToString());
+                    var facetToAdd = facet.Value.ToString();
+                    if (! _facets.Contains(facetToAdd))
+                    {
+                        _facets.Add(facetToAdd);
+                    }                    
                 }        
             }
 
@@ -81,6 +89,26 @@ namespace SYE.Services
             return SearchHelper.ConvertResults(results);
         }
 
+        private string BuildFilter(string refinementFacets)
+        {
+            string filter = null;
+            var facets = refinementFacets.Split(',');
+
+            for (var index = 0; index < facets.Length; index++)
+            {
+                var facet = facets[index];
+                if (index == 0)
+                {
+                    filter = "inspectionDirectorate eq '" + facet + "'";
+                }
+                else
+                {
+                    filter += " or inspectionDirectorate eq '" + facet + "'";
+                }
+            }
+
+            return filter;
+        }
         #endregion
 
         #region commented out code probably use later

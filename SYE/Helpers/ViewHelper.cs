@@ -12,10 +12,10 @@ namespace SYE.Helpers
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static IEnumerable<SelectListItem> ConvertList(IEnumerable<string> source)
+        public static List<SelectListItem> ConvertList(IEnumerable<string> source)
         {
             var indexer = 0;
-            var returnList = source.Select(x => new SelectListItem {Text = x, Selected = false, Value = indexer++.ToString() });
+            var returnList = source.Select(x => new SelectListItem {Text = x, Selected = false, Value = indexer++.ToString() }).ToList();
 
             return returnList;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SYE.Models;
@@ -21,13 +22,22 @@ namespace SYE.Controllers
             _sessionService = sessionService;
         }
 
-
         [HttpGet]
-        public IActionResult Index(string search, int pageNo = 1)
+        public IActionResult Index(string search, int pageNo = 1, List<SelectListItem> facets = null, string selectedFacets="")
         {
             try
             {
-                var viewModel = GetViewModel(search, pageNo);
+                var refinementFacets = string.Empty;
+                if (!string.IsNullOrEmpty(selectedFacets))
+                {
+                    refinementFacets = selectedFacets;
+                }
+                else if (facets != null && facets.Count > 1)
+                {
+                    refinementFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());                    
+                }
+
+                var viewModel = GetViewModel(search, pageNo, refinementFacets);
 
                 ViewBag.ShowResults = true;
                 return View(viewModel);
@@ -38,24 +48,6 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
-
-
-        [HttpGet]
-        public IActionResult GetPaginateResult(string search, int pageNo)
-        {
-            try
-            {
-                var viewModel = GetViewModel(search, pageNo);
-                return View("Index", viewModel);
-
-            }
-            catch (Exception ex)
-            {
-                //log error
-                return StatusCode(500);
-            }
-        }
-
 
         [HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
@@ -83,12 +75,17 @@ namespace SYE.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult SelectFacets(IEnumerable<SelectListItem> facets)
+        [HttpGet]
+        public IActionResult SelectFacets(string search, List<SelectListItem> facets)
         {
             try
             {
-                var viewModel = GetViewModel("", 0);
+                var refinementFacets = string.Empty;
+                if (facets != null && facets.Count > 1)
+                {
+                    refinementFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());
+                }
+                var viewModel = GetViewModel(search, 1, refinementFacets);
                 return View("Index", viewModel);
 
             }
@@ -99,31 +96,38 @@ namespace SYE.Controllers
             }
         }
 
-
         /// <summary>
         /// loads up the view model with paged data when there is a search string and page number
         /// otherwise it just returns a new view model
         /// </summary>
         /// <param name="search"></param>
         /// <param name="pageNo"></param>
+        /// <param name="refinementFacets">comma separated list of selected facets to filter on</param>
         /// <returns></returns>
-        private SearchResultsVM GetViewModel(string search, int pageNo)
+        private SearchResultsVM GetViewModel(string search, int pageNo, string refinementFacets = "")
         {
             var returnViewModel = new SearchResultsVM();
 
             if (!string.IsNullOrEmpty(search) && pageNo > 0)
             {
-
-                var results = _searchService.GetPaginatedResult(search, pageNo, _pageSize).Result;
+                returnViewModel.Data = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets).Result;
                 returnViewModel.ShowResults = true;
-                returnViewModel.Search = search;
-                returnViewModel.Data = results;
+                returnViewModel.Search = search;                
                 returnViewModel.PageSize = _pageSize;
                 returnViewModel.Count = _searchService.GetCount();
                 returnViewModel.Facets = ViewHelper.ConvertList(_searchService.GetFacets());
                 returnViewModel.TypeOfService = _searchService.GetFacets();
                 returnViewModel.CurrentPage = pageNo;
+
+                if (returnViewModel.Facets != null && (! string.IsNullOrEmpty(refinementFacets)))
+                {
+                    foreach (var facet in returnViewModel.Facets)
+                    {
+                        facet.Selected = (refinementFacets.Contains(facet.Text));
+                    }
+                }
             }
+
             return returnViewModel;
         }
     }

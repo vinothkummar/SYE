@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,7 +32,12 @@ namespace SYE.ViewModels
         [Required(ErrorMessage = "Please enter a search")]
         public string Search { get; set; }
         public List<SearchResult> Data { get; set; }
-        public IEnumerable<SelectListItem> Facets { get; set; }
+        public List<SelectListItem> Facets { get; set; }
+
+        public string SelectedFacets
+        {
+            get { return string.Join(',', this.Facets.Where(x => x.Selected).Select(x => x.Text).ToList()); }
+        }
         public IEnumerable<string> TypeOfService { get; set; }
     }
 }
