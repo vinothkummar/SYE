@@ -1,5 +1,4 @@
-﻿using Microsoft.Azure.Documents;
-
+﻿
 namespace SYE.Repository
 {
     public interface ISearchConfiguration
@@ -17,7 +16,6 @@ namespace SYE.Repository
         string CollectionId { get; set; }
     }
 
-
     public class AppConfiguration<T> : IAppConfiguration<T> where T : class
     {
         public string Endpoint { get; set; }
@@ -25,19 +23,11 @@ namespace SYE.Repository
         public string DatabaseId { get; set; }
         public string CollectionId { get; set; }
     }
+
     public class SearchConfiguration : ISearchConfiguration
     {
         public string SearchServiceName { get; set; }
         public string SearchApiKey { get; set; }
         public string IndexName { get; set; }
-    }
-    public interface ICosmosDocumentClient<T> where T : class
-    {
-        IDocumentClient Client { get; set; }
-    }
-
-    public class CosmosDocumentClient<T> : ICosmosDocumentClient<T> where T : class
-    {
-        public IDocumentClient Client { get; set; }
     }
 }
