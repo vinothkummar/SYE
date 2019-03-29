@@ -10,6 +10,7 @@ namespace SYE.Services
         Task<FormVM> GetLatestForm();
         Task<FormVM> GetFormById(string id);
         Task<FormVM> FindByName(string formName);
+        Task<FormVM> FindByVersion(string version);
     }
 
     public class FormService : IFormService
@@ -34,6 +35,11 @@ namespace SYE.Services
         public async Task<FormVM> FindByName(string formName)
         {
             return _repo.FindByAsync(m => m.FormName == formName).Result.FirstOrDefault();
+        }
+
+        public async Task<FormVM> FindByVersion(string version)
+        {
+            return _repo.FindByAsync(m => m.Version == version).Result.FirstOrDefault();
         }
 
     }

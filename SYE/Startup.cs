@@ -10,8 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SYE.Repository;
 using SYE.Services;
-using GDSHelpers.Models.SubmissionSchema;
 using GDSHelpers.Models.FormSchema;
+using SYE.Models.SubmissionSchema;
 using SYE.Services.Wrappers;
 
 namespace SYE
