@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using GDSHelpers.Models.SubmissionSchema;
 using Microsoft.Azure.Documents;
+using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 
 namespace SYE.Services

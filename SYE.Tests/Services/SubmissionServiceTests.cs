@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using FluentAssertions;
-using GDSHelpers.Models.SubmissionSchema;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Moq;
+using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
 using Xunit;

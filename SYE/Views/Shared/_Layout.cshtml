@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+<!DOCTYPE html>
 <html lang="en-GB">
 <head>
     <meta charset="utf-8" />
@@ -6,9 +8,9 @@
     <meta name="theme-color" content="#5f2861" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Share Your Experience - Care Quality Commission</title>
-    
-    <link rel="shortcut icon" href="~/assets/favicon.ico"  type="image/vnd.microsoft.icon" />
+    <title>@Configuration.GetSection("ApplicationSettings")["AppName"] - Care Quality Commission</title>
+
+    <link rel="shortcut icon" href="~/assets/favicon.ico" type="image/vnd.microsoft.icon" />
 
     <link href="~/css/govuk-frontend-2.4.1.min.css" rel="stylesheet" />
 
@@ -31,9 +33,9 @@
         <gds-header-container>
 
             <gds-logo url="/" url-title="" image-url="/images/cqc-logo.png" alt-text="Share Your Experience"></gds-logo>
-            
+
             <gds-header-content>
-                
+
             </gds-header-content>
 
         </gds-header-container>
