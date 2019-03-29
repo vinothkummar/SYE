@@ -47,7 +47,7 @@ namespace SYE.Repository
             {
                 var endPoint = UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId);
 
-                IQueryable<T> query = _client.CreateDocumentQuery<T>(endPoint, new FeedOptions { MaxItemCount = 1 } );
+                IQueryable<T> query = _client.CreateDocumentQuery<T>(endPoint, new FeedOptions { MaxItemCount = 1, EnableCrossPartitionQuery = true } );
                 if (predicate != null)
                 {
                     query = query.Where(predicate);
