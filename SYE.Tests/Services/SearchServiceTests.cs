@@ -50,7 +50,7 @@ namespace SYE.Tests.Services
 
             //act
             var sut = new SearchService(mockedIndexClient.Object);
-            var result = sut.GetPaginatedResult("searchString", 1, 10).Result[0];
+            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty).Result[0];
 
             //assert
             result.Id.Should().Be(expectedResult.Id);
@@ -96,7 +96,7 @@ namespace SYE.Tests.Services
 
             //act
             var sut = new SearchService(mockedIndexClient.Object);
-            var result = sut.GetPaginatedResult("searchString", 1, 10).Result;
+            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty).Result;
 
             //assert
             result.Count.Should().Be(1);
@@ -112,7 +112,7 @@ namespace SYE.Tests.Services
             //act
             var sut = new SearchService(mockedIndexClient.Object);
 
-            Func<Task> act = async () => { await sut.GetPaginatedResult("searchString", 1, 10); };
+            Func<Task> act = async () => { await sut.GetPaginatedResult("searchString", 1, 10, string.Empty); };
 
             //assert
             act.Should().Throw<Exception>();
