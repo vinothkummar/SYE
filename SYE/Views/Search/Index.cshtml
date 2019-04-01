@@ -97,32 +97,35 @@
     <gds-row>        
         <gds-column desktop-size="OneThird" tablet-size="FullWidth">
             <details class="govuk-details">
-                <summary class="govuk-details__summary">
-                    <select class="govuk-select" style="height: 100%; width: 300px; background-color: #ccc; border: none">
-                        <option>Type of service</option>
-                    </select>
-                </summary>
-                <div class="govuk-details__text">
-                    <div class="govuk-form-group">
-                        <form id="frm_facets" asp-action="Index" method="get">
-                            @for (var index = 0; index < Model.Facets.Count; index++)
-                            {
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
-                                <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Text">
-                                    @Model.Facets[index].Text
-                                </label>
-                                <input asp-for="@Model.Facets[index].Selected" type="hidden" />
-                                <input asp-for="@Model.Facets[index].Text" type="hidden" />
-                                <input asp-for="@Model.Facets[index].Value" type="hidden" />
-                            </div>
-                            }
-                            <input type="hidden" asp-for="Search"/>
-                            <br />
-                            <gds-button button-type="Submit" button-text="Apply"></gds-button>
-                        </form>
+                @if (Model.Facets.Count > 0)
+                {
+                    <summary class="govuk-details__summary"  style="border-style: none">
+                        <select class="govuk-select" style="height: 100%; width: 300px; background-color: #ccc; border: none">
+                            <option>Type of service</option>
+                        </select>
+                    </summary>
+                    <div class="govuk-details__text">
+                        <div class="govuk-form-group">
+                            <form id="frm_facets" asp-action="Index" method="get">
+                                @for (var index = 0; index < Model.Facets.Count; index++)
+                                {
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox" >
+                                        <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Text" style="font-size: 18px">
+                                            @Model.Facets[index].Text
+                                        </label>
+                                        <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
+                                        <input asp-for="@Model.Facets[index].Text" type="hidden" />
+                                        <input asp-for="@Model.Facets[index].Value" type="hidden" />
+                                    </div>
+                                }
+                                <input type="hidden" asp-for="Search"/>
+                                <br />
+                                <gds-button button-type="Submit" button-text="Apply"></gds-button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                }
             </details>
         </gds-column>
 
@@ -175,10 +178,10 @@
                             <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
                                 @if (Model.ShowPrev)
                                 {
-                                <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
-                                    ← Previous Page<br />
-                                    @(Model.CurrentPage - 1) of @Model.TotalPages
-                                </a>
+                                    <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
+                                        <img style="height: 15px; vertical-align: middle; background: transparent" src="images/arrow-left.png"><b> Previous Page</b><br/>
+                                        @(Model.CurrentPage - 1) of @Model.TotalPages
+                                    </a>
                                 }
                             </gds-column>
                         </gds-row>
@@ -187,10 +190,10 @@
                             <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
                                 @if (Model.ShowNext)
                                 {
-                                    <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
-                                        Next Page →<br />
-                                        @(Model.CurrentPage + 1) of @Model.TotalPages
-                                    </a>
+                                <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
+                                    <img style="height: 15px; vertical-align: middle; background: transparent" src="images/arrow-right.png"><b> Next Page</b><br />
+                                @(Model.CurrentPage + 1) of @Model.TotalPages
+                                </a>
                                 }
                             </gds-column>
                         </gds-row>

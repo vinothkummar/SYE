@@ -27,6 +27,8 @@ namespace SYE.Controllers
         {
             try
             {
+                var newSearch = SetNewSearch(search);
+
                 var refinementFacets = string.Empty;
                 if (!string.IsNullOrEmpty(selectedFacets))
                 {
@@ -37,7 +39,7 @@ namespace SYE.Controllers
                     refinementFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());                    
                 }
 
-                var viewModel = GetViewModel(search, pageNo, refinementFacets);
+                var viewModel = GetViewModel(search, pageNo, refinementFacets, newSearch);
 
                 ViewBag.ShowResults = true;
                 return View(viewModel);
@@ -85,7 +87,7 @@ namespace SYE.Controllers
                 {
                     refinementFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());
                 }
-                var viewModel = GetViewModel(search, 1, refinementFacets);
+                var viewModel = GetViewModel(search, 1, refinementFacets, false);
                 return View("Index", viewModel);
 
             }
@@ -104,13 +106,13 @@ namespace SYE.Controllers
         /// <param name="pageNo"></param>
         /// <param name="refinementFacets">comma separated list of selected facets to filter on</param>
         /// <returns></returns>
-        private SearchResultsVM GetViewModel(string search, int pageNo, string refinementFacets = "")
+        private SearchResultsVM GetViewModel(string search, int pageNo, string refinementFacets, bool newSearch)
         {
             var returnViewModel = new SearchResultsVM();
 
             if (!string.IsNullOrEmpty(search) && pageNo > 0)
             {
-                returnViewModel.Data = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets).Result;
+                returnViewModel.Data = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets, newSearch).Result;
                 returnViewModel.ShowResults = true;
                 returnViewModel.Search = search;                
                 returnViewModel.PageSize = _pageSize;
@@ -119,7 +121,7 @@ namespace SYE.Controllers
                 returnViewModel.TypeOfService = _searchService.GetFacets();
                 returnViewModel.CurrentPage = pageNo;
 
-                if (returnViewModel.Facets != null && (! string.IsNullOrEmpty(refinementFacets)))
+                if (returnViewModel.Facets != null && (! string.IsNullOrEmpty(refinementFacets)) && ! newSearch)
                 {
                     foreach (var facet in returnViewModel.Facets)
                     {
@@ -129,6 +131,24 @@ namespace SYE.Controllers
             }
 
             return returnViewModel;
+        }
+        /// <summary>
+        /// saves the search and checks saved search to see if it is a new search       
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        private bool SetNewSearch(string search)
+        {
+            bool newSearch = true;
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                var previousSearch = _sessionService.GetUserSearch();
+                newSearch = !(search.Equals(previousSearch, StringComparison.CurrentCultureIgnoreCase));
+                _sessionService.SaveUserSearch(search);
+            }
+
+            return newSearch;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using SYE.Models;
@@ -15,7 +16,7 @@ namespace SYE.Services
 {
     public interface ISearchService
     {
-        Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize = 10, string refinementFacets = "");
+        Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch);
         long GetCount();
         List<string> GetFacets();
     }
@@ -25,15 +26,16 @@ namespace SYE.Services
 
         private static long _count;
         private static List<string> _facets = new List<string>();
+        private static string _search = string.Empty;
 
         public SearchService(ICustomSearchIndexClient indexClientWrapper)
         {
             _indexClientWrapper = indexClientWrapper;
         }    
 
-        public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets)
+        public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
         {
-            var data = await GetDataAsync(search, currentPage, pageSize, refinementFacets);
+            var data = await GetDataAsync(search, currentPage, pageSize, refinementFacets, newSearch);
             return data;
         }
 
@@ -49,8 +51,17 @@ namespace SYE.Services
 
 
         #region Private Methods
-        private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize, string refinementFacets)
-        {
+        private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
+        {            
+            if (newSearch)
+            {
+                //clear out all facets for previous search
+                _facets = new List<string>();
+                refinementFacets = string.Empty;
+            }
+
+            _search = search;
+
             var sp = new SearchParameters
             {
                 IncludeTotalResultCount = true,
@@ -81,7 +92,7 @@ namespace SYE.Services
                     {
                         _facets.Add(facetToAdd);
                     }                    
-                }        
+                }
             }
 
             var results = searchResult.Results.Select(m => m.Document).ToList();
