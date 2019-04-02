@@ -54,7 +54,13 @@ namespace SYE.Services
         
         public FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements)
         {
-            var form = _formService.FindByName("Share Your Experience").Result;
+            var context = _context.HttpContext;
+            var version = context.Session.GetString("FormVersion");
+
+            var form = string.IsNullOrEmpty(version) ? 
+                _formService.GetLatestForm().Result : 
+                _formService.FindByVersion(version).Result;
+
             var json = JsonConvert.SerializeObject(form);
 
             if (replacements != null && replacements.Count > 0)
