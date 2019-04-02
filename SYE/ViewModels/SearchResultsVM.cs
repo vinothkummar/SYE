@@ -15,7 +15,6 @@ namespace SYE.ViewModels
         public SearchResultsVM()
         {
             Search = string.Empty;
-            //Facets = new List<string>();
         }
 
         [BindProperty(SupportsGet = true)]
@@ -28,6 +27,7 @@ namespace SYE.ViewModels
         public int TotalPages => (int)Math.Ceiling(decimal.Divide(Count, PageSize));
         public bool ShowPrev => CurrentPage > 1;
         public bool ShowNext => CurrentPage < TotalPages;
+        public bool ShowIncompletedSearchMessage { get; set; }
 
         [Required(ErrorMessage = "Please enter a search")]
         public string Search { get; set; }
@@ -36,7 +36,14 @@ namespace SYE.ViewModels
 
         public string SelectedFacets
         {
-            get { return string.Join(',', this.Facets.Where(x => x.Selected).Select(x => x.Text).ToList()); }
+            get
+            {
+                if (this.Facets == null)
+                {
+                    return null;
+                }
+                return string.Join(',', this.Facets.Where(x => x.Selected).Select(x => x.Text).ToList());
+            }
         }
         public IEnumerable<string> TypeOfService { get; set; }
     }

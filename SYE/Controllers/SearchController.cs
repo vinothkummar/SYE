@@ -23,10 +23,29 @@ namespace SYE.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string search, int pageNo = 1, List<SelectListItem> facets = null, string selectedFacets="")
+        public IActionResult Index(bool isError)
         {
             try
             {
+                return View(new SearchResultsVM{ShowIncompletedSearchMessage = isError});
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult SearchResults(string search, int pageNo = 1, List<SelectListItem> facets = null, string selectedFacets="")
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(search))
+                {
+                    //reset search
+                    return RedirectToAction("Index", new {isError = true});
+                }
                 var newSearch = SetNewSearch(search);
 
                 var refinementFacets = string.Empty;
@@ -41,7 +60,6 @@ namespace SYE.Controllers
 
                 var viewModel = GetViewModel(search, pageNo, refinementFacets, newSearch);
 
-                ViewBag.ShowResults = true;
                 return View(viewModel);
             }
             catch (Exception ex)
@@ -100,7 +118,7 @@ namespace SYE.Controllers
 
         /// <summary>
         /// loads up the view model with paged data when there is a search string and page number
-        /// otherwise it just returns a new view model
+        /// otherwise it just returns a new view model with a show error flag
         /// </summary>
         /// <param name="search"></param>
         /// <param name="pageNo"></param>
@@ -149,6 +167,11 @@ namespace SYE.Controllers
             }
 
             return newSearch;
+        }
+        private string GetPreviousSearch()
+        {
+            var previousSearch = _sessionService.GetUserSearch();
+            return previousSearch;
         }
     }
 }

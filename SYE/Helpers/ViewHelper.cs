@@ -14,6 +14,10 @@ namespace SYE.Helpers
         /// <returns></returns>
         public static List<SelectListItem> ConvertList(IEnumerable<string> source)
         {
+            if (source == null)
+            {
+                return null;
+            }
             var indexer = 0;
             var returnList = source.Select(x => new SelectListItem {Text = x, Selected = false, Value = indexer++.ToString() }).ToList();
 

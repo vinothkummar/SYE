@@ -72,7 +72,7 @@ namespace SYE.Services
 
             if (!string.IsNullOrWhiteSpace(refinementFacets))
             {
-                sp.Filter = BuildFilter(refinementFacets);
+                sp.Filter = SearchHelper.BuildFilter(refinementFacets);
             }
 
             var searchResult = await _indexClientWrapper.SearchAsync(search, sp);
@@ -98,27 +98,6 @@ namespace SYE.Services
             var results = searchResult.Results.Select(m => m.Document).ToList();
      
             return SearchHelper.ConvertResults(results);
-        }
-
-        private string BuildFilter(string refinementFacets)
-        {
-            string filter = null;
-            var facets = refinementFacets.Split(',');
-
-            for (var index = 0; index < facets.Length; index++)
-            {
-                var facet = facets[index];
-                if (index == 0)
-                {
-                    filter = "inspectionDirectorate eq '" + facet + "'";
-                }
-                else
-                {
-                    filter += " or inspectionDirectorate eq '" + facet + "'";
-                }
-            }
-
-            return filter;
         }
         #endregion
 

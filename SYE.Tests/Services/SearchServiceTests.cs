@@ -50,7 +50,7 @@ namespace SYE.Tests.Services
 
             //act
             var sut = new SearchService(mockedIndexClient.Object);
-            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty).Result[0];
+            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true).Result[0];
 
             //assert
             result.Id.Should().Be(expectedResult.Id);
@@ -96,7 +96,7 @@ namespace SYE.Tests.Services
 
             //act
             var sut = new SearchService(mockedIndexClient.Object);
-            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty).Result;
+            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true).Result;
 
             //assert
             result.Count.Should().Be(1);
@@ -112,10 +112,95 @@ namespace SYE.Tests.Services
             //act
             var sut = new SearchService(mockedIndexClient.Object);
 
-            Func<Task> act = async () => { await sut.GetPaginatedResult("searchString", 1, 10, string.Empty); };
+            Func<Task> act = async () => { await sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true); };
 
             //assert
             act.Should().Throw<Exception>();
+        }
+        [Fact]
+        public void GetCount_Should_Return_One()
+        {
+            //arrange
+            var setupResult = new Models.SearchResult
+            {
+                Id = "testid",
+                Name = "test location",
+                Address = "test address",
+                PostCode = "12345",
+                Town = "test town",
+                Region = "test region",
+                Category = "test category"
+            };
+            var doc = new Document
+            {
+                {"rid", setupResult.Id},
+                {"locationName", setupResult.Name},
+                {"postalAddressLine1", setupResult.Address},
+                {"postalAddressTownCity", setupResult.Town},
+                {"postalCode", setupResult.PostCode},
+                {"region", setupResult.Region},
+                {"inspectionDirectorate", "test category"}
+            };
+
+            var mockedIndexClient = new Mock<ICustomSearchIndexClient>();
+            var documentResult = new DocumentSearchResult
+            {
+                Count = 1,
+                Results = new List<SearchResult> { new SearchResult { Document = doc } }
+            };
+
+            mockedIndexClient.Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<SearchParameters>())).ReturnsAsync(documentResult);
+
+            //act
+            var sut = new SearchService(mockedIndexClient.Object);
+            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true).Result;
+
+            //assert
+            sut.GetCount().Should().Be(1);
+        }
+        [Fact]
+        public void GetFacets_Should_Return_Facets()
+        {
+            //arrange
+            var setupResult = new Models.SearchResult
+            {
+                Id = "testid",
+                Name = "test location",
+                Address = "test address",
+                PostCode = "12345",
+                Town = "test town",
+                Region = "test region",
+                Category = "test category"
+            };
+            var doc = new Document
+            {
+                {"rid", setupResult.Id},
+                {"locationName", setupResult.Name},
+                {"postalAddressLine1", setupResult.Address},
+                {"postalAddressTownCity", setupResult.Town},
+                {"postalCode", setupResult.PostCode},
+                {"region", setupResult.Region},
+                {"inspectionDirectorate", "test category"}
+            };
+
+            var mockedIndexClient = new Mock<ICustomSearchIndexClient>();
+            var documentResult = new DocumentSearchResult
+            {
+                Count = 1,
+                Facets = new FacetResults(),
+                Results = new List<SearchResult> { new SearchResult { Document = doc } }
+
+            };
+            documentResult.Facets.Add("key", new List<FacetResult>{new FacetResult{Value = "value"}});
+
+            mockedIndexClient.Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<SearchParameters>())).ReturnsAsync(documentResult);
+
+            //act
+            var sut = new SearchService(mockedIndexClient.Object);
+            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true).Result;
+
+            //assert
+            sut.GetFacets().Count.Should().Be(1);
         }
     }
 }
