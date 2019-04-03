@@ -17,6 +17,8 @@ namespace SYE.Services
         void SaveFormVmToSession(FormVM vm);
         FormVM GetFormVmFromSession();
         void UpdatePageVmInFormVm(PageVM vm);
+        void SaveUserSearch(string search);
+        string GetUserSearch();
     }
 
     public class SessionService : ISessionService
@@ -95,6 +97,8 @@ namespace SYE.Services
             return userSessionVm;
         }
 
+
+
         public void SaveFormVmToSession(FormVM vm)
         {
             var context = _context.HttpContext;
@@ -124,6 +128,18 @@ namespace SYE.Services
 
         }
 
+        public void SaveUserSearch(string search)
+        {
+            var context = _context.HttpContext;
+            context.Session.SetString("Search", search);
+        }
+
+        public string GetUserSearch()
+        {
+            var context = _context.HttpContext;
+            var search = context.Session.GetString("Search");
+            return search;
+        }
     }
 
 }

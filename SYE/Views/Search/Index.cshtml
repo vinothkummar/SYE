@@ -1,184 +1,43 @@
-﻿@using SYE.Models
+﻿@using Microsoft.Azure.Search.Common
+@using SYE.Models
 @model SYE.ViewModels.SearchResultsVM
 @{
     ViewData["Title"] = "Search";
 }
 
-@if (!Model.ShowResults)
-{
+<gds-row>
 
-    <gds-row>
+    <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
 
-        <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+        <gds-heading heading-type="H2" text="Find the care service you want to tell us about"></gds-heading>
 
-            <gds-heading heading-type="H2" text="Find the care service you want to tell us about"></gds-heading>
+        <gds-heading heading-type="H3" text="Search by service name or address"></gds-heading>
 
-            <gds-heading heading-type="H3" text="Search by service name or address"></gds-heading>
+        <gds-row>
+            <gds-column desktop-size="OneHalf" tablet-size="FullWidth">
 
-            <gds-row>
-                <gds-column desktop-size="OneHalf" tablet-size="FullWidth">
-
-                    <form asp-action="Index" method="get">
-
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="event-name">
-                                For example, Great Ormond St London WC1N. You do not need to use the whole name or address.
-                            </label>
-                            <input class="govuk-input" id="search" name="search" type="text" value="@Model.Search">
-                        </div>
-
-                        <gds-button button-type="Submit" button-text="Search"></gds-button>
-
-                    </form>
-
-                </gds-column>
-            </gds-row>
-
-        </gds-column>
-
-    </gds-row>
-}
-
-@if (Model.ShowResults)
-{
-    <gds-row>
-
-        <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-
-            <gds-heading heading-type="H3" text="Search results for"></gds-heading>
-
-            <gds-row>
-                <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-
-                    <form asp-action="Index" method="get">
-                        <div class="govuk-form-group">
-                            <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
-                            <input type="image" name="submit" src="images/search.png" style="height: 40px; vertical-align: middle" />
-                        </div>
-                    </form>
-
-                </gds-column>
-            </gds-row>
-
-        </gds-column>
-
-    </gds-row>
-
-    <gds-row>
-        <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-            <details class="govuk-details">
-                <summary class="govuk-details__summary">
-                    <span class="govuk-details__summary-text">
-                        I can't find the service I want to tell you about'
-                    </span>
-                </summary>
-                <div class="govuk-details__text">
+                <form asp-action="SearchResults" method="get">
 
                     <div class="govuk-form-group">
-                        <label class="govuk-label" for="more-detail">
-                            Tell us anything you can about the name of the service and where it is
+                        <label class="govuk-label" for="event-name">
+                            For example, Great Ormond St London WC1N. You do not need to use the whole name or address.
                         </label>
-                        <span id="more-detail-hint" class="govuk-hint">
-                            We will use what you tel us to try to identify it
-                        </span>
-                        <textarea class="govuk-textarea" id="more-detail" name="more-detail" rows="5" aria-describedby="more-detail-hint"></textarea>
-
-                        <gds-button button-type="Button" button-text="Continue"></gds-button>
-
+                        @if (Model.ShowIncompletedSearchMessage)
+                        {
+                            <label class="govuk-error-message" for="event-name">
+                                Please complete the text field below
+                            </label>
+                        }
+                        <input class="govuk-input" id="search" name="search" type="text" value="@Model.Search">
                     </div>
-                </div>
-            </details>
 
-        </gds-column>
-    </gds-row>
+                    <gds-button button-type="Submit" button-text="Search"></gds-button>
 
-    <gds-row>
-
-        <gds-column desktop-size="OneThird" tablet-size="FullWidth">
-            <div class="govuk-form-group">
-                <div id="filter-wrapper" style="border: none">
-                    <select class="govuk-select" style="width: 100%; background-color: #ccc; border: none">
-                        <option>Organisations</option>
-                    </select>
-                </div>
-            </div>
-        </gds-column>
-
-        <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-
-            <div id="search-results">
-
-                <gds-row>
-                    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-                        <label class="govuk-link">@Model.Count results found</label>
-                    </gds-column>
-                </gds-row>
-
-
-                @foreach (var result in Model.Data)
-                {
-                    <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
-                        <input id="ProviderId" name="ProviderId" value="" type="hidden" />
-                        <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
-                        <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
-
-                        <gds-row>
-                            <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-                                <a href="javascript:;" onclick="document.getElementById('frm_@result.Id').submit();">
-                                    <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
-                                </a>
-                                <p class="govuk-body">
-                                    @result.Category<br/>
-                                    @result.Address<br/>
-                                    @result.Town<br/>
-                                    @result.PostCode<br/>
-                                </p>
-                            </gds-column>
-                        </gds-row>
-                    </form>
-                }
-
-            </div>
-
-
-            @if (Model.TotalPages > 1)
-            {
-                <form asp-action="Index" method="get">
-                    <input type="hidden" id="search" name="search" value="@Model.Search" />
-                    <div class="govuk-body paging-wrapper">
-
-                        <gds-row>
-                            <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-                                @if (Model.ShowPrev)
-                                {
-                                <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" class="govuk-link">
-                                    ← Previous Page<br />
-                                    @(Model.CurrentPage - 1) of @Model.TotalPages
-                                </a>
-                                }
-                            </gds-column>
-                        </gds-row>
-
-                        <gds-row>
-                            <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-                                @if (Model.ShowNext)
-                                {
-                                    <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" class="govuk-link">
-                                        Next Page →<br />
-                                        @(Model.CurrentPage + 1) of @Model.TotalPages
-                                    </a>
-                                }
-                            </gds-column>
-                        </gds-row>
-
-                    </div>
                 </form>
-            }
 
+            </gds-column>
+        </gds-row>
 
+    </gds-column>
 
-        </gds-column>
-
-    </gds-row>
-
-}
+</gds-row>

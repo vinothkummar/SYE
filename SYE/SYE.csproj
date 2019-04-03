@@ -17,6 +17,10 @@
     <None Remove="Helpers\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="Helpers\ViewHelper.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="GDSHelpers" Version="2019.3.29.1" />
