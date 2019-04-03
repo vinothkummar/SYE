@@ -16,6 +16,7 @@ namespace SYE.Tests.Controllers
 {
     public class SearchControllerTests
     {
+        /*
         [Fact]
         public void SearchResultsShouldGetCorrectResult()
         {
@@ -204,5 +205,6 @@ namespace SYE.Tests.Controllers
             model.Facets[0].Selected.Should().Be(true);
             mockService.Verify();
         }
+        */
     }
 }

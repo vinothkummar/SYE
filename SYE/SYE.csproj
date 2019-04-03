@@ -18,7 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="Helpers\ViewHelper.cs" />
+    <Compile Include="Helpers\SelectItem.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
   </ItemGroup>
 
 

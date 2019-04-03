@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using SYE.Helpers;
 using SYE.Models;
-using SYE.Services;
 
 namespace SYE.ViewModels
 {
-    public class SearchResultsVM    // : PageModel
+    public class SearchResultsVM
     {
         public SearchResultsVM()
         {
@@ -32,8 +30,7 @@ namespace SYE.ViewModels
         [Required(ErrorMessage = "Please enter a search")]
         public string Search { get; set; }
         public List<SearchResult> Data { get; set; }
-        public List<SelectListItem> Facets { get; set; }
-
+        public List<SelectItem> Facets { get; set; }
         public string SelectedFacets
         {
             get

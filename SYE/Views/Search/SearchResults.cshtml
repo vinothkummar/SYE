@@ -1,9 +1,11 @@
-﻿@using Microsoft.Azure.Search.Common
+﻿@using Microsoft.AspNetCore.Http
+@using Microsoft.Azure.Search.Common
 @using SYE.Models
 @model SYE.ViewModels.SearchResultsVM
 @{
     ViewData["Title"] = "SearchResults";
 }
+
 <gds-row>
 
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
@@ -14,10 +16,9 @@
             <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
                 <form asp-action="SearchResults" method="get">
-                    <input type="hidden" id="selectedFacets" name="selectedFacets" value="@Model.SelectedFacets" />
                     <div class="govuk-form-group">
                         <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
-                        <input type="image" name="submit" src="~/images/search.png" style="height: 40px; vertical-align: middle" />
+                        <input type="image" name="submit" src="~/images/search.png" style="height: 40px; vertical-align: middle"/>
                     </div>
                 </form>
 
@@ -65,10 +66,10 @@
                 </select>
             </summary>
             @if (Model.Facets.Count > 0)
-            { 
+            {
                 <div class="govuk-details__text">
                     <div class="govuk-form-group">
-                        <form id="frm_facets" asp-action="SearchResults" method="get">
+                        <form id="frm_facets" asp-action="SearchResults" method="post">
                             @for (var index = 0; index < Model.Facets.Count; index++)
                             {
                                 <div class="govuk-checkboxes__item">
@@ -78,7 +79,6 @@
                                     </label>
                                     <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
                                     <input asp-for="@Model.Facets[index].Text" type="hidden" />
-                                    <input asp-for="@Model.Facets[index].Value" type="hidden" />
                                 </div>
                             }
                             <input type="hidden" asp-for="Search" />
@@ -131,7 +131,7 @@
         {
         <form asp-action="SearchResults" method="get">
             <input type="hidden" id="search" name="search" value="@Model.Search" />
-            <input type="hidden" id="selectedFacets" name="selectedFacets" value="@Model.SelectedFacets" />
+            <input type="hidden" id="selectedFacets" name="search" value="@Model.SelectedFacets" />
 
             <div class="govuk-body paging-wrapper">
 
@@ -139,7 +139,7 @@
                     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
                         @if (Model.ShowPrev)
                             {
-                        <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
+                        <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" asp-route-facets="@(Model.Facets)" class="govuk-link">
                             <img style="height: 15px; vertical-align: middle; background: transparent" src="~/images/arrow-left.png"><b> Previous Page</b><br />
                             @(Model.CurrentPage - 1) of @Model.TotalPages
                         </a>
@@ -150,12 +150,12 @@
                 <gds-row>
                     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
                         @if (Model.ShowNext)
-                            {
-                        <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
-                            <img style="height: 15px; vertical-align: middle; background: transparent" src="~/images/arrow-right.png"><b> Next Page</b><br />
-                            @(Model.CurrentPage + 1) of @Model.TotalPages
-                        </a>
-                            }
+                        {                                                        
+                            <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
+                                <img style="height: 15px; vertical-align: middle; background: transparent" src="~/images/arrow-right.png"><b> Next Page</b><br />
+                                @(Model.CurrentPage + 1) of @Model.TotalPages
+                            </a>
+                        }
                     </gds-column>
                 </gds-row>
 
