@@ -24,36 +24,61 @@ namespace SYE.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var vm = new CheckYourAnswersVm
+            try
             {
-                FormVm = _sessionService.GetFormVmFromSession()
-            };
+                var formVm = _sessionService.GetFormVmFromSession();
+                if (formVm == null)
+                {
+                    return NotFound();
+                }
+                var vm = new CheckYourAnswersVm
+                {
+                    FormVm = formVm
+                };
 
-            return View(vm);
+                return View(vm);
+            }
+            catch (Exception e)
+            {
+                //log error
+                return StatusCode(500);
+            }
         }
 
 
         [HttpPost]
         public IActionResult Index(CheckYourAnswersVm vm)
         {
-            var formVm = _sessionService.GetFormVmFromSession();
-
-            var submission = GenerateSubmission(formVm);
-
-            var result = _submissionService.CreateAsync(submission);
-            var reference = result.Id.ToString();
-            
-            if (vm.SendConfirmationEmail)
+            try
             {
-                //TODO: Send the confirmation email
+                var formVm = _sessionService.GetFormVmFromSession();
+
+                if (formVm == null)
+                {
+                    return NotFound();
+                }
+
+                var submission = GenerateSubmission(formVm);
+
+                var result = _submissionService.CreateAsync(submission);
+                var reference = result.Id.ToString();
+
+                if (vm.SendConfirmationEmail)
+                {
+                    //TODO: Send the confirmation email
+                }
+
+                HttpContext.Session.Clear();
+                HttpContext.Session.SetString("ReferenceNumber", reference);
+
+                return RedirectToAction("Index", "Confirmation");
             }
-
-            HttpContext.Session.Clear();
-            HttpContext.Session.SetString("ReferenceNumber", reference);
-
-            return RedirectToAction("Index", "Confirmation");
+            catch (Exception e)
+            {
+               //log error
+               return StatusCode(500);
+            }
         }
-
 
         private SubmissionVM GenerateSubmission(FormVM formVm)
         {

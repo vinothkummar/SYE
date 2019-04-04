@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using FluentAssertions;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Moq;
 using SYE.Controllers;
 using SYE.Models;
@@ -133,5 +128,31 @@ namespace SYE.Tests.Controllers
             model.Questions.Count(x => x.Validation.IsErrored).Should().Be(2);
             mockSession.Verify();
         }
+
+        [Theory]
+        [InlineData("CheckYourAnswers")]
+        [InlineData(null)]
+        public void Index_Post_Should_Redirect(string controllerName)
+        {
+            const string id = "123";
+            //arrange
+
+            var returnPage = new PageVM { PageId = id, NextPageId = controllerName };
+
+            var mockValidation = new Mock<IGdsValidation>();
+            var mockSession = new Mock<ISessionService>();
+            mockSession.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+            var sut = new FormController(mockValidation.Object, mockSession.Object);
+
+            //act
+            var result = sut.Index(new CurrentPageVM { PageId = id });
+
+            //assert
+            var redirectesult = result as RedirectToActionResult;
+            redirectesult.ControllerName.Should().Be(controllerName);
+            redirectesult.ActionName.Should().Be("Index");
+            mockSession.Verify();
+        }
+
     }
 }
