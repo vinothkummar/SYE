@@ -70,7 +70,7 @@ namespace SYE.Controllers
                 }
 
                 //Get the error count
-                var errorCount = pageVm.Questions.Count(m => m.Validation.IsErrored);
+                var errorCount = pageVm.Questions?.Count(m => m.Validation != null && m.Validation.IsErrored);
 
                 //If we have errors return to the View
                 if (errorCount > 0) return View(pageVm);
