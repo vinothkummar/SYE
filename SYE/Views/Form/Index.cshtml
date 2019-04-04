@@ -11,9 +11,8 @@
             @Html.HiddenFor(m => m.PageId)
             @Html.AntiForgeryToken()
             
-            <gds-heading heading-type="H3" text="You are giving feedback for @ViewBag.LocationName"></gds-heading>
-
-            <gds-heading heading-type="H2" text="@Model.PageName.Replace("!!location_name!!", "The Thatched House Dental Practice")" caption="@Model.PreAmble"></gds-heading>
+            @*<gds-heading heading-type="H3" text="You are giving feedback for @ViewBag.LocationName"></gds-heading>*@
+            @*<gds-heading heading-type="H2" text="@Model.PageName.Replace("!!location_name!!", "The Thatched House Dental Practice")" caption="@Model.PreAmble"></gds-heading>*@
 
             @if (Model.Questions != null)
             {

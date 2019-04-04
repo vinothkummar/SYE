@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SYE.Controllers
 {
@@ -6,6 +7,8 @@ namespace SYE.Controllers
     {
         public IActionResult Index(string id)
         {
+            ViewBag.Reference = HttpContext.Session.GetString("ReferenceNumber");
+
             return View();
         }
     }

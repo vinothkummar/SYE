@@ -68,7 +68,7 @@ namespace SYE.Repository
         {
             var query = _client.CreateDocumentQuery<T>(
                 UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId),
-                new FeedOptions { MaxItemCount = -1 })
+                new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true })
                 .Where(predicate)
                 .AsDocumentQuery();
 
