@@ -41,14 +41,17 @@ namespace SYE.Controllers
             var submission = GenerateSubmission(formVm);
 
             var result = _submissionService.CreateAsync(submission);
-            var reference = result.Id;
-
+            var reference = result.Id.ToString();
+            
             if (vm.SendConfirmationEmail)
             {
                 //TODO: Send the confirmation email
             }
-            
-            return RedirectToAction("Index", "Confirmation", new { id = reference });
+
+            HttpContext.Session.Clear();
+            HttpContext.Session.SetString("ReferenceNumber", reference);
+
+            return RedirectToAction("Index", "Confirmation");
         }
 
 
