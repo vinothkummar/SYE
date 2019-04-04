@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
@@ -7,6 +8,7 @@ using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SYE.Controllers;
+using SYE.Helpers;
 using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
@@ -16,7 +18,6 @@ namespace SYE.Tests.Controllers
 {
     public class SearchControllerTests
     {
-        /*
         [Fact]
         public void SearchResultsShouldGetCorrectResult()
         {
@@ -40,7 +41,7 @@ namespace SYE.Tests.Controllers
                     
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object);
-            var result = sut.SearchResults("search");
+            var result = sut.SearchResults("search", null);
 
             //assert
             var viewResult = result as ViewResult;
@@ -70,7 +71,7 @@ namespace SYE.Tests.Controllers
 
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object);
-            var result = sut.SearchResults("search");
+            var result = sut.SearchResults("search", null);
 
             //assert
             var viewResult = result as ViewResult;
@@ -91,7 +92,7 @@ namespace SYE.Tests.Controllers
                 It.IsAny<string>(), It.IsAny<bool>())).Throws(new Exception());
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object);
-            var result = sut.SearchResults("search");
+            var result = sut.SearchResults("search", null);
 
             //assert
             var statusResult = result as StatusCodeResult;
@@ -157,7 +158,7 @@ namespace SYE.Tests.Controllers
 
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object);
-            var result = sut.SearchResults("search", 1, null, "TestFacet");
+            var result = sut.SearchResults("search", 1, "TestFacet");
             
             //assert
             var viewResult = result as ViewResult;
@@ -195,7 +196,7 @@ namespace SYE.Tests.Controllers
 
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object);
-            var result = sut.SearchResults(search, 1, null, "TestFacet");
+            var result = sut.SearchResults(search, 1, "TestFacet");
             
             //assert
             var viewResult = result as ViewResult;
@@ -205,6 +206,230 @@ namespace SYE.Tests.Controllers
             model.Facets[0].Selected.Should().Be(true);
             mockService.Verify();
         }
-        */
+
+        [Fact]
+        public void SearchResultsShouldApplyCorrectSelectedFacet()
+        {
+            //arrange
+            var search = "test search";
+            var expectedrecord = new Models.SearchResult
+            {
+                Id = "testid",
+                Name = "test location",
+                Address = "test address",
+                PostCode = "12345",
+                Town = "test town",
+                Region = "test region",
+                Category = "test category"
+            };
+            var expectedResult = new List<SearchResult> {expectedrecord};
+
+            var facets = new List<SelectItem>
+            {
+                new SelectItem {Text = "Facet1", Selected = true},
+                new SelectItem {Text = "Facet2", Selected = true},
+                new SelectItem {Text = "Facet3", Selected = false},
+                new SelectItem {Text = "Face41", Selected = false}
+            };
+            var expectedTotalCount = facets.Count();
+            var expectedSelectedCount = facets.Count(x => x.Selected);
+
+            var facetsList = new EditableList<string>();
+            facetsList.AddRange(facets.Select(x => x.Text)); ;
+
+            var mockSession = new Mock<ISessionService>();
+            mockSession.Setup(x => x.GetUserSearch()).Returns(search);
+            var mockService = new Mock<ISearchService>();
+            mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(expectedResult).Verifiable();
+            mockService.Setup(x => x.GetFacets()).Returns(facetsList);
+
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.SearchResults(search, facets);
+
+            //assert
+            var viewResult = result as ViewResult;
+
+            var model = viewResult.Model as SearchResultsVM;
+            model.ShowResults.Should().Be(true);
+
+            //check number of facets is correct
+            model.Facets.Count.Should().Be(expectedTotalCount);           
+            model.Facets.Count(x => x.Selected).Should().Be(expectedSelectedCount);
+
+            //check the selected facets are correct
+            var selected = model.Facets.Where(x => x.Selected).Select(x => x.Text).ToList();            
+            foreach (var facet in facets.Where(x => x.Selected))
+            {
+                selected.Contains(facet.Text).Should().BeTrue();
+            }
+
+            mockService.Verify();
+        }
+        [Fact]
+        public void SearchResultsWithEmptySearchShouldRedirectToIndex()
+        {
+            //arrange
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.SearchResults(string.Empty, 1);
+
+            //assert
+            var redirectResult = result as RedirectToActionResult;
+
+            redirectResult.ActionName.Should().Be("Index");
+        }
+
+        [Fact]
+        public void SearchResultsWithEmptySearchShouldRedirectToIndexWithErrorFlag()
+        {
+            //arrange
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.SearchResults(string.Empty, 1);
+
+            //assert
+            var redirectResult = result as RedirectToActionResult;
+            object val;
+            redirectResult.RouteValues.TryGetValue("isError", out val).Should().Be(true);
+            val.Should().Be(true);
+        }
+
+        [Fact]
+        public void SearchResultsShouldReturnInternalError()
+        {
+            //arrange
+            var expectedrecord = new Models.SearchResult
+            {
+                Id = "testid",
+                Name = "test location",
+                Address = "test address",
+                PostCode = "12345",
+                Town = "test town",
+                Region = "test region",
+                Category = "test category"
+            };
+            var expectedResult = new List<Models.SearchResult>();
+            expectedResult.Add(expectedrecord);
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<string>(), It.IsAny<bool>())).Throws(new Exception());
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.SearchResults("search", 1);
+
+            //assert
+            var statusResult = result as StatusCodeResult;
+            statusResult.StatusCode.Should().Be(500);
+        }
+
+        [Fact]
+        public void IndexShouldReturnErrorFlag()
+        {
+            //arrange
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.Index(true);
+
+            //assert
+            var viewResult = result as ViewResult;
+
+            var model = viewResult.Model as SearchResultsVM;
+            model.ShowResults.Should().Be(false);
+            model.ShowIncompletedSearchMessage.Should().Be(true);
+        }
+
+        [Fact(Skip = "can't test index exception as it doesn't do anything yet")]
+        public void IndexShouldReturnInternalError()
+        {
+            //arrange
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.Index(true);
+
+            //assert
+            var statusResult = result as StatusCodeResult;
+            statusResult.StatusCode.Should().Be(500);
+        }
+
+        [Fact]
+        public void SelectLocationShouldRedirectToFormIndex()
+        {
+            //arrange
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.SelectLocation(new UserSessionVM());
+
+            //assert
+            var redirectResult = result as RedirectToActionResult;
+
+            redirectResult.ActionName.Should().Be("Index");
+            redirectResult.ControllerName.Should().Be("Form");
+        }
+
+        [Fact]
+        public void SelectLocationShouldCallSessionToSaveProvider()
+        {
+            //arrange
+            var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location"};
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            mockSession.Setup(x => x.SetUserSessionVars(userVm)).Verifiable();
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            sut.SelectLocation(userVm);
+
+            //assert
+            mockSession.Verify();
+        }
+
+        [Fact]
+        public void SelectLocationShouldCallSessionToSaveForm()
+        {
+            //arrange
+            var locationName = "test location";
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            var replacements = new Dictionary<string, string>
+            {
+                {"!!location_name!!", locationName}
+            };
+            mockSession.Setup(x => x.LoadLatestFormIntoSession(replacements)).Verifiable();
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            sut.SelectLocation(new UserSessionVM{LocationName = locationName});
+
+            //assert
+            mockSession.Verify();           
+        }
+
+        [Fact]
+        public void SelectLocationShouldReturnInternalError()
+        {
+            //arrange
+            var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location" };
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            mockSession.Setup(x => x.SetUserSessionVars(userVm)).Throws(new Exception());
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.SelectLocation(userVm);
+
+            //assert    
+            var statusResult = result as StatusCodeResult;
+            statusResult.StatusCode.Should().Be(500);
+        }
     }
 }

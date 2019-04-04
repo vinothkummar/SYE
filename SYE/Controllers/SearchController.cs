@@ -76,30 +76,9 @@ namespace SYE.Controllers
             catch(Exception ex)
             {
                 //log error
-                return NotFound();
+                return StatusCode(500);
             }
         }
-
-        //[HttpGet]
-        //public IActionResult SelectFacets(string search, List<SelectListItem> facets)
-        //{
-        //    try
-        //    {
-        //        var refinementFacets = string.Empty;
-        //        if (facets != null && facets.Count > 1)
-        //        {
-        //            refinementFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());
-        //        }
-        //        var viewModel = GetViewModel(search, 1, refinementFacets, false);
-        //        return View("Index", viewModel);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //log error
-        //        return StatusCode(500);
-        //    }
-        //}
 
         private IActionResult GetSearchResult(string search, int pageNo, string selectedFacets)
         {
