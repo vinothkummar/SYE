@@ -24,7 +24,10 @@ namespace SYE.Controllers
         {
             try
             {
-                ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
+                if (HttpContext?.Session != null)
+                {
+                    ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
+                }                
 
                 var pageVm = _sessionService.GetPageById(id);
 
@@ -49,39 +52,37 @@ namespace SYE.Controllers
         {
             try
             {
-                ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
+                if (HttpContext?.Session != null)
+                {
+                    ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
+                }                    
 
                 //Get the current PageVm from Session
                 var pageVm = _sessionService.GetPageById(vm.PageId);
 
-
                 //If Null throw NotFound error
                 if (pageVm == null) return NotFound();
 
-
-                //Validate the Response against the page json and update PageVm to contain the answers
-                _gdsValidate.ValidatePage(pageVm, Request.Form);
-
+                if (Request?.Form != null)
+                {
+                    //Validate the Response against the page json and update PageVm to contain the answers
+                    _gdsValidate.ValidatePage(pageVm, Request.Form);
+                }
 
                 //Get the error count
                 var errorCount = pageVm.Questions.Count(m => m.Validation.IsErrored);
 
-
                 //If we have errors return to the View
                 if (errorCount > 0) return View(pageVm);
-
 
                 //Now we need to update the FormVM in session.
                 _sessionService.UpdatePageVmInFormVm(pageVm);
 
-
                 //No errors redirect to the Index page with our new PageId
                 var nextPageId = pageVm.NextPageId;
 
-
                 //Check the nextPageId for preset controller names
                 if (nextPageId == "CheckYourAnswers") return RedirectToAction("Index", "CheckYourAnswers");
-
 
                 //Finally, No Errors so load the next page
                 return RedirectToAction("Index", new { id = nextPageId });
