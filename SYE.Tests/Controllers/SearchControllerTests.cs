@@ -369,7 +369,7 @@ namespace SYE.Tests.Controllers
 
             var model = viewResult.Model as SearchResultsVM;
             model.ShowResults.Should().Be(false);
-            model.ShowSearchErrorMessage.Should().Be(true);
+            model.ShowIncompletedSearchMessage.Should().Be(true);
         }
 
         [Fact(Skip = "can't test index exception as it doesn't do anything yet")]
