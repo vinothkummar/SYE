@@ -13,6 +13,7 @@ namespace SYE.Controllers
     public class SearchController : Controller
     {
         private readonly int _pageSize = 20;
+        private readonly int _maxSearchChars = 1000;
         private readonly ISearchService _searchService;
         private readonly ISessionService _sessionService;
 
@@ -36,37 +37,22 @@ namespace SYE.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult SearchResults(string search, int pageNo = 1, List<SelectListItem> facets = null, string selectedFacets="")
+        [HttpPost]//applies the filter & does a search
+        public IActionResult SearchResults(string search, List<SelectItem> facets = null)
         {
-            try
+            var selectedFacets = string.Empty;
+            if (facets != null)
             {
-                if (string.IsNullOrWhiteSpace(search))
-                {
-                    //reset search
-                    return RedirectToAction("Index", new {isError = true});
-                }
-                var newSearch = SetNewSearch(search);
-
-                var refinementFacets = string.Empty;
-                if (!string.IsNullOrEmpty(selectedFacets))
-                {
-                    refinementFacets = selectedFacets;
-                }
-                else if (facets != null && facets.Count > 1)
-                {
-                    refinementFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());                    
-                }
-
-                var viewModel = GetViewModel(search, pageNo, refinementFacets, newSearch);
-
-                return View(viewModel);
+                selectedFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());
             }
-            catch (Exception ex)
-            {
-                //log error
-                return StatusCode(500);
-            }
+                
+            return GetSearchResult(search, 1, selectedFacets);
+        }
+
+        [HttpGet]//searches
+        public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
+        {
+            return GetSearchResult(search, pageNo, selectedFacets);
         }
 
         [HttpPost]
@@ -91,23 +77,35 @@ namespace SYE.Controllers
             catch(Exception ex)
             {
                 //log error
-                return NotFound();
+                return StatusCode(500);
             }
         }
 
-        [HttpGet]
-        public IActionResult SelectFacets(string search, List<SelectListItem> facets)
+        private IActionResult GetSearchResult(string search, int pageNo, string selectedFacets)
         {
             try
             {
-                var refinementFacets = string.Empty;
-                if (facets != null && facets.Count > 1)
+                if (string.IsNullOrWhiteSpace(search))
                 {
-                    refinementFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());
+                    //reset search
+                    return RedirectToAction("Index", new { isError = true });
                 }
-                var viewModel = GetViewModel(search, 1, refinementFacets, false);
-                return View("Index", viewModel);
 
+                if (search.Length > _maxSearchChars)
+                {
+                    return View(new SearchResultsVM
+                    {
+                        Search = search,
+                        ShowExceededMaxLengthMessage = true, Facets = new List<SelectItem>(),
+                        Data = new List<SearchResult>()
+                    });
+                }
+
+                var newSearch = SetNewSearch(search);
+
+                var viewModel = GetViewModel(search, pageNo, selectedFacets, newSearch);
+
+                return View(viewModel);
             }
             catch (Exception ex)
             {
@@ -135,7 +133,7 @@ namespace SYE.Controllers
                 returnViewModel.Search = search;                
                 returnViewModel.PageSize = _pageSize;
                 returnViewModel.Count = _searchService.GetCount();
-                returnViewModel.Facets = ViewHelper.ConvertList(_searchService.GetFacets());
+                returnViewModel.Facets = ListHelper.ConvertList(_searchService.GetFacets());
                 returnViewModel.TypeOfService = _searchService.GetFacets();
                 returnViewModel.CurrentPage = pageNo;
 

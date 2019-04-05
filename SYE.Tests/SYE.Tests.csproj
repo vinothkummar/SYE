@@ -36,6 +36,9 @@
     <Reference Include="GDSHelpers">
       <HintPath>..\..\..\..\Users\cex\.nuget\packages\gdshelpers\1.0.0\lib\netstandard2.0\GDSHelpers.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNetCore.Hosting">
+      <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.hosting\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Hosting.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Session">
       <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.session\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Session.dll</HintPath>
     </Reference>
