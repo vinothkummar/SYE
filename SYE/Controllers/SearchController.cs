@@ -90,6 +90,17 @@ namespace SYE.Controllers
                     //reset search
                     return RedirectToAction("Index", new { isError = true });
                 }
+
+                if (search.Length > _maxSearchChars)
+                {
+                    return View(new SearchResultsVM
+                    {
+                        Search = search,
+                        ShowExceededMaxLengthMessage = true, Facets = new List<SelectItem>(),
+                        Data = new List<SearchResult>()
+                    });
+                }
+
                 var newSearch = SetNewSearch(search);
 
                 var viewModel = GetViewModel(search, pageNo, selectedFacets, newSearch);

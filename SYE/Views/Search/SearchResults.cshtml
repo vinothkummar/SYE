@@ -17,6 +17,12 @@
 
                 <form asp-action="SearchResults" method="get">
                     <div class="govuk-form-group">
+                        @if (Model.ShowExceededMaxLengthMessage)
+                        {
+                            <label class="govuk-error-message" for="event-name">
+                                Please reduce the number of characters in the text field below. (Max 1000)
+                            </label>
+                        }
                         <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
                         <input type="image" name="submit" src="~/images/search.png" style="height: 40px; vertical-align: middle"/>
                     </div>

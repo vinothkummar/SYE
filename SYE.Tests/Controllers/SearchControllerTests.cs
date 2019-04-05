@@ -83,6 +83,27 @@ namespace SYE.Tests.Controllers
         }
 
         [Fact]
+        public void SearchResultsShouldReturnMaxSearchCharsError()
+        {
+            //arrange
+
+            var search = new string('*', 5000);        
+
+            var mockSession = new Mock<ISessionService>();
+            var mockService = new Mock<ISearchService>();
+            //act
+            var sut = new SearchController(mockService.Object, mockSession.Object);
+            var result = sut.SearchResults(search, null);
+
+            //assert
+            var viewResult = result as ViewResult;
+
+            var model = viewResult.Model as SearchResultsVM;
+            model.ShowExceededMaxLengthMessage.Should().Be(true);
+            model.ShowResults.Should().Be(false);
+        }
+
+        [Fact]
         public void SearchResults_Should_Return_Internal_Error()
         {
             //arrange
@@ -267,15 +288,17 @@ namespace SYE.Tests.Controllers
 
             mockService.Verify();
         }
-        [Fact]
-        public void SearchResultsWithEmptySearchShouldRedirectToIndex()
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void SearchResultsWithEmptySearchShouldRedirectToIndex(string search)
         {
             //arrange
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object);
-            var result = sut.SearchResults(string.Empty, 1);
+            var result = sut.SearchResults(search, 1);
 
             //assert
             var redirectResult = result as RedirectToActionResult;
@@ -283,15 +306,17 @@ namespace SYE.Tests.Controllers
             redirectResult.ActionName.Should().Be("Index");
         }
 
-        [Fact]
-        public void SearchResultsWithEmptySearchShouldRedirectToIndexWithErrorFlag()
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void SearchResultsWithEmptySearchShouldRedirectToIndexWithErrorFlag(string search)
         {
             //arrange
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object);
-            var result = sut.SearchResults(string.Empty, 1);
+            var result = sut.SearchResults(search, 1);
 
             //assert
             var redirectResult = result as RedirectToActionResult;
@@ -344,7 +369,7 @@ namespace SYE.Tests.Controllers
 
             var model = viewResult.Model as SearchResultsVM;
             model.ShowResults.Should().Be(false);
-            model.ShowIncompletedSearchMessage.Should().Be(true);
+            model.ShowSearchErrorMessage.Should().Be(true);
         }
 
         [Fact(Skip = "can't test index exception as it doesn't do anything yet")]
