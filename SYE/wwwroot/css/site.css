@@ -125,7 +125,18 @@
 }
 
 
+.gds-display-none {
+    /*display: none;*/
+}
+
 .gds-question {
     font-size: 36px;
     font-weight: 700;
+}
+
+
+#qContact_003_03 label,
+#qContact_003_04 label {
+    font-size: 20px;
+    font-weight: normal;
 }
