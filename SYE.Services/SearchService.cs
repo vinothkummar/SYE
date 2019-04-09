@@ -77,7 +77,7 @@ namespace SYE.Services
             else
             {
                 sp.Filter = SearchHelper.BuildFilter(refinementFacets);
-                sp.Filter += " and registrationStatus eq 'Registered'";
+                sp.Filter = "(" + sp.Filter + ") and registrationStatus eq 'Registered'";
             }
 
             var searchResult = await _indexClientWrapper.SearchAsync(search, sp);

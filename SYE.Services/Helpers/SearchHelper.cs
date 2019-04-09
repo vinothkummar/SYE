@@ -55,7 +55,7 @@ namespace SYE.Services.Helpers
         {
             var searchResult = new SearchResult
             {
-                Id = GetValue(doc, "rid"),
+                Id = GetValue(doc, "id"),
                 Name = GetValue(doc, "locationName"),
                 Address = GetValue(doc, "postalAddressLine1"),
                 Address2 = GetValue(doc, "postalAddressLine2"),
