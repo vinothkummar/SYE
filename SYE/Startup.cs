@@ -7,19 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Notify.Interfaces;
+using Notify.Client;
 using SYE.Repository;
 using SYE.Services;
 using GDSHelpers.Models.FormSchema;
 using SYE.Models.SubmissionSchema;
 using SYE.Services.Wrappers;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace SYE
 {
     public class Startup
     {
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -79,6 +83,10 @@ namespace SYE
             services.AddScoped<ISubmissionService, SubmissionService>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.TryAddSingleton<IGovUkNotifyConfiguration>(_ => Configuration.GetSection("GovUkNotify").Get<GovUkNotifyConfiguration>());
+            services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(Configuration.GetConnectionString("GovUkNotifyApiKey")));
+            services.TryAddScoped<INotificationService, NotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -30,4 +30,22 @@ namespace SYE.Repository
         public string SearchApiKey { get; set; }
         public string IndexName { get; set; }
     }
+
+    public interface IGovUkNotifyConfiguration
+    {
+        string WithLocationEmailTemplateId { get; set; }
+        string WithoutLocationEmailTemplateId { get; set; }
+        string GreetingTemplate { get; set; }
+        string ClientReferenceTemplate { get; set; }
+        string ReplyToAddressId { get; set; }
+    }
+
+    public class GovUkNotifyConfiguration : IGovUkNotifyConfiguration
+    {
+        public string WithLocationEmailTemplateId { get; set; }
+        public string WithoutLocationEmailTemplateId { get; set; }
+        public string GreetingTemplate { get; set; }
+        public string ClientReferenceTemplate { get; set; }
+        public string ReplyToAddressId { get; set; }
+    }
 }
