@@ -145,7 +145,7 @@
                     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
                         @if (Model.ShowPrev)
                             {
-                        <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" asp-route-facets="@(Model.Facets)" class="govuk-link">
+                                <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
                             <img style="height: 15px; vertical-align: middle; background: transparent" src="~/images/arrow-left.png"><b> Previous Page</b><br />
                             @(Model.CurrentPage - 1) of @Model.TotalPages
                         </a>

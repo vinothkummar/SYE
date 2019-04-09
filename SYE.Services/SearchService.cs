@@ -70,9 +70,14 @@ namespace SYE.Services
                 Facets = new List<String> {"inspectionDirectorate"}
             };
 
-            if (!string.IsNullOrWhiteSpace(refinementFacets))
+            if (string.IsNullOrWhiteSpace(refinementFacets))
+            {
+                sp.Filter = "registrationStatus eq 'Registered'";
+            }
+            else
             {
                 sp.Filter = SearchHelper.BuildFilter(refinementFacets);
+                sp.Filter += " and registrationStatus eq 'Registered'";
             }
 
             var searchResult = await _indexClientWrapper.SearchAsync(search, sp);
