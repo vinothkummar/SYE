@@ -123,6 +123,10 @@
                         <p class="govuk-body">
                             @result.Category<br />
                             @result.Address<br />
+                            @if (!string.IsNullOrWhiteSpace(result.Address2))
+                            {
+                                @result.Address2<br />
+                            }
                             @result.Town<br />
                             @result.PostCode<br />
                         </p>

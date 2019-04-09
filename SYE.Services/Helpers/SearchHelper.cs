@@ -58,6 +58,7 @@ namespace SYE.Services.Helpers
                 Id = GetValue(doc, "rid"),
                 Name = GetValue(doc, "locationName"),
                 Address = GetValue(doc, "postalAddressLine1"),
+                Address2 = GetValue(doc, "postalAddressLine2"),
                 Town = GetValue(doc, "postalAddressTownCity"),
                 PostCode = GetValue(doc, "postalCode"),
                 Region = GetValue(doc, "region"),
