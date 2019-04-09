@@ -30,12 +30,25 @@ namespace SYE.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var vm = new CheckYourAnswersVm
+            try
             {
-                FormVm = SessionService.GetFormVmFromSession()
-            };
+                var formVm = _sessionService.GetFormVmFromSession();
+                if (formVm == null)
+                {
+                    return NotFound();
+                }
+                var vm = new CheckYourAnswersVm
+                {
+                    FormVm = formVm
+                };
 
-            return View(vm);
+                return View(vm);
+            }
+            catch (Exception e)
+            {
+                //log error
+                return StatusCode(500);
+            }
         }
 
 

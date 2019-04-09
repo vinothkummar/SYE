@@ -25,6 +25,27 @@ namespace SYE.Services.Helpers
             return returnList;
         }
 
+        public static string BuildFilter(string refinementFacets)
+        {
+            string filter = null;
+            var facets = refinementFacets.Split(',');
+
+            for (var index = 0; index < facets.Length; index++)
+            {
+                var facet = facets[index];
+                if (index == 0)
+                {
+                    filter = "inspectionDirectorate eq '" + facet + "'";
+                }
+                else
+                {
+                    filter += " or inspectionDirectorate eq '" + facet + "'";
+                }
+            }
+
+            return filter;
+        }
+
         /// <summary>
         /// Generates a SearchResult object from a document
         /// </summary>

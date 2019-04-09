@@ -17,9 +17,14 @@
     <None Remove="Helpers\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="Helpers\SelectItem.cs" />
+    <Compile Include="Helpers\ListHelper.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
-    <PackageReference Include="GDSHelpers" Version="2019.3.29.1" />
+    <PackageReference Include="GDSHelpers" Version="2019.4.4.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>

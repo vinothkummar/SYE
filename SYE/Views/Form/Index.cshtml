@@ -11,10 +11,6 @@
             @Html.HiddenFor(m => m.PageId)
             @Html.AntiForgeryToken()
             
-            <gds-heading heading-type="H3" text="You are giving feedback for @ViewBag.LocationName"></gds-heading>
-
-            <gds-heading heading-type="H2" text="@Model.PageName.Replace("!!location_name!!", "The Thatched House Dental Practice")" caption="@Model.PreAmble"></gds-heading>
-
             @if (Model.Questions != null)
             {
                 foreach (var question in Model.Questions)
@@ -30,6 +26,33 @@
                     @Html.GdsButton(button.ButtonType, button.ButtonText)
                 }
             }
+            
+            <script>
+
+                jQuery("[data-showwhen-questionid]").each(function(s, e) {
+
+                    var $this = jQuery(this);
+                    $this.hide();
+
+                    var questionToCheck = $this.data("showwhen-questionid");
+                    var valToCheck = $this.data("showwhen-value").toString();
+
+                    jQuery("[name=" + questionToCheck + "]").on("change", function() {
+                        var answer = jQuery(this).val();
+                        showWhen($this, answer, valToCheck);
+                    });
+
+                });
+                
+                function showWhen($this, answer, valToCheck) {
+                    if (valToCheck !== "" && answer === valToCheck) {
+                        $this.show();
+                    } else {
+                        $this.hide();
+                    }
+                }
+
+            </script>
 
         </form>
 

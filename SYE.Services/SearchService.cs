@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
 using SYE.Models;
@@ -15,23 +16,26 @@ namespace SYE.Services
 {
     public interface ISearchService
     {
-        Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize = 10);
+        Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch);
         long GetCount();
+        List<string> GetFacets();
     }
     public class SearchService : ISearchService
     {
-        //private static SearchServiceClient _searchClient;
         private static ICustomSearchIndexClient _indexClientWrapper;
 
         private static long _count;
+        private static List<string> _facets = new List<string>();
+        private static string _search = string.Empty;
+
         public SearchService(ICustomSearchIndexClient indexClientWrapper)
         {
             _indexClientWrapper = indexClientWrapper;
         }    
 
-        public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize)
+        public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
         {
-            var data = await GetDataAsync(search, currentPage, pageSize);
+            var data = await GetDataAsync(search, currentPage, pageSize, refinementFacets, newSearch);
             return data;
         }
 
@@ -40,13 +44,41 @@ namespace SYE.Services
             return _count;
         }
 
-        #region Private Methods
-        private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize)
+        public List<string> GetFacets()
         {
+            return _facets;
+        }
+
+
+        #region Private Methods
+        private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
+        {            
+            if (newSearch)
+            {
+                //clear out all facets for previous search
+                _facets = new List<string>();
+                refinementFacets = string.Empty;
+            }
+
+            _search = search;
+
             var sp = new SearchParameters
             {
-                IncludeTotalResultCount = true, Skip = ((currentPage - 1) * pageSize), Top = pageSize
+                IncludeTotalResultCount = true,
+                Skip = ((currentPage - 1) * pageSize),
+                Top = pageSize,
+                Facets = new List<String> {"inspectionDirectorate"}
             };
+
+            if (string.IsNullOrWhiteSpace(refinementFacets))
+            {
+                sp.Filter = "registrationStatus eq 'Registered'";
+            }
+            else
+            {
+                sp.Filter = SearchHelper.BuildFilter(refinementFacets);
+                sp.Filter += " and registrationStatus eq 'Registered'";
+            }
 
             var searchResult = await _indexClientWrapper.SearchAsync(search, sp);
 
@@ -54,12 +86,24 @@ namespace SYE.Services
             {
                 _count = (long )searchResult.Count;
             }
-            
+
+            if (searchResult.Facets != null && searchResult.Facets.Count == 1)
+            {
+                var facets = (searchResult.Facets).ToList()[0].Value;
+                foreach (var facet in facets)
+                {
+                    var facetToAdd = facet.Value.ToString();
+                    if (! _facets.Contains(facetToAdd))
+                    {
+                        _facets.Add(facetToAdd);
+                    }                    
+                }
+            }
+
             var results = searchResult.Results.Select(m => m.Document).ToList();
      
             return SearchHelper.ConvertResults(results);
         }
-
         #endregion
 
         #region commented out code probably use later
