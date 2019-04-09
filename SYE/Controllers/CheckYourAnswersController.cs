@@ -32,7 +32,7 @@ namespace SYE.Controllers
         {
             try
             {
-                var formVm = _sessionService.GetFormVmFromSession();
+                var formVm = SessionService.GetFormVmFromSession();
                 if (formVm == null)
                 {
                     return NotFound();
