@@ -43,31 +43,45 @@ namespace SYE.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Index(CheckYourAnswersVm vm)
         {
-            var formVm = SessionService.GetFormVmFromSession();
-            var submission = GenerateSubmission(formVm);
-            var result = _submissionService.CreateAsync(submission);
-            var reference = result.Id;
-
-            if (vm?.SendConfirmationEmail == true)
+            try
             {
-                using (Logger.BeginScope(new Dictionary<string, object> { { "SubmissionId", reference } }))
+                var formVm = SessionService.GetFormVmFromSession();
+                if (formVm == null)
                 {
-                    try
+                    return NotFound();
+                }
+
+                var submission = GenerateSubmission(formVm);
+                var result = _submissionService.CreateAsync(submission).Result;
+                var reference = result?.Id ?? String.Empty;
+
+                if (!String.IsNullOrWhiteSpace(reference) && vm?.SendConfirmationEmail == true)
+                {
+                    using (Logger.BeginScope(new Dictionary<string, object> { { "Submission Id", reference } }))
                     {
-                        Task.Run(() => SendEmailNotification(submission));
-                        Logger.LogInformation($"Confirmation email for submission id: [{reference}] sent successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.LogError(ex, $"There was and error sending confirmation email with submission id: [{reference}].");
-                        return StatusCode(500);
+                        try
+                        {
+                            Task.Run(() => SendEmailNotification(submission));
+                            Logger.LogInformation($"Confirmation email for submission id: [{reference}] sent successfully.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.LogError(ex, $"Error sending confirmation email with submission id: [{reference}].");
+                        }
                     }
                 }
+
+                HttpContext.Session.Clear();
+                HttpContext.Session.SetString("ReferenceNumber", reference);
+
+                return RedirectToAction("Index", "Confirmation");
             }
-
-            return RedirectToAction("Index", "Confirmation", new { id = reference });
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Internal server error!");
+                return StatusCode(500);
+            }
         }
-
 
         private SubmissionVM GenerateSubmission(FormVM formVm)
         {
@@ -102,38 +116,32 @@ namespace SYE.Controllers
 
         private async Task SendEmailNotification(SubmissionVM submission)
         {
-            if (submission == null)
-            {
-                throw new ArgumentNullException(nameof(submission));
-            }
+            string emailAddress = submission?
+                .Answers?.FirstOrDefault(x => x.Question.Equals("Email", StringComparison.OrdinalIgnoreCase))?
+                .Answer ?? String.Empty;
 
-            string templateId = String.Empty;
-            if (String.IsNullOrWhiteSpace(submission.LocationId) || String.IsNullOrWhiteSpace(submission.LocationName))
+            if (!String.IsNullOrWhiteSpace(emailAddress))
             {
-                templateId = _configuration.WithoutLocationEmailTemplateId;
+                string templateId = String.Empty;
+                string greetingTemplate = _configuration.GreetingTemplate;
+                string feedbackUserName = submission?.Answers?.FirstOrDefault(x => x.Question.Equals("Full name", StringComparison.OrdinalIgnoreCase))?.Answer ?? String.Empty;
+                string greeting = String.Format(greetingTemplate, feedbackUserName);
+                string locationName = submission?.LocationName;
+                Dictionary<string, dynamic> personalisation = new Dictionary<string, dynamic> { { "greeting", greeting }, { "location", locationName } };
+                //TODO: once reference value and format is confirmed, this needs to be updated.
+                string clientReferenceTemplate = _configuration.ClientReferenceTemplate;
+                string clientReference = String.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
+                string emailReplyToId = _configuration.ReplyToAddressId;
+                if (String.IsNullOrWhiteSpace(submission?.LocationId) || String.IsNullOrWhiteSpace(submission?.LocationName))
+                {
+                    templateId = _configuration.WithoutLocationEmailTemplateId;
+                }
+                else
+                {
+                    templateId = _configuration.WithLocationEmailTemplateId;
+                }
+                await _notificationService.NotifyByEmailAsync(templateId, emailAddress, personalisation, clientReference, emailReplyToId).ConfigureAwait(false);
             }
-            else
-            {
-                templateId = _configuration.WithLocationEmailTemplateId;
-            }
-
-            string emailAddress = submission.Answers?.FirstOrDefault(x => x.Question.Equals("Email", StringComparison.OrdinalIgnoreCase))?.Answer ?? String.Empty;
-            string greetingTemplate = _configuration.GreetingTemplate;
-            string feedbackUserName = submission.Answers?.FirstOrDefault(x => x.Question.Equals("Full name", StringComparison.OrdinalIgnoreCase))?.Answer ?? String.Empty;
-            string greeting = String.Format(greetingTemplate, feedbackUserName);
-            string locationName = submission.LocationName;
-            Dictionary<string, dynamic> personalisation = new Dictionary<string, dynamic> { { "greeting", greeting }, { "location", locationName } };
-            string clientReferenceTemplate = _configuration.ClientReferenceTemplate;
-            string clientReference = String.Format(clientReferenceTemplate, submission.LocationId, submission.Id);
-            string emailReplyToId = _configuration.ReplyToAddressId;
-
-            //TODO: remove default email address once journey is updated to collect email address from user.
-            if (String.IsNullOrWhiteSpace(emailAddress))
-            {
-                emailAddress = "prashant.thakar@cqc.org.uk";
-            }
-
-            await _notificationService.NotifyByEmailAsync(templateId, emailAddress, personalisation, clientReference, emailReplyToId).ConfigureAwait(false);
         }
     }
 }

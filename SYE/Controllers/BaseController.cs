@@ -8,17 +8,14 @@ namespace SYE.Controllers
 {
     public abstract class BaseController<T> : Controller where T : BaseController<T>
     {
+        protected ILogger Logger { get; }
 
-        ILogger _logger;
-        protected ILogger Logger => _logger ?? (_logger = ControllerContext.HttpContext.RequestServices.GetService<ILogger<T>>());
+        protected ISessionService SessionService { get; }
 
-        ISessionService _sessionService;
-        protected ISessionService SessionService => _sessionService ?? (_sessionService = ControllerContext.HttpContext.RequestServices.GetService<ISessionService>());
-
-        public BaseController(IHttpContextAccessor context)
+        protected BaseController(IHttpContextAccessor context)
         {
-            _logger = context?.HttpContext?.RequestServices?.GetService<ILogger<T>>() as ILogger;
-            _sessionService = context?.HttpContext?.RequestServices?.GetService<ISessionService>() ?? null;
+            this.Logger = context?.HttpContext?.RequestServices?.GetService<ILogger<T>>() as ILogger;
+            this.SessionService = context?.HttpContext?.RequestServices?.GetService<ISessionService>() ?? null;
         }
     }
 }
