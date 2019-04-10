@@ -66,10 +66,13 @@
 <gds-row>
     <gds-column desktop-size="OneThird" tablet-size="FullWidth">
         <details class="govuk-details">
-            <summary class="govuk-details__summary" style="border-style: none">
-                <select class="govuk-select" style="height: 100%; width: 300px; background-color: #ccc; border: none">
-                    <option>Type of service</option>
-                </select>
+            <summary class="govuk-details__summary" style="width: 100%; outline-color: lightgray; border-top-color: lightgray; outline-style: solid; border-left-color: lightgray; background-color: lightgray; border-style:hidden; border-width: unset; content: none">
+                <span>
+                    <label class="govuk-input" style="color: black; border: none; width: auto; float: left">
+                        Type of service
+                    </label>
+                    <img alt="" src="~/images/select.png" style="height: 40px; width: 40px; vertical-align: middle; float: right" />
+                </span>                
             </summary>
             @if (Model.Facets.Count > 0)
             {
@@ -89,7 +92,7 @@
                             }
                             <input type="hidden" asp-for="Search" />
                             <br />
-                            <gds-button button-type="Submit" button-text="Apply"></gds-button>
+                            <a class="govuk-input" style="color: black; border: none; width: auto; float: left" href="#" onclick="document.getElementById('frm_facets').submit()">Apply</a>
                         </form>
                     </div>
                 </div>
@@ -123,6 +126,10 @@
                         <p class="govuk-body">
                             @result.Category<br />
                             @result.Address<br />
+                            @if (!string.IsNullOrWhiteSpace(result.Address2))
+                            {
+                                @result.Address2<br />
+                            }
                             @result.Town<br />
                             @result.PostCode<br />
                         </p>
