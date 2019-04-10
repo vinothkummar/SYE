@@ -31,7 +31,7 @@ namespace SYE.Tests.Services
             };
             var doc = new Document
             {
-                {"rid", expectedResult.Id},
+                {"id", expectedResult.Id},
                 {"locationName", expectedResult.Name},
                 {"postalAddressLine1", expectedResult.Address},
                 {"postalAddressTownCity", expectedResult.Town},
