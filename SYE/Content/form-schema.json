@@ -11,21 +11,21 @@
       "questions": [
         {
           "question_id": "Start_001_01",
-          "question": "What do you want to tell us about?",
+          "question": "What kind of experience do you want to tell us about?",
           "data_type": "string",
           "input_type": "optionlist",
           "options": [
             {
-              "value": "Bad care",
-              "text": "Bad care"
+              "value": "Good",
+              "text": "Good"
             },
             {
-              "value": "Good care",
-              "text": "Good care"
+              "value": "Bad",
+              "text": "Bad"
             },
             {
               "value": "Both",
-              "text": "Both"
+              "text": "Both good and bad"
             }
           ],
           "validation": {
@@ -38,7 +38,7 @@
           },
           "answer_logic": [
             {
-              "value": "Good care",
+              "value": "Good",
               "next_page_id": "Pos_001"
             }
           ],
@@ -51,7 +51,7 @@
           "button_type": "submit"
         }
       ],
-      "next_page_id": "Neg_001"
+      "next_page_id": "Neg_005"
     },
     {
       "page_id": "Pos_001",
@@ -93,8 +93,8 @@
       "questions": [
         {
           "question_id": "Neg_001_01",
-          "question": "Is someone at risk of harm?",
-          "html_content": "<details class=\"govuk-details\"><summary class=\"govuk-details__summary\"><span class=\"govuk-details__summary-text\">What counts as abuse or neglect</span></summary><div class=\"govuk-details__text\"><p class=\"govuk-body\">Abuse is when someone harms or mistreats someone else.</p><p class=\"govuk-body\">Neglect is when someone is not cared for properly. For example, the staff do not let them have enough water, food, heating or medicine. Or they're not getting the help they need to wash or being helped to the toilet.</p></div></details>",
+          "question": "Is someone at immediate risk of harm?",
+          "html_content": "<p class=\"govuk-body\">If they are, we'll need to take urgent action. This is called safeguarding.</p><p class=\"govuk-body\">Examples of harm are things like abuse or neglect.</p><details class=\"govuk-details\"><summary class=\"govuk-details__summary\"><span class=\"govuk-details__summary-text\">What counts as abuse or neglect</span></summary><div class=\"govuk-details__text\"><p class=\"govuk-body\">Abuse is when someone harms or mistreats someone else.</p><p class=\"govuk-body\">Neglect is when someone is not cared for properly. For example, the staff do not let them have enough water, food, heating or medicine. Or they're not getting the help they need to wash or being helped to the toilet.</p></div></details>",
           "data_type": "string",
           "input_type": "optionlist",
           "options": [
@@ -209,7 +209,7 @@
         {
           "question_id": "Neg_004_01",
           "question": "Give us your feedback about !!location_name!!",
-          "html_content": "<details class=\"govuk-details\"><summary class=\"govuk-details__summary\"><span class=\"govuk-details__summary-text\">What to include in your feedback</span></summary><div class=\"govuk-details__text\"><p class=\"govuk-body\">Try to give clear examples of what the service did well [good and bad care only] and what it could have done better. It's helpful if you can tell us:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>if your feedback is about a particular ward or department</li><li>important dates</li><li>the names of people involved or the type of job they did - for example, was it a dentist or a dental hygienist?</li><li>the person who is at risk of harm</li></ul></p><p class=\"govuk-body\">The more detail you can give us, the better.</p><p class=\"govuk-body\">But if you want to stay anonymous, be careful not to say anything that could identify you.</p></div></details>",
+          "html_content": "<details class=\"govuk-details\"><div class=\"govuk-details__text\"><p class=\"govuk-body\">We use your feedback to help us understand the quality of care at Victoria House.</p><p class=\"govuk-body\">We look at it alongside other things. For example, information from the service itself and other people's feedback.</p></div></details><p class=\"govuk-body\">The more detail you can give us, the better.</p><p class=\"govuk-body\">But if you want to be anonymous, be careful not to say anything that could identify you.</p><p class=\"govuk-body\">There are a few things that are particularly useful to include.</p><details class=\"govuk-details\"><summary class=\"govuk-details__summary\"><span class=\"govuk-details__summary-text\">What to include</span></summary><div class=\"govuk-details__text\"><p class=\"govuk-body\">It helps if you can tell us:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>examples of what they did well or could have done better</li><li>the people involved or their jobs - for example, was it a care assistant or a care home manager?</li><li>if something happened at regular times, for example every Wednesday</li></ul></p></div></details>",
           "data_type": "string",
           "input_type": "textarea",
           "validation": {
@@ -276,7 +276,7 @@
           "button_type": "submit"
         }
       ],
-      "next_page_id": "Neg_006"
+      "next_page_id": "Neg_001"
     },
     {
       "page_id": "Neg_006",
@@ -517,9 +517,9 @@
       "next_page_id": "CheckYourAnswers"
     }
   ],
-  "_rid": "ovQWAOWjhucJAAAAAAAAAA==",
-  "_self": "dbs/ovQWAA==/colls/ovQWAOWjhuc=/docs/ovQWAOWjhucJAAAAAAAAAA==/",
-  "_etag": "\"00000000-0000-0000-eb89-a8621a5a01d4\"",
+  "_rid": "sZs9AO3YqOIBAAAAAAAAAA==",
+  "_self": "dbs/sZs9AA==/colls/sZs9AO3YqOI=/docs/sZs9AO3YqOIBAAAAAAAAAA==/",
+  "_etag": "\"00000000-0000-0000-efaf-0442328501d4\"",
   "_attachments": "attachments/",
-  "_ts": 1554452956
+  "_ts": 1554908807
 }
