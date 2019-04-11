@@ -4,21 +4,26 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Notify.Interfaces;
+using Notify.Client;
 using SYE.Repository;
 using SYE.Services;
 using GDSHelpers.Models.FormSchema;
 using SYE.Models.SubmissionSchema;
 using SYE.Services.Wrappers;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace SYE
 {
     public class Startup
     {
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -57,11 +62,13 @@ namespace SYE
             services.AddSingleton<IAppConfiguration<FormVM>>(formDatabaseConfig);
             services.AddSingleton<IAppConfiguration<SubmissionVM>>(submissionDatabaseConfig);
 
-            services.AddSingleton<ICosmosDocumentClient<FormVM>>(new CosmosDocumentClient<FormVM>() { Client = new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy) });
-            services.AddSingleton<ICosmosDocumentClient<SubmissionVM>>(new CosmosDocumentClient<SubmissionVM>() { Client = new DocumentClient(new Uri(submissionDatabaseConfig.Endpoint), submissionDatabaseConfig.Key, connectionPolicy) });
+            //services.AddSingleton<ICosmosDocumentClient<FormVM>>(new CosmosDocumentClient<FormVM>() { Client = new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy) });
+            //services.AddSingleton<ICosmosDocumentClient<SubmissionVM>>(new CosmosDocumentClient<SubmissionVM>() { Client = new DocumentClient(new Uri(submissionDatabaseConfig.Endpoint), submissionDatabaseConfig.Key, connectionPolicy) });
+            services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy));
 
-            services.AddScoped(typeof(IGenericRepository<FormVM>), typeof(GenericRepository<FormVM>));
-            services.AddScoped(typeof(IGenericRepository<SubmissionVM>), typeof(GenericRepository<SubmissionVM>));
+            //services.AddScoped(typeof(IGenericRepository<FormVM>), typeof(GenericRepository<FormVM>));
+            //services.AddScoped(typeof(IGenericRepository<SubmissionVM>), typeof(GenericRepository<SubmissionVM>));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services.AddScoped<IGdsValidation, GdsValidation>();
 
@@ -76,6 +83,10 @@ namespace SYE
             services.AddScoped<ISubmissionService, SubmissionService>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.TryAddSingleton<IGovUkNotifyConfiguration>(_ => Configuration.GetSection("GovUkNotify").Get<GovUkNotifyConfiguration>());
+            services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(Configuration.GetConnectionString("GovUkNotifyApiKey")));
+            services.TryAddScoped<INotificationService, NotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

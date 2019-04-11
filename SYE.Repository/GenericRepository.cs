@@ -26,12 +26,12 @@ namespace SYE.Repository
         private readonly IDocumentClient _client;
         private readonly IAppConfiguration<T> _appConfig;
 
-        public GenericRepository(IAppConfiguration<T> appConfig, ICosmosDocumentClient<T> client)
+        public GenericRepository(IAppConfiguration<T> appConfig, IDocumentClient client)
         {
             _appConfig = appConfig;
             _databaseId = _appConfig.DatabaseId;
             _collectionId = _appConfig.CollectionId;
-            _client = client.Client;
+            _client = client;
         }
 
         public async Task<T> GetByIdAsync(string id)
