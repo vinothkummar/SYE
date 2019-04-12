@@ -74,7 +74,7 @@ namespace SYE.Controllers
                     {
                         try
                         {
-                            Task.Run(() => SendEmailNotification(submission));
+                            Task.Run(async () => await SendEmailNotificationAsync(submission).ConfigureAwait(false));
                             Logger.LogInformation($"Confirmation email for submission id: [{reference}] sent successfully.");
                         }
                         catch (Exception ex)
@@ -127,34 +127,50 @@ namespace SYE.Controllers
             return vm;
         }
 
-        private async Task SendEmailNotification(SubmissionVM submission)
+        private Task SendEmailNotificationAsync(SubmissionVM submission)
         {
+            if (submission == null)
+            {
+                throw new ArgumentNullException(nameof(submission));
+            }
+            return SendEmailNotificationInternalAsync(submission);
+        }
+
+        private async Task SendEmailNotificationInternalAsync(SubmissionVM submission)
+        {
+            string emailTemplateId = String.Empty;
+            if (String.IsNullOrWhiteSpace(submission?.LocationId) || String.IsNullOrWhiteSpace(submission?.LocationName))
+            {
+                emailTemplateId = _configuration.WithoutLocationEmailTemplateId;
+            }
+            else
+            {
+                emailTemplateId = _configuration.WithLocationEmailTemplateId;
+            }
+            string greetingTemplate = _configuration.GreetingTemplate;
+            string clientReferenceTemplate = _configuration.ClientReferenceTemplate;
+            string emailReplyToId = _configuration.ReplyToAddressId;
+
             string emailAddress = submission?
-                .Answers?.FirstOrDefault(x => x.Question.Equals("Email", StringComparison.OrdinalIgnoreCase))?
+                .Answers?.FirstOrDefault(x => x.Question.Equals("Email Address", StringComparison.OrdinalIgnoreCase))?
                 .Answer ?? String.Empty;
 
-            if (!String.IsNullOrWhiteSpace(emailAddress))
-            {
-                string templateId = String.Empty;
-                string greetingTemplate = _configuration.GreetingTemplate;
-                string feedbackUserName = submission?.Answers?.FirstOrDefault(x => x.Question.Equals("Full name", StringComparison.OrdinalIgnoreCase))?.Answer ?? String.Empty;
-                string greeting = String.Format(greetingTemplate, feedbackUserName);
-                string locationName = submission?.LocationName;
-                Dictionary<string, dynamic> personalisation = new Dictionary<string, dynamic> { { "greeting", greeting }, { "location", locationName } };
-                //TODO: once reference value and format is confirmed, this needs to be updated.
-                string clientReferenceTemplate = _configuration.ClientReferenceTemplate;
-                string clientReference = String.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
-                string emailReplyToId = _configuration.ReplyToAddressId;
-                if (String.IsNullOrWhiteSpace(submission?.LocationId) || String.IsNullOrWhiteSpace(submission?.LocationName))
-                {
-                    templateId = _configuration.WithoutLocationEmailTemplateId;
-                }
-                else
-                {
-                    templateId = _configuration.WithLocationEmailTemplateId;
-                }
-                await _notificationService.NotifyByEmailAsync(templateId, emailAddress, personalisation, clientReference, emailReplyToId).ConfigureAwait(false);
-            }
+            string feedbackUserName = submission?
+                .Answers?.FirstOrDefault(x => x.Question.Equals("Full name", StringComparison.OrdinalIgnoreCase))?
+                .Answer ?? String.Empty;
+
+            string greeting = String.Format(greetingTemplate, feedbackUserName);
+            string locationName = submission?.LocationName;
+            string clientReference = String.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
+
+            Dictionary<string, dynamic> personalisation =
+                new Dictionary<string, dynamic> {
+                    { "greeting", greeting }, { "location", locationName }
+                };
+
+            await _notificationService.NotifyByEmailAsync(
+                    emailTemplateId, emailAddress, personalisation, clientReference, emailReplyToId
+                ).ConfigureAwait(false);
         }
     }
 }
