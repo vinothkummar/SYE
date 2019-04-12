@@ -377,13 +377,7 @@
             "is_errored": false,
             "error_message": ""
           },
-          "answer_logic": [
-            {
-              "value": "Yes",
-              "next_page_id": "Neg_007"
-            }
-          ],
-          "answer": "CheckYourAnswers"
+          "answer": ""
         }
       ],
       "buttons": [
@@ -626,7 +620,7 @@
   ],
   "_rid": "sZs9AO3YqOIBAAAAAAAAAA==",
   "_self": "dbs/sZs9AA==/colls/sZs9AO3YqOI=/docs/sZs9AO3YqOIBAAAAAAAAAA==/",
-  "_etag": "\"00000000-0000-0000-f072-1ed8c76101d4\"",
+  "_etag": "\"00000000-0000-0000-f121-27b584d301d4\"",
   "_attachments": "attachments/",
-  "_ts": 1554992603
+  "_ts": 1555067780
 }
