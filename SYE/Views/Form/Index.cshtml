@@ -5,7 +5,15 @@
 @{
     Layout = "_LayoutForm";
 }
-<gds-back-link link-text="Back" url="/Form/Index/Neg_005"></gds-back-link>
+
+@if (string.IsNullOrWhiteSpace(Model.PreviousPageId))
+{
+    <gds-back-link link-text="Back" url="#" onclick="history.go(-1);return false;"></gds-back-link>
+}
+else
+{
+    <gds-back-link link-text="Back" url="/Form/Index/@Model.PreviousPageId"></gds-back-link>
+}
 <gds-row>
 
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
@@ -14,7 +22,7 @@
 
             @Html.HiddenFor(m => m.PageId)
             @Html.AntiForgeryToken()
-            
+
             @if (Model.Questions != null)
             {
                 foreach (var question in Model.Questions)
@@ -30,10 +38,10 @@
                     @Html.GdsButton(button.ButtonType, button.ButtonText)
                 }
             }
-            
+
             <script>
 
-                jQuery("[data-showwhen-questionid]").each(function(s, e) {
+                jQuery("[data-showwhen-questionid]").each(function (s, e) {
 
                     var $this = jQuery(this);
                     $this.hide();
@@ -41,13 +49,13 @@
                     var questionToCheck = $this.data("showwhen-questionid");
                     var valToCheck = $this.data("showwhen-value").toString();
 
-                    jQuery("[name=" + questionToCheck + "]").on("change", function() {
+                    jQuery("[name=" + questionToCheck + "]").on("change", function () {
                         var answer = jQuery(this).val();
                         showWhen($this, answer, valToCheck);
                     });
 
                 });
-                
+
                 function showWhen($this, answer, valToCheck) {
                     if (valToCheck !== "" && answer === valToCheck) {
                         $this.show();
