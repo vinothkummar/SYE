@@ -45,5 +45,8 @@ namespace SYE.Models.SubmissionSchema
         public IEnumerable<AnswerVM> Answers { get; set; }
 
 
+        [JsonProperty("user_ref")]
+        public string UserRef { get; set; }
+
     }
 }

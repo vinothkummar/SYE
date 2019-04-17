@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SYE.Helpers;
 using SYE.Models;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
@@ -66,7 +67,7 @@ namespace SYE.Controllers
 
                 var submission = GenerateSubmission(formVm);
                 var result = _submissionService.CreateAsync(submission).Result;
-                var reference = result?.Id ?? String.Empty;
+                var reference = submission.UserRef ?? String.Empty;
 
                 if (!String.IsNullOrWhiteSpace(reference) && vm?.SendConfirmationEmail == true)
                 {
@@ -105,8 +106,10 @@ namespace SYE.Controllers
                 DateCreated = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
-                LocationName = HttpContext.Session.GetString("LocationName")
+                LocationName = HttpContext.Session.GetString("LocationName"),
             };
+
+            vm.UserRef = SubmissionHelper.GenerateUserRef(vm.LocationId, vm.Id, 4);
 
             var answers = new List<AnswerVM>();
 
