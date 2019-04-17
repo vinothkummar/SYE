@@ -133,7 +133,7 @@ namespace SYE.Controllers
                 returnViewModel.Search = search;                
                 returnViewModel.PageSize = _pageSize;
                 returnViewModel.Count = _searchService.GetCount();
-                returnViewModel.Facets = ListHelper.ConvertList(_searchService.GetFacets());
+                returnViewModel.Facets = SubmissionHelper.ConvertList(_searchService.GetFacets());
                 returnViewModel.TypeOfService = _searchService.GetFacets();
                 returnViewModel.CurrentPage = pageNo;
 
