@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using FluentAssertions;
+using SYE.Services;
 using Xunit;
 
 namespace SYE.Tests.Services
@@ -16,8 +17,10 @@ namespace SYE.Tests.Services
         [Fact]
         public void CreateDocumentTest()
         {
+            var sut = new DocumentService();
             var json = GetJsonString();
 
+            var result = sut.CreateDocumentFromJsonAsync(json);
             json.Should().Be("");
         }
 
