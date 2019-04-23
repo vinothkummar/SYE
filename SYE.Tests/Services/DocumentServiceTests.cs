@@ -11,7 +11,7 @@ namespace SYE.Tests.Services
     public class DocumentServiceTests
     {
         private string _dir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\";
-        private string _fileName = "submission-schema.json";
+        private string _fileNameNoContact = "submission-schema-no-contact.json";
         private string _location = "Test Location";
 
         [Fact]
@@ -20,8 +20,8 @@ namespace SYE.Tests.Services
             var sut = new DocumentService();
             var json = GetJsonString();
 
-            var result = sut.CreateDocumentFromJsonAsync(json);
-            json.Should().Be("");
+            var result = sut.CreateDocumentFromJsonAsync(json, _dir).Result;
+            result.Should().Be(true);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace SYE.Tests.Services
         private string GetJsonString()
         {
             var file = string.Empty;
-            var path = _dir + _fileName;
+            var path = _dir + _fileNameNoContact;
             if (string.IsNullOrWhiteSpace(path))
             {
                 throw new ArgumentException(nameof(path));
