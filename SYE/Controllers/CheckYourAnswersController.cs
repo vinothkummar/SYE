@@ -160,11 +160,11 @@ namespace SYE.Controllers
             string emailReplyToId = _configuration.ReplyToAddressId;
 
             string emailAddress = submission?
-                .Answers?.FirstOrDefault(x => x.Question.Equals("Email Address", StringComparison.OrdinalIgnoreCase))?
+                .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == "Contact_003_02")?
                 .Answer ?? String.Empty;
 
             string feedbackUserName = submission?
-                .Answers?.FirstOrDefault(x => x.Question.Equals("Full name", StringComparison.OrdinalIgnoreCase))?
+                .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == "Contact_003_01")?
                 .Answer ?? String.Empty;
 
             string greeting = String.Format(greetingTemplate, feedbackUserName);
