@@ -16,18 +16,20 @@ namespace SYE.Services
         Task<SubmissionVM> GetByIdAsync(string id);
         Task<IEnumerable<SubmissionVM>> FindByAsync(Expression<Func<SubmissionVM, bool>> predicate);
         Task<Document> UpdateAsync(string id, SubmissionVM item);
-        Task<int> GenerateUniqueUserRefAsync(string id);
+        Task<int> GenerateUniqueUserRefAsync();
     }
 
     public class SubmissionService : ISubmissionService
     {
         private readonly IGenericRepository<SubmissionVM> _repo;
         private readonly IGenericRepository<ConfigVM> _config;
+        private readonly IAppConfiguration<ConfigVM> _appConfig;
 
-        public SubmissionService(IGenericRepository<SubmissionVM> repo, IGenericRepository<ConfigVM> config)
+        public SubmissionService(IGenericRepository<SubmissionVM> repo, IGenericRepository<ConfigVM> config, IAppConfiguration<ConfigVM> appConfig)
         {
             _repo = repo;
             _config = config;
+            _appConfig = appConfig;
         }
         
         public Task<Document> CreateAsync(SubmissionVM item)
@@ -55,13 +57,13 @@ namespace SYE.Services
             return _repo.UpdateAsync(id, item);
         }
 
-        public Task<int> GenerateUniqueUserRefAsync(string id)
+        public Task<int> GenerateUniqueUserRefAsync()
         {
-            var configVm = _config.GetByIdAsync(id).Result;
+            var configVm = _config.GetByIdAsync(_appConfig.ConfigRecordId).Result;
 
             var submissionId = int.Parse(configVm.LastGeneratedRef) + 1;
             configVm.LastGeneratedRef = submissionId.ToString();
-            var result = _config.UpdateAsync(id, configVm);
+            var result = _config.UpdateAsync(_appConfig.ConfigRecordId, configVm);
 
             return Task.FromResult(submissionId);
         }

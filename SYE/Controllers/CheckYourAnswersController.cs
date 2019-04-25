@@ -109,7 +109,7 @@ namespace SYE.Controllers
                 LocationName = HttpContext.Session.GetString("LocationName"),
             };
 
-            vm.UserRef = _submissionService.GenerateUniqueUserRefAsync("ef47a7bd-a2cb-427b-875e-7deddf62345f").Result.ToString();
+            vm.UserRef = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
 
             var answers = new List<AnswerVM>();
 
