@@ -83,6 +83,7 @@ namespace SYE
             services.AddScoped<IFormService, FormService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISubmissionService, SubmissionService>();
+            services.AddScoped<IDocumentService, DocumentService>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

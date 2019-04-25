@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GDSHelpers.Models.FormSchema;
@@ -17,15 +18,18 @@ namespace SYE.Controllers
 {
     public class CheckYourAnswersController : BaseController<CheckYourAnswersController>
     {
+        private string _dir = Directory.GetCurrentDirectory() + "\\Documents\\";//this will be temporary so dont put into app settings
         private readonly ISubmissionService _submissionService;
         private readonly IGovUkNotifyConfiguration _configuration;
         private readonly INotificationService _notificationService;
+        private readonly IDocumentService _documentService;
 
         public CheckYourAnswersController(IHttpContextAccessor context, IServiceProvider service) : base(context)
         {
             _submissionService = service.GetService<ISubmissionService>();
             _configuration = service.GetService<IGovUkNotifyConfiguration>();
             _notificationService = service.GetService<INotificationService>();
+            _documentService = service.GetService<IDocumentService>();
         }
 
         [HttpGet]
@@ -67,6 +71,7 @@ namespace SYE.Controllers
 
                 var submission = GenerateSubmission(formVm);
                 var result = _submissionService.CreateAsync(submission).Result;
+                var filePath = _documentService.CreateSubmissionDocument(submission, _dir);
                 var reference = submission.UserRef ?? String.Empty;
 
                 if (!String.IsNullOrWhiteSpace(reference) && vm?.SendConfirmationEmail == true)
