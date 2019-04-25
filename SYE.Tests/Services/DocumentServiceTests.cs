@@ -27,7 +27,7 @@ namespace SYE.Tests.Services
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameNoContact);
 
-            var result = sut.CreateDocumentFromJson(json, _dir);
+            var result = sut.CreateSubmissionDocument(json, _dir);
             result.Should().NotBeNullOrWhiteSpace();
             FileHelper.FileExists(result).Should().BeTrue();
         }
@@ -37,7 +37,7 @@ namespace SYE.Tests.Services
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameContactDetails);
 
-            var result = sut.CreateDocumentFromJson(json, _dir);
+            var result = sut.CreateSubmissionDocument(json, _dir);
             result.Should().NotBeNullOrWhiteSpace();
             FileHelper.FileExists(result).Should().BeTrue();
         }

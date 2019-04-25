@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SYE.Models.SubmissionSchema;
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
@@ -23,8 +17,8 @@ namespace SYE.Services
 {
     public interface IDocumentService
     {
-        string CreateDocumentFromJson(string json, string folderName);
-        string CreateDocumentFromJson(SubmissionVM submissionVm, string path);
+        string CreateSubmissionDocument(string json, string folderName);
+        string CreateSubmissionDocument(SubmissionVM submissionVm, string path);
     }
     public class DocumentService : IDocumentService
     {
@@ -32,14 +26,14 @@ namespace SYE.Services
         private readonly int FontSizeNormal = 25;
         private readonly int FontSizeSmall = 15;
 
-        public string CreateDocumentFromJson(string json, string folderName)
+        public string CreateSubmissionDocument(string json, string folderName)
         {
            var submissionVm = JsonConvert.DeserializeObject<SubmissionVM>(json);
            var filePath = GenerateDocument(submissionVm, folderName);
            return filePath;
         }
 
-        public string CreateDocumentFromJson(SubmissionVM submissionVm, string folderName)
+        public string CreateSubmissionDocument(SubmissionVM submissionVm, string folderName)
         {
             var filePath = GenerateDocument(submissionVm, folderName);
             return filePath;
