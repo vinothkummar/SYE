@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.Azure.Search" Version="5.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Notify" Version="2.5.0" />
+    <PackageReference Include="Open-XML-SDK" Version="2.9.0" />
   </ItemGroup>
 
   <ItemGroup>

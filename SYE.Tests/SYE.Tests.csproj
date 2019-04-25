@@ -8,9 +8,17 @@
 
   <ItemGroup>
     <None Remove="Resources\form-schema.json" />
+    <None Remove="Resources\submission-schema-contact-details.json" />
+    <None Remove="Resources\submission-schema-no-contact.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\submission-schema-contact-details.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Resources\submission-schema-no-contact.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="Resources\form-schema.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -22,6 +30,7 @@
     <PackageReference Include="Microsoft.Azure.Search" Version="5.0.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="Moq" Version="4.10.1" />
+    <PackageReference Include="Open-XML-SDK" Version="2.9.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
   </ItemGroup>
