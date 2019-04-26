@@ -59,7 +59,7 @@ namespace SYE.Services
 
         public Task<int> GenerateUniqueUserRefAsync()
         {
-            var configVm = _config.GetByIdAsync(_appConfig.ConfigRecordId).Result;
+            var configVm = _config.GetAsync(x => x.Id == _appConfig.ConfigRecordId, null, x => x.LastGeneratedRef).Result;
 
             var submissionId = int.Parse(configVm.LastGeneratedRef) + 1;
             configVm.LastGeneratedRef = submissionId.ToString();
