@@ -114,7 +114,7 @@ namespace SYE.Controllers
                 LocationName = HttpContext.Session.GetString("LocationName"),
             };
 
-            vm.UserRef = SubmissionHelper.GenerateUserRef(vm.LocationId, vm.Id, 4);
+            vm.UserRef = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
 
             var answers = new List<AnswerVM>();
 

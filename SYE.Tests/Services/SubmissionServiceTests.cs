@@ -25,7 +25,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             mockedRepo.Setup(x => x.CreateAsync(It.IsAny<SubmissionVM>())).ReturnsAsync(new Document { Id = id });
             //act
@@ -39,7 +41,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             mockedRepo.Setup(x => x.CreateAsync(It.IsAny<SubmissionVM>())).ReturnsAsync(new Document { Id = id });
             //act
@@ -54,7 +58,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             mockedRepo.Setup(x => x.DeleteAsync(It.IsAny<string>()));
             // Act
@@ -69,7 +75,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             var submissionVm = new SubmissionVM { Id = id };
             var doc = new DocumentResponse<SubmissionVM>(submissionVm);
@@ -86,7 +94,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             var submissionVm = new SubmissionVM { Id = id };
             var doc = new DocumentResponse<SubmissionVM>(submissionVm);
@@ -103,7 +113,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             var submissionVm = new SubmissionVM {Id = id};
             var query = new List<SubmissionVM> { submissionVm }.AsQueryable();
@@ -121,7 +133,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             var submissionVm = new SubmissionVM { Id = id };
             var query = new List<SubmissionVM> { submissionVm }.AsQueryable();
@@ -139,7 +153,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             var submissionVm = new SubmissionVM { Id = id };
             var query = new List<SubmissionVM> { submissionVm }.AsQueryable();
@@ -156,7 +172,9 @@ namespace SYE.Tests.Services
             const string id = "123";
             //arrange
             var mockedRepo = new Mock<IGenericRepository<SubmissionVM>>();
-            var sut = new SubmissionService(mockedRepo.Object);
+            var mockedConfigRepo = new Mock<IGenericRepository<ConfigVM>>();
+            var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
+            var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             var submissionVm = new SubmissionVM { Id = id };
             var doc = new Document();

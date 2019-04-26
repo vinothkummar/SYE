@@ -17,15 +17,7 @@ namespace SYE.Helpers
             var returnList = source?.Select(x => new SelectItem {Text = x, Selected = false}).ToList();
 
             return returnList;
-        }
-        /// <summary>
-        /// Generated a reference number based on 2 strings
-        /// if any of the strings are null or empty then the reference number is empty
-        /// </summary>
-        /// <param name="string1"></param>
-        /// <param name="string2"></param>
-        /// <param name="numChars"></param>
-        /// <returns></returns>
+        }        
         public static string GenerateUserRef(string string1, string string2, int numChars)
         {
             var s1 = string.Empty;

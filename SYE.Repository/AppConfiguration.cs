@@ -14,6 +14,7 @@ namespace SYE.Repository
         string Key { get; set; }
         string DatabaseId { get; set; }
         string CollectionId { get; set; }
+        string ConfigRecordId { get; set; }
     }
 
     public class AppConfiguration<T> : IAppConfiguration<T> where T : class
@@ -22,6 +23,7 @@ namespace SYE.Repository
         public string Key { get; set; }
         public string DatabaseId { get; set; }
         public string CollectionId { get; set; }
+        public string ConfigRecordId { get; set; }
     }
 
     public class SearchConfiguration : ISearchConfiguration
