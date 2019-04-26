@@ -8,7 +8,7 @@ namespace SYE.Controllers
         public IActionResult Index(string id)
         {
             ViewBag.Reference = HttpContext.Session.GetString("ReferenceNumber");
-
+            ViewBag.ShowBackButton = false;
             return View();
         }
     }

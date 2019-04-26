@@ -3,17 +3,9 @@
 @model GDSHelpers.Models.FormSchema.PageVM
 
 @{
-    Layout = "_LayoutForm";
+    Layout = "_Layout";
 }
 
-@if (string.IsNullOrWhiteSpace(Model.PreviousPageId))
-{
-    <gds-back-link link-text="Back" url="#" onclick="history.go(-1);return false;"></gds-back-link>
-}
-else
-{
-    <gds-back-link link-text="Back" url="/Form/Index/@Model.PreviousPageId"></gds-back-link>
-}
 <gds-row>
 
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">

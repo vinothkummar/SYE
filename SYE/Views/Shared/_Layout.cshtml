@@ -4,28 +4,48 @@
 <html lang="en-GB">
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#5f2861" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>@Configuration.GetSection("ApplicationSettings")["AppName"] - Care Quality Commission</title>
+    <title>@(Configuration.GetValue<String>("ApplicationSettings:AppName")) - Care Quality Commission</title>
+
+    <meta name="theme-color" content="#5f2861" />
+
+    @if (Configuration.GetValue<Boolean>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:Enabled") == true)
+    {
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="@String.Concat("//www.googletagmanager.com/gtag/js?id=", Configuration.GetValue<String>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '@(Configuration.GetValue<String>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))');
+        </script>
+    }
+    @if (Configuration.GetValue<Boolean>("AnalyticsConfiguration:Hotjar:Enabled") == true)
+    {
+        <!-- Hotjar Tracking Code -->
+        <script>
+            (function (h, o, t, j, a, r) {
+                h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+                h._hjSettings = { hjid: @(Configuration.GetValue<String>("AnalyticsConfiguration:Hotjar:Id")), hjsv: @(Configuration.GetValue<String>("AnalyticsConfiguration:Hotjar:SnippetVersion")) };
+                a = o.getElementsByTagName('head')[0];
+                r = o.createElement('script'); r.async = 1;
+                r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window, document, '//static.hotjar.com/c/hotjar-', '.js?sv=');
+        </script>
+    }
 
     <link rel="shortcut icon" href="~/assets/favicon.ico" type="image/vnd.microsoft.icon" />
-    
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
-
-    <link href="~/css/govuk-frontend-2.4.1.min.css" rel="stylesheet" />
-
+    <link rel="stylesheet" href="~/css/govuk-frontend-2.4.1.min.css" />
     <!--[if lt IE 9]>
         <link href="~/css/govuk-frontend-ie8-2.4.1.min.css" rel="stylesheet" />
     <![endif]-->
-
     <link rel="stylesheet" href="~/css/site.css" />
 
 </head>
-
 <body class="govuk-template__body">
-
     <script>
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
@@ -49,7 +69,17 @@
 
         <gds-phase-banner phase="Beta" url="#"></gds-phase-banner>
 
-        <gds-back-link link-text="Back" url="#" onclick="history.go(-1);return false;"></gds-back-link>
+        @if (ViewBag.ShowBackButton != false)
+        {
+            if (!String.IsNullOrWhiteSpace(ViewBag.PreviousPage))
+            {
+                <gds-back-link link-text="Back" url="@(ViewBag.PreviousPage)"></gds-back-link>
+            }
+            else
+            {
+                <gds-back-link link-text="Back" url="#" onclick="history.go(-1);return false;"></gds-back-link>
+            }
+        }
 
         <gds-main-wrapper>
 
@@ -58,7 +88,6 @@
         </gds-main-wrapper>
 
     </gds-container>
-
 
     <footer class="govuk-footer " role="contentinfo">
         <div class="govuk-width-container ">
@@ -89,7 +118,6 @@
                         </li>
                     </ul>
 
-
                     <svg role="presentation" focusable="false" class="govuk-footer__licence-logo" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 483.2 195.7" height="17" width="41">
                         <path fill="currentColor" d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145" />
                     </svg>
@@ -105,13 +133,11 @@
         </div>
     </footer>
 
-
-
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     <script src="~/js/govuk-frontend-2.4.1.min.js" asp-append-version="true"></script>
     <script>window.GOVUKFrontend.initAll()</script>
-
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @RenderSection("Scripts", required: false)
+
 </body>
 </html>

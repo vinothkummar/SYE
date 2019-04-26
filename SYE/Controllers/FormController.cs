@@ -33,6 +33,10 @@ namespace SYE.Controllers
 
                 if (pageVm != null)
                 {
+                    if (!String.IsNullOrEmpty(pageVm.PreviousPageId))
+                    {
+                        ViewBag.PreviousPage = String.Concat("/Form/Index/", pageVm.PreviousPageId);
+                    }
                     return View(pageVm);
                 }
 
@@ -62,6 +66,11 @@ namespace SYE.Controllers
 
                 //If Null throw NotFound error
                 if (pageVm == null) return NotFound();
+
+                if (!String.IsNullOrEmpty(pageVm.PreviousPageId))
+                {
+                    ViewBag.PreviousPage = String.Concat("/Form/Index/", pageVm.PreviousPageId);
+                }
 
                 if (Request?.Form != null)
                 {
