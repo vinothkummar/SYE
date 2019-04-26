@@ -38,7 +38,6 @@
 
   <ItemGroup>
     <Folder Include="Content\" />
-    <Folder Include="Documents\" />
     <Folder Include="wwwroot\assets\images\" />
   </ItemGroup>
 
