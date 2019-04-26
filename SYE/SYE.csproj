@@ -3,6 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <Authors>CQC - Care Quality Commission</Authors>
+    <Company>CQC - Care Quality Commission</Company>
+    <Product>GFC - Give Feedback on Care</Product>
+    <PackageId>GFC</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -38,7 +42,6 @@
 
   <ItemGroup>
     <Folder Include="Content\" />
-    <Folder Include="Documents\" />
     <Folder Include="wwwroot\assets\images\" />
   </ItemGroup>
 
