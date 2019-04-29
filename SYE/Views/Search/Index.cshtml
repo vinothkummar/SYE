@@ -17,15 +17,23 @@
             <gds-column desktop-size="OneHalf" tablet-size="FullWidth">
 
                 <form asp-action="SearchResults" method="get">
+                    
+                    @{
+                        var errorCss = "";
+                        if (Model.ShowIncompletedSearchMessage)
+                        {
+                            errorCss = "govuk-form-group--error";
+                        }
+                    }
 
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group @errorCss">
                         <label class="govuk-label" for="search">
                             For example, searching for Great Ormond St London WC1N will find Great Ormond Street hospital in London. You do not need to use the whole name or address.
                         </label>
                         @if (Model.ShowIncompletedSearchMessage)
                         {
                             <label class="govuk-error-message" for="search">
-                                Please complete the text field below
+                                Enter the name of a service, its address or both. Just enter whichever part you can remember.
                             </label>
                         }
                         <input class="govuk-input" id="search" name="search" type="text" value="@Model.Search">
