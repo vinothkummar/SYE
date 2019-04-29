@@ -35,7 +35,14 @@ namespace SYE.Controllers
                 {
                     if (!String.IsNullOrEmpty(pageVm.PreviousPageId))
                     {
-                        ViewBag.PreviousPage = String.Concat("/Form/Index/", pageVm.PreviousPageId);
+                        if (pageVm.PreviousPageId.Equals("start", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            ViewBag.PreviousPage = "/search";
+                        }
+                        else
+                        {
+                            ViewBag.PreviousPage = String.Concat("/Form/Index/", pageVm.PreviousPageId);
+                        }                        
                     }
                     return View(pageVm);
                 }
