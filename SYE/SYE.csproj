@@ -28,7 +28,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="GDSHelpers" Version="2019.4.15.1" />
+    <PackageReference Include="GDSHelpers" Version="2019.4.29.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
   </ItemGroup>
