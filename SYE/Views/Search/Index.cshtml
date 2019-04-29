@@ -9,7 +9,7 @@
 
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
 
-        <gds-heading heading-type="H2" text="Find the care service you want to tell us about"></gds-heading>
+        <gds-heading heading-type="H1" text="Find the care service you want to tell us about"></gds-heading>
 
         <gds-heading heading-type="H3" text="Search by service name or address"></gds-heading>
 
@@ -19,12 +19,12 @@
                 <form asp-action="SearchResults" method="get">
 
                     <div class="govuk-form-group">
-                        <label class="govuk-label" for="event-name">
-                            For example, Great Ormond St London WC1N. You do not need to use the whole name or address.
+                        <label class="govuk-label" for="search">
+                            For example, searching for Great Ormond St London WC1N will find Great Ormond Street hospital in London. You do not need to use the whole name or address.
                         </label>
                         @if (Model.ShowIncompletedSearchMessage)
                         {
-                            <label class="govuk-error-message" for="event-name">
+                            <label class="govuk-error-message" for="search">
                                 Please complete the text field below
                             </label>
                         }
