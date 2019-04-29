@@ -22,6 +22,7 @@ namespace SYE.Services
     }
     public class DocumentService : IDocumentService
     {
+        private const string _documentNamePrefix = "feedback-GFC-";
         private readonly int FontSizeHeader = 50;
         private readonly int FontSizeNormal = 25;
         private readonly int FontSizeSmall = 15;
@@ -44,7 +45,7 @@ namespace SYE.Services
             var title = submissionVm.UserRef;
             try
             {
-                var fullPath = folderName + title + ".docx";
+                var fullPath = folderName + _documentNamePrefix + title + ".docx";
                 using (MemoryStream mem = new MemoryStream())
                 {
                     // Create Document
