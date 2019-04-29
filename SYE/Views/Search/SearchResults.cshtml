@@ -46,16 +46,18 @@
             <div class="govuk-details__text">
 
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="more-detail">
-                        Tell us anything you can about the name of the service and where it is
-                    </label>
-                    <span id="more-detail-hint" class="govuk-hint">
-                        We will use what you tel us to try to identify it
-                    </span>
-                    <textarea class="govuk-textarea" id="more-detail" name="more-detail" rows="5" aria-describedby="more-detail-hint"></textarea>
+                    <form id="frm_NotFound" asp-action="NotFound" method="post">
+                        <label class="govuk-label" for="more-detail">
+                            Tell us anything you can about the name of the service and where it is
+                        </label>
+                        <span id="more-detail-hint" class="govuk-hint">
+                            We will use what you tel us to try to identify it
+                        </span>
+                        <textarea class="govuk-textarea" id="moredetail" name="moredetail" rows="5" aria-describedby="more-detail-hint"></textarea>
 
-                    <gds-button button-type="Button" button-text="Continue"></gds-button>
-
+                        @*<gds-button button-type="Button" button-text="Continue"></gds-button>*@
+                        <gds-button button-type="Submit" button-text="Continue"></gds-button>
+                    </form>
                 </div>
             </div>
         </details>

@@ -83,6 +83,7 @@ namespace SYE.Services
             context.Session.SetString("ProviderId", vm.ProviderId ?? "");
             context.Session.SetString("LocationId", vm.LocationId ?? "");
             context.Session.SetString("LocationName", vm.LocationName ?? "");
+            context.Session.SetString("NotFoundDetails", vm.NotFoundDetails ?? "");
         }
 
         public UserSessionVM GetUserSession()

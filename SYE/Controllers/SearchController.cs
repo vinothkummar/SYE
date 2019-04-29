@@ -56,6 +56,32 @@ namespace SYE.Controllers
         }
 
         [HttpPost]
+        public IActionResult NotFound(string moredetail)
+        {
+            try
+            {
+                //Store the user entered details
+                _sessionService.SetUserSessionVars(new UserSessionVM{LocationId = "0", LocationName = "Not Found", ProviderId = "", NotFoundDetails = moredetail});
+
+                //Set up our replacement text
+                var replacements = new Dictionary<string, string>
+                {
+                    {"!!location_name!!", "Not Found"}
+                };
+
+                //Load the Form into Session
+                _sessionService.LoadLatestFormIntoSession(replacements);
+
+                return RedirectToAction("Index", "Form");
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500);
+            }
+
+        }
+        [HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
         {
             try

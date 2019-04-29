@@ -27,8 +27,13 @@ namespace SYE.Controllers
                 if (HttpContext?.Session != null)
                 {
                     ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
-                }                
+                    ViewBag.NotFoundDetails = HttpContext.Session.GetString("NotFoundDetails");
+                }
 
+                if (id == "" && ViewBag.LocationName == "Not Found")
+                {
+                    id = "NotFound";
+                }
                 var pageVm = _sessionService.GetPageById(id);
 
                 if (pageVm != null)
