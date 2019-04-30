@@ -98,7 +98,14 @@ namespace SYE.Controllers
                 var nextPageId = pageVm.NextPageId;
 
                 //Check the nextPageId for preset controller names
-                if (nextPageId == "CheckYourAnswers") return RedirectToAction("Index", "CheckYourAnswers");
+                switch (nextPageId)
+                {
+                    case "CheckYourAnswers":
+                        return RedirectToAction("Index", "CheckYourAnswers");
+
+                    case "Home":
+                        return RedirectToAction("Index", "Home");
+                }
 
                 //Finally, No Errors so load the next page
                 return RedirectToAction("Index", new { id = nextPageId });

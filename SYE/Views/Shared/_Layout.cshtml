@@ -49,6 +49,7 @@
     <script>
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
+    <a href="#main-content" class="govuk-skip-link">Skip to main content</a>
 
     <gds-header>
 
@@ -73,11 +74,11 @@
         {
             if (!String.IsNullOrWhiteSpace(ViewBag.PreviousPage))
             {
-                <gds-back-link link-text="Back" url="@(ViewBag.PreviousPage)"></gds-back-link>
+                <gds-back-link link-text="Back" href="@(ViewBag.PreviousPage)"></gds-back-link>
             }
             else
             {
-                <gds-back-link link-text="Back" url="#" onclick="history.go(-1);return false;"></gds-back-link>
+                <gds-back-link link-text="Back" href="#" onclick="history.go(-1);return false;"></gds-back-link>
             }
         }
 

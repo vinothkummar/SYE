@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@{
+    Layout = "_Layout";
+}
+
+<gds-row>
+
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+
+        <gds-heading text="How we use your information" heading-type="H1"></gds-heading>
+        <gds-heading text="What we use your feedback for" heading-type="H3"></gds-heading>
+
+        <gds-paragraph>
+            Our job is to monitor and inspect health and social care services. One of the ways we monitor them is by using feedback from people like you. This might be about:
+        </gds-paragraph>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>your own experiences of care</li>
+            <li>friends' or relatives' experiences</li>
+            <li>things you've found out or seen because of your job or volunteer work</li>
+        </ul>
+        <gds-paragraph>
+            We look at what you tell us alongside other information. This might be information from the service itself or what we see when we carry out inspections.
+        </gds-paragraph>
+        <gds-paragraph>
+            This helps us build up a picture of the quality of care the service gives.
+        </gds-paragraph>
+
+
+
+        <gds-heading text="How we store feedback and contact details" heading-type="H3"></gds-heading>
+        <gds-paragraph>
+            We store your feedback in a database. We own the database and it's hosted in the UK. If you give us your name and contact details, we store them in the same way.
+        </gds-paragraph>
+        <gds-paragraph>
+            We transfer this information to other systems so our staff can use it. We make sure the only members of our staff who can see it are people who need it for their jobs. Our systems are secure, owned by us and based in the UK.
+        </gds-paragraph>
+
+
+        <gds-heading text="How long we keep feedback and contact details" heading-type="H3"></gds-heading>
+        <gds-paragraph>
+            To keep your information safe, we follow:
+        </gds-paragraph>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>The General Data Protection Regulation (GDPR) and the Data Protection Act 2018</li>
+            <li>Our own policies on handling information</li>
+            <li>Our code of practice on confidential personal information</li>
+        </ul>
+        <gds-paragraph>
+            <a href="https://www.cqc.org.uk/about-us/our-policies/privacy-statement" target="_blank">Read our privacy statement</a> to find out more about how we handle personal information.
+        </gds-paragraph>
+
+
+        <gds-heading text="Staying anonymous can affect how we use feedback" heading-type="H3"></gds-heading>
+        <gds-paragraph>
+            You do not have to give your name or contact details when you give us feedback about an experience of care. But if you do stay anonymous, it can make it harder for us to take action.
+        </gds-paragraph>
+        <gds-paragraph>
+            This is because we sometimes need to get in touch with you to follow up. This might mean asking extra questions or getting more detail.
+        </gds-paragraph>
+        
+
+        <gds-heading text=" When we can and can’t keep your name confidential" heading-type="H3"></gds-heading>
+        <gds-paragraph>
+            If you give us your name, we’ll keep it confidential unless you tell us:
+        </gds-paragraph>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>someone is in danger of serious harm, like abuse or neglect (a safeguarding concern)</li>
+            <li>someone has committed a serious crime</li>
+        </ul>
+        <gds-paragraph>
+            If that’s the case, we may have to pass everything you’ve told us to the police, the council or another public body.
+        </gds-paragraph>
+
+
+        <gds-heading text=" When we can and can’t keep your name confidential" heading-type="H3"></gds-heading>
+        <gds-paragraph>
+            You can ask us not to share your feedback with the service. This can help if it’s important they do not find out who you are.
+        </gds-paragraph>
+        <gds-paragraph>
+            It’s important to understand they might still work out someone has contacted us. For example, if you tell us a service you work for has falsified their records, we may visit and ask to see them. This on its own could make the service suspicious.
+        </gds-paragraph>
+        
+        <gds-paragraph>
+            <gds-button button-text="Continue" button-type="Button" onclick="location.href='@Url.Action("Index", "Home")'"></gds-button>
+        </gds-paragraph>
+
+    </gds-column>
+
+</gds-row>
