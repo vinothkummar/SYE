@@ -56,17 +56,17 @@ namespace SYE.Controllers
         }
 
         [HttpPost]
-        public IActionResult NotFound(string moredetail)
+        public IActionResult NotFound()
         {
             try
             {
                 //Store the user entered details
-                _sessionService.SetUserSessionVars(new UserSessionVM{LocationId = "0", LocationName = "Not Found", ProviderId = "", NotFoundDetails = moredetail});
+                _sessionService.SetUserSessionVars(new UserSessionVM{LocationId = "0", LocationName = "the service", ProviderId = ""});
 
                 //Set up our replacement text
                 var replacements = new Dictionary<string, string>
                 {
-                    {"!!location_name!!", "Not Found"}
+                    {"!!location_name!!", "the service"}
                 };
 
                 //Load the Form into Session

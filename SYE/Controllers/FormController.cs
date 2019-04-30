@@ -3,6 +3,7 @@ using System.Linq;
 using GDSHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SYE.Models;
 using SYE.Services;
 
@@ -27,14 +28,11 @@ namespace SYE.Controllers
                 if (HttpContext?.Session != null)
                 {
                     ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
-                    ViewBag.NotFoundDetails = HttpContext.Session.GetString("NotFoundDetails");
                 }
 
-                if (id == "" && ViewBag.LocationName == "Not Found")
-                {
-                    id = "NotFound";
-                }
-                var pageVm = _sessionService.GetPageById(id);
+                var notFoundFirstPageFlag = (bool) (id == "" && ViewBag.LocationName == "the service");
+
+                var pageVm = _sessionService.GetPageById(id, notFoundFirstPageFlag);
 
                 if (pageVm != null)
                 {
@@ -42,7 +40,19 @@ namespace SYE.Controllers
                     {
                         if (pageVm.PreviousPageId.Equals("start", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            ViewBag.PreviousPage = "/search";
+                            if((!notFoundFirstPageFlag) && ViewBag.LocationName == "the service")
+                            {
+                                //this is the SECOND page of the journey when location is NOT found
+                                //However its also the FIRST page of the journey when the location IS found
+                                //back button should go to Not Found details page
+                                ViewBag.PreviousPage = String.Concat("/Form/Index/", "");
+                            }
+                            else
+                            {
+                                //this is the FIRST page of the journey
+                                //so back button should go to the search page
+                                ViewBag.PreviousPage = "/search";
+                            }                            
                         }
                         else
                         {
@@ -114,7 +124,6 @@ namespace SYE.Controllers
                 //TODO: log error
                 return StatusCode(500);
             }
-
         }
 
     }

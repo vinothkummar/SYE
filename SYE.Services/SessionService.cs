@@ -10,7 +10,7 @@ namespace SYE.Services
 {
     public interface ISessionService
     {
-        PageVM GetPageById(string pageId);
+        PageVM GetPageById(string pageId, bool notFoundFlag = false);
         FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements);
         void SetUserSessionVars(UserSessionVM vm);
         UserSessionVM GetUserSession();
@@ -35,13 +35,22 @@ namespace SYE.Services
             _context = context;
         }
         
-        public PageVM GetPageById(string pageId)
+        public PageVM GetPageById(string pageId, bool notFoundFlag = false)
         {
             var formVm = GetFormVmFromSession();
 
             if (string.IsNullOrWhiteSpace(pageId))
             {
-                return formVm.Pages.FirstOrDefault();
+                if (notFoundFlag)
+                {
+                    //get first page
+                    return formVm.Pages.FirstOrDefault();
+                }
+                else
+                {
+                    //get second page
+                    return formVm.Pages.Where(x => x.PageId != formVm.Pages.First().PageId).FirstOrDefault();
+                }
             }
 
             if (formVm.Pages.Any(x => x.PageId == pageId))
@@ -83,7 +92,6 @@ namespace SYE.Services
             context.Session.SetString("ProviderId", vm.ProviderId ?? "");
             context.Session.SetString("LocationId", vm.LocationId ?? "");
             context.Session.SetString("LocationName", vm.LocationName ?? "");
-            context.Session.SetString("NotFoundDetails", vm.NotFoundDetails ?? "");
         }
 
         public UserSessionVM GetUserSession()

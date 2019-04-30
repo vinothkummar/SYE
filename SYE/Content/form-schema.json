@@ -12,7 +12,7 @@
         {
           "question_id": "NotFound_01",
           "question": "Tell us anything you can about the name of the service and where it is",
-          "html_content": "<p class=\"govuk-body\">We will use what you tel us to try to identify it</p>",
+          "html_content": "<p class=\"govuk-body\">We will use what you tell us to try to identify it</p>",
           "data_type": "string",
           "input_type": "textarea",
           "validation": {
@@ -80,6 +80,7 @@
           "button_type": "submit"
         }
       ],
+      "no_location_previous_page_id": "NotFound",
       "previous_page_id": "start",
       "next_page_id": "Neg_005"
     },
