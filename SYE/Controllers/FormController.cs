@@ -84,7 +84,7 @@ namespace SYE.Controllers
                 }                    
 
                 //Get the current PageVm from Session
-                var pageVm = _sessionService.GetPageById(vm.PageId);
+                var pageVm = _sessionService.GetPageById(vm.PageId, false);
 
                 //If Null throw NotFound error
                 if (pageVm == null) return NotFound();

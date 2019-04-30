@@ -15,6 +15,7 @@ namespace SYE.Tests.Services
         private string _dir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\";
         private string _fileNameNoContact = "submission-schema-no-contact.json";
         private string _fileNameContactDetails = "submission-schema-contact-details.json";
+        private string _fileNameContactDetailsNoLocation = "submission-schema-contact-details-no-location.json"; 
 
         public DocumentServiceTests()
         {
@@ -41,8 +42,18 @@ namespace SYE.Tests.Services
             result.Should().NotBeNullOrWhiteSpace();
             FileHelper.FileExists(result).Should().BeTrue();
         }
+        [Fact]
+        public void CreateDocumentWithContactDetailsNoLocationTest()
+        {
+            var sut = new DocumentService();
+            var json = GetJsonString(_fileNameContactDetailsNoLocation);
 
-     /// <summary>
+            var result = sut.CreateSubmissionDocument(json, _dir);
+            result.Should().NotBeNullOrWhiteSpace();
+            FileHelper.FileExists(result).Should().BeTrue();
+        }
+
+        /// <summary>
         /// this method reads a json file from the folder and returns the next page
         /// </summary>
         /// <param name="pageId"></param>

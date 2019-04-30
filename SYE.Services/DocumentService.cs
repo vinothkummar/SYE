@@ -69,7 +69,9 @@ namespace SYE.Services
                         GetDataSection(body, "Completed :", new List<string> {DateTime.Parse(submissionVm.DateCreated).ToShortDateString()}, false);
                         GetDataSection(body, "Location ID :", new List<string> {submissionVm.LocationId}, false);
                         GetDataSection(body, "Provider ID :", new List<string> {submissionVm.ProviderId}, false);
-                        GetDataSection(body, "Location name/description :", new List<string>{ submissionVm.LocationName }, false);
+                        //location
+                        GetLocation(body, submissionVm);
+
                         //Are you happy to be contacted
                         var answerTxt = string.Empty;
                         var questionTxt = GetYesNoAnswer(submissionVm, "Yes I'm happy for you to contact me", "No, I do not want to give my name or contact details", "Contact_002", ref answerTxt);
@@ -136,6 +138,26 @@ namespace SYE.Services
             {
                 //log error
                 return null;
+            }
+        }
+        /// <summary>
+        /// Creates the feedback section
+        /// </summary>
+        /// <param name="body"></param>
+        /// <param name="submissionVm"></param>
+        private void GetLocation(Body body, SubmissionVM submissionVm)
+        {
+            var answer = submissionVm.Answers.Where(x => x.PageId == "NotFound").FirstOrDefault();
+            if (answer == null)
+            {
+                //location has been selected
+                GetDataSection(body, "Location name/description : ", new List<string> { submissionVm.LocationName }, false);
+            }
+            else
+            {
+                //location has not been found
+                GetDataSection(body, "Location name/description : ", new List<string> { "Not Found" }, false);
+                GetDataSection(body, "1. " + answer.Question, new List<string> {answer.Answer}, true);
             }
         }
         /// <summary>

@@ -10,7 +10,7 @@ namespace SYE.Services
 {
     public interface ISessionService
     {
-        PageVM GetPageById(string pageId, bool notFoundFlag = false);
+        PageVM GetPageById(string pageId, bool notFoundFlag);
         FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements);
         void SetUserSessionVars(UserSessionVM vm);
         UserSessionVM GetUserSession();
@@ -35,7 +35,7 @@ namespace SYE.Services
             _context = context;
         }
         
-        public PageVM GetPageById(string pageId, bool notFoundFlag = false)
+        public PageVM GetPageById(string pageId, bool notFoundFlag)
         {
             var formVm = GetFormVmFromSession();
 

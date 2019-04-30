@@ -55,8 +55,8 @@ namespace SYE.Controllers
             return GetSearchResult(search, pageNo, selectedFacets);
         }
 
-        [HttpPost]
-        public IActionResult NotFound()
+        [HttpGet]
+        public IActionResult LocationNotFound()
         {
             try
             {

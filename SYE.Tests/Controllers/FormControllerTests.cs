@@ -27,7 +27,7 @@ namespace SYE.Tests.Controllers
             var returnPage = new PageVM { PageId = id };
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
-            mockSession.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+            mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
             var sut = new FormController(mockValidation.Object, mockSession.Object);
 
             //act
@@ -48,7 +48,7 @@ namespace SYE.Tests.Controllers
             PageVM returnPage = null;
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
-            mockSession.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+            mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
             var sut = new FormController(mockValidation.Object, mockSession.Object);
 
             //act
@@ -67,7 +67,7 @@ namespace SYE.Tests.Controllers
             //arrange
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
-            mockSession.Setup(x => x.GetPageById(id)).Throws(new Exception()).Verifiable();
+            mockSession.Setup(x => x.GetPageById(id, false)).Throws(new Exception()).Verifiable();
             var sut = new FormController(mockValidation.Object, mockSession.Object);
 
             //act
@@ -87,7 +87,7 @@ namespace SYE.Tests.Controllers
             PageVM returnPage = null;
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
-            mockSession.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+            mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
             var sut = new FormController(mockValidation.Object, mockSession.Object);
 
             //act
@@ -115,7 +115,7 @@ namespace SYE.Tests.Controllers
 
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
-            mockSession.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+            mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
             var sut = new FormController(mockValidation.Object, mockSession.Object);
 
             //act
@@ -141,7 +141,7 @@ namespace SYE.Tests.Controllers
 
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
-            mockSession.Setup(x => x.GetPageById(id)).Returns(returnPage).Verifiable();
+            mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
             var sut = new FormController(mockValidation.Object, mockSession.Object);
 
             //act
