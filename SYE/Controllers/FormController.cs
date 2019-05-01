@@ -51,7 +51,7 @@ namespace SYE.Controllers
                             {
                                 //this is the FIRST page of the journey
                                 //so back button should go to the search page
-                                ViewBag.PreviousPage = "/search";
+                                ViewBag.PreviousPage = "/search";  
                             }                            
                         }
                         else
