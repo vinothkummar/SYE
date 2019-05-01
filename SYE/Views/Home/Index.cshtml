@@ -10,19 +10,15 @@
 
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
-        <gds-heading heading-type="H2" text="Give feedback on care"></gds-heading>
+        <gds-heading heading-type="H1" text="Give feedback on care"></gds-heading>
         <gds-paragraph>Use this form to tell us about:</gds-paragraph>
         <ul class="govuk-list govuk-list--bullet">
             <li>an experience of care from a service like a care home, care agency, hospital or GP it can be good or bad</li>
             <li>a concern you have about a care service you work for</li>
         </ul>
-        <gds-paragraph>
-            <img src="~/images/exclamation.png" style="height: 40px; margin: 0; padding: 5px 10px; vertical-align: middle">
-            <span style="height: 40px; vertical-align: middle">
-                <strong>If someone is in danger of serious harm, call 999</strong>
-            </span>
-        </gds-paragraph>
-
+        
+        <gds-warning-text message="If someone is in danger of serious harm, call 999" warning-id=""></gds-warning-text>
+        
         <form asp-controller="Search" asp-action="Index" method="get">
             <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start Now" button-type="Submit" start-now="true"></gds-button></p>
         </form>
@@ -34,32 +30,40 @@
 
             <ul class="govuk-tabs__list">
                 <li class="govuk-tabs__list-item">
-                    <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#feedback">
+                    <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#feedback" id="tab_feedback" role="tab" aria-controls="feedback" tabindex="-1" aria-selected="false">
                         How we'll use your feedback
                     </a>
                 </li>
                 <li class="govuk-tabs__list-item">
-                    <a class="govuk-tabs__tab" href="#get-help">
+                    <a class="govuk-tabs__tab" href="#get-help" id="tab_get-help" role="tab" aria-controls="get-help" tabindex="-1" aria-selected="false">
                         Get help with this form
                     </a>
                 </li>
             </ul>
 
             <section class="govuk-tabs__panel" id="feedback">
-                <gds-paragraph>We use your feedback to help us understand the quality of care the service gives. It helps make care better for everybody else.</gds-paragraph>
-                <gds-paragraph>We’ll pass it to our inspectors. It can tell them what they need to look at when they carry out an inspection.</gds-paragraph>
-
-                <div class="govuk-details__text">
-                    <gds-paragraph>
-                        This is different from making a formal complaint. To <a href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider">make a formal complaint</a> you must contact the service itself
-                    </gds-paragraph>
-                </div>
-
-                <gds-paragraph>You do not have to give us your name or contact details. But it's more likely we can take action if you do.</gds-paragraph>
                 <gds-paragraph>
-                    Find out <a href="/Form/Index/Contact_006">how we handle information</a> like contact details
+                    We use your feedback to help us understand the quality of care the service gives. It helps make care better for everybody else.
                 </gds-paragraph>
+
+                <gds-paragraph>
+                    We’ll pass it to our inspectors. It can tell them what they need to look at when they carry out an inspection.
+                </gds-paragraph>
+
+                <gds-inset-text>
+                    This is different from making a formal complaint. To <a target="_blank" href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider">make a formal complaint</a> you must contact the service itself
+                </gds-inset-text>
+
+                <gds-paragraph>
+                    You do not have to give us your name or contact details. But it's more likely we can take action if you do.
+                </gds-paragraph>
+
+                <gds-paragraph>
+                    Find out <a href="@Url.Action("Index", "HowWeUseYourInformation")">how we handle information</a> like contact details
+                </gds-paragraph>
+
             </section>
+
             <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="get-help">
                 <gds-paragraph>You can get help on the phone if it's hard for you to do things online.</gds-paragraph>
                 <gds-paragraph>
@@ -68,7 +72,7 @@
                     Excluding bank holidays
                 </gds-paragraph>
             </section>
-        </div>        
+        </div>
     </gds-column>
 
 </gds-row>
