@@ -17,35 +17,34 @@ namespace SYE.Services
 {
     public interface IDocumentService
     {
-        string CreateSubmissionDocument(string json, string folderName);
-        string CreateSubmissionDocument(SubmissionVM submissionVm, string path);
+        string CreateSubmissionDocument(string json);
+        string CreateSubmissionDocument(SubmissionVM submissionVm);
     }
     public class DocumentService : IDocumentService
     {
-        private const string _documentNamePrefix = "feedback-GFC-";
         private readonly int FontSizeHeader = 50;
         private readonly int FontSizeNormal = 25;
         private readonly int FontSizeSmall = 15;
 
-        public string CreateSubmissionDocument(string json, string folderName)
+        public string CreateSubmissionDocument(string json)
         {
            var submissionVm = JsonConvert.DeserializeObject<SubmissionVM>(json);
-           var filePath = GenerateDocument(submissionVm, folderName);
+           var filePath = GenerateDocument(submissionVm);
            return filePath;
         }
 
-        public string CreateSubmissionDocument(SubmissionVM submissionVm, string folderName)
+        public string CreateSubmissionDocument(SubmissionVM submissionVm)
         {
-            var filePath = GenerateDocument(submissionVm, folderName);
+            var filePath = GenerateDocument(submissionVm);
             return filePath;
         }
 
-        private string GenerateDocument(SubmissionVM submissionVm, string folderName)
+        private string GenerateDocument(SubmissionVM submissionVm)
         {
             var title = submissionVm.UserRef;
             try
             {
-                var fullPath = folderName + _documentNamePrefix + title + ".docx";
+                string convertedDoc = null;
                 using (MemoryStream mem = new MemoryStream())
                 {
                     // Create Document
@@ -126,13 +125,15 @@ namespace SYE.Services
                         }
 
                         mainPart.Document.Save();
-                        //write to file                        
-                        wordDocument.SaveAs(fullPath);
+
                         wordDocument.Close();
                     }
+                    //convert to bas64
+                    var bytes = mem.ToArray();                    
+                    convertedDoc = Convert.ToBase64String(bytes);
                     mem.Close();
                 }
-                return fullPath;
+                return convertedDoc;
             }
             catch (Exception e)
             {

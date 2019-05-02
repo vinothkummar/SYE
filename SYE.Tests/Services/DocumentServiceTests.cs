@@ -24,33 +24,44 @@ namespace SYE.Tests.Services
 
         [Fact]
         public void CreateDocumentNoContactDetailsTest()
-        {            
+        {
+            var path = _dir + "test1.docx";
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameNoContact);
 
-            var result = sut.CreateSubmissionDocument(json, _dir);
-            result.Should().NotBeNullOrWhiteSpace();
-            FileHelper.FileExists(result).Should().BeTrue();
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
+
         }
         [Fact]
         public void CreateDocumentWithContactDetailsTest()
         {
+            var path = _dir + "test2.docx";
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameContactDetails);
-
-            var result = sut.CreateSubmissionDocument(json, _dir);
-            result.Should().NotBeNullOrWhiteSpace();
-            FileHelper.FileExists(result).Should().BeTrue();
+            //act
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
         }
         [Fact]
         public void CreateDocumentWithContactDetailsNoLocationTest()
         {
+            var path = _dir + "test3.docx";
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameContactDetailsNoLocation);
-
-            var result = sut.CreateSubmissionDocument(json, _dir);
-            result.Should().NotBeNullOrWhiteSpace();
-            FileHelper.FileExists(result).Should().BeTrue();
+            //act
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
         }
 
         /// <summary>
@@ -80,11 +91,6 @@ namespace SYE.Tests.Services
 
             return file;
         }
-
-        //public void Dispose()
-        //{
-        //    FileHelper.DeleteFilesWithExtension(_dir, "docx");
-        //}
-
+        
     }
 }

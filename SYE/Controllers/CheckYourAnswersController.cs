@@ -69,8 +69,7 @@ namespace SYE.Controllers
                 }
 
                 var submission = GenerateSubmission(formVm);
-                var result = _submissionService.CreateAsync(submission).Result;
-                var filePath = _documentService.CreateSubmissionDocument(submission, _dir);
+                var result = _submissionService.CreateAsync(submission).Result;                
                 var reference = submission.UserRef ?? String.Empty;
 
                 if (!String.IsNullOrWhiteSpace(reference) && vm?.SendConfirmationEmail == true)
@@ -130,6 +129,8 @@ namespace SYE.Controllers
             }
 
             vm.Answers = answers;
+
+            vm.WordDocBase64 = _documentService.CreateSubmissionDocument(vm);
 
             return vm;
         }
