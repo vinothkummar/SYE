@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SYE.Helpers;
 using SYE.Models;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
@@ -76,7 +75,7 @@ namespace SYE.Controllers
 
                 if (!String.IsNullOrWhiteSpace(reference) && vm?.SendConfirmationEmail == true)
                 {
-                    using (Logger.BeginScope(new Dictionary<string, object> { { "Submission Id", reference } }))
+                    using (Logger.BeginScope(new Dictionary<string, object> { { "Submission Reference", reference } }))
                     {
                         try
                         {
@@ -173,7 +172,7 @@ namespace SYE.Controllers
 
             Dictionary<string, dynamic> personalisation =
                 new Dictionary<string, dynamic> {
-                    { "greeting", greeting }, { "location", locationName }
+                    { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.UserRef ?? String.Empty }
                 };
 
             await _notificationService.NotifyByEmailAsync(
