@@ -55,6 +55,32 @@ namespace SYE.Controllers
             return GetSearchResult(search, pageNo, selectedFacets);
         }
 
+        [HttpGet]
+        public IActionResult LocationNotFound()
+        {
+            try
+            {
+                //Store the user entered details
+                _sessionService.SetUserSessionVars(new UserSessionVM{LocationId = "0", LocationName = "the service", ProviderId = ""});
+
+                //Set up our replacement text
+                var replacements = new Dictionary<string, string>
+                {
+                    {"!!location_name!!", "the service"}
+                };
+
+                //Load the Form into Session
+                _sessionService.LoadLatestFormIntoSession(replacements);
+
+                return RedirectToAction("Index", "Form");
+            }
+            catch (Exception ex)
+            {
+                //log error
+                return StatusCode(500);
+            }
+
+        }
         [HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
         {

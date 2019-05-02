@@ -8,11 +8,15 @@
 
   <ItemGroup>
     <None Remove="Resources\form-schema.json" />
+    <None Remove="Resources\submission-schema-contact-details-no-location.json" />
     <None Remove="Resources\submission-schema-contact-details.json" />
     <None Remove="Resources\submission-schema-no-contact.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\submission-schema-contact-details-no-location.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="Resources\submission-schema-contact-details.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
