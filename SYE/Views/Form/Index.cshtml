@@ -15,6 +15,9 @@
             @Html.HiddenFor(m => m.PageId)
             @Html.AntiForgeryToken()
 
+
+            @Html.RenderPreAmble(Model)
+
             @if (Model.Questions != null)
             {
                 foreach (var question in Model.Questions)
@@ -22,6 +25,9 @@
                     @Html.GdsQuestion(question)
                 }
             }
+
+            @Html.RenderPostAmble(Model)
+
 
             @if (Model.Buttons != null)
             {
