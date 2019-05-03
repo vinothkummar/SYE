@@ -48,5 +48,8 @@ namespace SYE.Models.SubmissionSchema
         [JsonProperty("user_ref")]
         public string UserRef { get; set; }
 
+        [JsonProperty("base64_attachment")]
+        public string Base64Attachment { get; set; }
+
     }
 }

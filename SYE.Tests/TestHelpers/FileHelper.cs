@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Xml;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace SYE.Tests.TestHelpers
 {
@@ -31,6 +36,23 @@ namespace SYE.Tests.TestHelpers
             {
                 //log error
                 return false;
+            }
+        }
+
+        public static void GenerateWordDocument(string base64WordDocument, string fullPath)
+        {
+            LoadContent(Convert.FromBase64String(base64WordDocument), fullPath);
+        }
+        private static void LoadContent(byte[] content, string fullPath)
+        {
+            Stream documentStream = new MemoryStream();
+            documentStream.Write(content, 0, content.Length);
+
+            using (WordprocessingDocument document = WordprocessingDocument.Open(documentStream, true))
+            {
+                MainDocumentPart mainPart = document.MainDocumentPart;
+                mainPart.Document.Save();
+                document.SaveAs(fullPath);
             }
         }
     }
