@@ -48,7 +48,6 @@ namespace SYE.Tests.TestHelpers
             Stream documentStream = new MemoryStream();
             documentStream.Write(content, 0, content.Length);
 
-            //Processes word file, replace custom xml parts with parameters
             using (WordprocessingDocument document = WordprocessingDocument.Open(documentStream, true))
             {
                 MainDocumentPart mainPart = document.MainDocumentPart;
