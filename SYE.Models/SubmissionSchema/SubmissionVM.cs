@@ -48,7 +48,7 @@ namespace SYE.Models.SubmissionSchema
         [JsonProperty("user_ref")]
         public string UserRef { get; set; }
 
-        [JsonProperty("word-doc-base64")]
+        [JsonProperty("word_doc_base64")]
         public string WordDocBase64 { get; set; }
 
     }
