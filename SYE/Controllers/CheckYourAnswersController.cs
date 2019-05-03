@@ -130,7 +130,7 @@ namespace SYE.Controllers
 
             vm.Answers = answers;
 
-            vm.WordDocBase64 = _documentService.CreateSubmissionDocument(vm);
+            vm.Base64Attachment = _documentService.CreateSubmissionDocument(vm);
 
             return vm;
         }
