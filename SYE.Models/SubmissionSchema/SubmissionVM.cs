@@ -51,5 +51,7 @@ namespace SYE.Models.SubmissionSchema
         [JsonProperty("base64_attachment")]
         public string Base64Attachment { get; set; }
 
+        [JsonProperty("status")]
+        public string Status { get; set; }
     }
 }
