@@ -131,6 +131,7 @@ namespace SYE.Controllers
             vm.Answers = answers;
 
             vm.Base64Attachment = _documentService.CreateSubmissionDocument(vm);
+            vm.Status = "Saved";
 
             return vm;
         }
