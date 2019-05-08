@@ -95,7 +95,7 @@
                     @foreach (var result in Model.Data)
                     {
                         <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
-                            <input id="ProviderId" name="ProviderId" value="" type="hidden" />
+                            <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
                             <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
                             <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
 
