@@ -102,10 +102,6 @@ namespace SYE.Controllers
 
         private SubmissionVM GenerateSubmission(FormVM formVm)
         {
-            var dateNow = DateTime.Now;
-            var nowUtc = TimeZoneInfo.ConvertTimeToUtc(dateNow, TimeZoneInfo.Local).ToString();
-            var demo = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-
             var vm = new SubmissionVM
             {
                 Version = formVm.Version,
