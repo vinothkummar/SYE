@@ -58,15 +58,17 @@ namespace SYE.Controllers
         [HttpGet]
         public IActionResult LocationNotFound()
         {
+            var defaultServiceName = "the service";
+            
             try
             {
                 //Store the user entered details
-                _sessionService.SetUserSessionVars(new UserSessionVM{LocationId = "0", LocationName = "the service", ProviderId = ""});
+                _sessionService.SetUserSessionVars(new UserSessionVM{LocationId = "0", LocationName = defaultServiceName, ProviderId = ""});
 
                 //Set up our replacement text
                 var replacements = new Dictionary<string, string>
                 {
-                    {"!!location_name!!", "the service"}
+                    {"!!location_name!!", defaultServiceName}
                 };
 
                 //Load the Form into Session
