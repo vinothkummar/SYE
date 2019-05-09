@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SYE.Models;
 using SYE.Repository;
@@ -26,15 +28,17 @@ namespace SYE.Services
         private readonly IGenericRepository<FormVM> _repo;
         private readonly IFormService _formService;
         private readonly IHttpContextAccessor _context;
+        private readonly IConfiguration _configuration;
 
         const string schemaKey = "sye_form_schema";
 
-        public SessionService(IFormService formService, IHttpContextAccessor context)
+        public SessionService(IFormService formService, IHttpContextAccessor context, IConfiguration configuration)
         {
             _formService = formService;
             _context = context;
+            _configuration = configuration;
         }
-        
+
         public PageVM GetPageById(string pageId, bool notFoundFlag)
         {
             var formVm = GetFormVmFromSession();
@@ -60,19 +64,27 @@ namespace SYE.Services
 
             return null;
         }
-        
+
         public FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements)
         {
-            var context = _context.HttpContext;
-            var version = context.Session.GetString("FormVersion");
+            string formName = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Name");
+            string version = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Version");
 
-            var form = string.IsNullOrEmpty(version) ? 
-                _formService.GetLatestForm().Result : 
-                _formService.FindByVersion(version).Result;
+            var context = _context.HttpContext;
+            string sessionVersion = context.Session.GetString("FormVersion");
+
+            if (!String.IsNullOrWhiteSpace(sessionVersion))
+            {
+                version = sessionVersion;
+            }
+
+            var form = string.IsNullOrEmpty(version) ?
+                _formService.GetLatestFormByName(formName).Result :
+                _formService.FindByNameAndVersion(formName, version).Result;
 
             var json = JsonConvert.SerializeObject(form);
 
-            if (replacements != null && replacements.Count > 0)
+            if (replacements?.Count > 0)
             {
                 foreach (var item in replacements)
                 {
