@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SYE.Helpers;
 using SYE.Models;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
@@ -106,7 +107,7 @@ namespace SYE.Controllers
             {
                 Version = formVm.Version,
                 Id = Guid.NewGuid().ToString(),
-                DateCreated = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                DateCreated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
                 FormName = formVm.FormName,
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
@@ -124,8 +125,8 @@ namespace SYE.Controllers
                     {
                         PageId = page.PageId,
                         QuestionId = question.QuestionId,
-                        Question = string.IsNullOrEmpty(question.Question) ? page.PageName : question.Question,
-                        Answer = question.Answer
+                        Question = string.IsNullOrEmpty(question.Question) ? page.PageName.StripHtml() : question.Question.StripHtml(),
+                        Answer = question.Answer.StripHtml().RemoveLineBreaks()
                     }));
             }
 
