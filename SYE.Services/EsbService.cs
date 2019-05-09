@@ -9,10 +9,11 @@ namespace SYE.Services
 {
     public interface IEsbService
     {
-        Task<List<SubmissionVM>> GetAllSubmisions();
-        Task<List<SubmissionVM>> GetAllSubmisions(string status);
+        Task<IEnumerable<SubmissionVM>> GetAllSubmisions();
+        Task<IEnumerable<SubmissionVM>> GetAllSubmisions(string status);
         Task<SubmissionVM> GetSubmision(string id);
-        Task<bool> PostSubmision(string id);
+        Task<bool> PostSubmision(SubmissionVM submission);
+        Task<int> PostAllSubmisions();
     }
     public class EsbService : IEsbService
     {
@@ -23,24 +24,30 @@ namespace SYE.Services
             _repo = repo;
         }
 
-        public Task<List<SubmissionVM>> GetAllSubmisions()
+        public async Task<IEnumerable<SubmissionVM>> GetAllSubmisions()
         {
-            throw new NotImplementedException();
+            var results = await _repo.FindByAsync(x => x.UserRef != "");
+            return results;
         }
 
-        public Task<List<SubmissionVM>> GetAllSubmisions(string status)
+        public async Task<IEnumerable<SubmissionVM>> GetAllSubmisions(string status)
         {
-            //var results = _repo.FindByAsync(x => x.Status == status);
-            //return results;
-            throw new NotImplementedException();
+            var results = await _repo.FindByAsync(x => x.Status == status);
+            return results;
         }
 
-        public Task<SubmissionVM> GetSubmision(string id)
+        public async Task<SubmissionVM> GetSubmision(string id)
         {
-            throw new NotImplementedException();
+            var result = await _repo.GetAsync(x => x.UserRef == id, null, x => x.UserRef);
+            return result;
         }
 
-        public Task<bool> PostSubmision(string id)
+        public Task<bool> PostSubmision(SubmissionVM submission)
+        {
+            //throw new NotImplementedException();
+            return Task.FromResult(true);
+        }
+        public Task<int> PostAllSubmisions()
         {
             throw new NotImplementedException();
         }
