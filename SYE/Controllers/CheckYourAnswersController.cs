@@ -70,10 +70,9 @@ namespace SYE.Controllers
 
                 var submission = GenerateSubmission(formVm);
                 var result = _submissionService.CreateAsync(submission).Result;
-                var filePath = _documentService.CreateSubmissionDocument(submission, _dir);
-                var reference = submission.UserRef ?? String.Empty;
+                var reference = submission.SubmissionId ?? string.Empty;
 
-                if (!String.IsNullOrWhiteSpace(reference) && vm?.SendConfirmationEmail == true)
+                if (!string.IsNullOrWhiteSpace(reference) && vm?.SendConfirmationEmail == true)
                 {
                     using (Logger.BeginScope(new Dictionary<string, object> { { "Submission Reference", reference } }))
                     {
@@ -108,12 +107,13 @@ namespace SYE.Controllers
                 Version = formVm.Version,
                 Id = Guid.NewGuid().ToString(),
                 DateCreated = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                FormName = formVm.FormName,
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
                 LocationName = HttpContext.Session.GetString("LocationName"),
             };
 
-            vm.UserRef = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
+            vm.SubmissionId = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
 
             var answers = new List<AnswerVM>();
 
@@ -130,6 +130,9 @@ namespace SYE.Controllers
             }
 
             vm.Answers = answers;
+
+            vm.Base64Attachment = _documentService.CreateSubmissionDocument(vm);
+            vm.Status = "Saved";
 
             return vm;
         }
@@ -172,7 +175,7 @@ namespace SYE.Controllers
 
             Dictionary<string, dynamic> personalisation =
                 new Dictionary<string, dynamic> {
-                    { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.UserRef ?? String.Empty }
+                    { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.SubmissionId ?? String.Empty }
                 };
 
             await _notificationService.NotifyByEmailAsync(

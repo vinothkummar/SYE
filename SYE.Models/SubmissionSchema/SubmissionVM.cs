@@ -41,12 +41,22 @@ namespace SYE.Models.SubmissionSchema
         public string LocationName { get; set; }
 
 
+        [JsonProperty("gfc_id")]
+        public string SubmissionId { get; set; }
+
+
+        [JsonProperty("form_status")]
+        public string Status { get; set; }
+
+
+
         [JsonProperty("answers")]
         public IEnumerable<AnswerVM> Answers { get; set; }
+        
 
+        [JsonProperty("base64_attachment")]
+        public string Base64Attachment { get; set; }
 
-        [JsonProperty("user_ref")]
-        public string UserRef { get; set; }
-
+       
     }
 }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Azure.Search.Models;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Document = Microsoft.Azure.Search.Models.Document;
 using SearchResult = SYE.Models.SearchResult;
 
 namespace SYE.Services.Helpers
@@ -56,6 +57,7 @@ namespace SYE.Services.Helpers
             var searchResult = new SearchResult
             {
                 Id = GetValue(doc, "id"),
+                ProviderId = GetValue(doc, "providerId"),
                 Name = GetValue(doc, "locationName"),
                 Address = GetValue(doc, "postalAddressLine1"),
                 Address2 = GetValue(doc, "postalAddressLine2"),

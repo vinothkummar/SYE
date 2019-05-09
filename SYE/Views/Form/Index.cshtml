@@ -15,6 +15,9 @@
             @Html.HiddenFor(m => m.PageId)
             @Html.AntiForgeryToken()
 
+
+            @Html.RenderPreAmble(Model)
+
             @if (Model.Questions != null)
             {
                 foreach (var question in Model.Questions)
@@ -23,6 +26,9 @@
                 }
             }
 
+            @Html.RenderPostAmble(Model)
+
+
             @if (Model.Buttons != null)
             {
                 foreach (var button in Model.Buttons)
@@ -30,33 +36,6 @@
                     @Html.GdsButton(button.ButtonType, button.ButtonText)
                 }
             }
-
-            <script>
-
-                jQuery("[data-showwhen-questionid]").each(function (s, e) {
-
-                    var $this = jQuery(this);
-                    $this.hide();
-
-                    var questionToCheck = $this.data("showwhen-questionid");
-                    var valToCheck = $this.data("showwhen-value").toString();
-
-                    jQuery("[name=" + questionToCheck + "]").on("change", function () {
-                        var answer = jQuery(this).val();
-                        showWhen($this, answer, valToCheck);
-                    });
-
-                });
-
-                function showWhen($this, answer, valToCheck) {
-                    if (valToCheck !== "" && answer === valToCheck) {
-                        $this.show();
-                    } else {
-                        $this.hide();
-                    }
-                }
-
-            </script>
 
         </form>
 
