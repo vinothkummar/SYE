@@ -22,11 +22,11 @@ namespace SYE.Controllers
 
         [HttpGet]
         [Route("submissions")]
-        public ActionResult<IEnumerable<SubmissionVM>> GetAll()
+        public async Task<ActionResult<IEnumerable<SubmissionVM>>> GetAll()
         {
             try
             {
-                var results = _esbService.GetAllSubmisions().Result;
+                var results = await _esbService.GetAllSubmisions();
                 if (results == null)
                 {
                     return NotFound();
@@ -42,11 +42,11 @@ namespace SYE.Controllers
         }
         [HttpGet]
         [Route("submissions/{status}")]
-        public ActionResult<List<SubmissionVM>> GetAll(string status)
+        public async Task<ActionResult<List<SubmissionVM>>> GetAll(string status)
         {
             try
             {
-                var results = _esbService.GetAllSubmisions(status).Result;
+                var results = await _esbService.GetAllSubmisions(status);
                 if (results == null)
                 {
                     return NotFound();
@@ -62,11 +62,11 @@ namespace SYE.Controllers
         }
         [HttpGet]
         [Route("submission/{id}")]
-        public ActionResult<SubmissionVM> Get(string id)
+        public async Task<ActionResult<SubmissionVM>> Get(string id)
         {
             try
             {
-                var result = _esbService.GetSubmision(id).Result;
+                var result = await _esbService.GetSubmision(id);
                 if (result == null)
                     return NotFound();
 
@@ -101,12 +101,12 @@ namespace SYE.Controllers
         }
         [HttpPost]
         [Route("submissions")]
-        public ActionResult<SubmissionPostResultVM> PostAllToCrm()
+        public async Task<ActionResult<SubmissionPostResultVM>> PostAllToCrm()
         {
             try
             {
                 var allIds = _esbService.GetAllSubmisions("Saved").Result.Select(x => x.UserRef);
-                var result = GeneratePostsToCrm(allIds);
+                var result = await GeneratePostsToCrm(allIds);
                 return Ok(result);
             }
             catch (Exception e)
@@ -116,7 +116,7 @@ namespace SYE.Controllers
             }
         }
 
-        private SubmissionPostResultVM GeneratePostsToCrm(IEnumerable<string> ids)
+        private async Task<SubmissionPostResultVM> GeneratePostsToCrm(IEnumerable<string> ids)
         {
             var submissionResult = new SubmissionPostResultVM();
             submissionResult.DateCreated = DateTime.Now.ToLongDateString();
@@ -130,7 +130,7 @@ namespace SYE.Controllers
                 }
                 else
                 {
-                    var result = _esbService.PostSubmision(submission).Result;
+                    var result = await _esbService.PostSubmision(submission);
                     if (result == true)
                     {
                         submissionResult.NumberItemsPosted++;

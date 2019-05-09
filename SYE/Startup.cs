@@ -19,6 +19,7 @@ using SYE.Models.SubmissionSchema;
 using SYE.Services.Wrappers;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using SYE.EsbWrappers;
 
 namespace SYE
 {
@@ -85,6 +86,7 @@ namespace SYE
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IEsbService, EsbService>();
+            services.AddScoped<IEsbClient, EsbClient>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
