@@ -47,7 +47,7 @@ namespace SYE.Repository
             {
                 var endPoint = UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId);
 
-                IQueryable<T> query = _client.CreateDocumentQuery<T>(endPoint, new FeedOptions { MaxItemCount = 1, EnableCrossPartitionQuery = true } );
+                IQueryable<T> query = _client.CreateDocumentQuery<T>(endPoint, new FeedOptions { MaxItemCount = 1, EnableCrossPartitionQuery = true });
                 if (predicate != null)
                 {
                     query = query.Where(predicate);
@@ -60,8 +60,8 @@ namespace SYE.Repository
                 {
                     query = query.OrderByDescending(descKeySelector);
                 }
-                return query.AsEnumerable().FirstOrDefault() as T;
-            });
+                return query.AsEnumerable().FirstOrDefault();
+            }).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate)
@@ -95,7 +95,5 @@ namespace SYE.Repository
         {
             await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id));
         }
-
     }
-
 }

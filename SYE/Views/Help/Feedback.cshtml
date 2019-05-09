@@ -1,0 +1,68 @@
+﻿@using GDSHelpers
+@using Microsoft.AspNetCore.Http
+
+@model GDSHelpers.Models.FormSchema.PageVM
+
+@{
+    ViewData["Title"] = String.Concat(Model.Questions.Any(x => x.Validation.IsErrored) ? "Error:" : "", "Feedback");
+    Layout = "_Layout";
+}
+
+<gds-row>
+
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+
+        @if (Model.Questions.Any(x => x.Validation.IsErrored))
+        {
+
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        @foreach (var item in Model.Questions.Where(x => x.Validation.IsErrored))
+                        {
+                            <li>
+                                <a href="#@(item.QuestionId)">@Html.Raw(item.Validation.ErrorMessage)</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+
+        <gds-heading heading-type="H1" text="Report a problem"></gds-heading>
+
+        <p class="govuk-body">Use this form to tell us if:</p>
+        <details class="govuk-details">
+            <div class="govuk-details__text">
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>There was a technical problem</li>
+                    <li>Something didn't make sense, like you didn't understand one of our questions</li>
+                </ul>
+            </div>
+        </details>
+
+        <form asp-action="Index" asp-controller="Help" method="post">
+            @Html.AntiForgeryToken()
+            <input name="url-referer" id="url-referer" type="hidden" value="@(ViewBag.UrlReferer)" />
+            @if (Model.Questions != null)
+            {
+                foreach (var question in Model.Questions)
+                {
+                    @Html.GdsQuestion(question)
+                }
+            }
+            @if (Model.Buttons != null)
+            {
+                foreach (var button in Model.Buttons)
+                {
+                    @Html.GdsButton(button.ButtonType, button.ButtonText)
+                }
+            }
+        </form>
+
+    </gds-column>
+
+</gds-row>
