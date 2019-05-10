@@ -86,7 +86,7 @@ namespace SYE
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IDocumentService, DocumentService>();
             services.AddScoped<IEsbService, EsbService>();
-            services.AddScoped<IEsbClient, EsbClient>();
+            services.AddScoped<IEsbWrapper, EsbWrapper>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

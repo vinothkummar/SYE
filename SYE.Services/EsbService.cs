@@ -3,6 +3,7 @@ using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SYE.Services
 {
@@ -16,12 +17,12 @@ namespace SYE.Services
     public class EsbService : IEsbService
     {
         private readonly IGenericRepository<SubmissionVM> _repo;
-        private IEsbClient _esbClient;
+        private IEsbWrapper _esbWrapper;
 
-        public EsbService(IGenericRepository<SubmissionVM> repo, IEsbClient esbClient)
+        public EsbService(IGenericRepository<SubmissionVM> repo, IEsbWrapper esbWrapper)
         {
             _repo = repo;
-            _esbClient = esbClient;
+            _esbWrapper = esbWrapper;
         }
 
         public async Task<IEnumerable<SubmissionVM>> GetAllSubmisions()
@@ -44,7 +45,8 @@ namespace SYE.Services
 
         public async Task<bool> PostSubmision(SubmissionVM submission)
         {
-            var result = await _esbClient.PostSubmission(submission);
+            var json = JsonConvert.SerializeObject(submission);
+            var result = await _esbWrapper.PostSubmission(json);
             if (result == true)
             {
                 submission.Status = "Posted";
