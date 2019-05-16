@@ -35,10 +35,8 @@ namespace SYE.Controllers
             try
             {
                 PageVM pageViewModel = GetPage();
-
                 if (pageViewModel != null)
                 {
-                    ViewBag.ShowBackButton = false;
                     ViewBag.UrlReferer = urlReferer;
                     return View(nameof(Feedback), pageViewModel);
                 }
@@ -75,14 +73,12 @@ namespace SYE.Controllers
 
                 Task.Run(async () =>
                 {
-                    try
-                    {
-                        await SendEmailNotificationAsync(pageViewModel, urlReferer).ConfigureAwait(false);
-                    }
-                    catch (Exception innerEx)
-                    {
-                        _logger.LogError(innerEx, "Error sending service feedback email.");
-                    }
+                    await SendEmailNotificationAsync(pageViewModel, urlReferer)
+                            .ContinueWith(notificationTask =>
+                                _logger.LogError(notificationTask.Exception, "Error sending service feedback email."),
+                                TaskContinuationOptions.OnlyOnFaulted
+                            )
+                            .ConfigureAwait(false);
                 });
 
                 return RedirectToAction(nameof(FeedbackThankYou));
@@ -143,11 +139,11 @@ namespace SYE.Controllers
 
             Dictionary<string, dynamic> personalisation =
                 new Dictionary<string, dynamic> {
-                    { "phase", phase },
-                    { "banner clicked page", urlReferer },
-                    { "message", feedbackMessage },
-                    { "full name", feedbackUserName },
-                    { "email address", feedbackUserEmailAddress }
+                    { "service-phase", phase },
+                    { "banner-clicked-on-page", urlReferer },
+                    { "feedback-message", feedbackMessage },
+                    { "feedback-full-name", feedbackUserName },
+                    { "feedback-email-address", feedbackUserEmailAddress }
                 };
 
             await _notificationService.NotifyByEmailAsync(
