@@ -17,7 +17,7 @@ namespace SYE.EsbWrappers
             var returnBool = false;
             try
             {
-                var result = EsbClient.SendGenericAttachment("", EsbClient.PayloadType.Submission);
+                var result = EsbClient.SendGenericAttachment(submissionJson, EsbClient.PayloadType.Submission);
                 returnBool = true;//TODO look at the result before determining true/false
             }
             catch (Exception e)

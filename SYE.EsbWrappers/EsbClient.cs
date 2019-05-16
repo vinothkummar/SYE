@@ -16,9 +16,23 @@ namespace SYE.EsbWrappers
 
             var token = AuthenticationHelper.GetToken();
             string response;
-            var username = "";//ConfigurationManager.AppSettings["ESBAuthenticationUsername"];
-            var password = "";//ConfigurationManager.AppSettings["ESBAuthenticationPassword"];
-            var endpoint = "";//ConfigurationManager.AppSettings["GenericAttachmentEndpoint"];
+            /* Esb Settings Test
+                <add key="ESBAuthenticationEndpoint" value="https://api-uat.cqc.org.uk/olsServiceInterface/services/authenticationService" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+                <add key="PatientInfoServiceEndpoint" value="https://api-uat.cqc.org.uk/olsServiceInterfaceMH/services/patientInfo"  xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+                <add key="GenericAttachmentEndpoint" value="https://api-uat.cqc.org.uk/olsServiceInterface/services/GenericAttachmentService" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+                <add key="ESBAuthenticationUsername" value="drupalUser" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+                <add key="ESBAuthenticationPassword" value="leKR175HBpekhH" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />             
+                Esb Settings dev
+                <add key="ESBAuthenticationEndpoint" value="https://api-sys.cqc.org.uk/sys4/olsServiceInterface/services/authenticationService" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+                <add key="PatientInfoServiceEndpoint" value="https://api-sys.cqc.org.uk/sys4/olsServiceInterfaceMH/services/patientInfo" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+                <add key="GenericAttachmentEndpoint" value="https://api-sys.cqc.org.uk/sys4/olsServiceInterface/services/GenericAttachmentService" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+                <add key="ESBAuthenticationUsername" value="drupalUser" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+                <add key="ESBAuthenticationPassword" value="1687v8WyeN5kyh" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
+             */
+
+            var username = "drupalUser";//ConfigurationManager.AppSettings["ESBAuthenticationUsername"];
+            var password = "1687v8WyeN5kyh";//ConfigurationManager.AppSettings["ESBAuthenticationPassword"];
+            var endpoint = "https://api-sys.cqc.org.uk/sys4/olsServiceInterface/services/GenericAttachmentService";//ConfigurationManager.AppSettings["GenericAttachmentEndpoint"];
             if (username == null || password == null || endpoint == null) throw new ArgumentException("Could not read UserName, Password or GenericAttachmentEndpoint AppSettings");
 
             var path = Directory.GetCurrentDirectory() + "\\Resources\\GenericAttachmentTemplate.xml";

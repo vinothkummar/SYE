@@ -36,6 +36,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\SYE.EsbWrappers\SYE.EsbWrappers.csproj" />
     <ProjectReference Include="..\SYE.Models\SYE.Models.csproj" />
     <ProjectReference Include="..\SYE.Services\SYE.Services.csproj" />
   </ItemGroup>
