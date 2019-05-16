@@ -27,7 +27,7 @@ namespace SYE.Services
 
         public async Task<IEnumerable<SubmissionVM>> GetAllSubmisions()
         {
-            var results = await _repo.FindByAsync(x => x.UserRef != "");
+            var results = await _repo.FindByAsync(x => x.SubmissionId != "");
             return results;
         }
 
@@ -39,7 +39,7 @@ namespace SYE.Services
 
         public async Task<SubmissionVM> GetSubmision(string id)
         {
-            var result = await _repo.GetAsync(x => x.UserRef == id, null, x => x.UserRef);
+            var result = await _repo.GetAsync(x => x.SubmissionId == id, null, x => x.SubmissionId);
             return result;
         }
 

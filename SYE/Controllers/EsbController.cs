@@ -9,6 +9,7 @@ using SYE.Services;
 
 namespace SYE.Controllers
 {
+    //TODO secure this API!!
     [Route("api/[controller]")]
     [ApiController]
     public class EsbController : ControllerBase
@@ -90,7 +91,7 @@ namespace SYE.Controllers
                     return NotFound();
                 }
 
-                var result = GeneratePostsToCrm(new List<string> {submission.UserRef});
+                var result = GeneratePostsToCrm(new List<string> {submission.SubmissionId});
                 return Ok(result);
             }
             catch (Exception e)
@@ -105,7 +106,7 @@ namespace SYE.Controllers
         {
             try
             {
-                var allIds = _esbService.GetAllSubmisions("Saved").Result.Select(x => x.UserRef);
+                var allIds = _esbService.GetAllSubmisions("Saved").Result.Select(x => x.SubmissionId);
                 var result = await GeneratePostsToCrm(allIds);
                 return Ok(result);
             }
