@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
-    <PackageReference Include="GDSHelpers" Version="2019.5.3.1" />
+    <PackageReference Include="GDSHelpers" Version="2019.5.15.1" />
     <PackageReference Include="Microsoft.Azure.Search" Version="5.0.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="Moq" Version="4.10.1" />

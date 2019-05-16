@@ -7,19 +7,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>@(Configuration.GetValue<String>("ApplicationSettings:AppName")) - Care Quality Commission</title>
+    <title>@(Configuration.GetValue<string>("ApplicationSettings:AppName")) - Care Quality Commission</title>
 
     <meta name="theme-color" content="#5f2861" />
 
-    @if (Configuration.GetValue<Boolean>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:Enabled") == true)
+    @if (Configuration.GetValue<bool>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:Enabled") == true)
     {
         <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="@String.Concat("//www.googletagmanager.com/gtag/js?id=", Configuration.GetValue<String>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))"></script>
+        <script async src="@string.Concat("//www.googletagmanager.com/gtag/js?id=", Configuration.GetValue<string>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag() { dataLayer.push(arguments); }
             gtag('js', new Date());
-            gtag('config', '@(Configuration.GetValue<String>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))');
+            gtag('config', '@(Configuration.GetValue<string>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))');
         </script>
     }
     @if (Configuration.GetValue<Boolean>("AnalyticsConfiguration:Hotjar:Enabled") == true)
@@ -72,7 +72,7 @@
 
         @if (ViewBag.ShowBackButton != false)
         {
-            if (!String.IsNullOrWhiteSpace(ViewBag.PreviousPage))
+            if (!string.IsNullOrWhiteSpace(ViewBag.PreviousPage))
             {
                 <gds-back-link link-text="Back" href="@(ViewBag.PreviousPage)"></gds-back-link>
             }
