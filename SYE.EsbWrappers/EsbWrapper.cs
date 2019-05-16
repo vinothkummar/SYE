@@ -1,7 +1,4 @@
-﻿using SYE.Models.SubmissionSchema;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
 
 namespace SYE.EsbWrappers
@@ -12,12 +9,17 @@ namespace SYE.EsbWrappers
     }
     public class EsbWrapper : IEsbWrapper
     {
+        private IEsbClient _client;
+        public EsbWrapper(IEsbClient client)
+        {
+            _client = client;
+        }
         public async Task<bool> PostSubmission(string submissionJson)
         {
             var returnBool = false;
             try
             {
-                var result = EsbClient.SendGenericAttachment(submissionJson, EsbClient.PayloadType.Submission);
+                var result = _client.SendGenericAttachment(submissionJson, PayloadType.Submission);
                 returnBool = true;//TODO look at the result before determining true/false
             }
             catch (Exception e)

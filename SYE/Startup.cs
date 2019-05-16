@@ -57,6 +57,7 @@ namespace SYE
             var searchConfig = Configuration.GetSection("ConnectionStrings").GetSection("SearchDb").Get<SearchConfiguration>();
             var submissionDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
             var submissionConfig = Configuration.GetSection("ConnectionStrings").GetSection("ConfigDb").Get<AppConfiguration<ConfigVM>>();
+            var esbConfig = Configuration.GetSection("ConnectionStrings").GetSection("EsbConfig").Get<EsbConfiguration<EsbConfigVM>>();
 
             var indexClient = new CustomSearchIndexClient(searchConfig.SearchServiceName, searchConfig.IndexName, searchConfig.SearchApiKey);
             var searchService = new SearchService(indexClient);
@@ -64,13 +65,9 @@ namespace SYE
             services.AddSingleton<IAppConfiguration<FormVM>>(formDatabaseConfig);
             services.AddSingleton<IAppConfiguration<SubmissionVM>>(submissionDatabaseConfig);
             services.AddSingleton<IAppConfiguration<ConfigVM>>(submissionConfig);
+            services.AddSingleton<IEsbConfiguration<EsbConfigVM>>(esbConfig);
 
-            //services.AddSingleton<ICosmosDocumentClient<FormVM>>(new CosmosDocumentClient<FormVM>() { Client = new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy) });
-            //services.AddSingleton<ICosmosDocumentClient<SubmissionVM>>(new CosmosDocumentClient<SubmissionVM>() { Client = new DocumentClient(new Uri(submissionDatabaseConfig.Endpoint), submissionDatabaseConfig.Key, connectionPolicy) });
-            services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy));
-
-            //services.AddScoped(typeof(IGenericRepository<FormVM>), typeof(GenericRepository<FormVM>));
-            //services.AddScoped(typeof(IGenericRepository<SubmissionVM>), typeof(GenericRepository<SubmissionVM>));
+            services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy));            
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services.AddScoped<IGdsValidation, GdsValidation>();
@@ -85,8 +82,11 @@ namespace SYE
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IDocumentService, DocumentService>();
+            //var esbWrapper = new EsbWrapper("qweqwe", "asdasd");
+            //services.AddScoped<IEsbWrapper, EsbWrapper>(s => esbWrapper);
             services.AddScoped<IEsbService, EsbService>();
             services.AddScoped<IEsbWrapper, EsbWrapper>();
+            services.AddScoped<IEsbClient, EsbClient>(); 
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
