@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:tns="http://provider.model.service.ols.cqc.org.uk/generic/attachment" xmlns:masterdata="http://provider.model.service.ols.cqc.org.uk/masterdata" xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://provider.model.service.ols.cqc.org.uk/generic/attachment" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="masterdata.xsd" namespace="http://provider.model.service.ols.cqc.org.uk/masterdata" />
+  <xsd:element name="CreateEnquiry_Input">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="tns:CQCEnquiry" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="CreateEnquiry_Output">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="enquiryId" type="masterdata:String20" />
+        <xsd:element name="attachmentIdList" type="masterdata:AttachmentIdList" />
+        <xsd:element name="response" type="masterdata:Response" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="getAttachmentRequest" type="tns:GetAttachmentRequest" />
+  <xsd:element name="getAttachmentResponse" type="tns:GetAttachmentResponse" />
+  <xsd:annotation>
+    <xsd:documentation>CQC JMELVILLE 14/06/10 - Prototype for generic
+			enquiry creation interface</xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="CQCEnquiry" type="tns:CQCEnquiry" />
+  <xsd:complexType name="CQCEnquiry">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="Enquiry" type="tns:Enquiry" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Enquiry">
+    <xsd:sequence>
+      <xsd:element name="OrganisationId" type="masterdata:String20" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="ListOfDataItems" type="tns:ListOfDataItems" />
+      <xsd:element name="Category" type="tns:String30" />
+      <xsd:element name="Type" type="tns:String30" />
+      <xsd:element name="Subtype" type="tns:String30" />
+      <xsd:element name="SourceChannel" type="tns:String30" />
+      <xsd:element minOccurs="0" name="Priority" type="tns:String30" />
+      <xsd:element minOccurs="0" name="Department" type="tns:String50" />
+      <xsd:element minOccurs="0" name="ParentEnquiryId" type="tns:String30" />
+      <xsd:element minOccurs="0" name="Summary" type="tns:String100" />
+      <xsd:element minOccurs="0" name="Description" type="tns:String2000" />
+      <xsd:element minOccurs="0" name="CommMethod" type="tns:String30">
+        <xsd:annotation>
+          <xsd:documentation>CQC MROBERTS 26/06/2012 Added for setting
+						Notify Contact By</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="DataProtectionConsent" type="xsd:boolean" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="HCEmailResponseFromAddr" type="tns:String100">
+        <xsd:annotation>
+          <xsd:documentation>CQC CUDREA 06/11/2012 Added for T5 P2
+						requirements</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="RequiresCPI" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>CQC CUDREA 06/11/2012 Added for T5 P2
+						requirements</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="ContactPhone" type="tns:String30">
+        <xsd:annotation>
+          <xsd:documentation>CQC CUDREA 07/11/2012 Added for T5 P2
+						requirements</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="ContactLastName" type="tns:String50">
+        <xsd:annotation>
+          <xsd:documentation>CQC CUDREA 06/11/2012 Added for T5 P2
+						requirements</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="0" maxOccurs="1" name="ContactFirstName" type="tns:String50">
+        <xsd:annotation>
+          <xsd:documentation>CQC CUDREA 06/11/2012 Added for T5 P2
+						requirements</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ContactEmail" type="tns:String100">
+        <xsd:annotation>
+          <xsd:documentation>CQC CUDREA 06/11/2012 Added for T5 P2
+						requirements</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element minOccurs="1" maxOccurs="1" name="sourceApplication" type="tns:String30" />
+      <xsd:element minOccurs="1" maxOccurs="1" name="sourceSystem" type="tns:String60" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="sourceSystemId" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="protectiveMarkingExpiryDate" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="disposalAction" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="disposalTimePeriod" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="initialReceiptDate" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="protectiveMarking" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="protectiveMarkingDescriptor" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="Creator" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="onHold" type="xsd:boolean" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="ListOfDiscardEnquiryIds" type="tns:ListOfDiscardEnquiryIds" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="ListOfAssociatedEnquiryIds" type="tns:ListOfAssociatedEnquiryIds" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="olsSubmissionNumber" type="masterdata:String20" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ListOfDiscardEnquiryIds">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="discardEnquiry" type="masterdata:String20" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ListOfAssociatedEnquiryIds">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="associatedEnquiryId" type="masterdata:String20" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ListOfDataItems">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Data" type="tns:Data" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Data">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="nameValueTemplateNameAndVersion" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="ListOfAttributes" type="tns:ListOfAttributes" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="ListOfAttachments" type="tns:ListOfAttachments" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ListOfAttributes">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Attribute" type="tns:Attribute" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Attribute">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="Name" type="tns:String250" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="Value" type="tns:String30" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="Comment" type="tns:String250" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="Date" type="tns:String30" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ListOfAttachments">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Attachment" type="tns:Attachment" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Attachment">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="PrimaryContent" type="tns:PrimaryContent" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="ListOfAlternateFileRepresentations" type="tns:ListOfAlternateFileRepresentations" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PrimaryContent">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="FileName" type="tns:String200" />
+      <xsd:element minOccurs="1" maxOccurs="1" name="FileContent" type="xsd:base64Binary" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="ContentType" type="tns:String30" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ListOfAlternateFileRepresentations">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AlternateFileRepresentations" type="tns:AlternateFileRepresentations" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AlternateFileRepresentations">
+    <xsd:sequence>
+      <xsd:element minOccurs="1" maxOccurs="1" name="FileName" type="tns:String200" />
+      <xsd:element minOccurs="1" maxOccurs="1" name="FileContent" type="xsd:base64Binary" />
+      <xsd:element minOccurs="0" maxOccurs="1" name="ContentType" type="tns:String30" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GetAttachmentRequest">
+    <xsd:sequence>
+      <xsd:element name="attachmentId" type="masterdata:String30" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GetAttachmentResponse">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="1" name="Attachment" type="tns:AttachmentData" />
+      <xsd:element name="response" type="masterdata:Response" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AttachmentData">
+    <xsd:sequence>
+      <xsd:element name="attachmentFile" type="xsd:base64Binary" />
+      <xsd:element name="filename" type="tns:String200" />
+      <xsd:element minOccurs="0" name="fileExt" type="tns:String30" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:simpleType name="String50">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="50" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String250">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="250" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String200">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="200" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String60">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="60" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String30">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="30" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String2000">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="2000" />
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="String100">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="100" />
+    </xsd:restriction>
+  </xsd:simpleType>
+</xsd:schema>

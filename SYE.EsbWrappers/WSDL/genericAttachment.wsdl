@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:generic="http://provider.model.service.ols.cqc.org.uk/generic/attachment" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:masterdata="http://provider.model.service.ols.cqc.org.uk/masterdata" xmlns:tns="http://provider.service.ols.cqc.org.uk/genericAttachment" xmlns="http://schemas.xmlsoap.org/wsdl/" name="genericAttachment" targetNamespace="http://provider.service.ols.cqc.org.uk/genericAttachment" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema>
+      <xsd:import schemaLocation="genericAttachmentSchema.xsd" namespace="http://provider.model.service.ols.cqc.org.uk/generic/attachment" />
+      <xsd:import schemaLocation="masterdata.xsd" namespace="http://provider.model.service.ols.cqc.org.uk/masterdata" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="CreateEnquiry_Input">
+    <wsdl:part name="CreateEnquiry_Input" element="generic:CreateEnquiry_Input" />
+  </wsdl:message>
+  <wsdl:message name="CreateEnquiry_Output">
+    <wsdl:part name="CreateEnquiry_Output" element="generic:CreateEnquiry_Output" />
+  </wsdl:message>
+  <wsdl:message name="getAttachmentRequest">
+    <wsdl:part name="getAttachmentRequest" element="generic:getAttachmentRequest" />
+  </wsdl:message>
+  <wsdl:message name="getAttachmentResponse">
+    <wsdl:part name="getAttachmentResponse" element="generic:getAttachmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="FaultMsg">
+    <wsdl:part name="FaultMsg" element="masterdata:olsFault" />
+  </wsdl:message>
+  <wsdl:message name="Credentials">
+    <wsdl:part name="Credentials" element="masterdata:Credentials" />
+  </wsdl:message>
+  <wsdl:portType name="GenericAttachment">
+    <wsdl:operation name="CreateEnquiry">
+      <wsdl:input message="tns:CreateEnquiry_Input" />
+      <wsdl:output message="tns:CreateEnquiry_Output" />
+      <wsdl:fault name="FaultMsg" message="tns:FaultMsg" />
+    </wsdl:operation>
+    <wsdl:operation name="getAttachment">
+      <wsdl:input message="tns:getAttachmentRequest" />
+      <wsdl:output message="tns:getAttachmentResponse" />
+      <wsdl:fault name="FaultMsg" message="tns:FaultMsg" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="GenericAttachment" type="tns:GenericAttachment">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateEnquiry">
+      <soap:operation soapAction="document/http://provider.model.service.ols.cqc.org.uk/olsEnquiry:CreateEnquiry" />
+      <wsdl:input>
+        <soap:header message="tns:Credentials" part="Credentials" use="literal" />
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="FaultMsg">
+        <soap:fault use="literal" name="FaultMsg" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getAttachment">
+      <soap:operation soapAction="http://provider.model.service.ols.cqc.org.uk/olsEnquiry/getAttachment" />
+      <wsdl:input>
+        <soap:header message="tns:Credentials" part="Credentials" use="literal" />
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="FaultMsg">
+        <soap:fault use="literal" name="FaultMsg" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="GenericAttachmentService">
+    <wsdl:port name="GenericAttachment" binding="tns:GenericAttachment">
+      <soap:address location="http://provider.model.service.ols.cqc.org.uk/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
