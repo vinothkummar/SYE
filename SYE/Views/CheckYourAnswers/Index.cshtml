@@ -1,4 +1,5 @@
-﻿@model SYE.Models.CheckYourAnswersVm
+﻿@using SYE.Helpers
+@model SYE.Models.CheckYourAnswersVm
 
 @{
     Layout = "_Layout";
@@ -20,11 +21,11 @@
                         <dt class="govuk-summary-list__key">
                             @if (string.IsNullOrEmpty(question.Question))
                             {
-                                <text>@pageVm.PageName</text>
+                                <text>@pageVm.PageName.StripHtml()</text>
                             }
                             else
                             {
-                                <text>@question.Question</text>
+                                <text>@question.Question.StripHtml()</text>
                             }
                         </dt>
                         <dd class="govuk-summary-list__value">

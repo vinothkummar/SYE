@@ -44,7 +44,7 @@
 <gds-row>
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
         <gds-paragraph>
-            <a href="/Search/LocationNotFound"> I can't find the service I want to tell you about</a>
+            <a class="govuk-link" href="/Search/LocationNotFound"> I can't find the service I want to tell you about</a>
         </gds-paragraph>
     </gds-column>
 </gds-row>
@@ -95,13 +95,13 @@
                     @foreach (var result in Model.Data)
                     {
                         <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
-                            <input id="ProviderId" name="ProviderId" value="" type="hidden" />
+                            <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
                             <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
                             <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
 
                             <gds-row>
                                 <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-                                    <a href="javascript:;" onclick="document.getElementById('frm_@result.Id').submit();">
+                                    <a class="govuk-link" href="javascript:;" onclick="document.getElementById('frm_@result.Id').submit();">
                                         <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
                                     </a>
                                     <p class="govuk-body">

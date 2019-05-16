@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Compile Include="Helpers\SelectItem.cs" />
+    <Compile Include="Helpers\StringExtensions.cs" />
     <Compile Include="Helpers\SubmissionHelper.cs" />
   </ItemGroup>
 

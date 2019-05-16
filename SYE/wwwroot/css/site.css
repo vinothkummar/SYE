@@ -149,4 +149,9 @@
 .js-enabled .govuk-tabs__tab--selected {
     background-color: #ffffff;
 }
+
+label.govuk-label > p.govuk-body {
+    margin-bottom: 0;
 }
+
+

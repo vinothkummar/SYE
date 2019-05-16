@@ -41,7 +41,7 @@ namespace SYE.Services
 
         private string GenerateDocument(SubmissionVM submissionVm)
         {
-            var title = submissionVm.UserRef;
+            var title = submissionVm.SubmissionId;
             try
             {
                 string convertedDoc = null;
@@ -64,7 +64,7 @@ namespace SYE.Services
                         EmptyLine(body, para);
 
                         GetDataSection(body, "Channel :", new List<string>{"GFC"}, false);
-                        GetDataSection(body, "GFC reference number :", new List<string> {submissionVm.UserRef}, false);
+                        GetDataSection(body, "GFC reference number :", new List<string> {submissionVm.SubmissionId }, false);
                         GetDataSection(body, "Completed :", new List<string> {DateTime.Parse(submissionVm.DateCreated).ToShortDateString()}, false);
                         GetDataSection(body, "Location ID :", new List<string> {submissionVm.LocationId}, false);
                         GetDataSection(body, "Provider ID :", new List<string> {submissionVm.ProviderId}, false);

@@ -1,25 +1,22 @@
 ﻿using System;
 using GDSHelpers;
+using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Notify.Interfaces;
 using Notify.Client;
+using Notify.Interfaces;
+using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
-using GDSHelpers.Models.FormSchema;
-using SYE.Models.SubmissionSchema;
 using SYE.Services.Wrappers;
-using System.Collections.Generic;
-using Newtonsoft.Json;
-using SYE.EsbWrappers;
 
 namespace SYE
 {
@@ -31,6 +28,7 @@ namespace SYE
         }
 
         public IConfiguration Configuration { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -57,7 +55,6 @@ namespace SYE
             var searchConfig = Configuration.GetSection("ConnectionStrings").GetSection("SearchDb").Get<SearchConfiguration>();
             var submissionDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
             var submissionConfig = Configuration.GetSection("ConnectionStrings").GetSection("ConfigDb").Get<AppConfiguration<ConfigVM>>();
-            var esbConfig = Configuration.GetSection("ConnectionStrings").GetSection("EsbConfig").Get<EsbConfiguration<EsbConfigVM>>();
 
             var indexClient = new CustomSearchIndexClient(searchConfig.SearchServiceName, searchConfig.IndexName, searchConfig.SearchApiKey);
             var searchService = new SearchService(indexClient);
@@ -65,33 +62,31 @@ namespace SYE
             services.AddSingleton<IAppConfiguration<FormVM>>(formDatabaseConfig);
             services.AddSingleton<IAppConfiguration<SubmissionVM>>(submissionDatabaseConfig);
             services.AddSingleton<IAppConfiguration<ConfigVM>>(submissionConfig);
-            services.AddSingleton<IEsbConfiguration<EsbConfigVM>>(esbConfig);
 
-            services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy));            
+            services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy));
+
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services.AddScoped<IGdsValidation, GdsValidation>();
 
-            // TODO: Remove PageService, renamed to FormService
-            services.AddScoped<IPageService, PageService>();
             services.AddScoped<ISearchService, SearchService>(s => searchService);
             services.AddScoped<ICustomSearchIndexClient, CustomSearchIndexClient>(c => indexClient);
-
 
             services.AddScoped<IFormService, FormService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISubmissionService, SubmissionService>();
             services.AddScoped<IDocumentService, DocumentService>();
-            //var esbWrapper = new EsbWrapper("qweqwe", "asdasd");
-            //services.AddScoped<IEsbWrapper, EsbWrapper>(s => esbWrapper);
-            services.AddScoped<IEsbService, EsbService>();
-            services.AddScoped<IEsbWrapper, EsbWrapper>();
-            services.AddScoped<IEsbClient, EsbClient>(); 
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.TryAddSingleton<IGovUkNotifyConfiguration>(_ => Configuration.GetSection("GovUkNotify").Get<GovUkNotifyConfiguration>());
-            services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(Configuration.GetConnectionString("GovUkNotifyApiKey")));
+            services.TryAddSingleton<IGovUkNotifyConfiguration>(_ => Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").Get<GovUkNotifyConfiguration>());
+            services.TryAddSingleton<IAsyncNotificationClient>(_ =>
+                new NotificationClient(
+                        Configuration.GetSection("ConnectionStrings").GetValue<String>(
+                                String.Concat("GovUkNotifyApiKeys:", Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").GetValue<String>("KeyType"))
+                            )
+                    )
+            );
             services.TryAddScoped<INotificationService, NotificationService>();
         }
 
@@ -121,7 +116,8 @@ namespace SYE
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=Index}/{id?}"
+                );
             });
         }
     }
