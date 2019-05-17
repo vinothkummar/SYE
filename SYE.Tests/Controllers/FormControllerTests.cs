@@ -5,10 +5,12 @@ using FluentAssertions;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Moq;
 using SYE.Controllers;
 using SYE.Models;
 using SYE.Services;
+using SYE.ViewModels;
 using Xunit;
 
 namespace SYE.Tests.Controllers
@@ -24,12 +26,24 @@ namespace SYE.Tests.Controllers
         {
             const string id = "123";
             //arrange
-            var returnPage = new PageVM { PageId = id };
+            var returnPage = new PageVM { PageId = id, PreviousPages = new List<PreviousPageVM>() };
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = "" }).Verifiable();
+            mockSession.Setup(x => x.GetFormVmFromSession()).Returns(new FormVM());
 
+//            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            ApplicationSettings appSettings = new ApplicationSettings() { FormStartPage = "123" };
+            IOptions<ApplicationSettings> options = Options.Create(appSettings);
+            
+            //var serviceNotFoundPage = _config.Value.ServiceNotFoundPage;
+            //var startPage = _config.Value.FormStartPage;
+            //var targetPage = _config.Value.DefaultBackLink;
+
+            var sut = new FormController(mockValidation.Object, mockSession.Object, options);
+            sut.Url = mockUrlHelper.Object;
             //act
             var result = sut.Index(id);
 
@@ -49,7 +63,10 @@ namespace SYE.Tests.Controllers
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM{LocationName = "" }).Verifiable();
+            
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object);
 
             //act
             var result = sut.Index(id);
@@ -68,7 +85,10 @@ namespace SYE.Tests.Controllers
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
             mockSession.Setup(x => x.GetPageById(id, false)).Throws(new Exception()).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = "" }).Verifiable();
+
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object);
 
             //act
             var result = sut.Index(id);
@@ -88,10 +108,11 @@ namespace SYE.Tests.Controllers
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object);
 
             //act
-            var result = sut.Index(new CurrentPageVM{PageId = id});
+            var result = sut.Index(new CurrentPageVM { PageId = id });
 
             //assert
             var statusResult = result as StatusCodeResult;
@@ -105,7 +126,7 @@ namespace SYE.Tests.Controllers
             const string id = "123";
             //arrange
 
-            var returnPage = new PageVM{PageId = id};
+            var returnPage = new PageVM { PageId = id, PreviousPages = new List<PreviousPageVM>() };
             var questions = new List<QuestionVM>
             {
                 new QuestionVM {Validation = new ValidationVM {IsErrored = true, ErrorMessage = "blah blah"}},
@@ -116,8 +137,14 @@ namespace SYE.Tests.Controllers
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM {LocationName = "the service" }).Verifiable();
 
+            ApplicationSettings appSettings = new ApplicationSettings() { FormStartPage = id, ServiceNotFoundPage = "test1", DefaultBackLink = "test2"};
+            IOptions<ApplicationSettings> options = Options.Create(appSettings);
+
+            var mockUrlHelper = new Mock<IUrlHelper>();
+            var sut = new FormController(mockValidation.Object, mockSession.Object, options);
+            sut.Url = mockUrlHelper.Object;
             //act
             var result = sut.Index(new CurrentPageVM { PageId = id });
 
@@ -137,12 +164,19 @@ namespace SYE.Tests.Controllers
             const string id = "123";
             //arrange
 
-            var returnPage = new PageVM { PageId = id, NextPageId = controllerName };
+            var returnPage = new PageVM { PageId = id, NextPageId = controllerName, PreviousPages = new List<PreviousPageVM>() };
 
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = "the service" }).Verifiable();
+
+            ApplicationSettings appSettings = new ApplicationSettings() { FormStartPage = id, ServiceNotFoundPage = "test1", DefaultBackLink = "test2" };
+            IOptions<ApplicationSettings> options = Options.Create(appSettings);
+
+            var mockUrlHelper = new Mock<IUrlHelper>();
+            var sut = new FormController(mockValidation.Object, mockSession.Object, options);
+            sut.Url = mockUrlHelper.Object;
 
             //act
             var result = sut.Index(new CurrentPageVM { PageId = id });

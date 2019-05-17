@@ -46,6 +46,7 @@ namespace SYE.Controllers
                 {
                     FormVm = formVm
                 };
+
                 ViewBag.ShowBackButton = false;
                 return View(vm);
             }
@@ -149,8 +150,8 @@ namespace SYE.Controllers
 
         private async Task SendEmailNotificationInternalAsync(SubmissionVM submission)
         {
-            string emailTemplateId = String.Empty;
-            if (String.IsNullOrWhiteSpace(submission?.LocationId) || String.IsNullOrWhiteSpace(submission?.LocationName))
+            var emailTemplateId = string.Empty;
+            if (string.IsNullOrWhiteSpace(submission?.LocationId) || string.IsNullOrWhiteSpace(submission?.LocationName))
             {
                 emailTemplateId = _configuration.WithoutLocationEmailTemplateId;
             }
@@ -158,23 +159,23 @@ namespace SYE.Controllers
             {
                 emailTemplateId = _configuration.WithLocationEmailTemplateId;
             }
-            string greetingTemplate = _configuration.GreetingTemplate;
-            string clientReferenceTemplate = _configuration.ClientReferenceTemplate;
-            string emailReplyToId = _configuration.ReplyToAddressId;
+            var greetingTemplate = _configuration.GreetingTemplate;
+            var clientReferenceTemplate = _configuration.ClientReferenceTemplate;
+            var emailReplyToId = _configuration.ReplyToAddressId;
 
-            string emailAddress = submission?
+            var emailAddress = submission?
                 .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == "Contact_003_02")?
-                .Answer ?? String.Empty;
+                .Answer ?? string.Empty;
 
-            string feedbackUserName = submission?
+            var feedbackUserName = submission?
                 .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == "Contact_003_01")?
-                .Answer ?? String.Empty;
+                .Answer ?? string.Empty;
 
-            string greeting = String.Format(greetingTemplate, feedbackUserName);
-            string locationName = submission?.LocationName;
-            string clientReference = String.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
+            var greeting = string.Format(greetingTemplate, feedbackUserName);
+            var locationName = submission?.LocationName;
+            var clientReference = string.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
 
-            Dictionary<string, dynamic> personalisation =
+            var personalisation =
                 new Dictionary<string, dynamic> {
                     { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.SubmissionId ?? String.Empty }
                 };

@@ -17,6 +17,7 @@ using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
 using SYE.Services.Wrappers;
+using SYE.ViewModels;
 
 namespace SYE
 {
@@ -49,6 +50,8 @@ namespace SYE
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
 
             var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
             var formDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("FormSchemaDb").Get<AppConfiguration<FormVM>>();
@@ -83,7 +86,7 @@ namespace SYE
             services.TryAddSingleton<IAsyncNotificationClient>(_ =>
                 new NotificationClient(
                         Configuration.GetSection("ConnectionStrings").GetValue<String>(
-                                String.Concat("GovUkNotifyApiKeys:", Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").GetValue<String>("KeyType"))
+                                string.Concat("GovUkNotifyApiKeys:", Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").GetValue<String>("KeyType"))
                             )
                     )
             );
@@ -118,6 +121,9 @@ namespace SYE
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}"
                 );
+
+                routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
+
             });
         }
     }

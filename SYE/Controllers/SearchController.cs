@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
@@ -16,16 +16,24 @@ namespace SYE.Controllers
         private readonly int _maxSearchChars = 1000;
         private readonly ISearchService _searchService;
         private readonly ISessionService _sessionService;
+        private readonly IOptions<ApplicationSettings> _config;
 
-        public SearchController(ISearchService searchService, ISessionService sessionService)
+        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config)
         {
             _searchService = searchService;
             _sessionService = sessionService;
+            _config = config;
         }
 
         [HttpGet]
         public IActionResult Index(bool isError)
         {
+            ViewBag.ShowBackButton = true;
+            ViewBag.PreviousPage = Url.Action("Index", "Home");
+
+            //Make Sure we have a clean session
+            _sessionService.ClearSession();
+
             try
             {
                 return View(new SearchResultsVM{ShowIncompletedSearchMessage = isError});
@@ -52,6 +60,8 @@ namespace SYE.Controllers
         [HttpGet]//searches
         public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
         {
+            //ViewBag.ShowBackButton = true;
+            //ViewBag.PreviousPage = Url.Action("Index", "Search");
             return GetSearchResult(search, pageNo, selectedFacets);
         }
 
@@ -74,7 +84,8 @@ namespace SYE.Controllers
                 //Load the Form into Session
                 _sessionService.LoadLatestFormIntoSession(replacements);
 
-                return RedirectToAction("Index", "Form");
+                var serviceNotFoundPage = _config.Value.ServiceNotFoundPage;
+                return RedirectToAction("Index", "Form", new { id = serviceNotFoundPage });
             }
             catch (Exception ex)
             {
@@ -83,6 +94,7 @@ namespace SYE.Controllers
             }
 
         }
+
         [HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
         {
@@ -100,7 +112,8 @@ namespace SYE.Controllers
                 //Load the Form into Session
                 _sessionService.LoadLatestFormIntoSession(replacements);
 
-                return RedirectToAction("Index", "Form");
+                var startPage = _config.Value.FormStartPage;
+                return RedirectToAction("Index", "Form", new { id = startPage });
             }
             catch(Exception ex)
             {
@@ -111,6 +124,9 @@ namespace SYE.Controllers
 
         private IActionResult GetSearchResult(string search, int pageNo, string selectedFacets)
         {
+            //Make Sure we have a clean session
+            _sessionService.ClearSession();
+
             try
             {
                 if (string.IsNullOrWhiteSpace(search))
@@ -132,6 +148,9 @@ namespace SYE.Controllers
                 var newSearch = SetNewSearch(search);
 
                 var viewModel = GetViewModel(search, pageNo, selectedFacets, newSearch);
+
+                ViewBag.ShowBackButton = true;
+                ViewBag.PreviousPage = "javascript:history.go(-1);";
 
                 return View(viewModel);
             }
@@ -176,6 +195,7 @@ namespace SYE.Controllers
 
             return returnViewModel;
         }
+        
         /// <summary>
         /// saves the search and checks saved search to see if it is a new search       
         /// </summary>

@@ -14,7 +14,8 @@
 }
 
 .govuk-header__link--homepage:hover {
-    border-bottom: none;
+    /*border-bottom: none;*/
+    border-bottom-color: #5f2861;
 }
 
 .govuk-header__logotype-crown-fallback-image {
