@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYE.Models", "SYE.Models\SY
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYE.Repository", "SYE.Repository\SYE.Repository.csproj", "{A33385E8-0996-4702-B64D-053B53E529EF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYE.EsbWrappers", "SYE.EsbWrappers\SYE.EsbWrappers.csproj", "{5C105737-B315-443F-A212-86C3AA703CAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A33385E8-0996-4702-B64D-053B53E529EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A33385E8-0996-4702-B64D-053B53E529EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A33385E8-0996-4702-B64D-053B53E529EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C105737-B315-443F-A212-86C3AA703CAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C105737-B315-443F-A212-86C3AA703CAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C105737-B315-443F-A212-86C3AA703CAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C105737-B315-443F-A212-86C3AA703CAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

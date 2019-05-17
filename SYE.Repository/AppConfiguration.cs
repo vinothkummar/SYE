@@ -16,7 +16,6 @@ namespace SYE.Repository
         string CollectionId { get; set; }
         string ConfigRecordId { get; set; }
     }
-
     public class AppConfiguration<T> : IAppConfiguration<T> where T : class
     {
         public string Endpoint { get; set; }
