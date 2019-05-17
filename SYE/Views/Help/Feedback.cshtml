@@ -34,15 +34,11 @@
 
         <gds-heading heading-type="H1" text="Report a problem"></gds-heading>
 
-        <p class="govuk-body">Use this form to tell us if:</p>
-        <details class="govuk-details">
-            <div class="govuk-details__text">
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>There was a technical problem</li>
-                    <li>Something didn't make sense, like you didn't understand one of our questions</li>
-                </ul>
-            </div>
-        </details>
+        <p >Use this form to tell us if:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>there was a technical problem</li>
+            <li>something didn't make sense, like you didn't understand one of our questions</li>
+        </ul>
 
         <form asp-action="Index" asp-controller="Help" method="post">
             @Html.AntiForgeryToken()
