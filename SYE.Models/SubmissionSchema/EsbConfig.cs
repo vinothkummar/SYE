@@ -2,7 +2,7 @@
 
 namespace SYE.Models.SubmissionSchema
 {
-    public class EsbConfigVM
+    public class EsbConfig
     {
         [JsonProperty("id")]
         public string Id { get; set; }
@@ -31,5 +31,11 @@ namespace SYE.Models.SubmissionSchema
         
         [JsonProperty("esbGenericAttachmentPassword")]
         public string EsbGenericAttachmentPassword { get; set; }
+
+        [JsonProperty("esbGenericAttachmentSubmitKey")]
+        public string EsbGenericAttachmentSubmitKey { get; set; }
+
+        [JsonProperty("esbGenericAttachmentSubmitValue")]
+        public string EsbGenericAttachmentSubmitValue { get; set; }
     }
 }

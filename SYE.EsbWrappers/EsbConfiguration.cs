@@ -15,6 +15,8 @@ namespace SYE.EsbWrappers
         string EsbGenericAttachmentEndpoint { get; set; }
         string EsbGenericAttachmentUsername { get; set; }
         string EsbGenericAttachmentPassword { get; set; }
+        string EsbGenericAttachmentSubmitKey { get; set; }
+        string EsbGenericAttachmentSubmitValue { get; set; }
     }
     public class EsbConfiguration<T> : IEsbConfiguration<T> where T : class
     {
@@ -27,6 +29,8 @@ namespace SYE.EsbWrappers
         public string EsbGenericAttachmentEndpoint { get; set; }
         public string EsbGenericAttachmentUsername { get; set; }
         public string EsbGenericAttachmentPassword { get; set; }
+        public string EsbGenericAttachmentSubmitKey { get; set; }
+        public string EsbGenericAttachmentSubmitValue { get; set; }
     }
 
 }

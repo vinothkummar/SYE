@@ -21,8 +21,7 @@ namespace SYE.Controllers
             _esbService = esbService;
         }
 
-        [HttpGet]
-        [Route("submissions")]
+        [HttpGet("submissions")]
         public async Task<ActionResult<IEnumerable<SubmissionVM>>> GetAll()
         {
             try
@@ -41,8 +40,7 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpGet]
-        [Route("submissions/{status}")]
+        [HttpGet("submissions/{status}")]
         public async Task<ActionResult<List<SubmissionVM>>> GetAll(string status)
         {
             try
@@ -61,8 +59,7 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpGet]
-        [Route("submission/{id}")]
+        [HttpGet("submission/{id}")]
         public async Task<ActionResult<SubmissionVM>> Get(string id)
         {
             try
@@ -79,8 +76,7 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpPost]
-        [Route("submission")]
+        [HttpPost("submission")]
         public ActionResult<SubmissionPostResultVM> PostToCrm([FromBody] string id)
         {
             try
@@ -100,8 +96,7 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpPost]
-        [Route("submissions")]
+        [HttpGet("submissions")]
         public async Task<ActionResult<SubmissionPostResultVM>> PostAllToCrm()
         {
             try

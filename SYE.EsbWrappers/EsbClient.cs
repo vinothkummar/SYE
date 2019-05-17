@@ -14,8 +14,8 @@ namespace SYE.EsbWrappers
     }
     public class EsbClient : IEsbClient
     {
-        private IEsbConfiguration<EsbConfigVM> _esbConfig;
-        public EsbClient(IEsbConfiguration<EsbConfigVM> esbConfig)
+        private IEsbConfiguration<EsbConfig> _esbConfig;
+        public EsbClient(IEsbConfiguration<EsbConfig> esbConfig)
         {
             _esbConfig = esbConfig;
         }
@@ -42,7 +42,7 @@ namespace SYE.EsbWrappers
                         .Replace("{{password}}", password)
                         .Replace("{{subtype}}", GetFriendlyName(type));
 
-                    client.Headers.Add("SOAPAction", "document/http://provider.model.service.ols.cqc.org.uk/olsEnquiry:CreateEnquiry");
+                    client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
                     response = client.UploadString(endpoint, finalPayload);
                 }
             }
