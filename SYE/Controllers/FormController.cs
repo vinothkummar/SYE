@@ -28,7 +28,7 @@ namespace SYE.Controllers
         public IActionResult Index(string id = "")
         {
             try
-            {              
+            {
                 var userSession = _sessionService.GetUserSession();
                 var serviceNotFound = userSession.LocationName.Equals("the service");
 
@@ -54,11 +54,6 @@ namespace SYE.Controllers
         {
             try
             {
-                if (HttpContext?.Session != null)
-                {
-                    ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
-                }                    
-
                 //Get the current PageVm from Session
                 var pageVm = _sessionService.GetPageById(vm.PageId, false);
 
@@ -132,7 +127,7 @@ namespace SYE.Controllers
                     return Url.Action("Index", "Search");
 
                 if (serviceNotFound && currentPage.PageId == startPage)
-                    return Url.Action("Index", "Form", new {id = serviceNotFoundPage});
+                    return Url.Action("Index", "Form", new { id = serviceNotFoundPage });
             }
 
             //Check if we only have 1 option
