@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +20,7 @@ namespace SYE.Services
         void UpdatePageVmInFormVm(PageVM vm);
         void SaveUserSearch(string search);
         string GetUserSearch();
+        void ClearSession();
     }
 
     public class SessionService : ISessionService
@@ -44,24 +44,14 @@ namespace SYE.Services
 
             if (string.IsNullOrWhiteSpace(pageId))
             {
-                if (notFoundFlag)
-                {
-                    //get first page
-                    return formVm.Pages.FirstOrDefault();
-                }
-                else
-                {
-                    //get second page
-                    return formVm.Pages.Where(x => x.PageId != formVm.Pages.First().PageId).FirstOrDefault();
-                }
+                return notFoundFlag 
+                    ? formVm.Pages.FirstOrDefault() 
+                    : formVm.Pages.FirstOrDefault(x => x.PageId != formVm.Pages.First().PageId);
             }
 
-            if (formVm.Pages.Any(x => x.PageId == pageId))
-            {
-                return formVm.Pages.FirstOrDefault(m => m.PageId == pageId);
-            }
-
-            return null;
+            return formVm.Pages.Any(x => x.PageId == pageId)
+                ? formVm.Pages.FirstOrDefault(m => m.PageId == pageId)
+                : null;
         }
 
         public FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements)
@@ -115,8 +105,6 @@ namespace SYE.Services
             return userSessionVm;
         }
 
-
-
         public void SaveFormVmToSession(FormVM vm)
         {
             _httpContextAccessor.HttpContext.Session.SetString(schemaKey, JsonConvert.SerializeObject(vm));
@@ -152,6 +140,12 @@ namespace SYE.Services
         public string GetUserSearch()
         {
             return _httpContextAccessor.HttpContext.Session.GetString("Search");
+        }
+
+        public void ClearSession()
+        {
+            var context = _context.HttpContext;
+            context.Session.Clear();
         }
     }
 

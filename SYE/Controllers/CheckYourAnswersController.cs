@@ -45,6 +45,7 @@ namespace SYE.Controllers
                 {
                     FormVm = formVm
                 };
+
                 ViewBag.ShowBackButton = false;
                 return View(vm);
             }
@@ -173,11 +174,11 @@ namespace SYE.Controllers
                 .Answers?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "name").FormField, StringComparison.OrdinalIgnoreCase))?
                 .Answer ?? String.Empty;
 
-            string greeting = String.Format(greetingTemplate, feedbackUserName);
-            string locationName = submission?.LocationName;
-            string clientReference = String.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
+            var greeting = string.Format(greetingTemplate, feedbackUserName);
+            var locationName = submission?.LocationName;
+            var clientReference = string.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
 
-            Dictionary<string, dynamic> personalisation =
+            var personalisation =
                 new Dictionary<string, dynamic> {
                     { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.SubmissionId ?? String.Empty }
                 };

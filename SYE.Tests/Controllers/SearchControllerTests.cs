@@ -5,8 +5,12 @@ using System.Text;
 using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
 using GDSHelpers.Models.FormSchema;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Options;
 using Moq;
 using SYE.Controllers;
 using SYE.Helpers;
@@ -37,16 +41,11 @@ namespace SYE.Tests.Controllers
             expectedResult.Data.Add(expectedRecord);
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
-            var mockLogger = new Mock<ILogger<SearchController>>();
-            mockService.Setup(x => x.GetPaginatedResult(
-                It.IsAny<string>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<string>(),
-                It.IsAny<bool>())).ReturnsAsync(expectedResult).Verifiable();
-
+            mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(expectedResult).Verifiable();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults("search", null);
 
             //assert
@@ -72,14 +71,11 @@ namespace SYE.Tests.Controllers
             SearchServiceResult expectedResult = null;
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
-            var mockLogger = new Mock<ILogger<SearchController>>();
-            mockService
-                .Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
-                .ReturnsAsync(expectedResult)
-                .Verifiable();
-
+            mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(expectedResult).Verifiable();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults("search", null);
 
             //assert
@@ -100,9 +96,10 @@ namespace SYE.Tests.Controllers
 
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockLogger = new Mock<ILogger<SearchController>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults(search, null);
 
             //assert
@@ -122,8 +119,9 @@ namespace SYE.Tests.Controllers
             var mockLogger = new Mock<ILogger<SearchController>>();
             mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
                 It.IsAny<string>(), It.IsAny<bool>())).Throws(new Exception());
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults("search", null);
 
             //assert
@@ -150,13 +148,11 @@ namespace SYE.Tests.Controllers
             expectedResult.Data.Add(expectedrecord);
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
-            var mockLogger = new Mock<ILogger<SearchController>>();
-            mockService
-                .Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
-                .ReturnsAsync(expectedResult)
-                .Verifiable();
+            mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(expectedResult).Verifiable();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults("search", 1);
 
             //assert
@@ -191,14 +187,12 @@ namespace SYE.Tests.Controllers
 
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
-            var mockLogger = new Mock<ILogger<SearchController>>();
-            mockService
-                .Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
-                .ReturnsAsync(expectedResult)
-                .Verifiable();
-
+            mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(expectedResult).Verifiable();
+            mockService.Setup(x => x.GetFacets()).Returns(new EditableList<string> {"Test Facet"});
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults("search", 1, "TestFacet");
 
             //assert
@@ -235,14 +229,12 @@ namespace SYE.Tests.Controllers
             var mockSession = new Mock<ISessionService>();
             mockSession.Setup(x => x.GetUserSearch()).Returns(search);
             var mockService = new Mock<ISearchService>();
-            var mockLogger = new Mock<ILogger<SearchController>>();
-            mockService
-                .Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
-                .ReturnsAsync(expectedResult)
-                .Verifiable();
-
+            mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(expectedResult).Verifiable();
+            mockService.Setup(x => x.GetFacets()).Returns(new EditableList<string> { "TestFacet" });
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults(search, 1, "TestFacet");
 
             //assert
@@ -288,14 +280,12 @@ namespace SYE.Tests.Controllers
             var mockSession = new Mock<ISessionService>();
             mockSession.Setup(x => x.GetUserSearch()).Returns(search);
             var mockService = new Mock<ISearchService>();
-            var mockLogger = new Mock<ILogger<SearchController>>();
-            mockService
-                .Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>()))
-                .ReturnsAsync(expectedResult)
-                .Verifiable();
-
+            mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
+                It.IsAny<string>(), It.IsAny<bool>())).ReturnsAsync(expectedResult).Verifiable();
+            mockService.Setup(x => x.GetFacets()).Returns(facetsList);
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults(search, facets);
 
             //assert
@@ -325,9 +315,10 @@ namespace SYE.Tests.Controllers
             //arrange
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockLogger = new Mock<ILogger<SearchController>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults(search, 1);
 
             //assert
@@ -344,9 +335,10 @@ namespace SYE.Tests.Controllers
             //arrange
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockLogger = new Mock<ILogger<SearchController>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults(search, 1);
 
             //assert
@@ -377,8 +369,9 @@ namespace SYE.Tests.Controllers
             var mockLogger = new Mock<ILogger<SearchController>>();
             mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
                 It.IsAny<string>(), It.IsAny<bool>())).Throws(new Exception());
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SearchResults("search", 1);
 
             //assert
@@ -392,9 +385,14 @@ namespace SYE.Tests.Controllers
             //arrange
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            var mockUrlHelper = new Mock<IUrlHelper>();
+             
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
+            sut.Url = mockUrlHelper.Object;
+
             var mockLogger = new Mock<ILogger<SearchController>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
             var result = sut.Index(true);
 
             //assert
@@ -411,9 +409,10 @@ namespace SYE.Tests.Controllers
             //arrange
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockLogger = new Mock<ILogger<SearchController>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.Index(true);
 
             //assert
@@ -427,9 +426,12 @@ namespace SYE.Tests.Controllers
             //arrange
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
+            ApplicationSettings appSettings = new ApplicationSettings() { FormStartPage = "test" };
+            IOptions<ApplicationSettings> options = Options.Create(appSettings);
+
             var mockLogger = new Mock<ILogger<SearchController>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, options);
             var result = sut.SelectLocation(new UserSessionVM());
 
             //assert
@@ -448,8 +450,9 @@ namespace SYE.Tests.Controllers
             var mockService = new Mock<ISearchService>();
             var mockLogger = new Mock<ILogger<SearchController>>();
             mockSession.Setup(x => x.SetUserSessionVars(userVm)).Verifiable();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             sut.SelectLocation(userVm);
 
             //assert
@@ -469,9 +472,10 @@ namespace SYE.Tests.Controllers
                 {"!!location_name!!", locationName}
             };
             mockSession.Setup(x => x.LoadLatestFormIntoSession(replacements)).Verifiable();
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
-            sut.SelectLocation(new UserSessionVM { LocationName = locationName });
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
+            sut.SelectLocation(new UserSessionVM{LocationName = locationName});
 
             //assert
             mockSession.Verify();
@@ -486,8 +490,9 @@ namespace SYE.Tests.Controllers
             var mockService = new Mock<ISearchService>();
             var mockLogger = new Mock<ILogger<SearchController>>();
             mockSession.Setup(x => x.SetUserSessionVars(userVm)).Throws(new Exception());
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockLogger.Object);
+            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object);
             var result = sut.SelectLocation(userVm);
 
             //assert    

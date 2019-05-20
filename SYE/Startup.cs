@@ -14,10 +14,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Notify.Client;
 using Notify.Interfaces;
+using SYE.EsbWrappers;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
 using SYE.Services.Wrappers;
+using SYE.ViewModels;
 
 namespace SYE
 {
@@ -105,6 +107,11 @@ namespace SYE
                 throw new ConfigurationErrorsException($"Failed to load {nameof(configDatabase)} from application configuration.");
             }
             services.TryAddSingleton<IAppConfiguration<ConfigVM>>(configDatabase);
+            services.AddScoped<IEsbService, EsbService>();
+            services.AddScoped<IEsbWrapper, EsbWrapper>();
+            services.AddScoped<IEsbClient, EsbClient>();
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.TryAddScoped<IFormService, FormService>();
@@ -139,6 +146,9 @@ namespace SYE
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}"
                 );
+
+                routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
+
             });
         }
     }

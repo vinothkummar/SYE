@@ -1,0 +1,45 @@
+﻿<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <s:Header>
+    <h:Credentials xmlns:h="http://provider.model.service.ols.cqc.org.uk/masterdata" xmlns="http://provider.model.service.ols.cqc.org.uk/masterdata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <tokenId>{{token}}</tokenId>
+      <originatingSystem>OLS</originatingSystem>
+      <originatingSystemId>OLS</originatingSystemId>
+      <status/>
+    </h:Credentials>
+    <VsDebuggerCausalityData xmlns="http://schemas.microsoft.com/vstudio/diagnostics/servicemodelsink">uIDPo/DQiJidh+FMprIFxhju8cIAAAAA0AFH3mDcM0+TET34R3hE6SSDdBjhBeFFvzLqNmcCKcAACQAA</VsDebuggerCausalityData>
+    <o:Security s:mustUnderstand="1" xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <o:UsernameToken u:Id="uuid-bb7003f6-0dde-46c6-9bbc-7059d11265cb-3">
+        <o:Username>{{username}}</o:Username>
+        <o:Password>{{password}}</o:Password>
+      </o:UsernameToken>
+    </o:Security>
+  </s:Header>
+  <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <CreateEnquiry_Input xmlns="http://provider.model.service.ols.cqc.org.uk/generic/attachment">
+      <CQCEnquiry>
+        <Enquiry>
+          <OrganisationId>ADMIN_PROVIDER</OrganisationId>
+          <ListOfDataItems>
+            <Data>
+              <ListOfAttributes>
+                <Attribute>
+                  <Name>payload</Name>
+                  <Value>
+                    {{payload}}
+                  </Value>
+                </Attribute>
+              </ListOfAttributes>
+            </Data>
+          </ListOfDataItems>
+          <Category>Notifications</Category>
+          <Type>Mental Health Act</Type>
+          <Subtype>{{subtype}}</Subtype>
+          <SourceChannel>Web</SourceChannel>
+          <ContactEmail>IsdAppDevSupport@cqc.org.uk</ContactEmail>
+          <sourceApplication>MH windows service</sourceApplication>
+          <sourceSystem>MH windows service</sourceSystem>
+        </Enquiry>
+      </CQCEnquiry>
+    </CreateEnquiry_Input>
+  </s:Body>
+</s:Envelope>
