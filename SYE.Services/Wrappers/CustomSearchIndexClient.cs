@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
+using SYE.Repository;
 
 namespace SYE.Services.Wrappers
 {
@@ -16,6 +17,11 @@ namespace SYE.Services.Wrappers
     public class CustomSearchIndexClient : ICustomSearchIndexClient
     {
         private readonly SearchIndexClient _searchIndexClient;
+
+        public CustomSearchIndexClient(ISearchConfiguration searchConfiguration)
+        {
+            _searchIndexClient = new SearchIndexClient(searchConfiguration.SearchServiceName, searchConfiguration.IndexName, new SearchCredentials(searchConfiguration.SearchApiKey));
+        }
 
         public CustomSearchIndexClient(string searchServiceName, string indexName, string apiKey)
         {

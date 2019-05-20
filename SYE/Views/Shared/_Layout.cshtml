@@ -1,4 +1,5 @@
-﻿@using Microsoft.Extensions.Configuration
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 <!DOCTYPE html>
 <html lang="en-GB">
@@ -44,6 +45,7 @@
     <![endif]-->
     <link rel="stylesheet" href="~/css/site.css" />
 
+    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
 <body class="govuk-template__body">
     <script>
@@ -58,7 +60,7 @@
             <gds-logo url="/" url-title="" image-url="/images/cqc-logo.png" alt-text="Share Your Experience"></gds-logo>
 
             <gds-header-content>
-
+                
             </gds-header-content>
 
         </gds-header-container>
@@ -68,7 +70,7 @@
 
     <gds-container>
 
-        <gds-phase-banner phase="Beta" url="/help/feedback"></gds-phase-banner>
+        <gds-phase-banner phase="Beta" url="/help/feedback" ></gds-phase-banner>
 
         @if (ViewBag.ShowBackButton != false)
         {

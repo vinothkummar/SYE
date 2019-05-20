@@ -3,6 +3,7 @@ using System.Linq;
 using GDSHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SYE.Models;
 using SYE.Services;
@@ -13,11 +14,13 @@ namespace SYE.Controllers
     {
         private readonly IGdsValidation _gdsValidate;
         private readonly ISessionService _sessionService;
+        private readonly ILogger _logger;
 
-        public FormController(IGdsValidation gdsValidate, ISessionService sessionService)
+        public FormController(IGdsValidation gdsValidate, ISessionService sessionService, ILogger<FormController> logger)
         {
             _gdsValidate = gdsValidate;
             _sessionService = sessionService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -30,7 +33,7 @@ namespace SYE.Controllers
                     ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
                 }
 
-                var notFoundFirstPageFlag = (bool) (id == "" && ViewBag.LocationName == "the service");
+                var notFoundFirstPageFlag = (bool)(id == "" && ViewBag.LocationName == "the service");
 
                 var pageVm = _sessionService.GetPageById(id, notFoundFirstPageFlag);
 
@@ -40,7 +43,7 @@ namespace SYE.Controllers
                     {
                         if (pageVm.PreviousPageId.Equals("start", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if((!notFoundFirstPageFlag) && ViewBag.LocationName == "the service")
+                            if ((!notFoundFirstPageFlag) && ViewBag.LocationName == "the service")
                             {
                                 //this is the SECOND page of the journey when location is NOT found
                                 //However its also the FIRST page of the journey when the location IS found
@@ -51,13 +54,13 @@ namespace SYE.Controllers
                             {
                                 //this is the FIRST page of the journey
                                 //so back button should go to the search page
-                                ViewBag.PreviousPage = "/search";  
-                            }                            
+                                ViewBag.PreviousPage = "/search";
+                            }
                         }
                         else
                         {
                             ViewBag.PreviousPage = String.Concat("/Form/Index/", pageVm.PreviousPageId);
-                        }                        
+                        }
                     }
                     return View(pageVm);
                 }
@@ -66,7 +69,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                //TODO: log error
+                _logger.LogError(ex, "Error loading PageVM.");
                 return StatusCode(500);
             }
         }
@@ -81,7 +84,7 @@ namespace SYE.Controllers
                 if (HttpContext?.Session != null)
                 {
                     ViewBag.LocationName = HttpContext.Session.GetString("LocationName");
-                }                    
+                }
 
                 //Get the current PageVm from Session
                 var pageVm = _sessionService.GetPageById(vm.PageId, false);
@@ -128,7 +131,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                //TODO: log error
+                _logger.LogError(ex, "Error updating PageVM.");
                 return StatusCode(500);
             }
         }

@@ -50,7 +50,7 @@ namespace SYE.Tests.Services
 
             //act
             var sut = new SearchService(mockedIndexClient.Object);
-            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true).Result[0];
+            var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true).Result.Data[0];
 
             //assert
             result.Id.Should().Be(expectedResult.Id);
@@ -89,6 +89,7 @@ namespace SYE.Tests.Services
             var mockedIndexClient = new Mock<ICustomSearchIndexClient>();
             var documentResult = new DocumentSearchResult
             {
+                Count = 1,
                 Results = new List<SearchResult> { new SearchResult { Document = doc } }
             };
 
@@ -156,7 +157,7 @@ namespace SYE.Tests.Services
             var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true).Result;
 
             //assert
-            sut.GetCount().Should().Be(1);
+            result.Count.Should().Be(1);
         }
         [Fact]
         public void GetFacets_Should_Return_Facets()
@@ -191,7 +192,7 @@ namespace SYE.Tests.Services
                 Results = new List<SearchResult> { new SearchResult { Document = doc } }
 
             };
-            documentResult.Facets.Add("key", new List<FacetResult>{new FacetResult{Value = "value"}});
+            documentResult.Facets.Add("key", new List<FacetResult> { new FacetResult { Value = "value" } });
 
             mockedIndexClient.Setup(x => x.SearchAsync(It.IsAny<string>(), It.IsAny<SearchParameters>())).ReturnsAsync(documentResult);
 
@@ -200,7 +201,7 @@ namespace SYE.Tests.Services
             var result = sut.GetPaginatedResult("searchString", 1, 10, string.Empty, true).Result;
 
             //assert
-            sut.GetFacets().Count.Should().Be(1);
+            result.Count.Should().Be(1);
         }
     }
 }

@@ -5,6 +5,7 @@ using FluentAssertions;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using SYE.Controllers;
 using SYE.Models;
@@ -27,8 +28,9 @@ namespace SYE.Tests.Controllers
             var returnPage = new PageVM { PageId = id };
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockLogger.Object);
 
             //act
             var result = sut.Index(id);
@@ -48,8 +50,9 @@ namespace SYE.Tests.Controllers
             PageVM returnPage = null;
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockLogger.Object);
 
             //act
             var result = sut.Index(id);
@@ -67,8 +70,9 @@ namespace SYE.Tests.Controllers
             //arrange
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
             mockSession.Setup(x => x.GetPageById(id, false)).Throws(new Exception()).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockLogger.Object);
 
             //act
             var result = sut.Index(id);
@@ -87,8 +91,9 @@ namespace SYE.Tests.Controllers
             PageVM returnPage = null;
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockLogger.Object);
 
             //act
             var result = sut.Index(new CurrentPageVM{PageId = id});
@@ -115,8 +120,9 @@ namespace SYE.Tests.Controllers
 
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockLogger.Object);
 
             //act
             var result = sut.Index(new CurrentPageVM { PageId = id });
@@ -141,8 +147,9 @@ namespace SYE.Tests.Controllers
 
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
-            var sut = new FormController(mockValidation.Object, mockSession.Object);
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockLogger.Object);
 
             //act
             var result = sut.Index(new CurrentPageVM { PageId = id });

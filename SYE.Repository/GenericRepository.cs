@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
+using Newtonsoft.Json;
 
 namespace SYE.Repository
 {
     public interface IGenericRepository<T> where T : class
     {
-        Task<Document> CreateAsync(T item);
-        Task DeleteAsync(string id);
         Task<T> GetByIdAsync(string id);
         Task<T> GetAsync<TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TKey>> ascKeySelector, Expression<Func<T, TKey>> descKeySelector);
         Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate);
-        Task<Document> UpdateAsync(string id, T item);
+        Task<T> CreateAsync(T item);
+        Task<T> UpdateAsync(string id, T item);
+        Task DeleteAsync(string id);
     }
 
     public class GenericRepository<T> : IGenericRepository<T> where T : class
@@ -24,21 +25,18 @@ namespace SYE.Repository
         private readonly string _databaseId;
         private readonly string _collectionId;
         private readonly IDocumentClient _client;
-        private readonly IAppConfiguration<T> _appConfig;
 
         public GenericRepository(IAppConfiguration<T> appConfig, IDocumentClient client)
         {
-            _appConfig = appConfig;
-            _databaseId = _appConfig.DatabaseId;
-            _collectionId = _appConfig.CollectionId;
+            _databaseId = appConfig?.DatabaseId;
+            _collectionId = appConfig?.CollectionId;
             _client = client;
         }
 
         public async Task<T> GetByIdAsync(string id)
         {
             var param = UriFactory.CreateDocumentUri(_databaseId, _collectionId, id);
-            Document document = await _client.ReadDocumentAsync(param);
-            return (T)(dynamic)document;
+            return await _client.ReadDocumentAsync<T>(param).ConfigureAwait(false);
         }
 
         public async Task<T> GetAsync<TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TKey>> ascKeySelector, Expression<Func<T, TKey>> descKeySelector)
@@ -46,7 +44,6 @@ namespace SYE.Repository
             return await Task.Run(() =>
             {
                 var endPoint = UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId);
-
                 IQueryable<T> query = _client.CreateDocumentQuery<T>(endPoint, new FeedOptions { MaxItemCount = 1, EnableCrossPartitionQuery = true });
                 if (predicate != null)
                 {
@@ -60,7 +57,7 @@ namespace SYE.Repository
                 {
                     query = query.OrderByDescending(descKeySelector);
                 }
-                return query.AsEnumerable().FirstOrDefault();
+                return query?.AsEnumerable()?.FirstOrDefault();
             }).ConfigureAwait(false);
         }
 
@@ -71,29 +68,33 @@ namespace SYE.Repository
                 new FeedOptions { MaxItemCount = -1, EnableCrossPartitionQuery = true })
                 .Where(predicate)
                 .AsDocumentQuery();
-
             var results = new List<T>();
             while (query.HasMoreResults)
             {
-                results.AddRange(await query.ExecuteNextAsync<T>());
+                var items = await query.ExecuteNextAsync<T>();
+                if (items?.Count > 0)
+                {
+                    results.AddRange(await query.ExecuteNextAsync<T>());
+                }
             }
-
             return results;
         }
 
-        public async Task<Document> CreateAsync(T item)
+        public async Task<T> CreateAsync(T item)
         {
-            return await _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId), item);
+            var result = await _client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(_databaseId, _collectionId), item).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<T>(result.Resource.ToString());
         }
 
-        public async Task<Document> UpdateAsync(string id, T item)
+        public async Task<T> UpdateAsync(string id, T item)
         {
-            return await _client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id), item);
+            var result = await _client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id), item).ConfigureAwait(false);
+            return JsonConvert.DeserializeObject<T>(result.Resource.ToString());
         }
 
         public async Task DeleteAsync(string id)
         {
-            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id));
+            await _client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(_databaseId, _collectionId, id)).ConfigureAwait(false);
         }
     }
 }

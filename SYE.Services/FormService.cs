@@ -8,7 +8,7 @@ namespace SYE.Services
     public interface IFormService
     {
         Task<FormVM> GetLatestForm();
-        Task<FormVM> GetLatestFormByName(string formname);
+        Task<FormVM> GetLatestFormByName(string formName);
         Task<FormVM> GetFormById(string id);
         Task<FormVM> FindByName(string formName);
         Task<FormVM> FindByVersion(string version);

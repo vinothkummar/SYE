@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,15 +23,13 @@ namespace SYE
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -50,47 +49,69 @@ namespace SYE
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
-            var formDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("FormSchemaDb").Get<AppConfiguration<FormVM>>();
-            var searchConfig = Configuration.GetSection("ConnectionStrings").GetSection("SearchDb").Get<SearchConfiguration>();
-            var submissionDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
-            var submissionConfig = Configuration.GetSection("ConnectionStrings").GetSection("ConfigDb").Get<AppConfiguration<ConfigVM>>();
+            services.AddHttpContextAccessor();
 
-            var indexClient = new CustomSearchIndexClient(searchConfig.SearchServiceName, searchConfig.IndexName, searchConfig.SearchApiKey);
-            var searchService = new SearchService(indexClient);
+            services.TryAddScoped<ISessionService, SessionService>();
 
-            services.AddSingleton<IAppConfiguration<FormVM>>(formDatabaseConfig);
-            services.AddSingleton<IAppConfiguration<SubmissionVM>>(submissionDatabaseConfig);
-            services.AddSingleton<IAppConfiguration<ConfigVM>>(submissionConfig);
+            services.TryAddSingleton<IGdsValidation, GdsValidation>();
 
-            services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy));
+            string notificationApiKey = Configuration.GetSection("ConnectionStrings:GovUkNotify").GetValue<String>("ApiKey");
+            if (string.IsNullOrWhiteSpace(notificationApiKey))
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(notificationApiKey)} from application configuration.");
+            }
+            services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(notificationApiKey));
+            services.TryAddSingleton<INotificationService, NotificationService>();
 
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            var searchConfiguration = Configuration.GetSection("ConnectionStrings:SearchDb").Get<SearchConfiguration>();
+            if (searchConfiguration == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(searchConfiguration)} from application configuration.");
+            }
+            services.TryAddSingleton<ICustomSearchIndexClient>(new CustomSearchIndexClient(searchConfiguration));
+            services.TryAddSingleton<ISearchService, SearchService>();
 
-            services.AddScoped<IGdsValidation, GdsValidation>();
+            var cosmosDatabaseConnectionConfiguration = Configuration.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
+            if (cosmosDatabaseConnectionConfiguration == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(cosmosDatabaseConnectionConfiguration)} from application configuration.");
+            }
+            var cosmosDatabaseConnectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
+            services.TryAddSingleton<IDocumentClient>(
+                    new DocumentClient(
+                            new Uri(cosmosDatabaseConnectionConfiguration.Endpoint),
+                            cosmosDatabaseConnectionConfiguration.Key,
+                            cosmosDatabaseConnectionPolicy
+                        )
+                );
 
-            services.AddScoped<ISearchService, SearchService>(s => searchService);
-            services.AddScoped<ICustomSearchIndexClient, CustomSearchIndexClient>(c => indexClient);
+            var formSchemaDatabase = Configuration.GetSection("CosmosDBCollections:FormSchemaDb").Get<AppConfiguration<FormVM>>();
+            if (formSchemaDatabase == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(formSchemaDatabase)} from application configuration.");
+            }
+            services.TryAddSingleton<IAppConfiguration<FormVM>>(formSchemaDatabase);
 
-            services.AddScoped<IFormService, FormService>();
-            services.AddScoped<ISessionService, SessionService>();
-            services.AddScoped<ISubmissionService, SubmissionService>();
-            services.AddScoped<IDocumentService, DocumentService>();
+            var submissionsDatabase = Configuration.GetSection("CosmosDBCollections:SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
+            if (submissionsDatabase == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(submissionsDatabase)} from application configuration.");
+            }
+            services.TryAddSingleton<IAppConfiguration<SubmissionVM>>(submissionsDatabase);
 
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            var configDatabase = Configuration.GetSection("CosmosDBCollections:ConfigDb").Get<AppConfiguration<ConfigVM>>();
+            if (configDatabase == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(configDatabase)} from application configuration.");
+            }
+            services.TryAddSingleton<IAppConfiguration<ConfigVM>>(configDatabase);
 
-            services.TryAddSingleton<IGovUkNotifyConfiguration>(_ => Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").Get<GovUkNotifyConfiguration>());
-            services.TryAddSingleton<IAsyncNotificationClient>(_ =>
-                new NotificationClient(
-                        Configuration.GetSection("ConnectionStrings").GetValue<String>(
-                                String.Concat("GovUkNotifyApiKeys:", Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").GetValue<String>("KeyType"))
-                            )
-                    )
-            );
-            services.TryAddScoped<INotificationService, NotificationService>();
+            services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.TryAddScoped<IFormService, FormService>();
+            services.TryAddScoped<ISubmissionService, SubmissionService>();
+            services.TryAddScoped<IDocumentService, DocumentService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)//, IApplicationLifetime lifetime, IDistributedCache cache)
         {
             if (env.IsDevelopment() || env.IsEnvironment("Local"))

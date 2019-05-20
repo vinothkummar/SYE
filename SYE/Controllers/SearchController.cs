@@ -7,6 +7,7 @@ using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
 using SYE.Helpers;
+using Microsoft.Extensions.Logging;
 
 namespace SYE.Controllers
 {
@@ -16,11 +17,13 @@ namespace SYE.Controllers
         private readonly int _maxSearchChars = 1000;
         private readonly ISearchService _searchService;
         private readonly ISessionService _sessionService;
+        private readonly ILogger _logger;
 
-        public SearchController(ISearchService searchService, ISessionService sessionService)
+        public SearchController(ISearchService searchService, ISessionService sessionService, ILogger<SearchController> logger)
         {
             _searchService = searchService;
             _sessionService = sessionService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -28,11 +31,11 @@ namespace SYE.Controllers
         {
             try
             {
-                return View(new SearchResultsVM{ShowIncompletedSearchMessage = isError});
+                return View(new SearchResultsVM { ShowIncompletedSearchMessage = isError });
             }
             catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error loading search page.");
                 return StatusCode(500);
             }
         }
@@ -45,7 +48,7 @@ namespace SYE.Controllers
             {
                 selectedFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());
             }
-                
+
             return GetSearchResult(search, 1, selectedFacets);
         }
 
@@ -59,11 +62,11 @@ namespace SYE.Controllers
         public IActionResult LocationNotFound()
         {
             var defaultServiceName = "the service";
-            
+
             try
             {
                 //Store the user entered details
-                _sessionService.SetUserSessionVars(new UserSessionVM{LocationId = "0", LocationName = defaultServiceName, ProviderId = ""});
+                _sessionService.SetUserSessionVars(new UserSessionVM { LocationId = "0", LocationName = defaultServiceName, ProviderId = "" });
 
                 //Set up our replacement text
                 var replacements = new Dictionary<string, string>
@@ -78,7 +81,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error loading location not found page.");
                 return StatusCode(500);
             }
 
@@ -102,9 +105,9 @@ namespace SYE.Controllers
 
                 return RedirectToAction("Index", "Form");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error selecting location.");
                 return StatusCode(500);
             }
         }
@@ -124,7 +127,8 @@ namespace SYE.Controllers
                     return View(new SearchResultsVM
                     {
                         Search = search,
-                        ShowExceededMaxLengthMessage = true, Facets = new List<SelectItem>(),
+                        ShowExceededMaxLengthMessage = true,
+                        Facets = new List<SelectItem>(),
                         Data = new List<SearchResult>()
                     });
                 }
@@ -137,7 +141,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error getting search results.");
                 return StatusCode(500);
             }
         }
@@ -156,16 +160,17 @@ namespace SYE.Controllers
 
             if (!string.IsNullOrEmpty(search) && pageNo > 0)
             {
-                returnViewModel.Data = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets, newSearch).Result;
+                var searchResult = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets, newSearch).Result;
+                returnViewModel.Data = searchResult?.Data?.ToList() ?? new List<SearchResult>();
                 returnViewModel.ShowResults = true;
-                returnViewModel.Search = search;                
+                returnViewModel.Search = search;
                 returnViewModel.PageSize = _pageSize;
-                returnViewModel.Count = _searchService.GetCount();
-                returnViewModel.Facets = SubmissionHelper.ConvertList(_searchService.GetFacets());
-                returnViewModel.TypeOfService = _searchService.GetFacets();
+                returnViewModel.Count = searchResult?.Count ?? 0;
+                returnViewModel.Facets = SubmissionHelper.ConvertList(searchResult?.Facets);
+                returnViewModel.TypeOfService = searchResult?.Facets;
                 returnViewModel.CurrentPage = pageNo;
 
-                if (returnViewModel.Facets != null && (! string.IsNullOrEmpty(refinementFacets)) && ! newSearch)
+                if (returnViewModel.Facets != null && (!string.IsNullOrEmpty(refinementFacets)) && !newSearch)
                 {
                     foreach (var facet in returnViewModel.Facets)
                     {
@@ -176,6 +181,7 @@ namespace SYE.Controllers
 
             return returnViewModel;
         }
+
         /// <summary>
         /// saves the search and checks saved search to see if it is a new search       
         /// </summary>
@@ -193,11 +199,6 @@ namespace SYE.Controllers
             }
 
             return newSearch;
-        }
-        private string GetPreviousSearch()
-        {
-            var previousSearch = _sessionService.GetUserSearch();
-            return previousSearch;
         }
     }
 }
