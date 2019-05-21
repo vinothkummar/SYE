@@ -51,6 +51,8 @@ namespace SYE
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+
             services.AddHttpContextAccessor();
 
             services.TryAddScoped<ISessionService, SessionService>();
@@ -70,7 +72,7 @@ namespace SYE
             {
                 throw new ConfigurationErrorsException($"Failed to load {nameof(searchConfiguration)} from application configuration.");
             }
-            services.TryAddSingleton<ICustomSearchIndexClient>(new CustomSearchIndexClient(searchConfiguration));
+            services.TryAddSingleton<ICustomSearchIndexClient>(new CustomSearchIndexClient(searchConfiguration.SearchServiceName, searchConfiguration.IndexName, searchConfiguration.SearchApiKey));
             services.TryAddSingleton<ISearchService, SearchService>();
 
             var cosmosDatabaseConnectionConfiguration = Configuration.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
@@ -107,13 +109,20 @@ namespace SYE
                 throw new ConfigurationErrorsException($"Failed to load {nameof(configDatabase)} from application configuration.");
             }
             services.TryAddSingleton<IAppConfiguration<ConfigVM>>(configDatabase);
-            services.AddScoped<IEsbService, EsbService>();
-            services.AddScoped<IEsbWrapper, EsbWrapper>();
-            services.AddScoped<IEsbClient, EsbClient>();
 
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            var esbConfig = Configuration.GetSection("ConnectionStrings:EsbConfig").Get<EsbConfiguration<EsbConfig>>();
+            if (esbConfig == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(esbConfig)} from application configuration.");
+            }
+            services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            services.TryAddScoped<IEsbClient, EsbClient>();
+            services.TryAddScoped<IEsbWrapper, EsbWrapper>();
+            services.TryAddScoped<IEsbService, EsbService>();
+
             services.TryAddScoped<IFormService, FormService>();
             services.TryAddScoped<ISubmissionService, SubmissionService>();
             services.TryAddScoped<IDocumentService, DocumentService>();

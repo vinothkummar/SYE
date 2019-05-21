@@ -20,8 +20,7 @@ namespace SYE.Controllers
         private readonly IOptions<ApplicationSettings> _config;
         private readonly ILogger _logger;
 
-        public FormController(IGdsValidation gdsValidate, ISessionService sessionService, IOptions<ApplicationSettings> config)
-        public FormController(IGdsValidation gdsValidate, ISessionService sessionService, ILogger<FormController> logger)
+        public FormController(IGdsValidation gdsValidate, ISessionService sessionService, IOptions<ApplicationSettings> config, ILogger<FormController> logger)
         {
             _gdsValidate = gdsValidate;
             _sessionService = sessionService;

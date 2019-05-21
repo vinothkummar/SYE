@@ -60,7 +60,7 @@ namespace SYE.Services
             string version = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Version");
             string sessionVersion = _httpContextAccessor.HttpContext.Session.GetString("FormVersion");
 
-            if (!String.IsNullOrWhiteSpace(sessionVersion))
+            if (!string.IsNullOrWhiteSpace(sessionVersion))
             {
                 version = sessionVersion;
             }
@@ -144,8 +144,7 @@ namespace SYE.Services
 
         public void ClearSession()
         {
-            var context = _context.HttpContext;
-            context.Session.Clear();
+            _httpContextAccessor.HttpContext.Session.Clear();
         }
     }
 

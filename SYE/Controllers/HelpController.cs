@@ -15,18 +15,18 @@ namespace SYE.Controllers
 {
     public class HelpController : Controller
     {
-        private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
+        private readonly ILogger _logger;        
         private readonly IFormService _formService;
         private readonly IGdsValidation _gdsValidate;
+		private readonly IConfiguration _configuration;
         private readonly INotificationService _notificationService;
 
         public HelpController(IServiceProvider service)
         {
             this._logger = service?.GetService<ILogger<HelpController>>() as ILogger;
-            this._configuration = service?.GetService<IConfiguration>();
             this._formService = service?.GetService<IFormService>();
             this._gdsValidate = service?.GetService<IGdsValidation>();
+            this._configuration = service?.GetService<IConfiguration>();
             this._notificationService = service?.GetService<INotificationService>();
         }
 
@@ -130,10 +130,10 @@ namespace SYE.Controllers
 
         private async Task SendEmailNotificationInternalAsync(PageVM submission, String urlReferer)
         {
-            var fieldMappings = _configuration.GetSection("EmailNotification:FeedbackEmail:FieldMappings").Get<IEnumerable<EmailFieldMapping>>();
+            string phase = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("Phase");
             string emailTemplateId = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("EmailTemplateId");
             string emailAddress = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("ServiceSupportEmailAddress");
-            string phase = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("Phase");
+            var fieldMappings = _configuration.GetSection("EmailNotification:FeedbackEmail:FieldMappings").Get<IEnumerable<EmailFieldMapping>>();
 
             string feedbackMessage = submission?
                 .Questions?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "message").FormField, StringComparison.OrdinalIgnoreCase))?

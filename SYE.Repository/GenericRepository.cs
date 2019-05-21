@@ -12,12 +12,12 @@ namespace SYE.Repository
 {
     public interface IGenericRepository<T> where T : class
     {
+        Task<T> CreateAsync(T item);
+        Task DeleteAsync(string id);
         Task<T> GetByIdAsync(string id);
         Task<T> GetAsync<TKey>(Expression<Func<T, bool>> predicate, Expression<Func<T, TKey>> ascKeySelector, Expression<Func<T, TKey>> descKeySelector);
         Task<IEnumerable<T>> FindByAsync(Expression<Func<T, bool>> predicate);
-        Task<T> CreateAsync(T item);
         Task<T> UpdateAsync(string id, T item);
-        Task DeleteAsync(string id);
     }
 
     public class GenericRepository<T> : IGenericRepository<T> where T : class

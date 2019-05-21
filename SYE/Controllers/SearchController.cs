@@ -20,8 +20,7 @@ namespace SYE.Controllers
         private readonly IOptions<ApplicationSettings> _config;
         private readonly ILogger _logger;
 
-        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config)
-        public SearchController(ISearchService searchService, ISessionService sessionService, ILogger<SearchController> logger)
+        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, ILogger<SearchController> logger)
         {
             _searchService = searchService;
             _sessionService = sessionService;

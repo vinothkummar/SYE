@@ -1,6 +1,13 @@
 ﻿
 namespace SYE.Repository
 {
+    public interface ISearchConfiguration
+    {
+        string SearchServiceName { get; set; }
+        string SearchApiKey { get; set; }
+        string IndexName { get; set; }
+    }
+
     public interface ICosmosConnection
     {
         string Endpoint { get; set; }
@@ -24,13 +31,6 @@ namespace SYE.Repository
         public string DatabaseId { get; set; }
         public string CollectionId { get; set; }
         public string ConfigRecordId { get; set; }
-    }
-
-    public interface ISearchConfiguration
-    {
-        string SearchServiceName { get; set; }
-        string SearchApiKey { get; set; }
-        string IndexName { get; set; }
     }
 
     public class SearchConfiguration : ISearchConfiguration
