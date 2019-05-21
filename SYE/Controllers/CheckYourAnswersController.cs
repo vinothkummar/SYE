@@ -25,7 +25,6 @@ namespace SYE.Controllers
         private readonly INotificationService _notificationService;
         private readonly IDocumentService _documentService;
 
-
         public CheckYourAnswersController(IServiceProvider service)
         {
             _logger = service?.GetRequiredService<ILogger<CheckYourAnswersController>>() as ILogger;
@@ -48,7 +47,8 @@ namespace SYE.Controllers
                 }
                 var vm = new CheckYourAnswersVm
                 {
-                    FormVm = formVm
+                    FormVm = formVm,
+                    SendConfirmationEmail = true
                 };
 
                 ViewBag.ShowBackButton = false;
@@ -76,14 +76,35 @@ namespace SYE.Controllers
 
                 var submission = GenerateSubmission(formVm);
                 submission = _submissionService.CreateAsync(submission).Result;
-                var reference = submission.SubmissionId ?? string.Empty;
+                var reference = submission?.SubmissionId ?? string.Empty;
 
                 if (vm?.SendConfirmationEmail == true && !string.IsNullOrWhiteSpace(reference))
                 {
-                    Task.Run(async () =>
+                    var fieldMappings = _configuration
+                        .GetSection("EmailNotification:ConfirmationEmail:FieldMappings")
+                        .Get<IEnumerable<EmailFieldMapping>>();
+
+                    var feedbackUserName = submission?
+                        .Answers?
+                        .FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "name")?.FormField, StringComparison.OrdinalIgnoreCase))?
+                        .Answer ?? string.Empty;
+
+                    var emailAddress = submission?
+                        .Answers?
+                        .FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "email")?.FormField, StringComparison.OrdinalIgnoreCase))?
+                        .Answer ?? string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(emailAddress))
                     {
-                        await SendEmailNotificationAsync(submission)
-                                .ContinueWith(notificationTask =>
+
+                        var locationId = submission?.LocationId;
+                        var locationName = submission?.LocationName;
+                        var submissionId = submission?.Id;
+
+                        Task.Run(async () =>
+                        {
+                            await SendEmailNotificationAsync(feedbackUserName, emailAddress, locationId, locationName, submissionId, reference)
+                                    .ContinueWith(notificationTask =>
                                     {
                                         if (notificationTask.IsFaulted)
                                         {
@@ -94,8 +115,9 @@ namespace SYE.Controllers
                                             _logger.LogInformation($"Confirmation email for submission id: [{reference}] sent successfully.");
                                         }
                                     })
-                                .ConfigureAwait(false);
-                    });
+                                    .ConfigureAwait(false);
+                        });
+                    }
                 }
 
                 HttpContext.Session.Clear();
@@ -147,19 +169,10 @@ namespace SYE.Controllers
             return vm;
         }
 
-        private Task SendEmailNotificationAsync(SubmissionVM submission)
-        {
-            if (submission == null)
-            {
-                throw new ArgumentNullException(nameof(submission));
-            }
-            return SendEmailNotificationInternalAsync(submission);
-        }
-
-        private async Task SendEmailNotificationInternalAsync(SubmissionVM submission)
+        private async Task SendEmailNotificationAsync(string fullName, string emailAddress, string locationId, string locationName, string submissionId, string submissionReference)
         {
             var emailTemplateId = string.Empty;
-            if (string.IsNullOrWhiteSpace(submission?.LocationId) || string.IsNullOrWhiteSpace(submission?.LocationName))
+            if (string.IsNullOrWhiteSpace(locationId) || string.IsNullOrWhiteSpace(locationName))
             {
                 emailTemplateId = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("WithoutLocationEmailTemplateId");
             }
@@ -170,23 +183,13 @@ namespace SYE.Controllers
             var greetingTemplate = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("GreetingTemplate");
             var clientReferenceTemplate = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("ClientReferenceTemplate");
             var emailReplyToId = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("ReplyToAddressId");
-            var fieldMappings = _configuration.GetSection("EmailNotification:ConfirmationEmail:FieldMappings").Get<IEnumerable<EmailFieldMapping>>();
 
-            var emailAddress = submission?
-                .Answers?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "email").FormField, StringComparison.OrdinalIgnoreCase))?
-                .Answer ?? string.Empty;
-
-            var feedbackUserName = submission?
-                .Answers?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "name").FormField, StringComparison.OrdinalIgnoreCase))?
-                .Answer ?? string.Empty;
-
-            var greeting = string.Format(greetingTemplate, feedbackUserName);
-            var locationName = submission?.LocationName;
-            var clientReference = string.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
+            var greeting = string.Format(greetingTemplate, fullName);
+            var clientReference = string.Format(clientReferenceTemplate, locationId, submissionId);
 
             var personalisation =
                 new Dictionary<string, dynamic> {
-                    { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.SubmissionId ?? String.Empty }
+                    { "greeting", greeting }, { "location", locationName }, {"reference number", submissionReference ?? String.Empty }
                 };
 
             await _notificationService.NotifyByEmailAsync(
