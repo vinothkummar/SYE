@@ -1,9 +1,15 @@
-﻿using SYE.Models.SubmissionSchema;
+﻿using System;
+using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SYE.EsbWrappers;
+using System.Xml.Serialization;
+using System.Web;
+using System.IO;
+using System.Text;
+using System.Xml.Linq;
 
 namespace SYE.Services
 {
@@ -45,8 +51,8 @@ namespace SYE.Services
 
         public async Task<bool> PostSubmision(SubmissionVM submission)
         {
-            var json = JsonConvert.SerializeObject(submission);
-            var result = await _esbWrapper.PostSubmission(json);
+            var submissionString = GenerateEsbPayload(submission);
+            var result = await _esbWrapper.PostSubmission(submissionString);
             if (result == true)
             {
                 submission.Status = "Posted";
@@ -56,5 +62,32 @@ namespace SYE.Services
 
             return false;
         }
+        private string GenerateEsbPayload(SubmissionVM payload)
+        {
+            string serialized;
+
+            serialized = SerializePayload<SubmissionVM>(payload);
+
+            return serialized;
+        }
+
+        private string SerializePayload<T>(SubmissionVM payload)
+        {
+            var serializer = new XmlSerializer(typeof(T));
+            var writer = new Utf8StringWriter();
+            serializer.Serialize(writer, payload);
+            var escapedPayload = HttpUtility.HtmlEncode(writer.ToString());
+
+            if (escapedPayload == null) throw new ArgumentException("Payload cannot be null.");
+            var serialized = new XCData(escapedPayload);
+            return serialized.ToString();
+        }
+
     }
+  
+    internal class Utf8StringWriter : StringWriter
+    {
+        public override Encoding Encoding => Encoding.UTF8;
+    }
+
 }
