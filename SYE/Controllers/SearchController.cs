@@ -127,8 +127,9 @@ namespace SYE.Controllers
 
         private IActionResult GetSearchResult(string search, int pageNo, string selectedFacets)
         {
+            //This is commented out as it is causing Facets to not work
             //Make Sure we have a clean session
-            _sessionService.ClearSession();
+            //_sessionService.ClearSession();
 
             try
             {
