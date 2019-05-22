@@ -44,8 +44,8 @@ namespace SYE.Services
 
             if (string.IsNullOrWhiteSpace(pageId))
             {
-                return notFoundFlag 
-                    ? formVm.Pages.FirstOrDefault() 
+                return notFoundFlag
+                    ? formVm.Pages.FirstOrDefault()
                     : formVm.Pages.FirstOrDefault(x => x.PageId != formVm.Pages.First().PageId);
             }
 
@@ -58,7 +58,8 @@ namespace SYE.Services
         {
             string formName = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Name");
             string version = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Version");
-            string sessionVersion = _httpContextAccessor.HttpContext.Session.GetString("FormVersion");
+            var context = _httpContextAccessor.HttpContext;
+            string sessionVersion = context.Session.GetString("FormVersion");
 
             if (!string.IsNullOrWhiteSpace(sessionVersion))
             {
@@ -107,44 +108,45 @@ namespace SYE.Services
 
         public void SaveFormVmToSession(FormVM vm)
         {
-            _httpContextAccessor.HttpContext.Session.SetString(schemaKey, JsonConvert.SerializeObject(vm));
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.SetString(schemaKey, JsonConvert.SerializeObject(vm));
         }
 
         public FormVM GetFormVmFromSession()
         {
-            var json = _httpContextAccessor.HttpContext.Session.GetString(schemaKey);
+            var context = _httpContextAccessor.HttpContext;
+            var json = context.Session.GetString(schemaKey);
             return json == null ? default(FormVM) : JsonConvert.DeserializeObject<FormVM>(json);
         }
 
         public void UpdatePageVmInFormVm(PageVM vm)
         {
             var formVm = GetFormVmFromSession();
-
             var currentPage = formVm.Pages.FirstOrDefault(m => m.PageId == vm.PageId)?.Questions;
-
             foreach (var question in vm.Questions)
             {
                 var q = currentPage.FirstOrDefault(m => m.QuestionId == question.QuestionId);
                 q.Answer = question.Answer;
             }
-
             SaveFormVmToSession(formVm);
-
         }
 
         public void SaveUserSearch(string search)
         {
-            _httpContextAccessor.HttpContext.Session.SetString("Search", search);
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.SetString("Search", search);
         }
 
         public string GetUserSearch()
         {
-            return _httpContextAccessor.HttpContext.Session.GetString("Search");
+            var context = _httpContextAccessor.HttpContext;
+            return context.Session.GetString("Search");
         }
 
         public void ClearSession()
         {
-            _httpContextAccessor.HttpContext.Session.Clear();
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.Clear();
         }
     }
 

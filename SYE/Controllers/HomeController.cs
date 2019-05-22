@@ -23,5 +23,12 @@ namespace SYE.Controllers
             ViewBag.ShowBackButton = false;
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        [Route("Clear-Data")]
+        public IActionResult ClearData()
+        {
+            ControllerContext.HttpContext.Session.Clear();
+            return new RedirectResult("/");
+        }
     }
 }
