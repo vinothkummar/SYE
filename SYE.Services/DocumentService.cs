@@ -52,70 +52,89 @@ namespace SYE.Services
                     Body body = mainPart.Document.AppendChild(new Body());
                     Paragraph para = body.AppendChild(new Paragraph());
 
-                    //insert the new created run part
-                    var line = GetText("NCSC GFC concern template", FontSizeHeader);
-                    para.AppendChild(line);
-                    EmptyLine(body, para);
+                    ////insert the new created run part
+                    //var line = GetText("NCSC GFC concern template", FontSizeHeader);
+                    //para.AppendChild(line);
+                    //EmptyLine(body, para);
 
+                    GetDataSection(body, "Response Id :", new List<string> { submissionVm.Id }, false);
                     GetDataSection(body, "Channel :", new List<string> { "GFC" }, false);
                     GetDataSection(body, "GFC reference number :", new List<string> { submissionVm.SubmissionId }, false);
-                    GetDataSection(body, "Completed :", new List<string> { DateTime.Parse(submissionVm.DateCreated).ToShortDateString() }, false);
-                    GetDataSection(body, "Location ID :", new List<string> { submissionVm.LocationId }, false);
-                    GetDataSection(body, "Provider ID :", new List<string> { submissionVm.ProviderId }, false);
+                    GetDataSection(body, "Completed :", new List<string> { DateTime.Parse(submissionVm.DateCreated).ToShortDateString()  + ": "+ DateTime.Parse(submissionVm.DateCreated).ToShortTimeString() }, false);
+                    var locationId = string.Empty;
+                    var providerId = string.Empty;
+                    if (string.IsNullOrWhiteSpace(submissionVm.LocationId) || submissionVm.LocationId == "0")
+                    {
+                        locationId = "none";
+                    }
+                    else
+                    {
+                        locationId = submissionVm.LocationId;
+                    }
+                    if (string.IsNullOrWhiteSpace(submissionVm.ProviderId) || submissionVm.ProviderId == "0")
+                    {
+                        providerId = "none";
+                    }
+                    else
+                    {
+                        providerId = submissionVm.ProviderId;
+                    }
+                    GetDataSection(body, "Location ID :", new List<string> { locationId }, false);
+                    GetDataSection(body, "Provider ID :", new List<string> { providerId }, false);
                     //location
                     GetLocation(body, submissionVm);
 
                     //Are you happy to be contacted
                     var answerTxt = string.Empty;
-                    var questionTxt = GetYesNoAnswer(submissionVm, "Yes I'm happy for you to contact me", "No, I do not want to give my name or contact details", "Contact_002", ref answerTxt);
-                    GetDataSection(body, "11. " + questionTxt, new List<string> { answerTxt }, true);
+                    var questionTxt = GetYesNoAnswer(submissionVm, "Yes I'm happy for you to contact me", "No, I do not want to give my name or contact details", "can_we_contact_you", ref answerTxt);
+                    GetDataSection(body, questionTxt, new List<string> { answerTxt }, true);
                     //contact details
                     GetContactDetails(body, submissionVm);
                     //have you worked for this service
                     answerTxt = string.Empty;
-                    questionTxt = GetYesNoAnswer(submissionVm, "Yes, I have worked for this service", "No, I have never worked for them", "Neg_006", ref answerTxt);
-                    GetDataSection(body, "8. " + questionTxt, new List<string> { answerTxt }, true);
+                    questionTxt = GetYesNoAnswer(submissionVm, "Yes, I have worked for this service", "No, I have never worked for them", "have_you_worked_for_the_service", ref answerTxt);
+                    GetDataSection(body, questionTxt, new List<string> { answerTxt }, true);
                     //risk of harm
                     answerTxt = string.Empty;
-                    questionTxt = GetYesNoAnswer(submissionVm, "Yes, I think someone's at risk of harm", "No, I don't think anyone's at risk of harm", "Neg_001", ref answerTxt);
-                    GetDataSection(body, "4. " + questionTxt, new List<string> { answerTxt }, true);
+                    questionTxt = GetYesNoAnswer(submissionVm, "Yes, I think someone's at risk of harm", "No, I don't think anyone's at risk of harm", "is_someone_at_risk", ref answerTxt);
+                    GetDataSection(body, questionTxt, new List<string> { answerTxt }, true);
                     //have you told police
-                    var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_002");
+                    var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "have_you_told_the_police");
                     if (answer != null)
                     {
-                        GetDataSection(body, "5. " + answer.Question, new List<string> { answer.Answer }, true);
+                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
                     }
                     //good or bad
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Start_001");
+                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "what_do_you_want_to_tell_us_about");
                     if (answer != null)
                     {
-                        GetDataSection(body, "2. " + answer.Question, new List<string> { answer.Answer }, true);
+                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
                     }
                     //when did it happen
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_005");
+                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "when_did_it_happen");
                     if (answer != null)
                     {
-                        GetDataSection(body, "3. " + answer.Question, new List<string> { answer.Answer }, true);
+                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
                     }
                     //feedback
                     GetFeedback(body, submissionVm);
                     //how did you find out
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_004");
+                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "how_did_you_hear_about_this_form");
                     if (answer != null)
                     {
-                        GetDataSection(body, "13. " + answer.Question, new List<string> { answer.Answer }, true);
+                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
                     }
                     //which charity
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_005");
+                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you");
                     if (answer != null)
                     {
-                        GetDataSection(body, "14. " + answer.Question, new List<string> { answer.Answer }, true);
+                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
                     }
                     //can we share you feedback
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_001");
+                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "can_we_share_your_feedback");
                     if (answer != null)
                     {
-                        GetDataSection(body, "10. " + answer.Question, new List<string> { answer.Answer }, true);
+                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
                     }
 
                     mainPart.Document.Save();
@@ -137,7 +156,7 @@ namespace SYE.Services
         /// <param name="submissionVm"></param>
         private void GetLocation(Body body, SubmissionVM submissionVm)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "NotFound");
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "service_not_found");
             if (answer == null)
             {
                 //location has been selected
@@ -147,7 +166,7 @@ namespace SYE.Services
             {
                 //location has not been found
                 GetDataSection(body, "Location name/description : ", new List<string> { "Not Found" }, false);
-                GetDataSection(body, "1. " + answer.Question, new List<string> { answer.Answer }, true);
+                GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
             }
         }
 
@@ -158,15 +177,15 @@ namespace SYE.Services
         /// <param name="submissionVm"></param>
         private void GetFeedback(Body body, SubmissionVM submissionVm)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_004" && x.QuestionId == "Neg_004_01");
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_01");
             if (answer != null)
             {
                 var feedback1 = string.Empty;
                 var feedback2 = string.Empty;
                 var feedback3 = string.Empty;
                 feedback1 = answer.Answer;
-                var answer2 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_004" && x.QuestionId == "Neg_004_02");
-                var answer3 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_004" && x.QuestionId == "Neg_004_03");
+                var answer2 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_02");
+                var answer3 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_03");
                 if (answer2 != null)
                 {
                     feedback2 = answer2.Answer;
@@ -176,7 +195,7 @@ namespace SYE.Services
                     feedback3 = answer3.Answer;
                 }
 
-                GetDataSection(body, "7. " + answer.Question, new List<string> { feedback1 }, true);
+                GetDataSection(body, answer.Question, new List<string> { feedback1 }, true);
                 GetDataSection(body, "Can you be more exact about where you're telling us about? For example, which room? (optional)", new List<string> { feedback2 }, true, true);
                 GetDataSection(body, "When exactly did it happen? For example, can you give a date, month or year? (optional)", new List<string> { feedback3 }, true, true);
             }
@@ -189,7 +208,7 @@ namespace SYE.Services
         /// <param name="submissionVm"></param>
         private void GetContactDetails(Body body, SubmissionVM submissionVm)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_003" && x.QuestionId == "Contact_003_01");
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_01");
             if (answer != null)
             {
                 var question = answer.Question;
@@ -198,22 +217,21 @@ namespace SYE.Services
                 var telNum = string.Empty;
 
                 //contact details 2
-                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_003" && x.QuestionId == "Contact_003_02");
+                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_02");
                 if (answer != null) { email = answer.Answer; }
                 //contact details 3
-                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_003" && x.QuestionId == "Contact_003_03");
+                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_03");
                 if (answer != null) { telNum = answer.Answer; }
 
-                GetDataSection(
-                        body,
-                        String.Concat("12. ", question),
-                        new List<string> {
-                            $"Full name: {fullName}",
-                            $" Email address: {email}",
-                            $" UK telephone number: {telNum}"
-                        },
-                        true
-                    );
+                GetDataSection(body, question,
+                    new List<string>
+                    {
+                        $"Full name: {fullName}",
+                        $" Email address: {email}",
+                        $" UK telephone number: {telNum}"
+                    },
+                    true
+                );
             }
         }
 
