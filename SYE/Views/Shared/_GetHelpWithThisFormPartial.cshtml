@@ -1,0 +1,11 @@
+﻿@using Microsoft.Extensions.Configuration
+
+@inject IConfiguration Configuration
+
+<h2 class="govuk-heading-m">Get help with this form</h2>
+<p class="govuk-body">You can get help on the phone if it's hard for you to do things online.</p>
+<p class="govuk-body">
+    Telephone: @(Configuration.GetValue<string>("ApplicationSettings:GetHelp:ContactNumber"))<br>
+    @(Configuration.GetValue<string>("ApplicationSettings:GetHelp:ContactHours"))<br />
+    @(Configuration.GetValue<string>("ApplicationSettings:GetHelp:ContactExcluding"))
+</p>

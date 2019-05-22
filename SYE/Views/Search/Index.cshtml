@@ -17,7 +17,7 @@
             <gds-column desktop-size="OneHalf" tablet-size="FullWidth">
 
                 <form asp-action="SearchResults" method="get">
-                    
+
                     @{
                         var errorCss = "";
                         if (Model.ShowIncompletedSearchMessage)
@@ -49,3 +49,7 @@
     </gds-column>
 
 </gds-row>
+
+@{
+    await Html.RenderPartialAsync("_GetHelpWithThisFormPartial");
+}
