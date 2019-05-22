@@ -4,6 +4,8 @@ using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using SYE.Models;
 using SYE.Services;
@@ -16,12 +18,14 @@ namespace SYE.Controllers
         private readonly IGdsValidation _gdsValidate;
         private readonly ISessionService _sessionService;
         private readonly IOptions<ApplicationSettings> _config;
+        private readonly ILogger _logger;
 
-        public FormController(IGdsValidation gdsValidate, ISessionService sessionService, IOptions<ApplicationSettings> config)
+        public FormController(IGdsValidation gdsValidate, ISessionService sessionService, IOptions<ApplicationSettings> config, ILogger<FormController> logger)
         {
             _gdsValidate = gdsValidate;
             _sessionService = sessionService;
             _config = config;
+            _logger = logger;
         }
 
         [HttpGet("Form/{id}")]
@@ -42,7 +46,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                //TODO: log error
+                _logger.LogError(ex, "Error loading PageVM.");
                 return StatusCode(500);
             }
         }
@@ -99,7 +103,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                //TODO: log error
+                _logger.LogError(ex, "Error updating PageVM.");
                 return StatusCode(500);
             }
         }

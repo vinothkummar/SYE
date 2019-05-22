@@ -11,11 +11,11 @@ namespace SYE.Services
 {
     public interface ISubmissionService
     {
-        Task<Document> CreateAsync(SubmissionVM item);
+        Task<SubmissionVM> CreateAsync(SubmissionVM item);
         Task DeleteAsync(string id);
         Task<SubmissionVM> GetByIdAsync(string id);
         Task<IEnumerable<SubmissionVM>> FindByAsync(Expression<Func<SubmissionVM, bool>> predicate);
-        Task<Document> UpdateAsync(string id, SubmissionVM item);
+        Task<SubmissionVM> UpdateAsync(string id, SubmissionVM item);
         Task<int> GenerateUniqueUserRefAsync();
     }
 
@@ -31,8 +31,8 @@ namespace SYE.Services
             _config = config;
             _appConfig = appConfig;
         }
-        
-        public Task<Document> CreateAsync(SubmissionVM item)
+
+        public Task<SubmissionVM> CreateAsync(SubmissionVM item)
         {
             return _repo.CreateAsync(item);
         }
@@ -52,7 +52,7 @@ namespace SYE.Services
             return _repo.FindByAsync(predicate);
         }
 
-        public Task<Document> UpdateAsync(string id, SubmissionVM item)
+        public Task<SubmissionVM> UpdateAsync(string id, SubmissionVM item)
         {
             return _repo.UpdateAsync(id, item);
         }

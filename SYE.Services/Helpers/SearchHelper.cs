@@ -10,41 +10,24 @@ namespace SYE.Services.Helpers
 {
     public static class SearchHelper
     {
-        /// <summary>
-        /// Generates a list of SearchResult objects form a list of Document results
-        /// </summary>
-        /// <param name="results"></param>
-        /// <returns></returns>
-        public static List<SearchResult> ConvertResults(List<Document> results)
-        {
-            var returnList = new List<SearchResult>();
-            if (results != null)
-            {
-                returnList = results.Select(doc => GetSearchResult(doc)).ToList();
-            }
-
-            return returnList;
-        }
+        ///// <summary>
+        ///// Generates a list of SearchResult objects form a list of Document results
+        ///// </summary>
+        ///// <param name="results"></param>
+        ///// <returns></returns>
+        //public static List<SearchResult> ConvertResults(List<Document> results)
+        //{
+        //    var returnList = new List<SearchResult>();
+        //    if (results != null)
+        //    {
+        //        returnList = results.Select(doc => GetSearchResult(doc)).ToList();
+        //    }
+        //    return returnList;
+        //}
 
         public static string BuildFilter(string refinementFacets)
         {
-            string filter = null;
-            var facets = refinementFacets.Split(',');
-
-            for (var index = 0; index < facets.Length; index++)
-            {
-                var facet = facets[index];
-                if (index == 0)
-                {
-                    filter = "inspectionDirectorate eq '" + facet + "'";
-                }
-                else
-                {
-                    filter += " or inspectionDirectorate eq '" + facet + "'";
-                }
-            }
-
-            return filter;
+            return string.Join(" or ", refinementFacets.Split(',').Select(x => string.Concat("inspectionDirectorate eq '", x.Trim(), "'")));
         }
 
         /// <summary>
@@ -52,7 +35,7 @@ namespace SYE.Services.Helpers
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        private static SearchResult GetSearchResult(Document doc)
+        public static SearchResult GetSearchResult(Document doc)
         {
             var searchResult = new SearchResult
             {

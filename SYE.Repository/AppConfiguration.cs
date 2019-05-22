@@ -8,18 +8,26 @@ namespace SYE.Repository
         string IndexName { get; set; }
     }
 
-    public interface IAppConfiguration<T> where T : class
+    public interface ICosmosConnection
     {
         string Endpoint { get; set; }
         string Key { get; set; }
+    }
+
+    public class CosmosConnection : ICosmosConnection
+    {
+        public string Endpoint { get; set; }
+        public string Key { get; set; }
+    }
+
+    public interface IAppConfiguration<T> where T : class
+    {
         string DatabaseId { get; set; }
         string CollectionId { get; set; }
         string ConfigRecordId { get; set; }
     }
     public class AppConfiguration<T> : IAppConfiguration<T> where T : class
     {
-        public string Endpoint { get; set; }
-        public string Key { get; set; }
         public string DatabaseId { get; set; }
         public string CollectionId { get; set; }
         public string ConfigRecordId { get; set; }
@@ -32,21 +40,17 @@ namespace SYE.Repository
         public string IndexName { get; set; }
     }
 
-    public interface IGovUkNotifyConfiguration
+    public interface IEmailFieldMapping
     {
-        string WithLocationEmailTemplateId { get; set; }
-        string WithoutLocationEmailTemplateId { get; set; }
-        string GreetingTemplate { get; set; }
-        string ClientReferenceTemplate { get; set; }
-        string ReplyToAddressId { get; set; }
+        string Name { get; set; }
+        string TemplateField { get; set; }
+        string FormField { get; set; }
     }
 
-    public class GovUkNotifyConfiguration : IGovUkNotifyConfiguration
+    public class EmailFieldMapping : IEmailFieldMapping
     {
-        public string WithLocationEmailTemplateId { get; set; }
-        public string WithoutLocationEmailTemplateId { get; set; }
-        public string GreetingTemplate { get; set; }
-        public string ClientReferenceTemplate { get; set; }
-        public string ReplyToAddressId { get; set; }
+        public string Name { get; set; }
+        public string TemplateField { get; set; }
+        public string FormField { get; set; }
     }
 }

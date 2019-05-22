@@ -29,7 +29,7 @@ namespace SYE.Tests.Services
             var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
             var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
-            mockedRepo.Setup(x => x.CreateAsync(It.IsAny<SubmissionVM>())).ReturnsAsync(new Document { Id = id });
+            mockedRepo.Setup(x => x.CreateAsync(It.IsAny<SubmissionVM>())).ReturnsAsync(new SubmissionVM { Id = id });
             //act
             var result = await sut.CreateAsync(new SubmissionVM { Id = id });
             //assert
@@ -45,7 +45,7 @@ namespace SYE.Tests.Services
             var mockedConfig = new Mock<IAppConfiguration<ConfigVM>>();
             var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
-            mockedRepo.Setup(x => x.CreateAsync(It.IsAny<SubmissionVM>())).ReturnsAsync(new Document { Id = id });
+            mockedRepo.Setup(x => x.CreateAsync(It.IsAny<SubmissionVM>())).ReturnsAsync(new SubmissionVM { Id = id });
             //act
             var result = await sut.CreateAsync(new SubmissionVM { Id = id });
             //assert
@@ -177,7 +177,7 @@ namespace SYE.Tests.Services
             var sut = new SubmissionService(mockedRepo.Object, mockedConfigRepo.Object, mockedConfig.Object);
 
             var submissionVm = new SubmissionVM { Id = id };
-            var doc = new Document();
+            var doc = new SubmissionVM();
             mockedRepo.Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<SubmissionVM>())).ReturnsAsync(doc);
             // Act
             Action action = () => sut.UpdateAsync(id, submissionVm);

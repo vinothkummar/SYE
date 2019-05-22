@@ -53,25 +53,26 @@
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
         <form asp-action="Index" method="post">
-            
+            @Html.HiddenFor(m => m.SendConfirmationEmail)
+
             @*<gds-heading heading-type="H3" text="Would you like a confirmation email?"></gds-heading>
 
-            <gds-paragraph>
-                We will keep your email address confidential. We will only use it to let you know we have received your feedback. The longest we will store it is 24 hours.
-            </gds-paragraph>
+                <gds-paragraph>
+                    We will keep your email address confidential. We will only use it to let you know we have received your feedback. The longest we will store it is 24 hours.
+                </gds-paragraph>
 
-            <div class="govuk-checkboxes">
-                <div class="govuk-checkboxes__item">
-                    @Html.CheckBoxFor(m => m.SendConfirmationEmail, new { @class = "govuk-checkboxes__input" })
-                    <label class="govuk-label govuk-checkboxes__label" for="SendConfirmationEmail">
-                        Yes, send me an email to confirm you have received my feedback
-                    </label>
+                <div class="govuk-checkboxes">
+                    <div class="govuk-checkboxes__item">
+                        @Html.CheckBoxFor(m => m.SendConfirmationEmail, new { @class = "govuk-checkboxes__input" })
+                        <label class="govuk-label govuk-checkboxes__label" for="SendConfirmationEmail">
+                            Yes, send me an email to confirm you have received my feedback
+                        </label>
+                    </div>
                 </div>
-            </div>
 
-            <gds-paragraph>&nbsp;</gds-paragraph>
+                <gds-paragraph>&nbsp;</gds-paragraph>
 
-            <gds-heading heading-type="H3" text="Would you like a confirmation email?"></gds-heading>*@
+                <gds-heading heading-type="H3" text="Would you like a confirmation email?"></gds-heading>*@
 
             <p class="govuk-body">
                 Now send your feedback

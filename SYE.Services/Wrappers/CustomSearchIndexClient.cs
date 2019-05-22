@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Azure.Search;
 using Microsoft.Azure.Search.Models;
+using SYE.Repository;
 
 namespace SYE.Services.Wrappers
 {
@@ -9,7 +10,6 @@ namespace SYE.Services.Wrappers
     /// </summary>
     public interface ICustomSearchIndexClient
     {
-        //DocumentSearchResult<T> Search<T>(string searchTerm, SearchParameters parameters) where T : class;
         Task<DocumentSearchResult> SearchAsync(string searchTerm, SearchParameters parameters);
     }
 
@@ -24,7 +24,7 @@ namespace SYE.Services.Wrappers
 
         public async Task<DocumentSearchResult> SearchAsync(string searchTerm, SearchParameters parameters)
         {
-            return await _searchIndexClient.Documents.SearchAsync(searchTerm, parameters);
+            return await _searchIndexClient.Documents.SearchAsync(searchTerm, parameters).ConfigureAwait(false);
         }
     }
 }

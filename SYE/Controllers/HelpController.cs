@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SYE.Repository;
 using SYE.Services;
 
 namespace SYE.Controllers
 {
     public class HelpController : Controller
     {
-        private readonly ILogger _logger;
+        private readonly ILogger _logger;        
         private readonly IFormService _formService;
         private readonly IGdsValidation _gdsValidate;
-        private readonly IConfiguration _configuration;
+		private readonly IConfiguration _configuration;
         private readonly INotificationService _notificationService;
 
         public HelpController(IServiceProvider service)
@@ -75,9 +76,17 @@ namespace SYE.Controllers
                 {
                     await SendEmailNotificationAsync(pageViewModel, urlReferer)
                             .ContinueWith(notificationTask =>
-                                _logger.LogError(notificationTask.Exception, "Error sending service feedback email."),
-                                TaskContinuationOptions.OnlyOnFaulted
-                            )
+                                {
+                                    if (notificationTask.IsFaulted)
+                                    {
+                                        _logger.LogError(notificationTask.Exception, "Error sending service feedback email.");
+                                    }
+                                    else
+                                    {
+                                        _logger.LogInformation($"Service feedback email sent successfully.");
+                                    }
+
+                                })
                             .ConfigureAwait(false);
                 });
 
@@ -100,8 +109,8 @@ namespace SYE.Controllers
 
         private PageVM GetPage()
         {
-            string formName = _configuration.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<String>("Name");
-            string version = _configuration.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<String>("Version");
+            string formName = _configuration?.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<string>("Name");
+            string version = _configuration?.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<string>("Version");
 
             FormVM form = string.IsNullOrEmpty(version) ?
                 _formService.GetLatestFormByName(formName).Result :
@@ -121,29 +130,28 @@ namespace SYE.Controllers
 
         private async Task SendEmailNotificationInternalAsync(PageVM submission, String urlReferer)
         {
-            IConfigurationSection config = _configuration.GetSection("GovUkNotifyConfiguration:FeedbackEmail");
-
-            string emailTemplateId = config.GetValue<String>("EmailTemplateId");
-            string emailAddress = config.GetValue<String>("ServiceSupportEmailAddress");
-            string phase = config.GetValue<String>("Phase");
+            string phase = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("Phase");
+            string emailTemplateId = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("EmailTemplateId");
+            string emailAddress = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("ServiceSupportEmailAddress");
+            var fieldMappings = _configuration.GetSection("EmailNotification:FeedbackEmail:FieldMappings").Get<IEnumerable<EmailFieldMapping>>();
 
             string feedbackMessage = submission?
-                .Questions?.FirstOrDefault(x => x.QuestionId.Equals("message", StringComparison.OrdinalIgnoreCase))?
+                .Questions?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "message").FormField, StringComparison.OrdinalIgnoreCase))?
                 .Answer ?? String.Empty;
             string feedbackUserName = submission?
-                .Questions?.FirstOrDefault(x => x.QuestionId.Equals("full-name", StringComparison.OrdinalIgnoreCase))?
+                .Questions?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "name").FormField, StringComparison.OrdinalIgnoreCase))?
                 .Answer ?? String.Empty;
             string feedbackUserEmailAddress = submission?
-                .Questions?.FirstOrDefault(x => x.QuestionId.Equals("email-address", StringComparison.OrdinalIgnoreCase))?
+                .Questions?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "email").FormField, StringComparison.OrdinalIgnoreCase))?
                 .Answer ?? String.Empty;
 
             Dictionary<string, dynamic> personalisation =
                 new Dictionary<string, dynamic> {
                     { "service-phase", phase },
                     { "banner-clicked-on-page", urlReferer },
-                    { "feedback-message", feedbackMessage },
-                    { "feedback-full-name", feedbackUserName },
-                    { "feedback-email-address", feedbackUserEmailAddress }
+                    { fieldMappings.FirstOrDefault(y => y.Name == "message")?.TemplateField, feedbackMessage },
+                    { fieldMappings.FirstOrDefault(y => y.Name == "name")?.TemplateField, feedbackUserName },
+                    { fieldMappings.FirstOrDefault(y => y.Name == "email")?.TemplateField, feedbackUserEmailAddress }
                 };
 
             await _notificationService.NotifyByEmailAsync(
