@@ -51,7 +51,7 @@ namespace SYE.Models.SubmissionSchema
 
 
         [JsonProperty("answers")]
-        public IEnumerable<AnswerVM> Answers { get; set; }
+        public List<AnswerVM> Answers { get; set; }
         
 
         [JsonProperty("base64_attachment")]
