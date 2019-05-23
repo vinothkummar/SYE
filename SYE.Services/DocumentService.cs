@@ -51,91 +51,32 @@ namespace SYE.Services
                     mainPart.Document = new Document();
                     Body body = mainPart.Document.AppendChild(new Body());
                     Paragraph para = body.AppendChild(new Paragraph());
-
-                    ////insert the new created run part
-                    //var line = GetText("NCSC GFC concern template", FontSizeHeader);
-                    //para.AppendChild(line);
-                    //EmptyLine(body, para);
-
-                    GetDataSection(body, "Response Id :", new List<string> { submissionVm.Id }, false);
-                    GetDataSection(body, "Channel :", new List<string> { "GFC" }, false);
-                    GetDataSection(body, "GFC reference number :", new List<string> { submissionVm.SubmissionId }, false);
-                    GetDataSection(body, "Completed :", new List<string> { DateTime.Parse(submissionVm.DateCreated).ToShortDateString()  + ": "+ DateTime.Parse(submissionVm.DateCreated).ToShortTimeString() }, false);
-                    var locationId = string.Empty;
-                    var providerId = string.Empty;
-                    if (string.IsNullOrWhiteSpace(submissionVm.LocationId) || submissionVm.LocationId == "0")
-                    {
-                        locationId = "none";
-                    }
-                    else
-                    {
-                        locationId = submissionVm.LocationId;
-                    }
-                    if (string.IsNullOrWhiteSpace(submissionVm.ProviderId) || submissionVm.ProviderId == "0")
-                    {
-                        providerId = "none";
-                    }
-                    else
-                    {
-                        providerId = submissionVm.ProviderId;
-                    }
-                    GetDataSection(body, "Location ID :", new List<string> { locationId }, false);
-                    GetDataSection(body, "Provider ID :", new List<string> { providerId }, false);
+                    //header
+                    GetHeader(body, submissionVm);
                     //location
                     GetLocation(body, submissionVm);
-
                     //Are you happy to be contacted
-                    var answerTxt = string.Empty;
-                    var questionTxt = GetYesNoAnswer(submissionVm, "Yes I'm happy for you to contact me", "No, I do not want to give my name or contact details", "can_we_contact_you", ref answerTxt);
-                    GetDataSection(body, questionTxt, new List<string> { answerTxt }, true);
+                    GetAnswer(body, submissionVm, "can_we_contact_you");
                     //contact details
                     GetContactDetails(body, submissionVm);
                     //have you worked for this service
-                    answerTxt = string.Empty;
-                    questionTxt = GetYesNoAnswer(submissionVm, "Yes, I have worked for this service", "No, I have never worked for them", "have_you_worked_for_the_service", ref answerTxt);
-                    GetDataSection(body, questionTxt, new List<string> { answerTxt }, true);
+                    GetAnswer(body, submissionVm, "have_you_worked_for_the_service");
                     //risk of harm
-                    answerTxt = string.Empty;
-                    questionTxt = GetYesNoAnswer(submissionVm, "Yes, I think someone's at risk of harm", "No, I don't think anyone's at risk of harm", "is_someone_at_risk", ref answerTxt);
-                    GetDataSection(body, questionTxt, new List<string> { answerTxt }, true);
+                    GetAnswer(body, submissionVm, "is_someone_at_risk");
                     //have you told police
-                    var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "have_you_told_the_police");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
-                    }
+                    GetAnswer(body, submissionVm, "have_you_told_the_police");
                     //good or bad
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "what_do_you_want_to_tell_us_about");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
-                    }
+                    GetAnswer(body, submissionVm, "what_do_you_want_to_tell_us_about");
                     //when did it happen
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "when_did_it_happen");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
-                    }
+                    GetAnswer(body, submissionVm, "when_did_it_happen");
                     //feedback
                     GetFeedback(body, submissionVm);
                     //how did you find out
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "how_did_you_hear_about_this_form");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
-                    }
+                    GetAnswer(body, submissionVm, "how_did_you_hear_about_this_form");
                     //which charity
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
-                    }
+                    GetCharity(body, submissionVm);
                     //can we share you feedback
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "can_we_share_your_feedback");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
-                    }
+                    GetAnswer(body, submissionVm, "can_we_share_your_feedback");
 
                     mainPart.Document.Save();
 
@@ -149,6 +90,44 @@ namespace SYE.Services
             return convertedDoc;
         }
 
+        #region Document Loading
+        private void GetCharity(Body body, SubmissionVM submissionVm)
+        {
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you" && x.QuestionId == "which_charity_told_you_01");
+            if (answer != null)
+            {
+                GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
+            }
+            answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you" && x.QuestionId == "which_charity_told_you_02");
+            if (answer != null)
+            {
+                GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
+            }
+        }
+
+        private void GetAnswer(Body body, SubmissionVM submissionVm, string pageId)
+        {
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == pageId);
+            if (answer != null)
+            {
+                GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
+            }
+        }
+
+        private void GetHeader(Body body, SubmissionVM submissionVm)
+        {
+            GetDataSection(body, "Response Id :", new List<string> { submissionVm.Id }, false);
+            GetDataSection(body, "Channel :", new List<string> { "GFC" }, false);
+            GetDataSection(body, "GFC reference number :", new List<string> { submissionVm.SubmissionId }, false);
+            GetDataSection(body, "Completed :", new List<string> { GetUkDateStringFromZulu(submissionVm.DateCreated) }, false);
+        }
+
+        private string GetUkDateStringFromZulu(string dateCreated)
+        {
+            DateTime ukDate = DateTime.Parse(dateCreated).AddHours(1);
+            return ukDate.ToShortDateString() + ": " + ukDate.ToShortTimeString();
+        }
+
         /// <summary>
         /// Creates the feedback section
         /// </summary>
@@ -156,16 +135,31 @@ namespace SYE.Services
         /// <param name="submissionVm"></param>
         private void GetLocation(Body body, SubmissionVM submissionVm)
         {
+            var locationId = string.Empty;
+            var providerId = string.Empty;
+            var location = string.Empty;
+            var locationFound = false;
             var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "service_not_found");
             if (answer == null)
             {
                 //location has been selected
-                GetDataSection(body, "Location name/description : ", new List<string> { submissionVm.LocationName }, false);
+                locationId = submissionVm.LocationId;
+                providerId = submissionVm.ProviderId;
+                location = submissionVm.LocationName;
+                locationFound = true;
             }
             else
             {
                 //location has not been found
-                GetDataSection(body, "Location name/description : ", new List<string> { "Not Found" }, false);
+                locationId = "none";
+                providerId = "none";
+                location = "Not Found";                
+            }
+            GetDataSection(body, "Location ID :", new List<string> { locationId }, false);
+            GetDataSection(body, "Provider ID :", new List<string> { providerId }, false);
+            GetDataSection(body, "Location name/description : ", new List<string> { location }, false);
+            if (!locationFound)
+            {
                 GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
             }
         }
@@ -211,7 +205,7 @@ namespace SYE.Services
             var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_01");
             if (answer != null)
             {
-                var question = answer.Question;
+                //var question = answer.Question;
                 var fullName = answer.Answer;
                 var email = string.Empty;
                 var telNum = string.Empty;
@@ -223,7 +217,7 @@ namespace SYE.Services
                 answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_03");
                 if (answer != null) { telNum = answer.Answer; }
 
-                GetDataSection(body, question,
+                GetDataSection(body, "Contact Details",
                     new List<string>
                     {
                         $"Full name: {fullName}",
@@ -234,35 +228,9 @@ namespace SYE.Services
                 );
             }
         }
+        #endregion
 
-        /// <summary>
-        /// Set the Yes/No answer and returns the question for a specific submission record
-        /// </summary>
-        /// <param name="submissionVm"></param>
-        /// <param name="yesAnswer"></param>
-        /// <param name="noAnswer"></param>
-        /// <param name="pageNum"></param>
-        /// <param name="answer"></param>
-        /// <returns></returns>
-        private string GetYesNoAnswer(SubmissionVM submissionVm, string yesAnswer, string noAnswer, string pageNum, ref string answer)
-        {
-            var question = string.Empty;
-            var record = submissionVm.Answers.FirstOrDefault(x => x.PageId == pageNum);
-            if (record != null)
-            {
-                question = record.Question;
-                if (record.Answer == "Yes")
-                {
-                    answer = yesAnswer;
-                }
-                else
-                {
-                    answer = noAnswer;
-                }
-            }
-            return question;
-        }
-
+        #region Document Formatting
         /// <summary>
         /// Creates a line of text for the document
         /// </summary>
@@ -337,5 +305,6 @@ namespace SYE.Services
             para = body.AppendChild(new Paragraph());
             para.AppendChild(GetText(string.Empty, FontSizeSmall));
         }
+        #endregion
     }
 }

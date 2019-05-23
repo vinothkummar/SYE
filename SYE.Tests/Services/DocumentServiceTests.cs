@@ -25,7 +25,7 @@ namespace SYE.Tests.Services
         [Fact]
         public void CreateDocumentNoContactDetailsTest()
         {
-            var path = _dir + "test1.docx";
+            var path = _dir + "NoContactDetails.docx";
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameNoContact);
 
@@ -40,7 +40,7 @@ namespace SYE.Tests.Services
         [Fact]
         public void CreateDocumentWithContactDetailsTest()
         {
-            var path = _dir + "test2.docx";
+            var path = _dir + "ContactDetails.docx";
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameContactDetails);
             //act
@@ -53,7 +53,7 @@ namespace SYE.Tests.Services
         [Fact]
         public void CreateDocumentWithContactDetailsNoLocationTest()
         {
-            var path = _dir + "test3.docx";
+            var path = _dir + "ContactDetailsNoLocation.docx";
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameContactDetailsNoLocation);
             //act
