@@ -31,7 +31,7 @@
       "page_id": "give_us_your_feedback",
       "question_id": "give_us_your_feedback_01",
       "question": "Give us your feedback about  Sunderland Shared Lives",
-      "answer": "Formatted feedback!This should be on a new line.So should this!!"
+      "answer": "Formatted feedback!\r\nThis should be on a new line.\r\nSo should this!!"
     },
     {
       "page_id": "when_did_it_happen",

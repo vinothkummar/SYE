@@ -138,6 +138,7 @@ namespace SYE.Services
             var locationId = string.Empty;
             var providerId = string.Empty;
             var location = string.Empty;
+            var locationDescription = string.Empty;
             var locationFound = false;
             var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "service_not_found");
             if (answer == null)
@@ -153,15 +154,27 @@ namespace SYE.Services
                 //location has not been found
                 locationId = "none";
                 providerId = "none";
-                location = "Not Found";                
+                locationDescription = answer.Answer;
             }
             GetDataSection(body, "Location ID :", new List<string> { locationId }, false);
-            GetDataSection(body, "Provider ID :", new List<string> { providerId }, false);
-            GetDataSection(body, "Location name/description : ", new List<string> { location }, false);
-            if (!locationFound)
+            GetDataSection(body, "Provider ID :", new List<string> { providerId }, false);            
+            
+            if (locationFound)
             {
-                GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
+                GetDataSection(body, "Location name : ", new List<string> { location }, false);
             }
+            else
+            {
+                GetDataSection(body, "Location description : ", SplitOutNewLines(locationDescription), true);
+            }
+        }
+
+        private List<string> SplitOutNewLines(string answer)
+        {
+            //split out the text in case there is a new line
+            var answerText = answer.Replace("\r\n", "\n");
+            var answers = answerText.Split('\n').ToList();
+            return answers;
         }
 
         /// <summary>
@@ -189,9 +202,9 @@ namespace SYE.Services
                     feedback3 = answer3.Answer;
                 }
 
-                GetDataSection(body, answer.Question, new List<string> { feedback1 }, true);
-                GetDataSection(body, "Can you be more exact about where you're telling us about? For example, which room? (optional)", new List<string> { feedback2 }, true, true);
-                GetDataSection(body, "When exactly did it happen? For example, can you give a date, month or year? (optional)", new List<string> { feedback3 }, true, true);
+                GetDataSection(body, answer.Question, SplitOutNewLines(feedback1), true);
+                GetDataSection(body, "Can you be more exact about where you're telling us about? For example, which room? (optional)", SplitOutNewLines(feedback2), true, false);
+                GetDataSection(body, "When exactly did it happen? For example, can you give a date, month or year? (optional)", SplitOutNewLines(feedback3), true, false);
             }
         }
 
@@ -283,9 +296,11 @@ namespace SYE.Services
             }
             var line = GetText(sideheader, FontSizeNormal, dataOnNewLine);
             para.AppendChild(line);
+            var lineCounter = 0;
 
             foreach (var text in data.Where(x => !string.IsNullOrWhiteSpace(x)))
             {
+                lineCounter++;
                 if (dataOnNewLine)
                 {
                     para = body.AppendChild(new Paragraph());

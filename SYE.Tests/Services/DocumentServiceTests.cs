@@ -15,7 +15,8 @@ namespace SYE.Tests.Services
         private string _dir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\";
         private string _fileNameNoContact = "submission-schema-no-contact.json";
         private string _fileNameContactDetails = "submission-schema-contact-details.json";
-        private string _fileNameContactDetailsNoLocation = "submission-schema-contact-details-no-location.json"; 
+        private string _fileNameContactDetailsNoLocation = "submission-schema-contact-details-no-location.json";
+        private string _fileNameNoContactDetailsNoLocation = "submission-schema-no-contact-details-no-location.json";
 
         public DocumentServiceTests()
         {
@@ -56,6 +57,19 @@ namespace SYE.Tests.Services
             var path = _dir + "ContactDetailsNoLocation.docx";
             var sut = new DocumentService();
             var json = GetJsonString(_fileNameContactDetailsNoLocation);
+            //act
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
+        }
+        [Fact]
+        public void CreateDocumentWithNoContactDetailsNoLocationTest()
+        {
+            var path = _dir + "NoContactDetailsNoLocation.docx";
+            var sut = new DocumentService();
+            var json = GetJsonString(_fileNameNoContactDetailsNoLocation);
             //act
             var base64Documentresult = sut.CreateSubmissionDocument(json);
             //assert

@@ -25,19 +25,19 @@
       "page_id": "give_us_your_feedback",
       "question_id": "give_us_your_feedback_01",
       "question": "Give us your feedback about  Jenkins Dental Practice",
-      "answer": "Test feedback blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah!"
+      "answer": "Test feedback blah blah blah blah blah blah\r\nThis is a newline blah blah blah blah blah blah blah blah blah blah blah blah blah\r\nNew line blah blah blah blah blah blah blah blah blah blah blah blah blah blah!"
     },
     {
       "page_id": "give_us_your_feedback",
       "question_id": "give_us_your_feedback_02",
       "question": "Can you be more exact about where you're telling us about? For example, which room? (optional)",
-      "answer": "blah blah blah blah blah blah blah blah blah"
+      "answer": "blah blah blah blah\r\nNew line blah blah blah blah blah"
     },
     {
       "page_id": "give_us_your_feedback",
       "question_id": "give_us_your_feedback_03",
       "question": "When exactly did it happen? For example, can you give a date, month or year? (optional)",
-      "answer": "blah blah blah blah blah blah blah blah blah blah blah blah "
+      "answer": "blah\r\nNew line blah blah blah blah blah blah blah blah blah blah blah"
     },
     {
       "page_id": "when_did_it_happen",
