@@ -40,7 +40,7 @@ namespace SYE.Controllers
             _documentService = service.GetRequiredService<IDocumentService>();
         }
 
-        [HttpGet]
+        [HttpGet, Route("form/check-your-answers")]
         public IActionResult Index()
         {
             try
@@ -69,7 +69,7 @@ namespace SYE.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost, Route("form/check-your-answers")]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CheckYourAnswersVm vm)
         {

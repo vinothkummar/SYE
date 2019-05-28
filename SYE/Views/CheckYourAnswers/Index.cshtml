@@ -14,34 +14,34 @@
         <dl class="govuk-summary-list govuk-!-margin-bottom-9">
 
             @foreach (var pageVm in Model.FormVm.Pages.Where(m => Model.PageHistory.Contains(m.PageId)).OrderBy(m => Model.PageHistory.IndexOf(m.PageId)))
+            {
+                foreach (var question in pageVm.Questions.Where(m => !string.IsNullOrEmpty(m.Answer)))
                 {
-                    foreach (var question in pageVm.Questions.Where(m => !string.IsNullOrEmpty(m.Answer)))
-                    {
 
-                        <div class="govuk-summary-list__row">
-                            <dt class="govuk-summary-list__key">
-                                @if (string.IsNullOrEmpty(question.Question))
-                                {
-                                    <text>@pageVm.PageName.StripHtml()</text>
-                                }
-                                else
-                                {
-                                    <text>@question.Question.StripHtml()</text>
-                                }
-                            </dt>
-                            <dd class="govuk-summary-list__value">
-                                @question.Answer
-                            </dd>
-                            <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="@Url.Action("Index", "Form", new { id = pageVm.PageId} )">
-                                    Change
-                                    <span class="govuk-visually-hidden"> @question.Question.StripHtml()</span>
-                                </a>
-                            </dd>
-                        </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">
+                            @if (string.IsNullOrEmpty(question.Question))
+                            {
+                                <text>@pageVm.PageName.StripHtml()</text>
+                            }
+                            else
+                            {
+                                <text>@question.Question.StripHtml()</text>
+                            }
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @question.Answer
+                        </dd>
+                        <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link" href="@Url.Action("Index", "Form", new { id = pageVm.PageId} )">
+                                Change
+                                <span class="govuk-visually-hidden"> @question.Question.StripHtml()</span>
+                            </a>
+                        </dd>
+                    </div>
 
-                    }
                 }
+            }
 
         </dl>
 
@@ -54,31 +54,9 @@
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
         <form asp-action="Index" method="post">
-<<<<<<< HEAD
 
             <gds-heading heading-type="H3" text="Now send your feedback"></gds-heading>
-=======
             @Html.HiddenFor(m => m.SendConfirmationEmail)
-
-            @*<gds-heading heading-type="H3" text="Would you like a confirmation email?"></gds-heading>
-
-                <gds-paragraph>
-                    We will keep your email address confidential. We will only use it to let you know we have received your feedback. The longest we will store it is 24 hours.
-                </gds-paragraph>
-
-                <div class="govuk-checkboxes">
-                    <div class="govuk-checkboxes__item">
-                        @Html.CheckBoxFor(m => m.SendConfirmationEmail, new { @class = "govuk-checkboxes__input" })
-                        <label class="govuk-label govuk-checkboxes__label" for="SendConfirmationEmail">
-                            Yes, send me an email to confirm you have received my feedback
-                        </label>
-                    </div>
-                </div>
-
-                <gds-paragraph>&nbsp;</gds-paragraph>
-
-                <gds-heading heading-type="H3" text="Would you like a confirmation email?"></gds-heading>*@
->>>>>>> develop
 
             <p class="govuk-body">
                 You are about to send feedback about @Model.LocationName.
@@ -91,3 +69,7 @@
     </gds-column>
 
 </gds-row>
+
+@{
+    await Html.RenderPartialAsync("_GetHelpWithThisFormPartial");
+}

@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "Cookies";
+}
+@{
+    Layout = "_Layout";
+}
+
+<gds-row>
+
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+
+        <gds-heading heading-type="H1" text="Cookies"></gds-heading>
+
+        <gds-paragraph>
+            We use cookies on this site to make your experience as easy and simple as possible.
+        </gds-paragraph>
+
+        <gds-paragraph>
+            Cookies are small data files we put on your computer. They improve your experience by:
+        </gds-paragraph>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>remembering settings and information so you don’t have to keep re-entering them</li>
+            <li>helping us measure how you use the site so we can make sure it meets your need</li>
+        </ul>
+
+        <gds-paragraph>
+            Cookies do not tell us who you are.
+        </gds-paragraph>
+
+        <gds-heading heading-type="H2" text="How we use cookies"></gds-heading>
+
+        <gds-heading heading-type="H3" text="We use Google Analytics to see how people use our site"></gds-heading>
+
+        <gds-paragraph>
+            Google Analytics tells us things like:
+        </gds-paragraph>
+
+        <ul class="govuk-list govuk-list--bullet">
+            <li>the pages you've visited</li>
+            <li>how long you spent on each page</li>
+            <li>whether you got to the end of the service</li>
+            <li>how you came to it - for example, if you came from a search engine or followed a link from somewhere else</li>
+        </ul>
+
+        <gds-paragraph>
+            Google Analytics does not allow us to see your personal information, like your name or IP address.
+        </gds-paragraph>
+
+        <gds-paragraph>
+            Google Analytics uses the following cookies.
+        </gds-paragraph>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">Name</th>
+                    <th class="govuk-table__header" scope="col">What it does</th>
+                    <th class="govuk-table__header" scope="col">When it's removed</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">_utma</td>
+                    <td class="govuk-table__cell">Counts number of unique visits to the site</td>
+                    <td class="govuk-table__cell">2 years</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">_utmb</td>
+                    <td class="govuk-table__cell">Counts number of user sessions</td>
+                    <td class="govuk-table__cell">30&nbsp;minutes</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">_utmz</td>
+                    <td class="govuk-table__cell">Records how people get to the site</td>
+                    <td class="govuk-table__cell">6&nbsp;months</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">_utmv</td>
+                    <td class="govuk-table__cell">Helps us record variables in our tracking code to refine some of the information we get from Google Analytics</td>
+                    <td class="govuk-table__cell">2&nbsp;years</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">_utmx</td>
+                    <td class="govuk-table__cell">Website Optimizer uses this cookie - it helps make sure you have a consistent experience on the site</td>
+                    <td class="govuk-table__cell">2&nbsp;years</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <gds-paragraph>
+           You can find out more by reading <gds-link class="govuk-link" link-id="privacy-link" href="http://www.google.com/policies/privacy/" target="_blank" link-text="Google's privacy policy"></gds-link>.
+        </gds-paragraph>
+        
+        <gds-button onclick="history.go(-1);return false;" button-text="Continue" button-type="Button"></gds-button>
+
+    </gds-column>
+
+</gds-row>
