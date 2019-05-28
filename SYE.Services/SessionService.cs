@@ -27,17 +27,16 @@ namespace SYE.Services
 
     public class SessionService : ISessionService
     {
-        private readonly IGenericRepository<FormVM> _repo;
         private readonly IFormService _formService;
-        private readonly IHttpContextAccessor _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
 
         const string schemaKey = "sye_form_schema";
 
-        public SessionService(IFormService formService, IHttpContextAccessor context, IConfiguration configuration)
+        public SessionService(IFormService formService, IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
         {
             _formService = formService;
-            _context = context;
+            _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
         }
 
@@ -90,8 +89,8 @@ namespace SYE.Services
 
             if (string.IsNullOrWhiteSpace(pageId))
             {
-                return notFoundFlag 
-                    ? formVm.Pages.FirstOrDefault() 
+                return notFoundFlag
+                    ? formVm.Pages.FirstOrDefault()
                     : formVm.Pages.FirstOrDefault(x => x.PageId != formVm.Pages.First().PageId);
             }
 
@@ -102,11 +101,10 @@ namespace SYE.Services
 
         public FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements)
         {
-            var formName = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Name");
-            var version = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Version");
-
-            var context = _context.HttpContext;
-            var sessionVersion = context.Session.GetString("FormVersion");
+            string formName = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Name");
+            string version = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Version");
+            var context = _httpContextAccessor.HttpContext;
+            string sessionVersion = context.Session.GetString("FormVersion");
 
             if (!string.IsNullOrWhiteSpace(sessionVersion))
             {
@@ -135,7 +133,7 @@ namespace SYE.Services
 
         public void SetUserSessionVars(UserSessionVM vm)
         {
-            var context = _context.HttpContext;
+            var context = _httpContextAccessor.HttpContext;
             context.Session.SetString("ProviderId", vm.ProviderId ?? "");
             context.Session.SetString("LocationId", vm.LocationId ?? "");
             context.Session.SetString("LocationName", vm.LocationName ?? "");
@@ -149,7 +147,7 @@ namespace SYE.Services
 
         public UserSessionVM GetUserSession()
         {
-            var context = _context.HttpContext;
+            var context = _httpContextAccessor.HttpContext;
             var userSessionVm = new UserSessionVM
             {
                 ProviderId = context.Session.GetString("ProviderId"),
@@ -165,13 +163,13 @@ namespace SYE.Services
 
         public void SaveFormVmToSession(FormVM vm)
         {
-            var context = _context.HttpContext;
+            var context = _httpContextAccessor.HttpContext;
             context.Session.SetString(schemaKey, JsonConvert.SerializeObject(vm));
         }
 
         public FormVM GetFormVmFromSession()
         {
-            var context = _context.HttpContext;
+            var context = _httpContextAccessor.HttpContext;
             var json = context.Session.GetString(schemaKey);
             return json == null ? default(FormVM) : JsonConvert.DeserializeObject<FormVM>(json);
         }
@@ -179,35 +177,30 @@ namespace SYE.Services
         public void UpdatePageVmInFormVm(PageVM vm)
         {
             var formVm = GetFormVmFromSession();
-
             var currentPage = formVm.Pages.FirstOrDefault(m => m.PageId == vm.PageId)?.Questions;
-
             foreach (var question in vm.Questions)
             {
                 var q = currentPage.FirstOrDefault(m => m.QuestionId == question.QuestionId);
                 q.Answer = question.Answer;
             }
-
             SaveFormVmToSession(formVm);
-
         }
 
         public void SaveUserSearch(string search)
         {
-            var context = _context.HttpContext;
+            var context = _httpContextAccessor.HttpContext;
             context.Session.SetString("Search", search);
         }
 
         public string GetUserSearch()
         {
-            var context = _context.HttpContext;
-            var search = context.Session.GetString("Search");
-            return search;
+            var context = _httpContextAccessor.HttpContext;
+            return context.Session.GetString("Search");
         }
 
         public void ClearSession()
         {
-            var context = _context.HttpContext;
+            var context = _httpContextAccessor.HttpContext;
             context.Session.Clear();
         }
     }

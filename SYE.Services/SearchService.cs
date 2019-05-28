@@ -14,94 +14,77 @@ using SearchResult = SYE.Models.SearchResult;
 
 namespace SYE.Services
 {
+    public class SearchServiceResult
+    {
+        public long Count { get; set; }
+        public IList<string> Facets { get; set; }
+        public IList<SearchResult> Data { get; set; }
+    }
+
     public interface ISearchService
     {
-        Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch);
-        long GetCount();
-        List<string> GetFacets();
+        Task<SearchServiceResult> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch);
     }
+
     public class SearchService : ISearchService
     {
-        private static ICustomSearchIndexClient _indexClientWrapper;
-
-        private static long _count;
-        private static List<string> _facets = new List<string>();
-        private static string _search = string.Empty;
+        private readonly ICustomSearchIndexClient _indexClientWrapper;
+        private static IList<string> _facets = new List<string>();
 
         public SearchService(ICustomSearchIndexClient indexClientWrapper)
         {
             _indexClientWrapper = indexClientWrapper;
-        }    
-
-        public async Task<List<SearchResult>> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
-        {
-            var data = await GetDataAsync(search, currentPage, pageSize, refinementFacets, newSearch);
-            return data;
         }
 
-        public long GetCount()
+        public async Task<SearchServiceResult> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
         {
-            return _count;
+            return await GetDataAsync(search, currentPage, pageSize, refinementFacets, newSearch);
         }
-
-        public List<string> GetFacets()
-        {
-            return _facets;
-        }
-
 
         #region Private Methods
-        private async Task<List<SearchResult>> GetDataAsync(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
-        {            
+        private async Task<SearchServiceResult> GetDataAsync(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
+        {
             if (newSearch)
             {
                 //clear out all facets for previous search
-                _facets = new List<string>();
+                _facets.Clear();
                 refinementFacets = string.Empty;
             }
-
-            _search = search;
 
             var sp = new SearchParameters
             {
                 IncludeTotalResultCount = true,
                 Skip = ((currentPage - 1) * pageSize),
                 Top = pageSize,
-                Facets = new List<String> {"inspectionDirectorate"}
+                Facets = new List<String> { "inspectionDirectorate" }
             };
 
-            if (string.IsNullOrWhiteSpace(refinementFacets))
+            sp.Filter = "registrationStatus eq 'Registered'";
+            if (!string.IsNullOrWhiteSpace(refinementFacets))
             {
-                sp.Filter = "registrationStatus eq 'Registered'";
-            }
-            else
-            {
-                sp.Filter = "registrationStatus eq 'Registered' and (" + SearchHelper.BuildFilter(refinementFacets) + ")";
+                sp.Filter = string.Concat(sp.Filter, " and (", SearchHelper.BuildFilter(refinementFacets), ")");
             }
 
-            var searchResult = await _indexClientWrapper.SearchAsync(search, sp);
+            var searchResult = await _indexClientWrapper.SearchAsync(search, sp).ConfigureAwait(false);
 
-            if (searchResult.Count.HasValue)
+            if (searchResult.Facets?.Count == 1)
             {
-                _count = (long )searchResult.Count;
-            }
-
-            if (searchResult.Facets != null && searchResult.Facets.Count == 1)
-            {
-                var facets = (searchResult.Facets).ToList()[0].Value;
-                foreach (var facet in facets)
+                foreach (var item in searchResult?.Facets?.FirstOrDefault().Value?.Select(x => x.Value.ToString().Trim()))
                 {
-                    var facetToAdd = facet.Value.ToString();
-                    if (! _facets.Contains(facetToAdd))
+                    if (!_facets.Contains(item))
                     {
-                        _facets.Add(facetToAdd);
-                    }                    
+                        _facets.Add(item);
+                    }
                 }
             }
 
-            var results = searchResult.Results.Select(m => m.Document).ToList();
-     
-            return SearchHelper.ConvertResults(results);
+            return
+                new SearchServiceResult()
+                {
+                    Count = searchResult.Count ?? 0,
+                    Facets = _facets,
+                    Data = searchResult?.Results?.Select(x => SearchHelper.GetSearchResult(x.Document))?.ToList() ?? new List<SearchResult>()
+                };
         }
         #endregion
 

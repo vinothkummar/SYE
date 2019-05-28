@@ -29,7 +29,7 @@ namespace SYE.Controllers
                 var results = await _esbService.GetAllSubmisions();
                 if (results == null)
                 {
-                    return NotFound();
+                    return NotFound(); 
                 }
 
                 return Ok(results);
@@ -96,7 +96,7 @@ namespace SYE.Controllers
                 return StatusCode(500);
             }
         }
-        [HttpGet("submissions")]
+        [HttpPost("submissions")]
         public async Task<ActionResult<SubmissionPostResultVM>> PostAllToCrm()
         {
             try

@@ -20,26 +20,24 @@ using PageVM = GDSHelpers.Models.FormSchema.PageVM;
 
 namespace SYE.Controllers
 {
-    public class CheckYourAnswersController : BaseController<CheckYourAnswersController>
+    public class CheckYourAnswersController : Controller
     {
         private readonly ILogger _logger;
         private readonly ISubmissionService _submissionService;
-        private readonly IGovUkNotifyConfiguration _configuration;
+        private readonly IConfiguration _configuration;
         private readonly INotificationService _notificationService;
         private readonly IDocumentService _documentService;
         private readonly IOptions<ApplicationSettings> _config;
         private readonly ISessionService _sessionService;
 
-        public CheckYourAnswersController(IHttpContextAccessor context, IServiceProvider service, IOptions<ApplicationSettings> config,
-            ISessionService sessionService) : base(context)
+        public CheckYourAnswersController(IServiceProvider service)
         {
-            _submissionService = service.GetService<ISubmissionService>();
-            _configuration = service.GetService<IGovUkNotifyConfiguration>();
-            _notificationService = service.GetService<INotificationService>();
-            _documentService = service.GetService<IDocumentService>();
             _logger = service?.GetRequiredService<ILogger<CheckYourAnswersController>>() as ILogger;
-            _config = config;
-            _sessionService = sessionService;
+            _sessionService = service?.GetRequiredService<ISessionService>() ?? null;
+            _submissionService = service.GetRequiredService<ISubmissionService>();
+            _configuration = service?.GetRequiredService<IConfiguration>();
+            _notificationService = service.GetRequiredService<INotificationService>();
+            _documentService = service.GetRequiredService<IDocumentService>();
         }
 
         [HttpGet]
@@ -58,7 +56,6 @@ namespace SYE.Controllers
                     SendConfirmationEmail = true,
                     LocationName = _sessionService.GetUserSession().LocationName,
                     PageHistory =  _sessionService.GetNavOrder()
-                    
                 };
 
                 ViewBag.ShowBackButton = false;
@@ -66,7 +63,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Internal server error!");
+                _logger.LogError(ex, "Error loading FormVM.");
                 return StatusCode(500);
             }
         }
@@ -85,22 +82,48 @@ namespace SYE.Controllers
                 }
 
                 var submission = GenerateSubmission(formVm);
-                var result = _submissionService.CreateAsync(submission).Result;
-                var reference = submission.SubmissionId ?? string.Empty;
+                submission = _submissionService.CreateAsync(submission).Result;
+                var reference = submission?.SubmissionId ?? string.Empty;
 
-                if (!string.IsNullOrWhiteSpace(reference))  //&& vm?.SendConfirmationEmail == true)
+                if (vm?.SendConfirmationEmail == true && !string.IsNullOrWhiteSpace(reference))
                 {
-                    using (Logger.BeginScope(new Dictionary<string, object> { { "Submission Reference", reference } }))
+                    var fieldMappings = _configuration
+                        .GetSection("EmailNotification:ConfirmationEmail:FieldMappings")
+                        .Get<IEnumerable<EmailFieldMapping>>();
+
+                    var feedbackUserName = submission?
+                        .Answers?
+                        .FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "name")?.FormField, StringComparison.OrdinalIgnoreCase))?
+                        .Answer ?? string.Empty;
+
+                    var emailAddress = submission?
+                        .Answers?
+                        .FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "email")?.FormField, StringComparison.OrdinalIgnoreCase))?
+                        .Answer ?? string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(emailAddress))
                     {
-                        try
+
+                        var locationId = submission?.LocationId;
+                        var locationName = submission?.LocationName;
+                        var submissionId = submission?.Id;
+
+                        Task.Run(async () =>
                         {
-                            Task.Run(async () => await SendEmailNotificationAsync(submission).ConfigureAwait(false));
-                            Logger.LogInformation($"Confirmation email for submission id: [{reference}] sent successfully.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.LogError(ex, $"Error sending confirmation email with submission id: [{reference}].");
-                        }
+                            await SendEmailNotificationAsync(feedbackUserName, emailAddress, locationId, locationName, submissionId, reference)
+                                    .ContinueWith(notificationTask =>
+                                    {
+                                        if (notificationTask.IsFaulted)
+                                        {
+                                            _logger.LogError(notificationTask.Exception, $"Error sending confirmation email with submission id: [{reference}].");
+                                        }
+                                        else
+                                        {
+                                            _logger.LogInformation($"Confirmation email for submission id: [{reference}] sent successfully.");
+                                        }
+                                    })
+                                    .ConfigureAwait(false);
+                        });
                     }
                 }
 
@@ -111,7 +134,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "Internal server error!");
+                _logger.LogError(ex, "Error submitting feedback!");
                 return StatusCode(500);
             }
         }
@@ -153,45 +176,28 @@ namespace SYE.Controllers
             return vm;
         }
 
-        private Task SendEmailNotificationAsync(SubmissionVM submission)
-        {
-            if (submission == null)
-            {
-                throw new ArgumentNullException(nameof(submission));
-            }
-            return SendEmailNotificationInternalAsync(submission);
-        }
-
-        private async Task SendEmailNotificationInternalAsync(SubmissionVM submission)
+        private async Task SendEmailNotificationAsync(string fullName, string emailAddress, string locationId, string locationName, string submissionId, string submissionReference)
         {
             var emailTemplateId = string.Empty;
-            if (string.IsNullOrWhiteSpace(submission?.LocationId) || string.IsNullOrWhiteSpace(submission?.LocationName))
+            if (string.IsNullOrWhiteSpace(locationId) || string.IsNullOrWhiteSpace(locationName))
             {
-                emailTemplateId = _configuration.WithoutLocationEmailTemplateId;
+                emailTemplateId = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("WithoutLocationEmailTemplateId");
             }
             else
             {
-                emailTemplateId = _configuration.WithLocationEmailTemplateId;
+                emailTemplateId = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("WithLocationEmailTemplateId");
             }
-            var greetingTemplate = _configuration.GreetingTemplate;
-            var clientReferenceTemplate = _configuration.ClientReferenceTemplate;
-            var emailReplyToId = _configuration.ReplyToAddressId;
 
-            var emailAddress = submission?
-                .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == _config.Value.UsersEmailField)?
-                .Answer ?? string.Empty;
+            var greetingTemplate = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("GreetingTemplate");
+            var clientReferenceTemplate = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("ClientReferenceTemplate");
+            var emailReplyToId = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("ReplyToAddressId");
 
-            var feedbackUserName = submission?
-                .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == _config.Value.UsersNameField)?
-                .Answer ?? string.Empty;
-
-            var greeting = string.Format(greetingTemplate, feedbackUserName);
-            var locationName = submission?.LocationName;
-            var clientReference = string.Format(clientReferenceTemplate, submission?.LocationId, submission?.Id);
+            var greeting = string.Format(greetingTemplate, fullName);
+            var clientReference = string.Format(clientReferenceTemplate, locationId, submissionId);
 
             var personalisation =
                 new Dictionary<string, dynamic> {
-                    { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.SubmissionId ?? string.Empty }
+                    { "greeting", greeting }, { "location", locationName }, {"reference number", submissionReference ?? string.Empty }
                 };
 
 
