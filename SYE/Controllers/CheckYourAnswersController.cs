@@ -15,8 +15,6 @@ using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
 using SYE.ViewModels;
-using SYE.ViewModels.CheckYourAnswers;
-using PageVM = GDSHelpers.Models.FormSchema.PageVM;
 
 namespace SYE.Controllers
 {
