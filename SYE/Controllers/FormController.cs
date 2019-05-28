@@ -2,7 +2,6 @@
 using System.Linq;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -28,7 +27,7 @@ namespace SYE.Controllers
             _logger = logger;
         }
 
-        [HttpGet("Form/{id}")]
+        [HttpGet("form/{id}")]
         public IActionResult Index(string id = "")
         {
             try
@@ -42,6 +41,9 @@ namespace SYE.Controllers
 
                 ViewBag.PreviousPage = GetPreviousPage(pageVm, serviceNotFound);
 
+                //Update the users journey
+                _sessionService.UpdateNavOrder(pageVm.PageId);
+
                 return View(pageVm);
             }
             catch (Exception ex)
@@ -52,7 +54,7 @@ namespace SYE.Controllers
         }
 
 
-        [HttpPost("Form/{id}")]
+        [HttpPost("form/{id}")]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CurrentPageVM vm)
         {

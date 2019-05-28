@@ -4,7 +4,6 @@ namespace SYE.Controllers
 {
     public class HowWeUseYourInformationController : Controller
     {
-
         [Route("how-we-use-your-information")]
         public IActionResult Index()
         {

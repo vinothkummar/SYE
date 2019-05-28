@@ -11,6 +11,8 @@ namespace SYE.Services
 {
     public interface ISessionService
     {
+        void UpdateNavOrder(string currentPage);
+        List<string> GetNavOrder();
         PageVM GetPageById(string pageId, bool notFoundFlag);
         FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements);
         void SetUserSessionVars(UserSessionVM vm);
@@ -37,6 +39,49 @@ namespace SYE.Services
             _httpContextAccessor = httpContextAccessor;
             _configuration = configuration;
         }
+
+
+        public void UpdateNavOrder(string currentPage)
+        {
+            var userSession = GetUserSession();
+
+            if (userSession.NavOrder == null)
+            {
+                //First page
+                userSession.NavOrder = new List<string>{ currentPage };
+            }
+            else
+            {
+                //If we've not been here before add the page
+                if (!userSession.NavOrder.Contains(currentPage))
+                {
+                    userSession.NavOrder.Add(currentPage);
+                }
+                else
+                {
+                    //We have been here do delete everything after, just in case it changes
+                    var newNav = new List<string>();
+                   
+                    var index = userSession.NavOrder.IndexOf(currentPage);
+                    foreach (var page in userSession.NavOrder)
+                    {
+                        if (userSession.NavOrder.IndexOf(page) <= index) newNav.Add(page);
+                    }
+
+                    //Update the users navigation history
+                    userSession.NavOrder = newNav;
+                }
+            }
+
+            SetUserSessionVars(userSession);
+        }
+
+        public List<string> GetNavOrder()
+        {
+            var userSession = GetUserSession();
+            return userSession.NavOrder ?? new List<string>();
+        }
+
 
         public PageVM GetPageById(string pageId, bool notFoundFlag)
         {
@@ -92,6 +137,12 @@ namespace SYE.Services
             context.Session.SetString("ProviderId", vm.ProviderId ?? "");
             context.Session.SetString("LocationId", vm.LocationId ?? "");
             context.Session.SetString("LocationName", vm.LocationName ?? "");
+
+            if (vm.NavOrder != null)
+            {
+                var pageList = string.Join(",", vm.NavOrder.ToArray<string>());
+                context.Session.SetString("NavOrder", pageList ?? "");
+            }
         }
 
         public UserSessionVM GetUserSession()
@@ -103,6 +154,10 @@ namespace SYE.Services
                 LocationId = context.Session.GetString("LocationId"),
                 LocationName = context.Session.GetString("LocationName")
             };
+
+            if (!string.IsNullOrEmpty(context.Session.GetString("NavOrder")))
+                userSessionVm.NavOrder = context.Session.GetString("NavOrder").Split(',').ToList();
+
             return userSessionVm;
         }
 

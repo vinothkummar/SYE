@@ -82,12 +82,12 @@ namespace SYE
             }
             var cosmosDatabaseConnectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
             services.TryAddSingleton<IDocumentClient>(
-                    new DocumentClient(
-                            new Uri(cosmosDatabaseConnectionConfiguration.Endpoint),
-                            cosmosDatabaseConnectionConfiguration.Key,
-                            cosmosDatabaseConnectionPolicy
-                        )
-                );
+                new DocumentClient(
+                    new Uri(cosmosDatabaseConnectionConfiguration.Endpoint),
+                    cosmosDatabaseConnectionConfiguration.Key,
+                    cosmosDatabaseConnectionPolicy
+                )
+            );
 
             var formSchemaDatabase = Configuration.GetSection("CosmosDBCollections:FormSchemaDb").Get<AppConfiguration<FormVM>>();
             if (formSchemaDatabase == null)
@@ -156,7 +156,11 @@ namespace SYE
                     template: "{controller=Home}/{action=Index}/{id?}"
                 );
 
-                routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
+
+                //routes.MapRoute("searchResults", "search/results/{search?}", defaults: new { controller = "Form", action = "SearchResults" });
+                //routes.MapRoute("searchResults", "search/results/{search?}/{pageNo?}", defaults: new { controller = "Form", action = "SearchResults" });
+
+                //routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
 
             });
         }

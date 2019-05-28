@@ -15,6 +15,10 @@
             @Html.HiddenFor(m => m.PageId)
             @Html.AntiForgeryToken()
 
+            @if (!string.IsNullOrEmpty(Model.PageName))
+            {
+                <gds-heading heading-type="H1" text="@Model.PageName"></gds-heading>
+            }
 
             @Html.RenderPreAmble(Model)
 
@@ -42,6 +46,7 @@
     </gds-column>
 
 </gds-row>
+
 
 @{
     await Html.RenderPartialAsync("_GetHelpWithThisFormPartial");

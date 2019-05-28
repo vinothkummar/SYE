@@ -8,22 +8,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using SYE.Helpers;
 using SYE.Models;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
+using SYE.ViewModels;
 
 namespace SYE.Controllers
 {
     public class CheckYourAnswersController : Controller
     {
         private readonly ILogger _logger;
-        private readonly ISessionService _sessionService;
         private readonly ISubmissionService _submissionService;
         private readonly IConfiguration _configuration;
         private readonly INotificationService _notificationService;
         private readonly IDocumentService _documentService;
+        private readonly IOptions<ApplicationSettings> _config;
+        private readonly ISessionService _sessionService;
 
         public CheckYourAnswersController(IServiceProvider service)
         {
@@ -35,7 +38,7 @@ namespace SYE.Controllers
             _documentService = service.GetRequiredService<IDocumentService>();
         }
 
-        [HttpGet]
+        [HttpGet, Route("form/check-your-answers")]
         public IActionResult Index()
         {
             try
@@ -48,7 +51,9 @@ namespace SYE.Controllers
                 var vm = new CheckYourAnswersVm
                 {
                     FormVm = formVm,
-                    SendConfirmationEmail = true
+                    SendConfirmationEmail = true,
+                    LocationName = _sessionService.GetUserSession().LocationName,
+                    PageHistory =  _sessionService.GetNavOrder()
                 };
 
                 ViewBag.ShowBackButton = false;
@@ -59,10 +64,11 @@ namespace SYE.Controllers
                 _logger.LogError(ex, "Error loading FormVM.");
                 return StatusCode(500);
             }
+
         }
 
 
-        [HttpPost]
+        [HttpPost, Route("form/check-your-answers")]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CheckYourAnswersVm vm)
         {
@@ -143,9 +149,9 @@ namespace SYE.Controllers
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
                 LocationName = HttpContext.Session.GetString("LocationName"),
+                SubmissionId = _submissionService.GenerateUniqueUserRefAsync().Result.ToString(),
             };
 
-            vm.SubmissionId = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
 
             var answers = new List<AnswerVM>();
 
@@ -180,6 +186,7 @@ namespace SYE.Controllers
             {
                 emailTemplateId = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("WithLocationEmailTemplateId");
             }
+
             var greetingTemplate = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("GreetingTemplate");
             var clientReferenceTemplate = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("ClientReferenceTemplate");
             var emailReplyToId = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("ReplyToAddressId");
@@ -189,12 +196,16 @@ namespace SYE.Controllers
 
             var personalisation =
                 new Dictionary<string, dynamic> {
-                    { "greeting", greeting }, { "location", locationName }, {"reference number", submissionReference ?? String.Empty }
+                    { "greeting", greeting }, { "location", locationName }, {"reference number", submissionReference ?? string.Empty }
                 };
 
-            await _notificationService.NotifyByEmailAsync(
+
+            if(!string.IsNullOrEmpty(emailAddress)) {
+                await _notificationService.NotifyByEmailAsync(
                     emailTemplateId, emailAddress, personalisation, clientReference, emailReplyToId
                 ).ConfigureAwait(false);
+            }
+            
         }
     }
 }
