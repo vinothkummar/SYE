@@ -2,7 +2,6 @@
 using System.Linq;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SYE.Models;
@@ -37,6 +36,9 @@ namespace SYE.Controllers
                 if (pageVm == null) return NotFound();
 
                 ViewBag.PreviousPage = GetPreviousPage(pageVm, serviceNotFound);
+
+                //Update the users journey
+                _sessionService.UpdateNavOrder(pageVm.PageId);
 
                 return View(pageVm);
             }

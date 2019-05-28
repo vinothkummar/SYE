@@ -25,7 +25,7 @@ namespace SYE.Controllers
             _config = config;
         }
 
-        [HttpGet]
+        [HttpGet("find-a-service")]
         public IActionResult Index(bool isError)
         {
             ViewBag.ShowBackButton = true;
@@ -45,6 +45,16 @@ namespace SYE.Controllers
             }
         }
 
+
+        [HttpGet]//searches
+        public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
+        {
+            //ViewBag.ShowBackButton = true;
+            //ViewBag.PreviousPage = Url.Action("Index", "Search");
+            return GetSearchResult(search, pageNo, selectedFacets);
+        }
+
+
         [HttpPost]//applies the filter & does a search
         public IActionResult SearchResults(string search, List<SelectItem> facets = null)
         {
@@ -57,14 +67,7 @@ namespace SYE.Controllers
             return GetSearchResult(search, 1, selectedFacets);
         }
 
-        [HttpGet]//searches
-        public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
-        {
-            //ViewBag.ShowBackButton = true;
-            //ViewBag.PreviousPage = Url.Action("Index", "Search");
-            return GetSearchResult(search, pageNo, selectedFacets);
-        }
-
+        
         [HttpGet]
         public IActionResult LocationNotFound()
         {

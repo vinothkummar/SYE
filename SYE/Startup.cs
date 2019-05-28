@@ -90,10 +90,11 @@ namespace SYE
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.TryAddSingleton<IGovUkNotifyConfiguration>(_ => Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").Get<GovUkNotifyConfiguration>());
+
             services.TryAddSingleton<IAsyncNotificationClient>(_ =>
                 new NotificationClient(
-                        Configuration.GetSection("ConnectionStrings").GetValue<String>(
-                                string.Concat("GovUkNotifyApiKeys:", Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").GetValue<String>("KeyType"))
+                        Configuration.GetSection("ConnectionStrings").GetValue<string>(
+                                string.Concat("GovUkNotifyApiKeys:", Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").GetValue<string>("KeyType"))
                             )
                     )
             );
@@ -129,7 +130,7 @@ namespace SYE
                     template: "{controller=Home}/{action=Index}/{id?}"
                 );
 
-                routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
+                routes.MapRoute("form", "feedback/{id?}", defaults: new { controller = "Form", action = "index" });
 
             });
         }

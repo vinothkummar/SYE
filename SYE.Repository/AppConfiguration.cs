@@ -49,4 +49,5 @@ namespace SYE.Repository
         public string ClientReferenceTemplate { get; set; }
         public string ReplyToAddressId { get; set; }
     }
+
 }

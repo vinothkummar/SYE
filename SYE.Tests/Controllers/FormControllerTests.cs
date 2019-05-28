@@ -9,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using SYE.Controllers;
 using SYE.Models;
+using SYE.Repository;
 using SYE.Services;
 using SYE.ViewModels;
 using Xunit;

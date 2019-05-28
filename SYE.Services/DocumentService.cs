@@ -28,9 +28,9 @@ namespace SYE.Services
 
         public string CreateSubmissionDocument(string json)
         {
-           var submissionVm = JsonConvert.DeserializeObject<SubmissionVM>(json);
-           var filePath = GenerateDocument(submissionVm);
-           return filePath;
+            var submissionVm = JsonConvert.DeserializeObject<SubmissionVM>(json);
+            var filePath = GenerateDocument(submissionVm);
+            return filePath;
         }
 
         public string CreateSubmissionDocument(SubmissionVM submissionVm)
@@ -63,11 +63,11 @@ namespace SYE.Services
                         para.AppendChild(line);
                         EmptyLine(body, para);
 
-                        GetDataSection(body, "Channel :", new List<string>{"GFC"}, false);
-                        GetDataSection(body, "GFC reference number :", new List<string> {submissionVm.SubmissionId }, false);
-                        GetDataSection(body, "Completed :", new List<string> {DateTime.Parse(submissionVm.DateCreated).ToShortDateString()}, false);
-                        GetDataSection(body, "Location ID :", new List<string> {submissionVm.LocationId}, false);
-                        GetDataSection(body, "Provider ID :", new List<string> {submissionVm.ProviderId}, false);
+                        GetDataSection(body, "Channel :", new List<string> { "GFC" }, false);
+                        GetDataSection(body, "GFC reference number :", new List<string> { submissionVm.SubmissionId }, false);
+                        GetDataSection(body, "Completed :", new List<string> { DateTime.Parse(submissionVm.DateCreated).ToShortDateString() }, false);
+                        GetDataSection(body, "Location ID :", new List<string> { submissionVm.LocationId }, false);
+                        GetDataSection(body, "Provider ID :", new List<string> { submissionVm.ProviderId }, false);
                         //location
                         GetLocation(body, submissionVm);
 
@@ -84,7 +84,7 @@ namespace SYE.Services
                         //risk of harm
                         answerTxt = string.Empty;
                         questionTxt = GetYesNoAnswer(submissionVm, "Yes, I think someone's at risk of harm", "No, I don't think anyone's at risk of harm", "Neg_001", ref answerTxt);
-                        GetDataSection(body, "4. " + questionTxt, new List<string> { answerTxt }, true);                        
+                        GetDataSection(body, "4. " + questionTxt, new List<string> { answerTxt }, true);
                         //have you told police
                         var answer = submissionVm.Answers.Where(x => x.PageId == "Neg_002").FirstOrDefault();
                         if (answer != null)
@@ -101,7 +101,7 @@ namespace SYE.Services
                         answer = submissionVm.Answers.Where(x => x.PageId == "Neg_005").FirstOrDefault();
                         if (answer != null)
                         {
-                            GetDataSection(body, "3. " + answer.Question, new List<string> {answer.Answer}, true);
+                            GetDataSection(body, "3. " + answer.Question, new List<string> { answer.Answer }, true);
                         }
                         //feedback
                         GetFeedback(body, submissionVm);
@@ -129,7 +129,7 @@ namespace SYE.Services
                         wordDocument.Close();
                     }
                     //convert to bas64
-                    var bytes = mem.ToArray();                    
+                    var bytes = mem.ToArray();
                     convertedDoc = Convert.ToBase64String(bytes);
                     mem.Close();
                 }
@@ -158,7 +158,7 @@ namespace SYE.Services
             {
                 //location has not been found
                 GetDataSection(body, "Location name/description : ", new List<string> { "Not Found" }, false);
-                GetDataSection(body, "1. " + answer.Question, new List<string> {answer.Answer}, true);
+                GetDataSection(body, "1. " + answer.Question, new List<string> { answer.Answer }, true);
             }
         }
         /// <summary>
@@ -243,7 +243,7 @@ namespace SYE.Services
                 else
                 {
                     answer = noAnswer;
-                }                
+                }
             }
             return question;
         }
@@ -255,18 +255,18 @@ namespace SYE.Services
         /// <param name="bold"></param>
         /// <returns></returns>
         private Run GetText(string text, int size, bool bold = false)
-        {            
+        {
             Run HighLightRun = new Run();
             RunProperties runPro = new RunProperties();
             RunFonts runFont = new RunFonts() { Ascii = "Arial", HighAnsi = "Arial" };
             FontSize fontSize = new FontSize() { Val = size.ToString() };
 
-            Text runText = new Text() { Text = text};
+            Text runText = new Text() { Text = text };
             runPro.Append(runFont);
             if (bold)
             {
                 runPro.Append(new Bold());
-            }            
+            }
             runPro.Append(fontSize);
 
             HighLightRun.Append(runPro);
@@ -282,7 +282,7 @@ namespace SYE.Services
         /// <param name="dataOnNewLine"></param>
         /// <param name="indent"></param>
         private void GetDataSection(Body body, string sideheader, List<string> data, bool dataOnNewLine, bool indent = false)
-        {            
+        {
             var para = body.AppendChild(new Paragraph());
             if (indent)
             {
@@ -291,8 +291,8 @@ namespace SYE.Services
                 NumberingProperties npUl = new NumberingProperties(
                     new NumberingLevelReference() { Val = 2 },
                     new NumberingId() { Val = 1 }
-                );                
-                
+                );
+
                 ParagraphProperties ppUnordered = new ParagraphProperties(npUl, iUl);
                 para.ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
             }
@@ -312,7 +312,7 @@ namespace SYE.Services
                 }
                 para.AppendChild(line);
             }
-           EmptyLine(body, para);
+            EmptyLine(body, para);
         }
         private void EmptyLine(Body body, Paragraph para)
         {

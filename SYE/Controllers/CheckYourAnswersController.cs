@@ -8,11 +8,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SYE.Helpers;
 using SYE.Models;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
+using SYE.ViewModels;
+using SYE.ViewModels.CheckYourAnswers;
+using PageVM = GDSHelpers.Models.FormSchema.PageVM;
 
 namespace SYE.Controllers
 {
@@ -23,13 +27,18 @@ namespace SYE.Controllers
         private readonly IGovUkNotifyConfiguration _configuration;
         private readonly INotificationService _notificationService;
         private readonly IDocumentService _documentService;
+        private readonly IOptions<ApplicationSettings> _config;
+        private readonly ISessionService _sessionService;
 
-        public CheckYourAnswersController(IHttpContextAccessor context, IServiceProvider service) : base(context)
+        public CheckYourAnswersController(IHttpContextAccessor context, IServiceProvider service, IOptions<ApplicationSettings> config,
+            ISessionService sessionService) : base(context)
         {
             _submissionService = service.GetService<ISubmissionService>();
             _configuration = service.GetService<IGovUkNotifyConfiguration>();
             _notificationService = service.GetService<INotificationService>();
             _documentService = service.GetService<IDocumentService>();
+            _config = config;
+            _sessionService = sessionService;
         }
 
         [HttpGet]
@@ -37,22 +46,26 @@ namespace SYE.Controllers
         {
             try
             {
-                var formVm = SessionService.GetFormVmFromSession();
+                var formVm = _sessionService.GetFormVmFromSession();
                 if (formVm == null)
                 {
                     return NotFound();
                 }
                 var vm = new CheckYourAnswersVm
                 {
-                    FormVm = formVm
+                    FormVm = formVm,
+                    SendConfirmationEmail = true,
+                    LocationName = _sessionService.GetUserSession().LocationName,
+                    PageHistory =  _sessionService.GetNavOrder()
+                    
                 };
 
                 ViewBag.ShowBackButton = false;
                 return View(vm);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //log error
+                Logger.LogError(ex, "Internal server error!");
                 return StatusCode(500);
             }
         }
@@ -64,7 +77,7 @@ namespace SYE.Controllers
         {
             try
             {
-                var formVm = SessionService.GetFormVmFromSession();
+                var formVm = _sessionService.GetFormVmFromSession();
                 if (formVm == null)
                 {
                     return NotFound();
@@ -74,7 +87,7 @@ namespace SYE.Controllers
                 var result = _submissionService.CreateAsync(submission).Result;
                 var reference = submission.SubmissionId ?? string.Empty;
 
-                if (!string.IsNullOrWhiteSpace(reference) && vm?.SendConfirmationEmail == true)
+                if (!string.IsNullOrWhiteSpace(reference))  //&& vm?.SendConfirmationEmail == true)
                 {
                     using (Logger.BeginScope(new Dictionary<string, object> { { "Submission Reference", reference } }))
                     {
@@ -113,9 +126,9 @@ namespace SYE.Controllers
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
                 LocationName = HttpContext.Session.GetString("LocationName"),
+                SubmissionId = _submissionService.GenerateUniqueUserRefAsync().Result.ToString(),
             };
 
-            vm.SubmissionId = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
 
             var answers = new List<AnswerVM>();
 
@@ -164,11 +177,11 @@ namespace SYE.Controllers
             var emailReplyToId = _configuration.ReplyToAddressId;
 
             var emailAddress = submission?
-                .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == "Contact_003_02")?
+                .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == _config.Value.UsersEmailField)?
                 .Answer ?? string.Empty;
 
             var feedbackUserName = submission?
-                .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == "Contact_003_01")?
+                .Answers?.FirstOrDefault(x => x.Question.Equals("Your contact details", StringComparison.OrdinalIgnoreCase) && x.QuestionId == _config.Value.UsersNameField)?
                 .Answer ?? string.Empty;
 
             var greeting = string.Format(greetingTemplate, feedbackUserName);
@@ -177,12 +190,16 @@ namespace SYE.Controllers
 
             var personalisation =
                 new Dictionary<string, dynamic> {
-                    { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.SubmissionId ?? String.Empty }
+                    { "greeting", greeting }, { "location", locationName }, {"reference number", submission?.SubmissionId ?? string.Empty }
                 };
 
-            await _notificationService.NotifyByEmailAsync(
+
+            if(!string.IsNullOrEmpty(emailAddress)) {
+                await _notificationService.NotifyByEmailAsync(
                     emailTemplateId, emailAddress, personalisation, clientReference, emailReplyToId
                 ).ConfigureAwait(false);
+            }
+            
         }
     }
 }

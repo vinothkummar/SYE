@@ -8,7 +8,7 @@
 
 <gds-row>
 
-    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+    <gds-column desktop-size="ThreeQuarter" tablet-size="FullWidth">
 
         <gds-heading heading-type="H1" text="Give feedback on care"></gds-heading>
         <gds-paragraph>Use this form to tell us about:</gds-paragraph>
@@ -16,9 +16,9 @@
             <li>an experience of care from a service like a care home, care agency, hospital or GP it can be good or bad</li>
             <li>a concern you have about a care service you work for</li>
         </ul>
-        
+
         <gds-warning-text message="If someone is in danger of serious harm, call 999" warning-id=""></gds-warning-text>
-        
+
         <form asp-controller="Search" asp-action="Index" method="get">
             <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start Now" button-type="Submit" start-now="true"></gds-button></p>
         </form>
@@ -73,6 +73,17 @@
                 </gds-paragraph>
             </section>
         </div>
+    </gds-column>
+
+    <gds-column desktop-size="OneQuarter" tablet-size="FullWidth">
+
+        <div class="purple-bar"></div>
+
+        <gds-heading heading-type="H3" text="Related Content"></gds-heading>
+        <gds-paragraph>
+            <gds-link class="govuk-link" target="_blank" link-id="related-content" link-text="Make a formal complaint to a service or provider" href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider"></gds-link>
+        </gds-paragraph>
+
     </gds-column>
 
 </gds-row>
