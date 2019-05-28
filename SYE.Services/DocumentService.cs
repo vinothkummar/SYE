@@ -282,18 +282,18 @@ namespace SYE.Services
         private void GetDataSection(Body body, string sideheader, List<string> data, bool dataOnNewLine, bool indent = false)
         {
             var para = body.AppendChild(new Paragraph());
-            if (indent)
-            {
-                Indentation iUl = new Indentation() { LeftChars = 10, Hanging = "360" };  // correct indentation  
+            //if (indent)//creates numbered list
+            //{
+            //    Indentation iUl = new Indentation() { LeftChars = 10, Hanging = "360" };  // correct indentation  
 
-                NumberingProperties npUl = new NumberingProperties(
-                    new NumberingLevelReference() { Val = 2 },
-                    new NumberingId() { Val = 1 }
-                );
+            //    NumberingProperties npUl = new NumberingProperties(
+            //        new NumberingLevelReference() { Val = 2 },
+            //        new NumberingId() { Val = 1 }
+            //    );
 
-                ParagraphProperties ppUnordered = new ParagraphProperties(npUl, iUl);
-                para.ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
-            }
+            //    ParagraphProperties ppUnordered = new ParagraphProperties(npUl, iUl);
+            //    para.ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
+            //}
             var line = GetText(sideheader, FontSizeNormal, dataOnNewLine);
             para.AppendChild(line);
             var lineCounter = 0;
@@ -308,7 +308,8 @@ namespace SYE.Services
                 line = GetText(text, FontSizeNormal, !dataOnNewLine);
                 if (dataOnNewLine)
                 {
-                    para.Append(new Run(new TabChar()));
+                    //para.Append(new Run(new TabChar()));//creates tab indent but not on wrapped line!!
+                    para.Append(new Run());
                 }
                 para.AppendChild(line);
             }
