@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GDSHelpers.Models.FormSchema;
@@ -8,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SYE.Helpers;
 using SYE.Models;
@@ -22,7 +22,7 @@ namespace SYE.Controllers
 {
     public class CheckYourAnswersController : BaseController<CheckYourAnswersController>
     {
-        private string _dir = Directory.GetCurrentDirectory() + "\\Documents\\";//this will be temporary so dont put into app settings
+        private readonly ILogger _logger;
         private readonly ISubmissionService _submissionService;
         private readonly IGovUkNotifyConfiguration _configuration;
         private readonly INotificationService _notificationService;
@@ -37,6 +37,7 @@ namespace SYE.Controllers
             _configuration = service.GetService<IGovUkNotifyConfiguration>();
             _notificationService = service.GetService<INotificationService>();
             _documentService = service.GetService<IDocumentService>();
+            _logger = service?.GetRequiredService<ILogger<CheckYourAnswersController>>() as ILogger;
             _config = config;
             _sessionService = sessionService;
         }
@@ -65,7 +66,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "Internal server error!");
+                _logger.LogError(ex, "Internal server error!");
                 return StatusCode(500);
             }
         }
