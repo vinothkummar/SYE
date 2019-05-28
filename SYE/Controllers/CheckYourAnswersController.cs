@@ -148,7 +148,7 @@ namespace SYE.Controllers
             vm.SubmissionId = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
 
             var answers = new List<AnswerVM>();
-
+            var test = 0;
             foreach (var page in formVm.Pages)
             {
                 answers.AddRange(page.Questions.Where(m => !string.IsNullOrEmpty(m.Answer))
@@ -157,7 +157,8 @@ namespace SYE.Controllers
                         PageId = page.PageId,
                         QuestionId = question.QuestionId,
                         Question = string.IsNullOrEmpty(question.Question) ? page.PageName.StripHtml() : question.Question.StripHtml(),
-                        Answer = question.Answer.StripHtml()//.RemoveLineBreaks()
+                        Answer = question.Answer.StripHtml(),//.RemoveLineBreaks()
+                        DocumentOrder = test++
                     }));
             }
 

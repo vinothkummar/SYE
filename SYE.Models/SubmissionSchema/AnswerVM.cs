@@ -18,5 +18,8 @@ namespace SYE.Models.SubmissionSchema
         
         [JsonProperty("answer")]
         public string Answer { get; set; }
+
+        [JsonProperty("document_order")]
+        public int DocumentOrder { get; set; }
     }
 }

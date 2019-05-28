@@ -56,27 +56,27 @@ namespace SYE.Services
                     //location
                     GetLocation(body, submissionVm);
                     //Are you happy to be contacted
-                    GetAnswer(body, submissionVm, "can_we_contact_you");
+                    GetAnswer(body, submissionVm, "can_we_contact_you");//2
                     //contact details
                     GetContactDetails(body, submissionVm);
                     //have you worked for this service
-                    GetAnswer(body, submissionVm, "have_you_worked_for_the_service");
+                    GetAnswer(body, submissionVm, "have_you_worked_for_the_service");//6
                     //risk of harm
-                    GetAnswer(body, submissionVm, "is_someone_at_risk");
+                    GetAnswer(body, submissionVm, "is_someone_at_risk");//7
                     //have you told police
-                    GetAnswer(body, submissionVm, "have_you_told_the_police");
+                    GetAnswer(body, submissionVm, "have_you_told_the_police");//8
                     //good or bad
-                    GetAnswer(body, submissionVm, "what_do_you_want_to_tell_us_about");
+                    GetAnswer(body, submissionVm, "what_do_you_want_to_tell_us_about");//9
                     //when did it happen
-                    GetAnswer(body, submissionVm, "when_did_it_happen");
+                    GetAnswer(body, submissionVm, "when_did_it_happen");//10
                     //feedback
                     GetFeedback(body, submissionVm);
                     //how did you find out
-                    GetAnswer(body, submissionVm, "how_did_you_hear_about_this_form");
+                    GetAnswer(body, submissionVm, "how_did_you_hear_about_this_form");//14
                     //which charity
                     GetCharity(body, submissionVm);
                     //can we share you feedback
-                    GetAnswer(body, submissionVm, "can_we_share_your_feedback");
+                    GetAnswer(body, submissionVm, "can_we_share_your_feedback");//17
 
                     mainPart.Document.Save();
 
@@ -93,12 +93,12 @@ namespace SYE.Services
         #region Document Loading
         private void GetCharity(Body body, SubmissionVM submissionVm)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you" && x.QuestionId == "which_charity_told_you_01");
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you" && x.QuestionId == "which_charity_told_you_01");//15
             if (answer != null)
             {
                 GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
             }
-            answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you" && x.QuestionId == "which_charity_told_you_02");
+            answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you" && x.QuestionId == "which_charity_told_you_02");//16
             if (answer != null)
             {
                 GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
@@ -140,7 +140,7 @@ namespace SYE.Services
             var location = string.Empty;
             var locationDescription = string.Empty;
             var locationFound = false;
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "service_not_found");
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "service_not_found");//1
             if (answer == null)
             {
                 //location has been selected
@@ -184,15 +184,15 @@ namespace SYE.Services
         /// <param name="submissionVm"></param>
         private void GetFeedback(Body body, SubmissionVM submissionVm)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_01");
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_01");//11
             if (answer != null)
             {
                 var feedback1 = string.Empty;
                 var feedback2 = string.Empty;
                 var feedback3 = string.Empty;
                 feedback1 = answer.Answer;
-                var answer2 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_02");
-                var answer3 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_03");
+                var answer2 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_02");//12
+                var answer3 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_03");//13
                 if (answer2 != null)
                 {
                     feedback2 = answer2.Answer;
@@ -215,7 +215,7 @@ namespace SYE.Services
         /// <param name="submissionVm"></param>
         private void GetContactDetails(Body body, SubmissionVM submissionVm)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_01");
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_01");//3
             if (answer != null)
             {
                 //var question = answer.Question;
@@ -224,10 +224,10 @@ namespace SYE.Services
                 var telNum = string.Empty;
 
                 //contact details 2
-                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_02");
+                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_02");//4
                 if (answer != null) { email = answer.Answer; }
                 //contact details 3
-                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_03");
+                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_03");//5
                 if (answer != null) { telNum = answer.Answer; }
 
                 GetDataSection(body, "Contact Details",
