@@ -27,7 +27,7 @@ namespace SYE.Controllers
             _logger = logger;
         }
 
-        [HttpGet("Form/{id}")]
+        [HttpGet("form/{id}")]
         public IActionResult Index(string id = "")
         {
             try
@@ -54,7 +54,7 @@ namespace SYE.Controllers
         }
 
 
-        [HttpPost("Form/{id}")]
+        [HttpPost("form/{id}")]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CurrentPageVM vm)
         {

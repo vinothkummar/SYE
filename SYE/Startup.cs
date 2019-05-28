@@ -156,7 +156,11 @@ namespace SYE
                     template: "{controller=Home}/{action=Index}/{id?}"
                 );
 
-                routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
+
+                //routes.MapRoute("searchResults", "search/results/{search?}", defaults: new { controller = "Form", action = "SearchResults" });
+                //routes.MapRoute("searchResults", "search/results/{search?}/{pageNo?}", defaults: new { controller = "Form", action = "SearchResults" });
+
+                //routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
 
             });
         }

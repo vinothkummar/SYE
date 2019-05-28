@@ -28,7 +28,7 @@ namespace SYE.Controllers
             _logger = logger;
         }
 
-        [HttpGet("find-a-service")]
+        [HttpGet("search/find-a-service")]
         public IActionResult Index(bool isError)
         {
             ViewBag.ShowBackButton = true;
@@ -49,7 +49,7 @@ namespace SYE.Controllers
         }
 
 
-        [HttpGet]//searches
+        [HttpGet, Route("/search/results")]//searches
         public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
         {
             //ViewBag.ShowBackButton = true;
@@ -58,7 +58,7 @@ namespace SYE.Controllers
         }
 
 
-        [HttpPost]//applies the filter & does a search
+        [HttpPost, Route("/search/results")]//applies the filter & does a search
         public IActionResult SearchResults(string search, List<SelectItem> facets = null)
         {
             var selectedFacets = string.Empty;
