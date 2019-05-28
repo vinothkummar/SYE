@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Configuration;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,15 +24,13 @@ namespace SYE
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
-
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -51,57 +49,85 @@ namespace SYE
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddHttpContextAccessor();
+            services.AddHealthChecks();
+            services.AddOptions();
 
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
 
-            var connectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>();
-            var formDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("FormSchemaDb").Get<AppConfiguration<FormVM>>();
-            var searchConfig = Configuration.GetSection("ConnectionStrings").GetSection("SearchDb").Get<SearchConfiguration>();
-            var submissionDatabaseConfig = Configuration.GetSection("ConnectionStrings").GetSection("SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
-            var submissionConfig = Configuration.GetSection("ConnectionStrings").GetSection("ConfigDb").Get<AppConfiguration<ConfigVM>>();
-            var esbConfig = Configuration.GetSection("ConnectionStrings").GetSection("EsbConfig").Get<EsbConfiguration<EsbConfig>>();
+            services.TryAddScoped<ISessionService, SessionService>();
 
-            var indexClient = new CustomSearchIndexClient(searchConfig.SearchServiceName, searchConfig.IndexName, searchConfig.SearchApiKey);
-            var searchService = new SearchService(indexClient);
+            services.TryAddSingleton<IGdsValidation, GdsValidation>();
 
-            services.AddSingleton<IAppConfiguration<FormVM>>(formDatabaseConfig);
-            services.AddSingleton<IAppConfiguration<SubmissionVM>>(submissionDatabaseConfig);
-            services.AddSingleton<IAppConfiguration<ConfigVM>>(submissionConfig);
+            string notificationApiKey = Configuration.GetSection("ConnectionStrings:GovUkNotify").GetValue<String>("ApiKey");
+            if (string.IsNullOrWhiteSpace(notificationApiKey))
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(notificationApiKey)} from application configuration.");
+            }
+            services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(notificationApiKey));
+            services.TryAddScoped<INotificationService, NotificationService>();
+
+            var searchConfiguration = Configuration.GetSection("ConnectionStrings:SearchDb").Get<SearchConfiguration>();
+            if (searchConfiguration == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(searchConfiguration)} from application configuration.");
+            }
+            services.TryAddSingleton<ICustomSearchIndexClient>(new CustomSearchIndexClient(searchConfiguration.SearchServiceName, searchConfiguration.IndexName, searchConfiguration.SearchApiKey));
+            services.TryAddScoped<ISearchService, SearchService>();
+
+            var cosmosDatabaseConnectionConfiguration = Configuration.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
+            if (cosmosDatabaseConnectionConfiguration == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(cosmosDatabaseConnectionConfiguration)} from application configuration.");
+            }
+            var cosmosDatabaseConnectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
+            services.TryAddSingleton<IDocumentClient>(
+                new DocumentClient(
+                    new Uri(cosmosDatabaseConnectionConfiguration.Endpoint),
+                    cosmosDatabaseConnectionConfiguration.Key,
+                    cosmosDatabaseConnectionPolicy
+                )
+            );
+
+            var formSchemaDatabase = Configuration.GetSection("CosmosDBCollections:FormSchemaDb").Get<AppConfiguration<FormVM>>();
+            if (formSchemaDatabase == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(formSchemaDatabase)} from application configuration.");
+            }
+            services.TryAddSingleton<IAppConfiguration<FormVM>>(formSchemaDatabase);
+
+            var submissionsDatabase = Configuration.GetSection("CosmosDBCollections:SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
+            if (submissionsDatabase == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(submissionsDatabase)} from application configuration.");
+            }
+            services.TryAddSingleton<IAppConfiguration<SubmissionVM>>(submissionsDatabase);
+
+            var configDatabase = Configuration.GetSection("CosmosDBCollections:ConfigDb").Get<AppConfiguration<ConfigVM>>();
+            if (configDatabase == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(configDatabase)} from application configuration.");
+            }
+            services.TryAddSingleton<IAppConfiguration<ConfigVM>>(configDatabase);
+
+            var esbConfig = Configuration.GetSection("ConnectionStrings:EsbConfig").Get<EsbConfiguration<EsbConfig>>();
+            if (esbConfig == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(esbConfig)} from application configuration.");
+            }
             services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
 
-            services.AddSingleton<IDocumentClient>(new DocumentClient(new Uri(formDatabaseConfig.Endpoint), formDatabaseConfig.Key, connectionPolicy));
+            services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.TryAddScoped<IEsbClient, EsbClient>();
+            services.TryAddScoped<IEsbWrapper, EsbWrapper>();
+            services.TryAddScoped<IEsbService, EsbService>();
 
-            services.AddScoped<IGdsValidation, GdsValidation>();
-
-            services.AddScoped<ISearchService, SearchService>(s => searchService);
-            services.AddScoped<ICustomSearchIndexClient, CustomSearchIndexClient>(c => indexClient);
-
-            services.AddScoped<IFormService, FormService>();
-            services.AddScoped<ISessionService, SessionService>();
-            services.AddScoped<ISubmissionService, SubmissionService>();
-            services.AddScoped<IDocumentService, DocumentService>();
-
-            services.AddScoped<IEsbService, EsbService>();
-            services.AddScoped<IEsbWrapper, EsbWrapper>();
-            services.AddScoped<IEsbClient, EsbClient>();
-
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            services.TryAddSingleton<IGovUkNotifyConfiguration>(_ => Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").Get<GovUkNotifyConfiguration>());
-
-            services.TryAddSingleton<IAsyncNotificationClient>(_ =>
-                new NotificationClient(
-                        Configuration.GetSection("ConnectionStrings").GetValue<string>(
-                                string.Concat("GovUkNotifyApiKeys:", Configuration.GetSection("GovUkNotifyConfiguration:ConfirmationEmail").GetValue<string>("KeyType"))
-                            )
-                    )
-            );
-            services.TryAddScoped<INotificationService, NotificationService>();
+            services.TryAddScoped<IFormService, FormService>();
+            services.TryAddScoped<ISubmissionService, SubmissionService>();
+            services.TryAddScoped<IDocumentService, DocumentService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)//, IApplicationLifetime lifetime, IDistributedCache cache)
         {
             if (env.IsDevelopment() || env.IsEnvironment("Local"))
