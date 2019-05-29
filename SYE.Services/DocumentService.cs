@@ -5,6 +5,7 @@ using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SYE.Models.SubmissionSchema;
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
@@ -22,10 +23,15 @@ namespace SYE.Services
     }
     public class DocumentService : IDocumentService
     {
+        private readonly IConfiguration _configuration;
         private readonly int FontSizeHeader = 50;
         private readonly int FontSizeNormal = 25;
         private readonly int FontSizeSmall = 15;
 
+        public DocumentService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public string CreateSubmissionDocument(string json)
         {
             var submissionVm = JsonConvert.DeserializeObject<SubmissionVM>(json);
@@ -46,8 +52,13 @@ namespace SYE.Services
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(documentStream, WordprocessingDocumentType.Document, true))
                 {
                     //get from appsettings ***************
-                    var notFoundId = "service_not_found";
-                    var contactIds = new List<string>() { "your_contact_details_01", "your_contact_details_02", "your_contact_details_03" };
+                    var notFoundId = _configuration.GetSection("SubmissionDocument").GetValue<string>("NotFoundQuestionId");
+                    var contactIds = new List<string>
+                    {
+                        _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactNameQuestionId"),
+                        _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactEmailQuestionId"),
+                        _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactTelephoneNumberQuestionId")
+                    };
                     //************************************
 
                     // Add a main document part. 
