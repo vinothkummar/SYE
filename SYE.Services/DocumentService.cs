@@ -45,8 +45,17 @@ namespace SYE.Services
                 // Create Document
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(documentStream, WordprocessingDocumentType.Document, true))
                 {
+                    //get from appsettings ***************
+                    var notFoundId = "service_not_found";
+                    var contactIds = new List<string>() { "your_contact_details_01", "your_contact_details_02", "your_contact_details_03" };
+                    //************************************
+
                     // Add a main document part. 
+                    var contactAnswers = submissionVm.Answers
+                        .Where(x => contactIds.Contains(x.QuestionId))
+                        .OrderBy(x => x.DocumentOrder).ToList();
                     MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+
                     // Create the document structure and add some text.
                     mainPart.Document = new Document();
                     Body body = mainPart.Document.AppendChild(new Body());
@@ -54,35 +63,27 @@ namespace SYE.Services
                     //header
                     GetHeader(body, submissionVm);
                     //location
-                    GetLocation(body, submissionVm);
-                    //Are you happy to be contacted
-                    GetAnswer(body, submissionVm, "can_we_contact_you");//2
-                    //contact details
-                    GetContactDetails(body, submissionVm);
-                    //have you worked for this service
-                    GetAnswer(body, submissionVm, "have_you_worked_for_the_service");//6
-                    //risk of harm
-                    GetAnswer(body, submissionVm, "is_someone_at_risk");//7
-                    //have you told police
-                    GetAnswer(body, submissionVm, "have_you_told_the_police");//8
-                    //good or bad
-                    GetAnswer(body, submissionVm, "what_do_you_want_to_tell_us_about");//9
-                    //when did it happen
-                    GetAnswer(body, submissionVm, "when_did_it_happen");//10
-                    //feedback
-                    GetFeedback(body, submissionVm);
-                    //how did you find out
-                    GetAnswer(body, submissionVm, "how_did_you_hear_about_this_form");//14
-                    //which charity
-                    GetCharity(body, submissionVm);
-                    //can we share you feedback
-                    GetAnswer(body, submissionVm, "can_we_share_your_feedback");//17
+                    GetLocation(body, submissionVm, notFoundId);
+                    foreach (var answer in submissionVm.Answers.Where(x => x.DocumentOrder > 1).OrderBy(x => x.DocumentOrder))
+                    {
+                        if(contactAnswers.Contains(answer))//skip these
+                        {
+                            if (answer.QuestionId.Equals(contactIds.FirstOrDefault()))//only once
+                            {
+                                GetContactDetails(body, contactAnswers);
+                            }
+                        }
+                        else
+                        {
+                            GetAnswer(body, submissionVm, answer.QuestionId);
+                        }                        
+                    }
 
                     mainPart.Document.Save();
 
                     wordDocument.Close();
                 }
-                //convert to bas64
+                //convert to base64
                 var documentBytes = documentStream.ToArray();
                 convertedDoc = Convert.ToBase64String(documentBytes);
                 documentStream.Close();
@@ -91,26 +92,12 @@ namespace SYE.Services
         }
 
         #region Document Loading
-        private void GetCharity(Body body, SubmissionVM submissionVm)
+        private void GetAnswer(Body body, SubmissionVM submissionVm, string questionId)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you" && x.QuestionId == "which_charity_told_you_01");//15
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.QuestionId == questionId);
             if (answer != null)
             {
-                GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
-            }
-            answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "which_charity_told_you" && x.QuestionId == "which_charity_told_you_02");//16
-            if (answer != null)
-            {
-                GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
-            }
-        }
-
-        private void GetAnswer(Body body, SubmissionVM submissionVm, string pageId)
-        {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == pageId);
-            if (answer != null)
-            {
-                GetDataSection(body, answer.Question, new List<string> { answer.Answer }, true);
+                GetDataSection(body, answer.Question, SplitOutNewLines(answer.Answer), true);
             }
         }
 
@@ -133,14 +120,15 @@ namespace SYE.Services
         /// </summary>
         /// <param name="body"></param>
         /// <param name="submissionVm"></param>
-        private void GetLocation(Body body, SubmissionVM submissionVm)
+        /// <param name="notFoundId"></param>
+        private void GetLocation(Body body, SubmissionVM submissionVm, string notFoundId)
         {
             var locationId = string.Empty;
             var providerId = string.Empty;
             var location = string.Empty;
             var locationDescription = string.Empty;
             var locationFound = false;
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "service_not_found");//1
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == notFoundId);//1
             if (answer == null)
             {
                 //location has been selected
@@ -169,67 +157,30 @@ namespace SYE.Services
             }
         }
 
-        private List<string> SplitOutNewLines(string answer)
-        {
-            //split out the text in case there is a new line
-            var answerText = answer.Replace("\r\n", "\n");
-            var answers = answerText.Split('\n').ToList();
-            return answers;
-        }
-
-        /// <summary>
-        /// Creates the feedback section
-        /// </summary>
-        /// <param name="body"></param>
-        /// <param name="submissionVm"></param>
-        private void GetFeedback(Body body, SubmissionVM submissionVm)
-        {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_01");//11
-            if (answer != null)
-            {
-                var feedback1 = string.Empty;
-                var feedback2 = string.Empty;
-                var feedback3 = string.Empty;
-                feedback1 = answer.Answer;
-                var answer2 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_02");//12
-                var answer3 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "give_us_your_feedback" && x.QuestionId == "give_us_your_feedback_03");//13
-                if (answer2 != null)
-                {
-                    feedback2 = answer2.Answer;
-                }
-                if (answer2 != null)
-                {
-                    feedback3 = answer3.Answer;
-                }
-
-                GetDataSection(body, answer.Question, SplitOutNewLines(feedback1), true);
-                GetDataSection(body, "Can you be more exact about where you're telling us about? For example, which room? (optional)", SplitOutNewLines(feedback2), true, false);
-                GetDataSection(body, "When exactly did it happen? For example, can you give a date, month or year? (optional)", SplitOutNewLines(feedback3), true, false);
-            }
-        }
-
         /// <summary>
         /// Creates the contact details section
         /// </summary>
         /// <param name="body"></param>
         /// <param name="submissionVm"></param>
-        private void GetContactDetails(Body body, SubmissionVM submissionVm)
+        /// <param name="answers"></param>
+        private void GetContactDetails(Body body, List<AnswerVM> answers)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_01");//3
-            if (answer != null)
+            if (answers != null && answers.Count > 0)
             {
-                //var question = answer.Question;
-                var fullName = answer.Answer;
+                var fullName = answers[0].Answer;
                 var email = string.Empty;
                 var telNum = string.Empty;
 
                 //contact details 2
-                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_02");//4
-                if (answer != null) { email = answer.Answer; }
+                if (answers.Count > 1)
+                {
+                    email = answers[1].Answer;
+                }
                 //contact details 3
-                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "your_contact_details" && x.QuestionId == "your_contact_details_03");//5
-                if (answer != null) { telNum = answer.Answer; }
-
+                if (answers.Count > 2)
+                {
+                    telNum = answers[2].Answer;
+                }
                 GetDataSection(body, "Contact Details",
                     new List<string>
                     {
@@ -241,6 +192,15 @@ namespace SYE.Services
                 );
             }
         }
+
+        private List<string> SplitOutNewLines(string answer)
+        {
+            //split out the text in case there is a new line
+            var answerText = answer.Replace("\r\n", "\n");
+            var answers = answerText.Split('\n').ToList();
+            return answers;
+        }
+
         #endregion
 
         #region Document Formatting

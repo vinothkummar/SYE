@@ -64,19 +64,19 @@ namespace SYE.Tests.Services
             FileHelper.GenerateWordDocument(base64Documentresult, path);
             FileHelper.FileExists(path).Should().BeTrue();
         }
-        [Fact]
-        public void CreateDocumentWithNoContactDetailsNoLocationTest()
-        {
-            var path = _dir + "NoContactDetailsNoLocation.docx";
-            var sut = new DocumentService();
-            var json = GetJsonString(_fileNameNoContactDetailsNoLocation);
-            //act
-            var base64Documentresult = sut.CreateSubmissionDocument(json);
-            //assert
-            base64Documentresult.Should().NotBeNullOrWhiteSpace();
-            FileHelper.GenerateWordDocument(base64Documentresult, path);
-            FileHelper.FileExists(path).Should().BeTrue();
-        }
+        //[Fact]
+        //public void CreateDocumentWithNoContactDetailsNoLocationTest()
+        //{
+        //    var path = _dir + "NoContactDetailsNoLocation.docx";
+        //    var sut = new DocumentService();
+        //    var json = GetJsonString(_fileNameNoContactDetailsNoLocation);
+        //    //act
+        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
+        //    //assert
+        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
+        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
+        //    FileHelper.FileExists(path).Should().BeTrue();
+        //}
 
         /// <summary>
         /// this method reads a json file from the folder and returns the next page

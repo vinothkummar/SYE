@@ -20,6 +20,6 @@ namespace SYE.Models.SubmissionSchema
         public string Answer { get; set; }
 
         [JsonProperty("document_order")]
-        public int DocumentOrder { get; set; }
+        public int? DocumentOrder { get; set; }
     }
 }
