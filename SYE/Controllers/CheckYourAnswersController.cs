@@ -140,7 +140,7 @@ namespace SYE.Controllers
 
         private SubmissionVM GenerateSubmission(FormVM formVm)
         {
-            var vm = new SubmissionVM
+            var submissionVm = new SubmissionVM
             {
                 Version = formVm.Version,
                 Id = Guid.NewGuid().ToString(),
@@ -152,10 +152,10 @@ namespace SYE.Controllers
                 SubmissionId = _submissionService.GenerateUniqueUserRefAsync().Result.ToString(),
             };
 
-
             var answers = new List<AnswerVM>();
 
-            foreach (var page in formVm.Pages)
+            var pageHistory = _sessionService.GetNavOrder();
+            foreach (var page in formVm.Pages.Where(m => pageHistory.Contains(m.PageId)).OrderBy(m => pageHistory.IndexOf(m.PageId)))
             {
                 answers.AddRange(page.Questions.Where(m => !string.IsNullOrEmpty(m.Answer))
                     .Select(question => new AnswerVM
@@ -167,12 +167,12 @@ namespace SYE.Controllers
                     }));
             }
 
-            vm.Answers = answers;
+            submissionVm.Answers = answers;
 
-            vm.Base64Attachment = _documentService.CreateSubmissionDocument(vm);
-            vm.Status = "Saved";
+            submissionVm.Base64Attachment = _documentService.CreateSubmissionDocument(submissionVm);
+            submissionVm.Status = "Saved";
 
-            return vm;
+            return submissionVm;
         }
 
         private async Task SendEmailNotificationAsync(string fullName, string emailAddress, string locationId, string locationName, string submissionId, string submissionReference)
