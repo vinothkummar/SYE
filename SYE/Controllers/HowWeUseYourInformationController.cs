@@ -8,7 +8,7 @@ namespace SYE.Controllers
         public IActionResult Index()
         {
             ViewBag.ShowBackButton = true;
-            ViewBag.PreviousPage = "/";
+            ViewBag.PreviousPage = "javascript:history.go(-1);";
             return View();
         }
     }
