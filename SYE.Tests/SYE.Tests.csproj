@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\appsettings.Development.json" />
+    <None Remove="Resources\appsettings.json" />
+    <None Remove="Resources\appsettings.Local.json" />
+    <None Remove="Resources\appsettings.PreProd.json" />
+    <None Remove="Resources\appsettings.Production.json" />
+    <None Remove="Resources\appsettings.Test.json" />
+    <None Remove="Resources\appsettings.UAT.json" />
     <None Remove="Resources\form-schema.json" />
     <None Remove="Resources\submission-schema-contact-details-no-location.json" />
     <None Remove="Resources\submission-schema-contact-details.json" />
@@ -15,6 +22,28 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\appsettings.Development.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Resources\appsettings.json">
+      <TransformOnBuild>true</TransformOnBuild>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Resources\appsettings.Local.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Resources\appsettings.PreProd.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Resources\appsettings.Production.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Resources\appsettings.Test.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Resources\appsettings.UAT.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="Resources\submission-schema-no-contact-details-no-location.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
