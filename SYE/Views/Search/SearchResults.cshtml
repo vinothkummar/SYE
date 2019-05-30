@@ -61,15 +61,15 @@
                     <div class="govuk-details__text">
                         <div class="govuk-form-group">
                             <form id="frm_facets" asp-action="SearchResults" method="post">
-                                @foreach (var facet in Model.Facets)
+                                @for (var index = 0; index < Model.Facets.Count; index++)
                                 {
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" asp-for="@facet.Selected" type="checkbox">
-                                        <label class="govuk-label govuk-checkboxes__label" asp-for="@facet.Text" style="font-size: 18px">
-                                            @facet.Text
+                                        <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
+                                        <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Text" style="font-size: 18px">
+                                            @Model.Facets[index].Text
                                         </label>
-                                        <input asp-for="@facet.Selected" value="false" type="hidden" />
-                                        <input asp-for="@facet.Text" type="hidden" />
+                                        <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
+                                        <input asp-for="@Model.Facets[index].Text" type="hidden" />
                                     </div>
                                 }
                                 <input type="hidden" asp-for="Search" />
