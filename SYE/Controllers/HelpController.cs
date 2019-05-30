@@ -30,12 +30,12 @@ namespace SYE.Controllers
             this._notificationService = service?.GetService<INotificationService>();
         }
 
-        [HttpGet]
-        public ActionResult Feedback([FromHeader(Name = "referer")] String urlReferer)
+        [HttpGet("report-a-problem")]
+        public ActionResult Feedback([FromHeader(Name = "referer")] string urlReferer)
         {
             try
             {
-                PageVM pageViewModel = GetPage();
+                var pageViewModel = GetPage();
                 if (pageViewModel != null)
                 {
                     ViewBag.UrlReferer = urlReferer;
@@ -49,9 +49,9 @@ namespace SYE.Controllers
             return StatusCode(500);
         }
 
-        [HttpPost, ActionName("Feedback")]
+        [HttpPost("report-a-problem"), ActionName("Feedback")]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitFeedback([FromForm(Name = "url-referer")] String urlReferer)
+        public ActionResult SubmitFeedback([FromForm(Name = "url-referer")] string urlReferer)
         {
             PageVM pageViewModel = null;
             try

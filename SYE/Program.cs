@@ -20,16 +20,14 @@ namespace SYE
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostingContext, configurationBuilder) =>
+                .CaptureStartupErrors(true)
+                .SuppressStatusMessages(false)
+                .ConfigureAppConfiguration(configurationBuilder =>
                 {
-                    if (!hostingContext.HostingEnvironment.IsEnvironment("Local"))
+                    var builtConfig = configurationBuilder.Build();
+                    string keyVaultEndpoint = builtConfig?.GetValue<string>("KeyVaultName");
+                    if (!string.IsNullOrWhiteSpace(keyVaultEndpoint))
                     {
-                        var builtConfig = configurationBuilder.Build();
-                        string keyVaultEndpoint = builtConfig?.GetValue<string>("KeyVaultName");
-                        if (string.IsNullOrWhiteSpace(keyVaultEndpoint))
-                        {
-                            throw new ConfigurationErrorsException($"Failed to load {nameof(keyVaultEndpoint)} from application configuration.");
-                        }
                         var azureServiceTokenProvider = new AzureServiceTokenProvider();
                         var keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
                         configurationBuilder.AddAzureKeyVault(keyVaultEndpoint, keyVaultClient, new DefaultKeyVaultSecretManager());
@@ -37,19 +35,7 @@ namespace SYE
                 })
                 .UseApplicationInsights()
                 .UseStartup<Startup>()
-                .ConfigureLogging((hostingContext, logBuilder) =>
-                {
-                    logBuilder.ClearProviders();
-                    if (!hostingContext.HostingEnvironment.IsEnvironment("Local"))
-                    {
-                        logBuilder.AddApplicationInsights();
-                    }
-                    else
-                    {
-                        logBuilder.AddDebug();
-                        logBuilder.AddConsole();
-                    }
-                });
+                .ConfigureLogging(logBuilder => logBuilder.AddApplicationInsights());
         }
     }
 }

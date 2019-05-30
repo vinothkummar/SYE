@@ -11,6 +11,8 @@ namespace SYE.Services
 {
     public interface ISessionService
     {
+        void UpdateNavOrder(string currentPage);
+        List<string> GetNavOrder();
         PageVM GetPageById(string pageId, bool notFoundFlag);
         FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements);
         void SetUserSessionVars(UserSessionVM vm);
@@ -38,14 +40,57 @@ namespace SYE.Services
             _configuration = configuration;
         }
 
+
+        public void UpdateNavOrder(string currentPage)
+        {
+            var userSession = GetUserSession();
+
+            if (userSession.NavOrder == null)
+            {
+                //First page
+                userSession.NavOrder = new List<string>{ currentPage };
+            }
+            else
+            {
+                //If we've not been here before add the page
+                if (!userSession.NavOrder.Contains(currentPage))
+                {
+                    userSession.NavOrder.Add(currentPage);
+                }
+                else
+                {
+                    //We have been here do delete everything after, just in case it changes
+                    var newNav = new List<string>();
+                   
+                    var index = userSession.NavOrder.IndexOf(currentPage);
+                    foreach (var page in userSession.NavOrder)
+                    {
+                        if (userSession.NavOrder.IndexOf(page) <= index) newNav.Add(page);
+                    }
+
+                    //Update the users navigation history
+                    userSession.NavOrder = newNav;
+                }
+            }
+
+            SetUserSessionVars(userSession);
+        }
+
+        public List<string> GetNavOrder()
+        {
+            var userSession = GetUserSession();
+            return userSession.NavOrder ?? new List<string>();
+        }
+
+
         public PageVM GetPageById(string pageId, bool notFoundFlag)
         {
             var formVm = GetFormVmFromSession();
 
             if (string.IsNullOrWhiteSpace(pageId))
             {
-                return notFoundFlag 
-                    ? formVm.Pages.FirstOrDefault() 
+                return notFoundFlag
+                    ? formVm.Pages.FirstOrDefault()
                     : formVm.Pages.FirstOrDefault(x => x.PageId != formVm.Pages.First().PageId);
             }
 
@@ -58,7 +103,8 @@ namespace SYE.Services
         {
             string formName = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Name");
             string version = _configuration.GetSection("FormsConfiguration:ServiceForm").GetValue<string>("Version");
-            string sessionVersion = _httpContextAccessor.HttpContext.Session.GetString("FormVersion");
+            var context = _httpContextAccessor.HttpContext;
+            string sessionVersion = context.Session.GetString("FormVersion");
 
             if (!string.IsNullOrWhiteSpace(sessionVersion))
             {
@@ -91,6 +137,12 @@ namespace SYE.Services
             context.Session.SetString("ProviderId", vm.ProviderId ?? "");
             context.Session.SetString("LocationId", vm.LocationId ?? "");
             context.Session.SetString("LocationName", vm.LocationName ?? "");
+
+            if (vm.NavOrder != null)
+            {
+                var pageList = string.Join(",", vm.NavOrder.ToArray<string>());
+                context.Session.SetString("NavOrder", pageList ?? "");
+            }
         }
 
         public UserSessionVM GetUserSession()
@@ -102,49 +154,54 @@ namespace SYE.Services
                 LocationId = context.Session.GetString("LocationId"),
                 LocationName = context.Session.GetString("LocationName")
             };
+
+            if (!string.IsNullOrEmpty(context.Session.GetString("NavOrder")))
+                userSessionVm.NavOrder = context.Session.GetString("NavOrder").Split(',').ToList();
+
             return userSessionVm;
         }
 
         public void SaveFormVmToSession(FormVM vm)
         {
-            _httpContextAccessor.HttpContext.Session.SetString(schemaKey, JsonConvert.SerializeObject(vm));
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.SetString(schemaKey, JsonConvert.SerializeObject(vm));
         }
 
         public FormVM GetFormVmFromSession()
         {
-            var json = _httpContextAccessor.HttpContext.Session.GetString(schemaKey);
+            var context = _httpContextAccessor.HttpContext;
+            var json = context.Session.GetString(schemaKey);
             return json == null ? default(FormVM) : JsonConvert.DeserializeObject<FormVM>(json);
         }
 
         public void UpdatePageVmInFormVm(PageVM vm)
         {
             var formVm = GetFormVmFromSession();
-
             var currentPage = formVm.Pages.FirstOrDefault(m => m.PageId == vm.PageId)?.Questions;
-
             foreach (var question in vm.Questions)
             {
                 var q = currentPage.FirstOrDefault(m => m.QuestionId == question.QuestionId);
                 q.Answer = question.Answer;
             }
-
             SaveFormVmToSession(formVm);
-
         }
 
         public void SaveUserSearch(string search)
         {
-            _httpContextAccessor.HttpContext.Session.SetString("Search", search);
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.SetString("Search", search);
         }
 
         public string GetUserSearch()
         {
-            return _httpContextAccessor.HttpContext.Session.GetString("Search");
+            var context = _httpContextAccessor.HttpContext;
+            return context.Session.GetString("Search");
         }
 
         public void ClearSession()
         {
-            _httpContextAccessor.HttpContext.Session.Clear();
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.Clear();
         }
     }
 

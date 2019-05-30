@@ -28,7 +28,7 @@ namespace SYE.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("search/find-a-service")]
         public IActionResult Index(bool isError)
         {
             ViewBag.ShowBackButton = true;
@@ -48,7 +48,17 @@ namespace SYE.Controllers
             }
         }
 
-        [HttpPost]//applies the filter & does a search
+
+        [HttpGet, Route("/search/results")]//searches
+        public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
+        {
+            //ViewBag.ShowBackButton = true;
+            //ViewBag.PreviousPage = Url.Action("Index", "Search");
+            return GetSearchResult(search, pageNo, selectedFacets);
+        }
+
+
+        [HttpPost, Route("/search/results")]//applies the filter & does a search
         public IActionResult SearchResults(string search, List<SelectItem> facets = null)
         {
             var selectedFacets = string.Empty;
@@ -60,14 +70,7 @@ namespace SYE.Controllers
             return GetSearchResult(search, 1, selectedFacets);
         }
 
-        [HttpGet]//searches
-        public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
-        {
-            //ViewBag.ShowBackButton = true;
-            //ViewBag.PreviousPage = Url.Action("Index", "Search");
-            return GetSearchResult(search, pageNo, selectedFacets);
-        }
-
+        
         [HttpGet]
         public IActionResult LocationNotFound()
         {
@@ -127,8 +130,9 @@ namespace SYE.Controllers
 
         private IActionResult GetSearchResult(string search, int pageNo, string selectedFacets)
         {
+            //This is commented out as it is causing Facets to not work
             //Make Sure we have a clean session
-            _sessionService.ClearSession();
+            //_sessionService.ClearSession();
 
             try
             {

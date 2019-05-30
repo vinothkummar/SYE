@@ -1,9 +1,9 @@
 {
     "id": "594df59f-e37c-49e7-969e-d9a2e7a4226c",
-    "version": "6.1.0.0",
+    "version": "6.3.0.0",
     "form_name": "give-feedback-on-care",
     "pre_amble": "",
-    "last_modified": "ISODate(\"2019-05-17T00:00:00.000Z\")",
+    "last_modified": "ISODate(\"2019-05-09T10:00:00.000Z\")",
     "pages": [
         {
             "page_id": "service_not_found",
@@ -51,15 +51,15 @@
                     "input_type": "optionlist",
                     "options": [
                         {
-                            "value": "Good",
+                            "value": "Good experience",
                             "text": "Good"
                         },
                         {
-                            "value": "Bad",
+                            "value": "Bad experience",
                             "text": "Bad"
                         },
                         {
-                            "value": "Both",
+                            "value": "Both good and bad experience",
                             "text": "Both good and bad"
                         }
                     ],
@@ -82,6 +82,55 @@
             ],
             "previous_pages": [],
             "next_page_id": "when_did_it_happen"
+        },
+        {
+            "page_id": "when_did_it_happen",
+            "page_name": "",
+            "questions": [
+                {
+                    "question_id": "when_did_it_happen_01",
+                    "question": "When did it happen?",
+                    "data_type": "string",
+                    "input_type": "optionlist",
+                    "options": [
+                        {
+                            "value": "It is still happening",
+                            "text": "It's still happening"
+                        },
+                        {
+                            "value": "In the last year",
+                            "text": "In the last year"
+                        },
+                        {
+                            "value": "Over a year ago",
+                            "text": "Over a year ago"
+                        }
+                    ],
+                    "validation": {
+                        "required": {
+                            "is_required": true,
+                            "error_message": "Select one option to tell us when the thing happened. Just choose whichever one describes your feedback best."
+                        },
+                        "is_errored": false,
+                        "error_message": ""
+                    },
+                    "answer": ""
+                }
+            ],
+            "buttons": [
+                {
+                    "button_text": "Continue",
+                    "button_type": "submit"
+                }
+            ],
+            "previous_pages": [
+                {
+                    "question_id": "",
+                    "answer": "",
+                    "page_id": "what_do_you_want_to_tell_us_about"
+                }
+            ],
+            "next_page_id": "is_someone_at_risk"
         },
         {
             "page_id": "how_we_use_your_feedback",
@@ -116,11 +165,11 @@
                     "input_type": "optionlist",
                     "options": [
                         {
-                            "value": "No",
+                            "value": "No, I do not think someone is at risk of abuse or neglect",
                             "text": "No, I do not think someone is at risk of abuse or neglect"
                         },
                         {
-                            "value": "Yes",
+                            "value": "Yes, I think someone is at risk of abuse or neglect",
                             "text": "Yes, I think someone is at risk of abuse or neglect"
                         }
                     ],
@@ -134,7 +183,7 @@
                     },
                     "answer_logic": [
                         {
-                            "value": "Yes",
+                            "value": "Yes, I think someone is at risk of abuse or neglect",
                             "next_page_id": "have_you_told_the_police"
                         }
                     ],
@@ -209,7 +258,7 @@
             "previous_pages": [
                 {
                     "question_id": "is_someone_at_risk_01",
-                    "answer": "Yes",
+                    "answer": "Yes, I think someone is at risk of abuse or neglect",
                     "page_id": "is_someone_at_risk"
                 }
             ],
@@ -300,7 +349,7 @@
             "previous_pages": [
                 {
                     "question_id": "is_someone_at_risk_01",
-                    "answer": "No",
+                    "answer": "No, I do not think someone is at risk of abuse or neglect",
                     "page_id": "is_someone_at_risk"
                 },
                 {
@@ -327,55 +376,6 @@
             "next_page_id": "have_you_worked_for_the_service"
         },
         {
-            "page_id": "when_did_it_happen",
-            "page_name": "",
-            "questions": [
-                {
-                    "question_id": "when_did_it_happen_01",
-                    "question": "When did it happen?",
-                    "data_type": "string",
-                    "input_type": "optionlist",
-                    "options": [
-                        {
-                            "value": "It is still happening",
-                            "text": "It's still happening"
-                        },
-                        {
-                            "value": "In the last year",
-                            "text": "In the last year"
-                        },
-                        {
-                            "value": "Over a year ago",
-                            "text": "Over a year ago"
-                        }
-                    ],
-                    "validation": {
-                        "required": {
-                            "is_required": true,
-                            "error_message": "Select one option to tell us when the thing happened. Just choose whichever one describes your feedback best."
-                        },
-                        "is_errored": false,
-                        "error_message": ""
-                    },
-                    "answer": ""
-                }
-            ],
-            "buttons": [
-                {
-                    "button_text": "Continue",
-                    "button_type": "submit"
-                }
-            ],
-            "previous_pages": [
-                {
-                    "question_id": "",
-                    "answer": "",
-                    "page_id": "what_do_you_want_to_tell_us_about"
-                }
-            ],
-            "next_page_id": "is_someone_at_risk"
-        },
-        {
             "page_id": "have_you_worked_for_the_service",
             "page_name": "",
             "questions": [
@@ -387,11 +387,11 @@
                     "input_type": "optionlist",
                     "options": [
                         {
-                            "value": "Yes",
+                            "value": "Yes, I have worked for this service",
                             "text": "Yes, I have worked for this service"
                         },
                         {
-                            "value": "No",
+                            "value": "No, I have never worked for this service",
                             "text": "No, I have never worked for them"
                         }
                     ],
@@ -405,11 +405,11 @@
                     },
                     "answer_logic": [
                         {
-                            "value": "Yes",
+                            "value": "Yes, I have worked for this service",
                             "next_page_id": "check_if_the_law_will_protect_you"
                         },
                         {
-                            "value": "No",
+                            "value": "No, I have never worked for them",
                             "next_page_id": "can_we_share_your_feedback"
                         }
                     ],
@@ -435,11 +435,11 @@
             "page_id": "check_if_the_law_will_protect_you",
             "page_name": "",
             "questions": [
-              {
-                "question_id": "check_if_the_law_will_protect_you_01",
-                "question": "Check if the law will protect you",
-                "html_content": "<p class=\"govuk-body\">The law may protect you if you speak up about a concern. This is sometimes called whistleblowing.</p><p class=\"govuk-body\">Your rights are set out in the Public Interest Disclosure Act (PIDA). Before you tell us about your concern, it's important to check if PIDA will protect you. This might mean talking to a lawyer, a trade union or an organisation like Public Concern at Work.</p><h3 class=\"govuk-heading-m\">What we'll do with the information you give us</h3><p class=\"govuk-body\">One of our inspectors will look at what you tell us. We may have to pass it to another public body. We'll only do this if we think they should look at it instead of us. We'll tell you if we need to do this, as long as you give us your contact details.</p>"
-              }
+                {
+                    "question_id": "check_if_the_law_will_protect_you_01",
+                    "question": "Check if the law will protect you",
+                    "html_content": "<p class=\"govuk-body\">The law may protect you if you speak up about a concern. This is sometimes called whistleblowing.</p><p class=\"govuk-body\">Your rights are set out in the Public Interest Disclosure Act (PIDA). Before you tell us about your concern, it's important to check if PIDA will protect you. This might mean talking to a lawyer, a trade union or an organisation like Public Concern at Work.</p><h3 class=\"govuk-heading-m\">What we'll do with the information you give us</h3><p class=\"govuk-body\">One of our inspectors will look at what you tell us. We may have to pass it to another public body. We'll only do this if we think they should look at it instead of us. We'll tell you if we need to do this, as long as you give us your contact details.</p>"
+                }
             ],
             "buttons": [
                 {
@@ -450,7 +450,7 @@
             "previous_pages": [
                 {
                     "question_id": "have_you_worked_for_the_service_01",
-                    "answer": "Yes",
+                    "answer": "Yes, I have worked for this service",
                     "page_id": "have_you_worked_for_the_service"
                 }
             ],
@@ -463,16 +463,16 @@
                 {
                     "question_id": "can_we_share_your_feedback_01",
                     "question": "Can we share your feedback with !!location_name!!?",
-                    "html_content": "<p class=\"govuk-body\">Sometimes it helps if we can share your feedback with the care service. We only share it if either:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>you say we can</li><li>we think someone's at risk of serious harm</li></ul></p><p class=\"govuk-body\">It's important to think about whether the service could still work out who you are<br/><a class=\"govuk-link\" href=\"/Form/Index/how_we_use_your_feedback\">Find out more about staying anonymous</a></p>",
+                    "html_content": "<p class=\"govuk-body\">Sometimes it helps if we can share your feedback with the care service. We only share it if either:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>you say we can</li><li>we think someone's at risk of serious harm</li></ul></p><p class=\"govuk-body\">It's important to think about whether the service could still work out who you are <a class=\"govuk-link\" href=\"/Form/Index/how_we_use_your_feedback\">Find out more about staying anonymous</a></p>",
                     "data_type": "string",
                     "input_type": "optionlist",
                     "options": [
                         {
-                            "value": "Yes",
+                            "value": "Yes, you can share my feedback with them",
                             "text": "Yes, you can share my feedback with them"
                         },
                         {
-                            "value": "No",
+                            "value": "No, I would prefer you not to share it with them",
                             "text": "No, I would prefer you not to share it with them"
                         }
                     ],
@@ -496,12 +496,12 @@
             "previous_pages": [
                 {
                     "question_id": "have_you_worked_for_the_service_01",
-                    "answer": "No",
+                    "answer": "No, I have never worked for this service",
                     "page_id": "have_you_worked_for_the_service"
                 },
                 {
                     "question_id": "have_you_worked_for_the_service_01",
-                    "answer": "Yes",
+                    "answer": "Yes, I have worked for this service",
                     "page_id": "check_if_the_law_will_protect_you"
                 }
             ],
@@ -509,7 +509,7 @@
         },
         {
             "page_id": "can_we_contact_you",
-            "page_name": "Can we contact you",
+            "page_name": "",
             "questions": [
                 {
                     "question_id": "can_we_contact_you_01",
@@ -519,11 +519,11 @@
                     "input_type": "optionlist",
                     "options": [
                         {
-                            "value": "Yes",
+                            "value": "Yes, I am happy for you to contact me",
                             "text": "Yes, I am happy for you to contact me"
                         },
                         {
-                            "value": "No",
+                            "value": "No, I do not want to give my name or contact details",
                             "text": "No, I do not want to give my name or contact details"
                         }
                     ],
@@ -537,7 +537,7 @@
                     },
                     "answer_logic": [
                         {
-                            "value": "No",
+                            "value": "No, I do not want to give my name or contact details",
                             "next_page_id": "how_did_you_hear_about_this_form"
                         }
                     ],
@@ -566,8 +566,7 @@
             "questions": [
                 {
                     "question_id": "your_contact_details_01",
-                    "question": "Your contact details",
-                    "additional_text": "<label class=\"govuk-label\">Full name</label>",
+                    "question": "<p class=\"govuk-body\">Full name</p>",
                     "data_type": "text",
                     "input_type": "textbox",
                     "validation": {
@@ -582,7 +581,7 @@
                 },
                 {
                     "question_id": "your_contact_details_02",
-                    "additional_text": "<p class=\"govuk-body\">Email address</p>",
+                    "question": "<p class=\"govuk-body\">Email address</p>",
                     "data_type": "text",
                     "input_type": "textbox",
                     "validation": {
@@ -620,7 +619,7 @@
             "previous_pages": [
                 {
                     "question_id": "can_we_contact_you_01",
-                    "answer": "Yes",
+                    "answer": "Yes, I am happy for you to contact me",
                     "page_id": "can_we_contact_you"
                 }
             ],
@@ -675,12 +674,12 @@
             "previous_pages": [
                 {
                     "question_id": "can_we_contact_you_01",
-                    "answer": "No",
+                    "answer": "No, I do not want to give my name or contact details",
                     "page_id": "can_we_contact_you"
                 },
                 {
                     "question_id": "can_we_contact_you_01",
-                    "answer": "Yes",
+                    "answer": "Yes, I am happy for you to contact me",
                     "page_id": "your_contact_details"
                 }
             ],
@@ -689,72 +688,72 @@
         {
             "page_id": "which_charity_told_you",
             "page_name": "",
-            "questions": [
+          "questions": [
+            {
+              "question_id": "which_charity_told_you_01",
+              "question": "Which charity told you?",
+              "data_type": "string",
+              "input_type": "optionlist",
+              "options": [
                 {
-                    "question_id": "which_charity_told_you_01",
-                    "question": "Which charity told you?",
-                    "data_type": "string",
-                    "input_type": "optionlist",
-                    "options": [
-                        {
-                            "value": "Carers UK",
-                            "text": "Carers UK"
-                        },
-                        {
-                            "value": "Disability rights UK",
-                            "text": "Disability rights UK"
-                        },
-                        {
-                            "value": "Mind",
-                            "text": "Mind"
-                        },
-                        {
-                            "value": "The National Autistic Society",
-                            "text": "The National Autistic Society"
-                        },
-                        {
-                            "value": "Patients Association",
-                            "text": "Patients Association"
-                        },
-                        {
-                            "value": "The Relatives and Residents Association",
-                            "text": "The Relatives and Residents Association"
-                        },
-                        {
-                            "value": "Another charity",
-                            "text": "Another charity"
-                        }
-                    ],
-                    "validation": {
-                        "required": {
-                            "is_required": true,
-                            "error_message": "Select the name of the charity that told you about this form. Or select ‘Another charity’ if you heard about it from one that is not in the list."
-                        },
-                        "is_errored": false,
-                        "error_message": ""
-                    },
-                    "answer": ""
+                  "value": "Carers UK",
+                  "text": "Carers UK"
                 },
                 {
-                    "question_id": "which_charity_told_you_02",
-                    "question": "<p class=\"govuk-body\">Tell us the name of the charity</p>",
-                    "data_type": "text",
-                    "input_type": "textbox",
-                    "show_when": {
-                        "question_id": "which_charity_told_you_01",
-                        "answer": "Another charity"
-                    },
-                    "validation": {
-                        "required": {
-                            "is_required": false,
-                            "error_message": "You must give a valid charity name"
-                        },
-                        "is_errored": false,
-                        "error_message": ""
-                    },
-                    "answer": ""
+                  "value": "Disability rights UK",
+                  "text": "Disability rights UK"
+                },
+                {
+                  "value": "Mind",
+                  "text": "Mind"
+                },
+                {
+                  "value": "The National Autistic Society",
+                  "text": "The National Autistic Society"
+                },
+                {
+                  "value": "Patients Association",
+                  "text": "Patients Association"
+                },
+                {
+                  "value": "The Relatives and Residents Association",
+                  "text": "The Relatives and Residents Association"
+                },
+                {
+                  "value": "Another charity",
+                  "text": "Another charity"
                 }
-            ],
+              ],
+              "validation": {
+                "required": {
+                  "is_required": true,
+                  "error_message": "Select the name of the charity that told you about this form. Or select ‘Another charity’ if you heard about it from one that is not in the list."
+                },
+                "is_errored": false,
+                "error_message": ""
+              },
+              "answer": ""
+            },
+            {
+              "question_id": "which_charity_told_you_02",
+              "question": "<p class=\"govuk-body\">Tell us the name of the charity</p>",
+              "data_type": "text",
+              "input_type": "textbox",
+              "show_when": {
+                "question_id": "which_charity_told_you_01",
+                "answer": "Another charity"
+              },
+              "validation": {
+                "required": {
+                  "is_required": false,
+                  "error_message": "You must give a valid charity name"
+                },
+                "is_errored": false,
+                "error_message": ""
+              },
+              "answer": ""
+            }
+          ],
             "buttons": [
                 {
                     "button_text": "Continue",
@@ -771,9 +770,9 @@
             "next_page_id": "CheckYourAnswers"
         }
     ],
-    "_rid": "gvVzALaMRu0GAAAAAAAAAA==",
-    "_self": "dbs/gvVzAA==/colls/gvVzALaMRu0=/docs/gvVzALaMRu0GAAAAAAAAAA==/",
-    "_etag": "\"00000000-0000-0000-0bea-9d1760a501d5\"",
+    "_rid": "gvVzALaMRu0IAAAAAAAAAA==",
+    "_self": "dbs/gvVzAA==/colls/gvVzALaMRu0=/docs/gvVzALaMRu0IAAAAAAAAAA==/",
+    "_etag": "\"00000000-0000-0000-121b-288cb71b01d5\"",
     "_attachments": "attachments/",
-    "_ts": 1558013036
+    "_ts": 1558693593
 }

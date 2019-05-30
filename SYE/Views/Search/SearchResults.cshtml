@@ -10,7 +10,7 @@
 
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
 
-        <gds-heading heading-type="H3" text="Search results for"></gds-heading>
+        <gds-heading heading-type="H1" text="Search"></gds-heading>
 
         <gds-row>
             <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
@@ -36,12 +36,6 @@
 </gds-row>
 
 <gds-row>
-    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-        <label class="govuk-link">@Model.Count results found</label>
-    </gds-column>
-</gds-row>
-
-<gds-row>
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
         <gds-paragraph>
             <a class="govuk-link" href="/Search/LocationNotFound"> I can't find the service I want to tell you about</a>
@@ -49,115 +43,128 @@
     </gds-column>
 </gds-row>
 
-    @if (Model.Data.Count > 0)
-    {
-        <gds-row>
-            <gds-column desktop-size="OneThird" tablet-size="FullWidth">
-                <details class="govuk-details">
-                    <summary class="govuk-details__summary" style="width: 90%; outline-color: lightgray; border-top-color: lightgray; outline-style: solid; border-left-color: lightgray; background-color: lightgray; border-style:hidden; border-width: unset; content: none">
-                        <span>
-                            <label class="govuk-input" style="color: black; border: none; width: auto; float: left">
-                                Type of service
-                            </label>
-                            <img alt="" src="~/images/select.png" style="height: 40px; width: 40px; vertical-align: middle; float: right" />
-                        </span>
-                    </summary>
-                    @if (Model.Facets.Count > 0)
-                    {
-                        <div class="govuk-details__text">
-                            <div class="govuk-form-group">
-                                <form id="frm_facets" asp-action="SearchResults" method="post">
-                                    @for (var index = 0; index < Model.Facets.Count; index++)
-                                    {
-                                        <div class="govuk-checkboxes__item">
-                                            <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
-                                            <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Text" style="font-size: 18px">
-                                                @Model.Facets[index].Text
-                                            </label>
-                                            <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
-                                            <input asp-for="@Model.Facets[index].Text" type="hidden" />
-                                        </div>
-                                    }
-                                    <input type="hidden" asp-for="Search" />
-                                    <br />
-                                    <a class="govuk-input" style="color: black; border: none; width: auto; float: left" href="#" onclick="document.getElementById('frm_facets').submit()">Apply filter</a>
-                                </form>
-                            </div>
-                        </div>
-                    }
-                </details>
-            </gds-column>
-
-            <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-
-                <div id="search-results">
-
-                    @foreach (var result in Model.Data)
-                    {
-                        <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
-                            <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
-                            <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
-                            <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
-
-                            <gds-row>
-                                <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-                                    <a class="govuk-link" href="javascript:;" onclick="document.getElementById('frm_@result.Id').submit();">
-                                        <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
-                                    </a>
-                                    <p class="govuk-body">
-                                        @result.Category<br />
-                                        @result.Address<br />
-                                        @if (!string.IsNullOrWhiteSpace(result.Address2))
-                                        {
-                                            @result.Address2<br />
-                                        }
-                                        @result.Town<br />
-                                        @result.PostCode<br />
-                                    </p>
-                                </gds-column>
-                            </gds-row>
-                        </form>
-                    }
-
-                </div>
-
-                @if (Model.TotalPages > 1)
+@if (Model.Data.Count > 0)
+{
+    <gds-row>
+        <gds-column desktop-size="OneThird" tablet-size="FullWidth">
+            <details class="govuk-details">
+                <summary class="govuk-details__summary" style="width: 90%; outline-color: lightgray; border-top-color: lightgray; outline-style: solid; border-left-color: lightgray; background-color: lightgray; border-style:hidden; border-width: unset; content: none">
+                    <span>
+                        <label class="govuk-input" style="color: black; border: none; width: auto; float: left">
+                            Type of service
+                        </label>
+                        <img alt="" src="~/images/select.png" style="height: 40px; width: 40px; vertical-align: middle; float: right" />
+                    </span>
+                </summary>
+                @if (Model.Facets.Count > 0)
                 {
-                    <form asp-action="SearchResults" method="get">
-                        <input type="hidden" id="search" name="search" value="@Model.Search" />
-                        <input type="hidden" id="selectedFacets" name="search" value="@Model.SelectedFacets" />
-
-                        <div class="govuk-body paging-wrapper">
-
-                            <gds-row>
-                                <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-                                    @if (Model.ShowPrev)
-                                    {
-                                        <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
-                                            <img style="height: 15px; vertical-align: middle; background: transparent" src="~/images/arrow-left.png"><b> Previous Page</b><br />
-                                            @(Model.CurrentPage - 1) of @Model.TotalPages
-                                        </a>
-                                    }
-                                </gds-column>
-                            </gds-row>
-
-                            <gds-row>
-                                <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-                                    @if (Model.ShowNext)
-                                    {
-                                        <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
-                                            <img style="height: 15px; vertical-align: middle; background: transparent" src="~/images/arrow-right.png"><b> Next Page</b><br />
-                                            @(Model.CurrentPage + 1) of @Model.TotalPages
-                                        </a>
-                                    }
-                                </gds-column>
-                            </gds-row>
-
+                    <div class="govuk-details__text">
+                        <div class="govuk-form-group">
+                            <form id="frm_facets" asp-action="SearchResults" method="post">
+                                @foreach (var facet in Model.Facets)
+                                {
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input" asp-for="@facet.Selected" type="checkbox">
+                                        <label class="govuk-label govuk-checkboxes__label" asp-for="@facet.Text" style="font-size: 18px">
+                                            @facet.Text
+                                        </label>
+                                        <input asp-for="@facet.Selected" value="false" type="hidden" />
+                                        <input asp-for="@facet.Text" type="hidden" />
+                                    </div>
+                                }
+                                <input type="hidden" asp-for="Search" />
+                                <br />
+                                <a class="govuk-input" style="color: black; border: none; width: auto; float: left" href="#" onclick="document.getElementById('frm_facets').submit()">Apply filter</a>
+                            </form>
                         </div>
+                    </div>
+                }
+            </details>
+        </gds-column>
+
+        <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+
+            <gds-paragraph>
+                @Model.Count results
+            </gds-paragraph>
+
+            <div id="search-results">
+
+                @foreach (var result in Model.Data)
+                {
+                    <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
+                        <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
+                        <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
+                        <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
+
+                        <gds-row>
+                            <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+                                <a class="govuk-link" href="javascript:;" onclick="document.getElementById('frm_@result.Id').submit();">
+                                    <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
+                                </a>
+                                <p class="govuk-body">
+                                    @result.Category<br />
+                                    @result.Address<br />
+                                    @if (!string.IsNullOrWhiteSpace(result.Address2))
+                                    {
+                                        @result.Address2<br />
+                                    }
+                                    @result.Town<br />
+                                    @result.PostCode<br />
+                                </p>
+                            </gds-column>
+                        </gds-row>
                     </form>
                 }
-            </gds-column>
 
-        </gds-row>
-    }
+            </div>
 
+            @if (Model.TotalPages > 1)
+            {
+                <form asp-action="SearchResults" method="get">
+                    <input type="hidden" id="search" name="search" value="@Model.Search" />
+                    <input type="hidden" id="selectedFacets" name="search" value="@Model.SelectedFacets" />
+
+                    <div class="govuk-body paging-wrapper">
+
+                        <gds-row>
+                            <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+                                @if (Model.ShowPrev)
+                                {
+                                    <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage - 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
+                                        <svg class="gem-c-pagination__link-icon" xmlns="http://www.w3.org/2000/svg" height="13" width="17" viewBox="0 0 17 13">
+                                            <path fill="currentColor" d="m10.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+                                        </svg>
+                                        <b> Previous Page</b><br />
+                                        @(Model.CurrentPage - 1) of @Model.TotalPages
+                                    </a>
+                                }
+                            </gds-column>
+                        </gds-row>
+
+                        <gds-row>
+                            <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+                                @if (Model.ShowNext)
+                                {
+                                    <a asp-route-search="@(Model.Search)" asp-route-pageNo="@(Model.CurrentPage + 1)" asp-route-selectedFacets="@(Model.SelectedFacets)" class="govuk-link">
+                                        <svg class="gem-c-pagination__link-icon" xmlns="http://www.w3.org/2000/svg" height="13" width="17" viewBox="0 0 17 13">
+                                            <path fill="currentColor" d="m10.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+                                        </svg>
+                                        <b> Next Page</b><br />
+                                        @(Model.CurrentPage + 1) of @Model.TotalPages
+                                    </a>
+                                }
+                            </gds-column>
+                        </gds-row>
+
+                    </div>
+                </form>
+            }
+        </gds-column>
+
+    </gds-row>
+}
+
+@{
+    await Html.RenderPartialAsync("_GetHelpWithThisFormPartial");
+}

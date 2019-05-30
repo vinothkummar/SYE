@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
@@ -50,10 +49,11 @@ namespace SYE
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddHttpContextAccessor();
+            services.AddHealthChecks();
+            services.AddOptions();
 
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
-
-            services.AddHttpContextAccessor();
 
             services.TryAddScoped<ISessionService, SessionService>();
 
@@ -65,7 +65,7 @@ namespace SYE
                 throw new ConfigurationErrorsException($"Failed to load {nameof(notificationApiKey)} from application configuration.");
             }
             services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(notificationApiKey));
-            services.TryAddSingleton<INotificationService, NotificationService>();
+            services.TryAddScoped<INotificationService, NotificationService>();
 
             var searchConfiguration = Configuration.GetSection("ConnectionStrings:SearchDb").Get<SearchConfiguration>();
             if (searchConfiguration == null)
@@ -73,7 +73,7 @@ namespace SYE
                 throw new ConfigurationErrorsException($"Failed to load {nameof(searchConfiguration)} from application configuration.");
             }
             services.TryAddSingleton<ICustomSearchIndexClient>(new CustomSearchIndexClient(searchConfiguration.SearchServiceName, searchConfiguration.IndexName, searchConfiguration.SearchApiKey));
-            services.TryAddSingleton<ISearchService, SearchService>();
+            services.TryAddScoped<ISearchService, SearchService>();
 
             var cosmosDatabaseConnectionConfiguration = Configuration.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
             if (cosmosDatabaseConnectionConfiguration == null)
@@ -82,12 +82,12 @@ namespace SYE
             }
             var cosmosDatabaseConnectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
             services.TryAddSingleton<IDocumentClient>(
-                    new DocumentClient(
-                            new Uri(cosmosDatabaseConnectionConfiguration.Endpoint),
-                            cosmosDatabaseConnectionConfiguration.Key,
-                            cosmosDatabaseConnectionPolicy
-                        )
-                );
+                new DocumentClient(
+                    new Uri(cosmosDatabaseConnectionConfiguration.Endpoint),
+                    cosmosDatabaseConnectionConfiguration.Key,
+                    cosmosDatabaseConnectionPolicy
+                )
+            );
 
             var formSchemaDatabase = Configuration.GetSection("CosmosDBCollections:FormSchemaDb").Get<AppConfiguration<FormVM>>();
             if (formSchemaDatabase == null)
@@ -156,7 +156,11 @@ namespace SYE
                     template: "{controller=Home}/{action=Index}/{id?}"
                 );
 
-                routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
+
+                //routes.MapRoute("searchResults", "search/results/{search?}", defaults: new { controller = "Form", action = "SearchResults" });
+                //routes.MapRoute("searchResults", "search/results/{search?}/{pageNo?}", defaults: new { controller = "Form", action = "SearchResults" });
+
+                //routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
 
             });
         }

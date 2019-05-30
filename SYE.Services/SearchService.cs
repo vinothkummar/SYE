@@ -38,8 +38,7 @@ namespace SYE.Services
 
         public async Task<SearchServiceResult> GetPaginatedResult(string search, int currentPage, int pageSize, string refinementFacets, bool newSearch)
         {
-            var data = await GetDataAsync(search, currentPage, pageSize, refinementFacets, newSearch);
-            return data;
+            return await GetDataAsync(search, currentPage, pageSize, refinementFacets, newSearch);
         }
 
         #region Private Methods
@@ -70,9 +69,12 @@ namespace SYE.Services
 
             if (searchResult.Facets?.Count == 1)
             {
-                foreach (var item in _facets.Except(searchResult?.Facets?.FirstOrDefault().Value?.Select(x => x.Value.ToString().Trim())))
+                foreach (var item in searchResult?.Facets?.FirstOrDefault().Value?.Select(x => x.Value.ToString().Trim()))
                 {
-                    _facets.Add(item);
+                    if (!_facets.Contains(item))
+                    {
+                        _facets.Add(item);
+                    }
                 }
             }
 
