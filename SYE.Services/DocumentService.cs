@@ -52,12 +52,12 @@ namespace SYE.Services
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(documentStream, WordprocessingDocumentType.Document, true))
                 {
                     //************************************
-                    string notFoundId = "service_not_found";
+                    string notFoundId = "tell-us-which-service-01";
                     var contactIds = new List<string>
                     {
-                        "your_contact_details_01",
-                        "your_contact_details_02",
-                        "your_contact_details_03"
+                        "your-contact-details-01",
+                        "your-contact-details-02",
+                        "your-contact-details-03"
                     };
 
                     if (_configuration != null)//TODO This is a work around. Fix config setup in tests!!
