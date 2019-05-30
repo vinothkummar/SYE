@@ -1,9 +1,9 @@
 {
     "id": "65bfc042-ce7a-478e-80ee-9f99c3bae03c",
-    "version": "6.5.0.0",
+    "version": "6.6.0.0",
     "form_name": "give-feedback-on-care",
     "pre_amble": "",
-    "last_modified": "ISODate(\"2019-05-29T10:00:00.000Z\")",
+    "last_modified": "ISODate(\"2019-05-30T10:00:00.000Z\")",
     "pages": [
         {
             "page_id": "tell-us-which-service",
@@ -38,14 +38,14 @@
                 }
             ],
             "previous_pages": [],
-            "next_page_id": "what-do-you-want-to-tell-us-about"
+            "next_page_id": "what-you-want-to-tell-us-about"
         },
         {
-            "page_id": "what-do-you-want-to-tell-us-about",
+            "page_id": "what-you-want-to-tell-us-about",
             "page_name": "",
             "questions": [
                 {
-                    "question_id": "what-do-you-want-to-tell-us-about-01",
+                    "question_id": "what-you-want-to-tell-us-about-01",
                     "question": "What kind of experience do you want to tell us about?",
                     "data_type": "string",
                     "input_type": "optionlist",
@@ -127,7 +127,7 @@
                 {
                     "question_id": "",
                     "answer": "",
-                    "page_id": "what-do-you-want-to-tell-us-about"
+                    "page_id": "what-you-want-to-tell-us-about"
                 }
             ],
             "next_page_id": "abuse-or-neglect"
@@ -138,8 +138,8 @@
             "questions": [
                 {
                     "question_id": "how-we-use-your-feedback-01",
-                    "question": "How we use your information",
-                    "html_content": "<h3 class=\"govuk-heading-m\">What we use your feedback for</h3><p class=\"govuk-body\">Our job is to monitor and inspect health and social care services. One of the ways we monitor them is by using feedback from people like you. This might be about:</p><ul class=\"govuk-list govuk-list--bullet\"><li>your own experiences of care</li><li>friends' or relatives' experiences</li><li>things you've found out or seen because of your job or volunteer work</li></ul><p class=\"govuk-body\">We look at what you tell us alongside other information. This might be information from the service itself or what we see when we carry out inspections.</p><p class=\"govuk-body\">This helps us build up a picture of the quality of care the service gives.</p><h3 class=\"govuk-heading-m\">How we store feedback and contact details</h3><p class=\"govuk-body\">We store your feedback in a database. We own the database and it's hosted in the UK. If you give us your name and contact details, we store them in the same way.</p><p class=\"govuk-body\">We transfer this information to other systems so our staff can use it. We make sure the only members of our staff who can see it are people who need it for their jobs. Our systems are secure, owned by us and based in the UK.</p><h3 class=\"govuk-heading-m\">How long we keep feedback and contact details</h3><p class=\"govuk-body\">The longest we'll keep your feedback is [x] years. [What about contact details?]</p><h3 class=\"govuk-heading-m\">Data protection laws and standards</h3><p class=\"govuk-body\">To keep your information safe, we follow:</p><ul class=\"govuk-list govuk-list--bullet\"><li>The General Data Protection Regulation (GDPR) and the Data Protection Act 2018</li><li>Our own policies on handling information</li><li>Our code of practice on confidential personal information</li></ul><p class=\"govuk-body\"><a class=\"govuk-link\" href=\"https://www.cqc.org.uk/about-us/our-policies/privacy-statement\" target=\"_blank\">Read our privacy statement</a> to find out more about how we handle personal information.</p><h3 class=\"govuk-heading-m\">Staying anonymous can affect how we use feedback</h3><p class=\"govuk-body\">You do not have to give your name or contact details when you give us feedback about an experience of care. But if you do stay anonymous, it can make it harder for us to take action.</p><p class=\"govuk-body\">This is because we sometimes need to get in touch with you to follow up. This might mean asking extra questions or getting more detail.</p><h3 class=\"govuk-heading-m\"> When we can and can’t keep your name confidential</h3><p class=\"govuk-body\">If you give us your name, we’ll keep it confidential unless you tell us:</p><ul class=\"govuk-list govuk-list--bullet\"><li>someone is in danger of serious harm, like abuse or neglect (a safeguarding concern)</li><li>someone has committed a serious crime</li></ul><p class=\"govuk-body\">If that’s the case, we may have to pass everything you’ve told us to the police, the council or another public body.</p><h3 class=\"govuk-heading-m\">Other ways the service might find out who you are</h3><p class=\"govuk-body\">You can ask us not to share your feedback with the service. This can help if it’s important they do not find out who you are.</p><p class=\"govuk-body\">It’s important to understand they might still work out someone has contacted us. For example, if you tell us a service you work for has falsified their records, we may visit and ask to see them. This on its own could make the service suspicious.</p><p class=\"govuk-body\"><button class=\"govuk-button\" type=\"submit\">Continue</button></p>",
+                    "question": "",
+                    "html_content": "<h1 class=\"govuk-heading-xl\">How we use your information</h1><h3 class=\"govuk-heading-m\">What we use your feedback for</h3><p class=\"govuk-body\">Our job is to monitor and inspect health and social care services. One of the ways we monitor them is by using feedback from people like you. This might be about:</p><ul class=\"govuk-list govuk-list--bullet\"><li>your own experiences of care</li><li>friends' or relatives' experiences</li><li>things you've found out or seen because of your job or volunteer work</li></ul><p class=\"govuk-body\">We look at what you tell us alongside other information. This might be information from the service itself or what we see when we carry out inspections.</p><p class=\"govuk-body\">This helps us build up a picture of the quality of care the service gives.</p><h3 class=\"govuk-heading-m\">How we store feedback and contact details</h3><p class=\"govuk-body\">We store your feedback in a database. We own the database and it's hosted in the UK. If you give us your name and contact details, we store them in the same way.</p><p class=\"govuk-body\">We transfer this information to other systems so our staff can use it. We make sure the only members of our staff who can see it are people who need it for their jobs. Our systems are secure, owned by us and based in the UK.</p><h3 class=\"govuk-heading-m\">How long we keep feedback and contact details</h3><p class=\"govuk-body\">There are several things we do with the information we collect through this service. How long we keep the information depends on what we use it for. This table gives some examples.</p><table class=\"govuk-table\"><thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"col\">What we use the information for</th><th class=\"govuk-table__header\" scope=\"col\">How long we keep it</th></tr></thead><tbody class=\"govuk-table__body\"><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"row\">Safeguarding (protecting people from things like abuse or neglect)</th><td class=\"govuk-table__cell\">3 years</td></tr><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"row\">Complaints about CQC</th><td class=\"govuk-table__cell\">5 years</td></tr><tr class=\"govuk-table__row\"><th class=\"govuk-table__header\" scope=\"row\">Enforcement (taking action when people do not follow the regulations)</th><td class=\"govuk-table__cell\">7 years after the action has ended</td></tr></tbody></table><p class=\"govuk-body\">There are some types of information we keep for longer. We also sometimes keep information permanently when we have removed personal details that identify people.</p><p class=\"govuk-body\">You can find out more about how long we keep information by reading our <a href=\"https://www.cqc.org.uk/about-us/our-policies/privacy-statement\" class=\"govuk-link\" target=\"_blank\">privacy statement</a>.</p><h3 class=\"govuk-heading-m\">Data protection laws and standards</h3><p class=\"govuk-body\">To keep your information safe, we follow:</p><ul class=\"govuk-list govuk-list--bullet\"><li>The General Data Protection Regulation (GDPR) and the Data Protection Act 2018</li><li>Our own policies on handling information</li><li>Our code of practice on confidential personal information</li></ul><p class=\"govuk-body\"><a class=\"govuk-link\" href=\"https://www.cqc.org.uk/about-us/our-policies/privacy-statement\" target=\"_blank\">Read our privacy statement</a> to find out more about how we handle personal information.</p><h3 class=\"govuk-heading-m\">Staying anonymous can affect how we use feedback</h3><p class=\"govuk-body\">You do not have to give your name or contact details when you give us feedback about an experience of care. But if you do stay anonymous, it can make it harder for us to take action.</p><p class=\"govuk-body\">This is because we sometimes need to get in touch with you to follow up. This might mean asking extra questions or getting more detail.</p><h3 class=\"govuk-heading-m\"> When we can and can’t keep your name confidential</h3><p class=\"govuk-body\">If you give us your name, we’ll keep  confidential unless you tell us:</p><ul class=\"govuk-list govuk-list--bullet\"><li>someone is in danger of serious harm, like abuse or neglect (a safeguarding concern)</li><li>someone has committed a serious crime</li></ul><p class=\"govuk-body\">If that’s the case, we may have to pass everything you’ve told us to the police, the council or another public body.</p><p class=\"govuk-body\">You can ask us not to share your feedback with the service. This can help if it’s important they do not find out who you are.</p><p class=\"govuk-body\">It's important to understand we may still have to act on your concern. This might mean the service could still work out someone has contacted us. For example, if you tell us a service you work for has falsified their records, we may visit and ask to see them. This on its own could make the service suspicious.</p><p class=\"govuk-body\"><button class=\"govuk-button\" type=\"submit\">Continue</button></p>",
                     "answer": ""
                 }
             ],
@@ -765,10 +765,10 @@
                             "value": "The Relatives and Residents Association",
                             "text": "The Relatives and Residents Association"
                         },
-                      {
-                        "value": "Another charity",
-                        "text": "Another charity"
-                      }
+                        {
+                            "value": "Another charity",
+                            "text": "Another charity"
+                        }
                     ],
                     "validation": {
                         "required": {
@@ -780,25 +780,25 @@
                     },
                     "answer": ""
                 },
-                {
-                    "question_id": "tell-us-which-charity-02",
-                    "question": "<p class=\"govuk-body\">Tell us the name of the charity</p>",
-                    "data_type": "text",
-                    "input_type": "textbox",
-                    "show_when": {
-                        "question_id": "tell-us-which-charity-01",
-                        "answer": "Another charity"
-                    },
-                    "validation": {
-                        "required": {
-                            "is_required": false,
-                            "error_message": "You must give a valid charity name"
-                        },
-                        "is_errored": false,
-                        "error_message": ""
-                    },
-                    "answer": ""
-                }
+              {
+                "question_id": "tell-us-which-charity-02",
+                "question": "<p class=\"govuk-body\">Tell us the name of the charity</p>",
+                "data_type": "text",
+                "input_type": "textbox",
+                "show_when": {
+                  "question_id": "tell-us-which-charity-01",
+                  "answer": "Another charity"
+                },
+                "validation": {
+                  "required": {
+                    "is_required": false,
+                    "error_message": "You must give a valid charity name"
+                  },
+                  "is_errored": false,
+                  "error_message": ""
+                },
+                "answer": ""
+              }
             ],
             "buttons": [
                 {
