@@ -41,7 +41,38 @@
 
         <gds-heading text="How long we keep feedback and contact details" heading-type="H3"></gds-heading>
         <gds-paragraph>
-            The longest we'll keep your feedback is [x] years. [What about contact details?]
+            There are several things we do with the information we collect through this service. How long we keep the information depends on what we use it for. This table gives some examples.
+        </gds-paragraph>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">What we use the information for</th>
+                    <th class="govuk-table__header" scope="col">How long we keep it</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">Safeguarding (protecting people from things like abuse or neglect)</th>
+                    <td class="govuk-table__cell">3 years</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">Complaints about CQC</th>
+                    <td class="govuk-table__cell">5 years</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">Enforcement (taking action when people do not follow the regulations)</th>
+                    <td class="govuk-table__cell">7 years after the action has ended</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <gds-paragraph>
+            There are some types of information we keep for longer. We also sometimes keep information permanently when we have removed personal details that identify people.
+        </gds-paragraph>
+
+        <gds-paragraph>
+            You can find out more about how long we keep information by reading our <a href="https://www.cqc.org.uk/about-us/our-policies/privacy-statement" class="govuk-link" target="_blank">privacy statement</a>.
         </gds-paragraph>
 
 
@@ -83,17 +114,15 @@
         </gds-paragraph>
 
 
-        <gds-heading text="Other ways the service might find out who you are" heading-type="H3"></gds-heading>
         <gds-paragraph>
             You can ask us not to share your feedback with the service. This can help if it’s important they do not find out who you are.
         </gds-paragraph>
         <gds-paragraph>
-            It’s important to understand they might still work out someone has contacted us. For example, if you tell us a service you
-            work for has falsified their records, we may visit and ask to see them. This on its own could make the service suspicious.
+            It's important to understand we may still have to act on your concern. This might mean the service could still work out someone has contacted us. For example, if you tell us a service you work for has falsified their records, we may visit and ask to see them. This on its own could make the service suspicious.
         </gds-paragraph>
 
         <gds-paragraph>
-            <gds-button button-text="Continue" button-type="Button" onclick="location.href='@Url.Action("Index", "Home")'"></gds-button>
+            <gds-button button-text="Continue" button-type="Button" onclick="history.go(-1);return false;"></gds-button>
         </gds-paragraph>
 
     </gds-column>

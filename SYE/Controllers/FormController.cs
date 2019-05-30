@@ -92,6 +92,9 @@ namespace SYE.Controllers
                 //Check the nextPageId for preset controller names
                 switch (nextPageId)
                 {
+                    case "HowWeUseYourInformation":
+                        return RedirectToAction("Index", "HowWeUseYourInformation");
+
                     case "CheckYourAnswers":
                         return RedirectToAction("Index", "CheckYourAnswers");
 

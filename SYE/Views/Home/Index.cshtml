@@ -1,7 +1,9 @@
-﻿@{
+﻿@using Microsoft.Extensions.Options
+@using SYE.ViewModels
+@{
     ViewData["Title"] = "Home Page";
 }
-
+@inject IOptions<ApplicationSettings> Configuration
 @{
     Layout = "_Layout";
 }
@@ -51,7 +53,7 @@
                 </gds-paragraph>
 
                 <gds-inset-text>
-                    This is different from making a formal complaint. To <a target="_blank" href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider">make a formal complaint</a> you must contact the service itself
+                    This is different from making a formal complaint. To <a class="govuk-link" target="_blank" href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider">make a formal complaint</a> you must contact the service itself
                 </gds-inset-text>
 
                 <gds-paragraph>
@@ -59,7 +61,7 @@
                 </gds-paragraph>
 
                 <gds-paragraph>
-                    Find out <a href="@Url.Action("Index", "HowWeUseYourInformation")">how we handle information</a> like contact details
+                    Find out <a class="govuk-link" href="@Url.Action("Index", "HowWeUseYourInformation")">how we handle information</a> like contact details
                 </gds-paragraph>
 
             </section>
@@ -67,9 +69,9 @@
             <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="get-help">
                 <gds-paragraph>You can get help on the phone if it's hard for you to do things online.</gds-paragraph>
                 <gds-paragraph>
-                    Telephone: 03000 616161<br />
-                    Monday to Friday, 8:30am to 5pm<br />
-                    Excluding bank holidays
+                    Telephone: @(Configuration.Value.GetHelp.ContactNumber)<br>
+                    @(Configuration.Value.GetHelp.ContactHours)<br />
+                    @(Configuration.Value.GetHelp.ContactExcluding)
                 </gds-paragraph>
             </section>
         </div>
@@ -79,14 +81,14 @@
 
         <div class="purple-bar"></div>
 
-        <gds-heading heading-type="H3" text="Related Content"></gds-heading>
+        <h2 class="govuk-heading-m">Related Content</h2>
 
         <gds-paragraph>
             <gds-link class="govuk-link" target="_blank" link-id="related-content" link-text="How to make a formal complaint to a service or provider" href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider"></gds-link>
         </gds-paragraph>
 
         <gds-paragraph>
-            <gds-link class="govuk-link" target="_blank" link-id="related-content" link-text="Find out which types of service we regulate" href="https://www.cqc.org.uk/what-we-do/services-we-regulate/services-we-regulate"></gds-link>
+            <gds-link class="govuk-link" target="_blank" link-id="regulated-services" link-text="Find out which types of service we regulate" href="https://www.cqc.org.uk/what-we-do/services-we-regulate/services-we-regulate"></gds-link>
         </gds-paragraph>
 
     </gds-column>
