@@ -11,9 +11,11 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Notify.Client;
 using Notify.Interfaces;
 using SYE.EsbWrappers;
+using SYE.Helpers;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
@@ -50,7 +52,6 @@ namespace SYE
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpContextAccessor();
-            services.AddHealthChecks();
             services.AddOptions();
 
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
@@ -118,25 +119,26 @@ namespace SYE
             services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
             services.TryAddScoped<IEsbClient, EsbClient>();
             services.TryAddScoped<IEsbWrapper, EsbWrapper>();
             services.TryAddScoped<IEsbService, EsbService>();
-
             services.TryAddScoped<IFormService, FormService>();
             services.TryAddScoped<ISubmissionService, SubmissionService>();
             services.TryAddScoped<IDocumentService, DocumentService>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)//, IApplicationLifetime lifetime, IDistributedCache cache)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment() || env.IsEnvironment("Local"))
+
+            if (env.IsDevelopment() || env.IsLocal())
             {
                 app.UseDeveloperExceptionPage();
+                // Uncomment following to test error pages locally
+                //app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -161,7 +163,6 @@ namespace SYE
                 //routes.MapRoute("searchResults", "search/results/{search?}/{pageNo?}", defaults: new { controller = "Form", action = "SearchResults" });
 
                 //routes.MapRoute("form", "form/{id?}", defaults: new { controller = "Form", action = "index" });
-
             });
         }
     }

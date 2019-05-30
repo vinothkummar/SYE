@@ -1,13 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SYE.Models;
 
 namespace SYE.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor)
+        {
+            _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
         public IActionResult Index(string v = "")
         {
             //Set the version for A/B testing
@@ -17,11 +28,50 @@ namespace SYE.Controllers
             return View();
         }
 
+        // Error return pages are can be configured here. 
+        // I have added basics here. Add and adapt as appropriate
+        // once tickets are raised with specific requirements.
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("Error/{statusCode?}")]
+        public IActionResult Error(int? statusCode = null)
         {
             ViewBag.ShowBackButton = false;
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var statusCodeReExecuteFeature = _httpContextAccessor?.HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
+
+            //Following will not be populated on 404
+            var exceptionHandlerPathFeature = _httpContextAccessor?.HttpContext?.Features?.Get<IExceptionHandlerPathFeature>();
+
+            // 400, 500 and default are coded if you need to add more error codes, add them here
+            // Please change error messages and if needed View for error page.
+            // Alternatively you can also add specific error views like 400.cshtml and "return view("400");"
+            switch (statusCode)
+            {
+                case 404:
+                    // Added usage of statuscode feature. Please adapt to requirements by default AI will capture all errors unless configured not to.
+                    //_logger?.LogError("Page not found path:[{path}] and query:[{query}]", statusCodeReExecuteFeature?.OriginalPath ?? string.Empty, statusCodeReExecuteFeature?.OriginalQueryString ?? string.Empty);
+                    _logger.LogError("page not found");
+                    ViewBag.ErrorTitle = "Page not found";
+                    ViewBag.ErrorMessage = "Sorry the page you requested could not be found";
+                    break;
+                case 500:
+                    // Added usage of exceptionhandlerpath feature. Please adapt to requirements by default AI will capture all errors unless configured not to.
+                    //_logger?.LogError(exceptionHandlerPathFeature?.Error, "Error at path:[{path}]", exceptionHandlerPathFeature?.Path ?? string.Empty);
+                    ViewBag.ErrorTitle = "Something went wrong";
+                    ViewBag.ErrorMessage = "Sorry something went wrong on the server.";
+                    break;
+                default:
+                    ViewBag.ErrorTitle = "The service is unavailable";
+                    ViewBag.ErrorMessage = "You will be able to use the service from 9am on Monday 19 November 2018.";
+                    break;
+            }
+            // Ideally default error view "Error.cshtml" should be changed and model removed 
+            // as we do not require Trace/Activity Id there
+            return View(
+                new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+                }
+            );
         }
 
         [Route("Clear-Data")]

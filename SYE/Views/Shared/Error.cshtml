@@ -3,14 +3,12 @@
     ViewData["Title"] = "Error";
 }
 
-
-
 <gds-row>
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
-        <gds-heading heading-type="H1" text="Sorry, the service is unavailable"></gds-heading>
+        <gds-heading heading-type="H1" text="@(ViewBag.ErrorTitle)"></gds-heading>
 
-        <gds-paragraph>You will be able to use the service from 9am on Monday 19 November 2018.</gds-paragraph>
+        <gds-paragraph>@(ViewBag.ErrorMessage)</gds-paragraph>
 
         <gds-paragraph>
             <a class="govuk-link" href="#">Contact the Care Quality Commission Helpline</a> if you need to make changes to your claim or speak to someone about your tax credits.

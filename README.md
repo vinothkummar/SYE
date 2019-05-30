@@ -68,3 +68,14 @@ For The GOV.UK Notify client add [this](https://api.bintray.com/nuget/gov-uk-not
 
 
 ## Key Contacts
+
+## AI Logging
+    // Following is only required if capturing logs from Program and Startup to Application Insights.
+    // Otherwise you can just use loggingBuilder.AddApplicationInsights() without any arguments and iKey will be picked up from application settings
+    var iKey = builderContext?.Configuration?.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey");
+    if (!string.IsNullOrWhiteSpace(iKey))
+    {
+        loggingBuilder.AddApplicationInsights(iKey);
+        loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(typeof(Program).FullName, LogLevel.Error);
+        loggingBuilder.AddFilter<ApplicationInsightsLoggerProvider>(typeof(Startup).FullName, LogLevel.Error);
+    }
