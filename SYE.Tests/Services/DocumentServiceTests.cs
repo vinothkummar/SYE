@@ -16,7 +16,6 @@ namespace SYE.Tests.Services
 {
     public class DocumentServiceTests
     {
-        private IConfiguration _configuration;
         private string _dir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName + "\\Resources\\";
         private string _fileNameNoContact = "submission-schema-no-contact.json";
         private string _fileNameContactDetails = "submission-schema-contact-details.json";
@@ -26,92 +25,89 @@ namespace SYE.Tests.Services
         public DocumentServiceTests()
         {
             FileHelper.DeleteFilesWithExtension(_dir, "docx");//remove any residual files
-            _configuration = TestHelper.GetApplicationConfiguration(_dir);
         }
 
-        [Fact]
-        public void CreateDocumentNoContactDetailsTest()
-        {
-      /*
-            //var mockConfig = new Mock<IConfiguration>();
-            var mockConfig = new Mock<IConfigurationRoot>();
+        //[Fact]
+        //public void CreateDocumentNoContactDetailsTest()
+        //{
+        //    //var mockConfig = new Mock<IConfiguration>();
+        //    var mockConfig = new Mock<IConfigurationRoot>();
 
-            mockConfig.SetupGet(x => x["NotFoundQuestionId"]).Returns("service_not_found");
-            mockConfig.SetupGet(x => x["ContactNameQuestionId"]).Returns("your_contact_details_01");
-            mockConfig.SetupGet(x => x["ContactEmailQuestionId"]).Returns("your_contact_details_02");
-            mockConfig.SetupGet(x => x["ContactTelephoneNumberQuestionId"]).Returns("your_contact_details_03");
+        //    mockConfig.SetupGet(x => x["NotFoundQuestionId"]).Returns("service_not_found");
+        //    mockConfig.SetupGet(x => x["ContactNameQuestionId"]).Returns("your_contact_details_01");
+        //    mockConfig.SetupGet(x => x["ContactEmailQuestionId"]).Returns("your_contact_details_02");
+        //    mockConfig.SetupGet(x => x["ContactTelephoneNumberQuestionId"]).Returns("your_contact_details_03");
 
-            //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("NotFoundQuestionId")).Returns("service_not_found");
-            //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactNameQuestionId")).Returns("your_contact_details_01");
-            //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactEmailQuestionId")).Returns("your_contact_details_02");
-            //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactTelephoneNumberQuestionId")).Returns("your_contact_details_03");
-*/
-            var path = _dir + "NoContactDetails.docx";
-            var test = _configuration["ContactNameQuestionId"];
-            var sut = new DocumentService(_configuration);
-            var json = GetJsonString(_fileNameNoContact);
+        //    //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("NotFoundQuestionId")).Returns("service_not_found");
+        //    //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactNameQuestionId")).Returns("your_contact_details_01");
+        //    //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactEmailQuestionId")).Returns("your_contact_details_02");
+        //    //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactTelephoneNumberQuestionId")).Returns("your_contact_details_03");
+        //    var path = _dir + "NoContactDetails.docx";
 
-            var base64Documentresult = sut.CreateSubmissionDocument(json);
-            base64Documentresult.Should().NotBeNullOrWhiteSpace();
-            //assert
-            base64Documentresult.Should().NotBeNullOrWhiteSpace();
-            FileHelper.GenerateWordDocument(base64Documentresult, path);
-            FileHelper.FileExists(path).Should().BeTrue();
+        //    var sut = new DocumentService(mockConfig.Object);
+        //    var json = GetJsonString(_fileNameNoContact);
 
-            }
+        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
+        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
+        //    //assert
+        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
+        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
+        //    FileHelper.FileExists(path).Should().BeTrue();
+
+        //}
             //[Fact]
-            //public void CreateDocumentWithContactDetailsTest()
-            //{
-            //    var path = _dir + "ContactDetails.docx";
-            //    var sut = new DocumentService();
-            //    var json = GetJsonString(_fileNameContactDetails);
-            //    //act
-            //    var base64Documentresult = sut.CreateSubmissionDocument(json);
-            //    //assert
-            //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
-            //    FileHelper.GenerateWordDocument(base64Documentresult, path);
-            //    FileHelper.FileExists(path).Should().BeTrue();
-            //}
-            //[Fact]
-            //public void CreateDocumentWithContactDetailsNoLocationTest()
-            //{
-            //    var path = _dir + "ContactDetailsNoLocation.docx";
-            //    var sut = new DocumentService();
-            //    var json = GetJsonString(_fileNameContactDetailsNoLocation);
-            //    //act
-            //    var base64Documentresult = sut.CreateSubmissionDocument(json);
-            //    //assert
-            //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
-            //    FileHelper.GenerateWordDocument(base64Documentresult, path);
-            //    FileHelper.FileExists(path).Should().BeTrue();
-            //}
-            //[Fact]
-            //public void CreateDocumentWithNoContactDetailsNoLocationTest()
-            //{
-            //    var path = _dir + "NoContactDetailsNoLocation.docx";
-            //    var sut = new DocumentService();
-            //    var json = GetJsonString(_fileNameNoContactDetailsNoLocation);
-            //    //act
-            //    var base64Documentresult = sut.CreateSubmissionDocument(json);
-            //    //assert
-            //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
-            //    FileHelper.GenerateWordDocument(base64Documentresult, path);
-            //    FileHelper.FileExists(path).Should().BeTrue();
-            //}
+        //public void CreateDocumentWithContactDetailsTest()
+        //{
+        //    var path = _dir + "ContactDetails.docx";
+        //    var sut = new DocumentService();
+        //    var json = GetJsonString(_fileNameContactDetails);
+        //    //act
+        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
+        //    //assert
+        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
+        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
+        //    FileHelper.FileExists(path).Should().BeTrue();
+        //}
+        //[Fact]
+        //public void CreateDocumentWithContactDetailsNoLocationTest()
+        //{
+        //    var path = _dir + "ContactDetailsNoLocation.docx";
+        //    var sut = new DocumentService();
+        //    var json = GetJsonString(_fileNameContactDetailsNoLocation);
+        //    //act
+        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
+        //    //assert
+        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
+        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
+        //    FileHelper.FileExists(path).Should().BeTrue();
+        //}
+        //[Fact]
+        //public void CreateDocumentWithNoContactDetailsNoLocationTest()
+        //{
+        //    var path = _dir + "NoContactDetailsNoLocation.docx";
+        //    var sut = new DocumentService();
+        //    var json = GetJsonString(_fileNameNoContactDetailsNoLocation);
+        //    //act
+        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
+        //    //assert
+        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
+        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
+        //    FileHelper.FileExists(path).Should().BeTrue();
+        //}
 
 
-            /// <summary>
-            /// this method reads a json file from the folder and returns the next page
-            /// </summary>
-            /// <param name="pageId"></param>
-            /// <param name="path"></param>
-            /// <param name="locationName"></param>
-            /// <returns></returns>
-            /// <remarks>
-            /// Please refactor this function (and all tests consuming this method) so method accepts whole form schema and returns required page.
-            /// If we need to load form from database/cache/session/file-system it has to be done as a seperate function
-            /// </remarks>   
-            private string GetJsonString(string fileName)
+        /// <summary>
+        /// this method reads a json file from the folder and returns the next page
+        /// </summary>
+        /// <param name="pageId"></param>
+        /// <param name="path"></param>
+        /// <param name="locationName"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Please refactor this function (and all tests consuming this method) so method accepts whole form schema and returns required page.
+        /// If we need to load form from database/cache/session/file-system it has to be done as a seperate function
+        /// </remarks>   
+        private string GetJsonString(string fileName)
         {
             var file = string.Empty;
             var path = _dir + fileName;
@@ -128,60 +124,4 @@ namespace SYE.Tests.Services
             return file;
         }
     }
-
-    public class DocsConfiguration : IConfiguration
-    {
-        //put settings fields in here
-        public string this[string key] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public IEnumerable<IConfigurationSection> GetChildren()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IChangeToken GetReloadToken()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IConfigurationSection GetSection(string key)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-   public static class TestHelper
-    {
-        public static IConfigurationRoot GetIConfigurationRoot(string outputPath)
-        {
-            return new ConfigurationBuilder()
-                .SetBasePath(outputPath)
-                .AddJsonFile("appsettings.json", optional: true)
-                //.AddUserSecrets("e3dfcccf-0cb3-423a-b302-e3e92e95c128")
-                //.AddEnvironmentVariables()
-                .Build();
-        }
-        public static DocsConfiguration GetApplicationConfiguration(string outputPath)
-        {
-            var configuration = new DocsConfiguration();
-
-            var iConfig = GetIConfigurationRoot(outputPath);
-
-            iConfig
-                .GetSection("SubmissionDocument")
-                .Bind(configuration);
-
-            return configuration;
-        }
-
-    }
-    //public static class ConfigurationExtensions
-    //{
-    //    public static IConfigurationProxy Proxy = new ConfigurationProxy();
-    //    public static T GetValue<T>(this IConfigurationRoot config, string key) => Proxy.GetValue<T>(config, key);
-    //}
-    //public class ConfigurationProxy : IConfigurationProxy
-    //{
-    //    public T GetValue<T>(IConfigurationRoot config, string key) => config.GetValue<T>(key);
-    //}
 }
