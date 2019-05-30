@@ -27,73 +27,69 @@ namespace SYE.Tests.Services
             FileHelper.DeleteFilesWithExtension(_dir, "docx");//remove any residual files
         }
 
-        //[Fact]
-        //public void CreateDocumentNoContactDetailsTest()
-        //{
-        //    //var mockConfig = new Mock<IConfiguration>();
-        //    var mockConfig = new Mock<IConfigurationRoot>();
+        [Fact]
+        public void CreateDocumentNoContactDetailsTest()
+        {
+            ////var mockConfig = new Mock<IConfiguration>();
+            //var mockConfig = new Mock<IConfigurationRoot>();
 
-        //    mockConfig.SetupGet(x => x["NotFoundQuestionId"]).Returns("service_not_found");
-        //    mockConfig.SetupGet(x => x["ContactNameQuestionId"]).Returns("your_contact_details_01");
-        //    mockConfig.SetupGet(x => x["ContactEmailQuestionId"]).Returns("your_contact_details_02");
-        //    mockConfig.SetupGet(x => x["ContactTelephoneNumberQuestionId"]).Returns("your_contact_details_03");
+            //mockConfig.SetupGet(x => x["NotFoundQuestionId"]).Returns("service_not_found");
+            //mockConfig.SetupGet(x => x["ContactNameQuestionId"]).Returns("your_contact_details_01");
+            //mockConfig.SetupGet(x => x["ContactEmailQuestionId"]).Returns("your_contact_details_02");
+            //mockConfig.SetupGet(x => x["ContactTelephoneNumberQuestionId"]).Returns("your_contact_details_03");
 
-        //    //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("NotFoundQuestionId")).Returns("service_not_found");
-        //    //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactNameQuestionId")).Returns("your_contact_details_01");
-        //    //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactEmailQuestionId")).Returns("your_contact_details_02");
-        //    //mockConfig.Setup(x => x.GetSection("SubmissionDocument").GetValue<string>("ContactTelephoneNumberQuestionId")).Returns("your_contact_details_03");
-        //    var path = _dir + "NoContactDetails.docx";
+            var path = _dir + "NoContactDetails.docx";
 
-        //    var sut = new DocumentService(mockConfig.Object);
-        //    var json = GetJsonString(_fileNameNoContact);
+            var sut = new DocumentService(null);
+            var json = GetJsonString(_fileNameNoContact);
 
-        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
-        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
-        //    //assert
-        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
-        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
-        //    FileHelper.FileExists(path).Should().BeTrue();
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
 
-        //}
-            //[Fact]
-        //public void CreateDocumentWithContactDetailsTest()
-        //{
-        //    var path = _dir + "ContactDetails.docx";
-        //    var sut = new DocumentService();
-        //    var json = GetJsonString(_fileNameContactDetails);
-        //    //act
-        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
-        //    //assert
-        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
-        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
-        //    FileHelper.FileExists(path).Should().BeTrue();
-        //}
-        //[Fact]
-        //public void CreateDocumentWithContactDetailsNoLocationTest()
-        //{
-        //    var path = _dir + "ContactDetailsNoLocation.docx";
-        //    var sut = new DocumentService();
-        //    var json = GetJsonString(_fileNameContactDetailsNoLocation);
-        //    //act
-        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
-        //    //assert
-        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
-        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
-        //    FileHelper.FileExists(path).Should().BeTrue();
-        //}
-        //[Fact]
-        //public void CreateDocumentWithNoContactDetailsNoLocationTest()
-        //{
-        //    var path = _dir + "NoContactDetailsNoLocation.docx";
-        //    var sut = new DocumentService();
-        //    var json = GetJsonString(_fileNameNoContactDetailsNoLocation);
-        //    //act
-        //    var base64Documentresult = sut.CreateSubmissionDocument(json);
-        //    //assert
-        //    base64Documentresult.Should().NotBeNullOrWhiteSpace();
-        //    FileHelper.GenerateWordDocument(base64Documentresult, path);
-        //    FileHelper.FileExists(path).Should().BeTrue();
-        //}
+        }
+        [Fact]
+        public void CreateDocumentWithContactDetailsTest()
+        {
+            var path = _dir + "ContactDetails.docx";
+            var sut = new DocumentService(null);
+            var json = GetJsonString(_fileNameContactDetails);
+            //act
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
+        }
+        [Fact]
+        public void CreateDocumentWithContactDetailsNoLocationTest()
+        {
+            var path = _dir + "ContactDetailsNoLocation.docx";
+            var sut = new DocumentService(null);
+            var json = GetJsonString(_fileNameContactDetailsNoLocation);
+            //act
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
+        }
+        [Fact]
+        public void CreateDocumentWithNoContactDetailsNoLocationTest()
+        {
+            var path = _dir + "NoContactDetailsNoLocation.docx";
+            var sut = new DocumentService(null);
+            var json = GetJsonString(_fileNameNoContactDetailsNoLocation);
+            //act
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
+        }
 
 
         /// <summary>

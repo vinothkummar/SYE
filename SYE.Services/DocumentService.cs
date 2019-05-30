@@ -51,14 +51,27 @@ namespace SYE.Services
                 // Create Document
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(documentStream, WordprocessingDocumentType.Document, true))
                 {
-                    //get from appsettings ***************
-                    var notFoundId = _configuration.GetSection("SubmissionDocument").GetValue<string>("NotFoundQuestionId");
+                    //************************************
+                    string notFoundId = "service_not_found";
                     var contactIds = new List<string>
                     {
-                        _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactNameQuestionId"),
-                        _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactEmailQuestionId"),
-                        _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactTelephoneNumberQuestionId")
+                        "your_contact_details_01",
+                        "your_contact_details_02",
+                        "your_contact_details_03"
                     };
+
+                    if (_configuration != null)//TODO This is a work around. Fix config setup in tests!!
+                    {
+                        //get from appsettings
+                        notFoundId = _configuration.GetSection("SubmissionDocument").GetValue<string>("NotFoundQuestionId");
+                        contactIds = new List<string>
+                        {
+                            _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactNameQuestionId"),
+                            _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactEmailQuestionId"),
+                            _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactTelephoneNumberQuestionId")
+                        };
+
+                    }
                     //************************************
 
                     // Add a main document part. 
