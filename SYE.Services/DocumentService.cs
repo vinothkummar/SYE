@@ -5,6 +5,7 @@ using System.Linq;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SYE.Models.SubmissionSchema;
 using Paragraph = DocumentFormat.OpenXml.Wordprocessing.Paragraph;
@@ -22,10 +23,15 @@ namespace SYE.Services
     }
     public class DocumentService : IDocumentService
     {
+        private readonly IConfiguration _configuration;
         private readonly int FontSizeHeader = 50;
         private readonly int FontSizeNormal = 25;
         private readonly int FontSizeSmall = 15;
 
+        public DocumentService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public string CreateSubmissionDocument(string json)
         {
             var submissionVm = JsonConvert.DeserializeObject<SubmissionVM>(json);
@@ -45,84 +51,63 @@ namespace SYE.Services
                 // Create Document
                 using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(documentStream, WordprocessingDocumentType.Document, true))
                 {
+                    //************************************
+                    string notFoundId = "tell-us-which-service-01";
+                    var contactIds = new List<string>
+                    {
+                        "your-contact-details-01",
+                        "your-contact-details-02",
+                        "your-contact-details-03"
+                    };
+
+                    if (_configuration != null)//TODO This is a work around. Fix config setup in tests!!
+                    {
+                        //get from appsettings
+                        notFoundId = _configuration.GetSection("SubmissionDocument").GetValue<string>("NotFoundQuestionId");
+                        contactIds = new List<string>
+                        {
+                            _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactNameQuestionId"),
+                            _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactEmailQuestionId"),
+                            _configuration.GetSection("SubmissionDocument").GetValue<string>("ContactTelephoneNumberQuestionId")
+                        };
+
+                    }
+                    //************************************
+
                     // Add a main document part. 
+                    var contactAnswers = submissionVm.Answers
+                        .Where(x => contactIds.Contains(x.QuestionId))
+                        .OrderBy(x => x.DocumentOrder).ToList();
                     MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
+
                     // Create the document structure and add some text.
                     mainPart.Document = new Document();
                     Body body = mainPart.Document.AppendChild(new Body());
                     Paragraph para = body.AppendChild(new Paragraph());
-
-                    //insert the new created run part
-                    var line = GetText("NCSC GFC concern template", FontSizeHeader);
-                    para.AppendChild(line);
-                    EmptyLine(body, para);
-
-                    GetDataSection(body, "Channel :", new List<string> { "GFC" }, false);
-                    GetDataSection(body, "GFC reference number :", new List<string> { submissionVm.SubmissionId }, false);
-                    GetDataSection(body, "Completed :", new List<string> { DateTime.Parse(submissionVm.DateCreated).ToShortDateString() }, false);
-                    GetDataSection(body, "Location ID :", new List<string> { submissionVm.LocationId }, false);
-                    GetDataSection(body, "Provider ID :", new List<string> { submissionVm.ProviderId }, false);
+                    //header
+                    GetHeader(body, submissionVm);
                     //location
-                    GetLocation(body, submissionVm);
-
-                    //Are you happy to be contacted
-                    var answerTxt = string.Empty;
-                    var questionTxt = GetYesNoAnswer(submissionVm, "Yes I'm happy for you to contact me", "No, I do not want to give my name or contact details", "Contact_002", ref answerTxt);
-                    GetDataSection(body, "11. " + questionTxt, new List<string> { answerTxt }, true);
-                    //contact details
-                    GetContactDetails(body, submissionVm);
-                    //have you worked for this service
-                    answerTxt = string.Empty;
-                    questionTxt = GetYesNoAnswer(submissionVm, "Yes, I have worked for this service", "No, I have never worked for them", "Neg_006", ref answerTxt);
-                    GetDataSection(body, "8. " + questionTxt, new List<string> { answerTxt }, true);
-                    //risk of harm
-                    answerTxt = string.Empty;
-                    questionTxt = GetYesNoAnswer(submissionVm, "Yes, I think someone's at risk of harm", "No, I don't think anyone's at risk of harm", "Neg_001", ref answerTxt);
-                    GetDataSection(body, "4. " + questionTxt, new List<string> { answerTxt }, true);
-                    //have you told police
-                    var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_002");
-                    if (answer != null)
+                    GetLocation(body, submissionVm, notFoundId);
+                    foreach (var answer in submissionVm.Answers.Where(x => x.DocumentOrder > 1).OrderBy(x => x.DocumentOrder))
                     {
-                        GetDataSection(body, "5. " + answer.Question, new List<string> { answer.Answer }, true);
-                    }
-                    //good or bad
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Start_001");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, "2. " + answer.Question, new List<string> { answer.Answer }, true);
-                    }
-                    //when did it happen
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_005");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, "3. " + answer.Question, new List<string> { answer.Answer }, true);
-                    }
-                    //feedback
-                    GetFeedback(body, submissionVm);
-                    //how did you find out
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_004");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, "13. " + answer.Question, new List<string> { answer.Answer }, true);
-                    }
-                    //which charity
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_005");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, "14. " + answer.Question, new List<string> { answer.Answer }, true);
-                    }
-                    //can we share you feedback
-                    answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_001");
-                    if (answer != null)
-                    {
-                        GetDataSection(body, "10. " + answer.Question, new List<string> { answer.Answer }, true);
+                        if(contactAnswers.Contains(answer))//skip these
+                        {
+                            if (answer.QuestionId.Equals(contactIds.FirstOrDefault()))//only once
+                            {
+                                GetContactDetails(body, contactAnswers);
+                            }
+                        }
+                        else
+                        {
+                            GetAnswer(body, submissionVm, answer.QuestionId);
+                        }                        
                     }
 
                     mainPart.Document.Save();
 
                     wordDocument.Close();
                 }
-                //convert to bas64
+                //convert to base64
                 var documentBytes = documentStream.ToArray();
                 convertedDoc = Convert.ToBase64String(documentBytes);
                 documentStream.Close();
@@ -130,25 +115,28 @@ namespace SYE.Services
             return convertedDoc;
         }
 
-        /// <summary>
-        /// Creates the feedback section
-        /// </summary>
-        /// <param name="body"></param>
-        /// <param name="submissionVm"></param>
-        private void GetLocation(Body body, SubmissionVM submissionVm)
+        #region Document Loading
+        private void GetAnswer(Body body, SubmissionVM submissionVm, string questionId)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "NotFound");
-            if (answer == null)
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.QuestionId == questionId);
+            if (answer != null)
             {
-                //location has been selected
-                GetDataSection(body, "Location name/description : ", new List<string> { submissionVm.LocationName }, false);
+                GetDataSection(body, answer.Question, SplitOutNewLines(answer.Answer), true);
             }
-            else
-            {
-                //location has not been found
-                GetDataSection(body, "Location name/description : ", new List<string> { "Not Found" }, false);
-                GetDataSection(body, "1. " + answer.Question, new List<string> { answer.Answer }, true);
-            }
+        }
+
+        private void GetHeader(Body body, SubmissionVM submissionVm)
+        {
+            GetDataSection(body, "Response Id :", new List<string> { submissionVm.Id }, false);
+            GetDataSection(body, "Channel :", new List<string> { "GFC" }, false);
+            GetDataSection(body, "GFC reference number :", new List<string> { submissionVm.SubmissionId }, false);
+            GetDataSection(body, "Completed :", new List<string> { GetUkDateStringFromZulu(submissionVm.DateCreated) }, false);
+        }
+
+        private string GetUkDateStringFromZulu(string dateCreated)
+        {
+            DateTime ukDate = DateTime.Parse(dateCreated).AddHours(1);
+            return ukDate.ToShortDateString() + ": " + ukDate.ToShortTimeString();
         }
 
         /// <summary>
@@ -156,29 +144,40 @@ namespace SYE.Services
         /// </summary>
         /// <param name="body"></param>
         /// <param name="submissionVm"></param>
-        private void GetFeedback(Body body, SubmissionVM submissionVm)
+        /// <param name="notFoundId"></param>
+        private void GetLocation(Body body, SubmissionVM submissionVm, string notFoundId)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_004" && x.QuestionId == "Neg_004_01");
-            if (answer != null)
+            var locationId = string.Empty;
+            var providerId = string.Empty;
+            var location = string.Empty;
+            var locationDescription = string.Empty;
+            var locationFound = false;
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == notFoundId);//1
+            if (answer == null)
             {
-                var feedback1 = string.Empty;
-                var feedback2 = string.Empty;
-                var feedback3 = string.Empty;
-                feedback1 = answer.Answer;
-                var answer2 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_004" && x.QuestionId == "Neg_004_02");
-                var answer3 = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Neg_004" && x.QuestionId == "Neg_004_03");
-                if (answer2 != null)
-                {
-                    feedback2 = answer2.Answer;
-                }
-                if (answer2 != null)
-                {
-                    feedback3 = answer3.Answer;
-                }
-
-                GetDataSection(body, "7. " + answer.Question, new List<string> { feedback1 }, true);
-                GetDataSection(body, "Can you be more exact about where you're telling us about? For example, which room? (optional)", new List<string> { feedback2 }, true, true);
-                GetDataSection(body, "When exactly did it happen? For example, can you give a date, month or year? (optional)", new List<string> { feedback3 }, true, true);
+                //location has been selected
+                locationId = submissionVm.LocationId;
+                providerId = submissionVm.ProviderId;
+                location = submissionVm.LocationName;
+                locationFound = true;
+            }
+            else
+            {
+                //location has not been found
+                locationId = "none";
+                providerId = "none";
+                locationDescription = answer.Answer;
+            }
+            GetDataSection(body, "Location ID :", new List<string> { locationId }, false);
+            GetDataSection(body, "Provider ID :", new List<string> { providerId }, false);            
+            
+            if (locationFound)
+            {
+                GetDataSection(body, "Location name : ", new List<string> { location }, false);
+            }
+            else
+            {
+                GetDataSection(body, "Location description : ", SplitOutNewLines(locationDescription), true);
             }
         }
 
@@ -187,64 +186,48 @@ namespace SYE.Services
         /// </summary>
         /// <param name="body"></param>
         /// <param name="submissionVm"></param>
-        private void GetContactDetails(Body body, SubmissionVM submissionVm)
+        /// <param name="answers"></param>
+        private void GetContactDetails(Body body, List<AnswerVM> answers)
         {
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_003" && x.QuestionId == "Contact_003_01");
-            if (answer != null)
+            if (answers != null && answers.Count > 0)
             {
-                var question = answer.Question;
-                var fullName = answer.Answer;
+                var fullName = answers[0].Answer;
                 var email = string.Empty;
                 var telNum = string.Empty;
 
                 //contact details 2
-                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_003" && x.QuestionId == "Contact_003_02");
-                if (answer != null) { email = answer.Answer; }
+                if (answers.Count > 1)
+                {
+                    email = answers[1].Answer;
+                }
                 //contact details 3
-                answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == "Contact_003" && x.QuestionId == "Contact_003_03");
-                if (answer != null) { telNum = answer.Answer; }
-
-                GetDataSection(
-                        body,
-                        String.Concat("12. ", question),
-                        new List<string> {
-                            $"Full name: {fullName}",
-                            $" Email address: {email}",
-                            $" UK telephone number: {telNum}"
-                        },
-                        true
-                    );
+                if (answers.Count > 2)
+                {
+                    telNum = answers[2].Answer;
+                }
+                GetDataSection(body, "Contact Details",
+                    new List<string>
+                    {
+                        $"Full name: {fullName}",
+                        $" Email address: {email}",
+                        $" UK telephone number: {telNum}"
+                    },
+                    true
+                );
             }
         }
 
-        /// <summary>
-        /// Set the Yes/No answer and returns the question for a specific submission record
-        /// </summary>
-        /// <param name="submissionVm"></param>
-        /// <param name="yesAnswer"></param>
-        /// <param name="noAnswer"></param>
-        /// <param name="pageNum"></param>
-        /// <param name="answer"></param>
-        /// <returns></returns>
-        private string GetYesNoAnswer(SubmissionVM submissionVm, string yesAnswer, string noAnswer, string pageNum, ref string answer)
+        private List<string> SplitOutNewLines(string answer)
         {
-            var question = string.Empty;
-            var record = submissionVm.Answers.FirstOrDefault(x => x.PageId == pageNum);
-            if (record != null)
-            {
-                question = record.Question;
-                if (record.Answer == "Yes")
-                {
-                    answer = yesAnswer;
-                }
-                else
-                {
-                    answer = noAnswer;
-                }
-            }
-            return question;
+            //split out the text in case there is a new line
+            var answerText = answer.Replace("\r\n", "\n");
+            var answers = answerText.Split('\n').ToList();
+            return answers;
         }
 
+        #endregion
+
+        #region Document Formatting
         /// <summary>
         /// Creates a line of text for the document
         /// </summary>
@@ -283,23 +266,25 @@ namespace SYE.Services
         private void GetDataSection(Body body, string sideheader, List<string> data, bool dataOnNewLine, bool indent = false)
         {
             var para = body.AppendChild(new Paragraph());
-            if (indent)
-            {
-                Indentation iUl = new Indentation() { LeftChars = 10, Hanging = "360" };  // correct indentation  
+            //if (indent)//creates numbered list
+            //{
+            //    Indentation iUl = new Indentation() { LeftChars = 10, Hanging = "360" };  // correct indentation  
 
-                NumberingProperties npUl = new NumberingProperties(
-                    new NumberingLevelReference() { Val = 2 },
-                    new NumberingId() { Val = 1 }
-                );
+            //    NumberingProperties npUl = new NumberingProperties(
+            //        new NumberingLevelReference() { Val = 2 },
+            //        new NumberingId() { Val = 1 }
+            //    );
 
-                ParagraphProperties ppUnordered = new ParagraphProperties(npUl, iUl);
-                para.ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
-            }
+            //    ParagraphProperties ppUnordered = new ParagraphProperties(npUl, iUl);
+            //    para.ParagraphProperties = new ParagraphProperties(ppUnordered.OuterXml);
+            //}
             var line = GetText(sideheader, FontSizeNormal, dataOnNewLine);
             para.AppendChild(line);
+            var lineCounter = 0;
 
             foreach (var text in data.Where(x => !string.IsNullOrWhiteSpace(x)))
             {
+                lineCounter++;
                 if (dataOnNewLine)
                 {
                     para = body.AppendChild(new Paragraph());
@@ -307,7 +292,8 @@ namespace SYE.Services
                 line = GetText(text, FontSizeNormal, !dataOnNewLine);
                 if (dataOnNewLine)
                 {
-                    para.Append(new Run(new TabChar()));
+                    //para.Append(new Run(new TabChar()));//creates tab indent but not on wrapped line!!
+                    para.Append(new Run());
                 }
                 para.AppendChild(line);
             }
@@ -319,5 +305,6 @@ namespace SYE.Services
             para = body.AppendChild(new Paragraph());
             para.AppendChild(GetText(string.Empty, FontSizeSmall));
         }
+        #endregion
     }
 }

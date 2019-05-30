@@ -4,9 +4,13 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using FluentAssertions;
+using Moq;
 using SYE.Tests.TestHelpers;
 using SYE.Services;
 using Xunit;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using Microsoft.Extensions.Primitives;
 
 namespace SYE.Tests.Services
 {
@@ -16,6 +20,7 @@ namespace SYE.Tests.Services
         private string _fileNameNoContact = "submission-schema-no-contact.json";
         private string _fileNameContactDetails = "submission-schema-contact-details.json";
         private string _fileNameContactDetailsNoLocation = "submission-schema-contact-details-no-location.json";
+        private string _fileNameNoContactDetailsNoLocation = "submission-schema-no-contact-details-no-location.json";
 
         public DocumentServiceTests()
         {
@@ -25,8 +30,17 @@ namespace SYE.Tests.Services
         [Fact]
         public void CreateDocumentNoContactDetailsTest()
         {
-            var path = _dir + "test1.docx";
-            var sut = new DocumentService();
+            ////var mockConfig = new Mock<IConfiguration>();
+            //var mockConfig = new Mock<IConfigurationRoot>();
+
+            //mockConfig.SetupGet(x => x["NotFoundQuestionId"]).Returns("service_not_found");
+            //mockConfig.SetupGet(x => x["ContactNameQuestionId"]).Returns("your_contact_details_01");
+            //mockConfig.SetupGet(x => x["ContactEmailQuestionId"]).Returns("your_contact_details_02");
+            //mockConfig.SetupGet(x => x["ContactTelephoneNumberQuestionId"]).Returns("your_contact_details_03");
+
+            var path = _dir + "NoContactDetails.docx";
+
+            var sut = new DocumentService(null);
             var json = GetJsonString(_fileNameNoContact);
 
             var base64Documentresult = sut.CreateSubmissionDocument(json);
@@ -40,8 +54,8 @@ namespace SYE.Tests.Services
         [Fact]
         public void CreateDocumentWithContactDetailsTest()
         {
-            var path = _dir + "test2.docx";
-            var sut = new DocumentService();
+            var path = _dir + "ContactDetails.docx";
+            var sut = new DocumentService(null);
             var json = GetJsonString(_fileNameContactDetails);
             //act
             var base64Documentresult = sut.CreateSubmissionDocument(json);
@@ -53,8 +67,8 @@ namespace SYE.Tests.Services
         [Fact]
         public void CreateDocumentWithContactDetailsNoLocationTest()
         {
-            var path = _dir + "test3.docx";
-            var sut = new DocumentService();
+            var path = _dir + "ContactDetailsNoLocation.docx";
+            var sut = new DocumentService(null);
             var json = GetJsonString(_fileNameContactDetailsNoLocation);
             //act
             var base64Documentresult = sut.CreateSubmissionDocument(json);
@@ -63,6 +77,20 @@ namespace SYE.Tests.Services
             FileHelper.GenerateWordDocument(base64Documentresult, path);
             FileHelper.FileExists(path).Should().BeTrue();
         }
+        [Fact]
+        public void CreateDocumentWithNoContactDetailsNoLocationTest()
+        {
+            var path = _dir + "NoContactDetailsNoLocation.docx";
+            var sut = new DocumentService(null);
+            var json = GetJsonString(_fileNameNoContactDetailsNoLocation);
+            //act
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
+        }
+
 
         /// <summary>
         /// this method reads a json file from the folder and returns the next page
@@ -91,6 +119,5 @@ namespace SYE.Tests.Services
 
             return file;
         }
-
     }
 }
