@@ -89,6 +89,32 @@ namespace SYE.Controllers
                 //No errors redirect to the Index page with our new PageId
                 var nextPageId = pageVm.NextPageId;
 
+
+
+
+
+                //************************************************
+                //Hack to make Good Journey work
+                //Need to refactor into GDS Helpers when we have time
+                if (vm.PageId == "give-your-feedback")
+                {
+                    var formVm = _sessionService.GetFormVmFromSession();
+                    var questions = formVm.Pages.SelectMany(m => m.Questions).ToList();
+
+                    var startGoodJourney = questions.FirstOrDefault(m => m.QuestionId == "what-you-want-to-tell-us-about-01");
+                    if (startGoodJourney != null && startGoodJourney.Answer == "Good experience")
+                    {
+                        nextPageId = "can-we-share";
+                    }
+                }
+                //************************************************
+
+
+
+
+
+
+
                 //Check the nextPageId for preset controller names
                 switch (nextPageId)
                 {

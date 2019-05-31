@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SYE.Models;
-using SYE.Repository;
 
 namespace SYE.Services
 {
