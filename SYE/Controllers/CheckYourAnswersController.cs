@@ -179,7 +179,7 @@ namespace SYE.Controllers
         private async Task SendEmailNotificationAsync(string fullName, string emailAddress, string locationId, string locationName, string submissionId, string submissionReference)
         {
             var emailTemplateId = string.Empty;
-            if (string.IsNullOrWhiteSpace(locationId) || string.IsNullOrWhiteSpace(locationName))
+            if (string.IsNullOrWhiteSpace(locationId.Replace("0", "")))
             {
                 emailTemplateId = _configuration.GetSection("EmailNotification:ConfirmationEmail").GetValue<string>("WithoutLocationEmailTemplateId");
             }
