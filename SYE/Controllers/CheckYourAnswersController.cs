@@ -163,7 +163,7 @@ namespace SYE.Controllers
                         PageId = page.PageId,
                         QuestionId = question.QuestionId,
                         Question = string.IsNullOrEmpty(question.Question) ? page.PageName.StripHtml() : question.Question.StripHtml(),
-                        Answer = question.Answer.StripHtml().RemoveLineBreaks(),
+                        Answer = question.Answer.StripHtml(),
                         DocumentOrder = question.DocumentOrder
                     }));
             }
