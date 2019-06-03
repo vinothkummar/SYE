@@ -152,7 +152,7 @@ namespace SYE.Services
             var location = string.Empty;
             var locationDescription = string.Empty;
             var locationFound = false;
-            var answer = submissionVm.Answers.FirstOrDefault(x => x.PageId == notFoundId);//1
+            var answer = submissionVm.Answers.FirstOrDefault(x => x.QuestionId == notFoundId);//1
             if (answer == null)
             {
                 //location has been selected
@@ -191,29 +191,14 @@ namespace SYE.Services
         {
             if (answers != null && answers.Count > 0)
             {
-                var fullName = answers[0].Answer;
-                var email = string.Empty;
-                var telNum = string.Empty;
+                //build data list
+                var data = new List<string>();
+                foreach (var answer in answers)
+                {
+                    data.Add(answer.Question + ": " + answer.Answer);
+                }
 
-                //contact details 2
-                if (answers.Count > 1)
-                {
-                    email = answers[1].Answer;
-                }
-                //contact details 3
-                if (answers.Count > 2)
-                {
-                    telNum = answers[2].Answer;
-                }
-                GetDataSection(body, "Contact Details",
-                    new List<string>
-                    {
-                        $"Full name: {fullName}",
-                        $" Email address: {email}",
-                        $" UK telephone number: {telNum}"
-                    },
-                    true
-                );
+                GetDataSection(body, "Contact Details", data, true);
             }
         }
 
