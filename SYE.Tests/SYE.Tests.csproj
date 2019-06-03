@@ -7,14 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\form-schema.json" />
     <None Remove="Resources\submission-schema-contact-details-no-location.json" />
     <None Remove="Resources\submission-schema-contact-details.json" />
     <None Remove="Resources\submission-schema-no-contact-details-no-location.json" />
     <None Remove="Resources\submission-schema-no-contact.json" />
+    <None Remove="Resources\submission-schema-no-email.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\submission-schema-no-email.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="Resources\submission-schema-no-contact-details-no-location.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -25,9 +28,6 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="Resources\submission-schema-no-contact.json">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="Resources\form-schema.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>

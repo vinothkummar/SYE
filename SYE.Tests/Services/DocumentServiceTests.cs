@@ -21,6 +21,7 @@ namespace SYE.Tests.Services
         private string _fileNameContactDetails = "submission-schema-contact-details.json";
         private string _fileNameContactDetailsNoLocation = "submission-schema-contact-details-no-location.json";
         private string _fileNameNoContactDetailsNoLocation = "submission-schema-no-contact-details-no-location.json";
+        private string _fileNameNoEmail = "submission-schema-no-email.json";
 
         public DocumentServiceTests()
         {
@@ -90,7 +91,19 @@ namespace SYE.Tests.Services
             FileHelper.GenerateWordDocument(base64Documentresult, path);
             FileHelper.FileExists(path).Should().BeTrue();
         }
-
+        [Fact]
+        public void CreateDocumentWithNoEmailTest()
+        {
+            var path = _dir + "ContactDetailsNoEmail.docx";
+            var sut = new DocumentService(null);
+            var json = GetJsonString(_fileNameNoEmail);
+            //act
+            var base64Documentresult = sut.CreateSubmissionDocument(json);
+            //assert
+            base64Documentresult.Should().NotBeNullOrWhiteSpace();
+            FileHelper.GenerateWordDocument(base64Documentresult, path);
+            FileHelper.FileExists(path).Should().BeTrue();
+        }
 
         /// <summary>
         /// this method reads a json file from the folder and returns the next page
