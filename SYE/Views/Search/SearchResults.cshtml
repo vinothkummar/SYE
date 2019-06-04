@@ -74,7 +74,9 @@
                                 }
                                 <input type="hidden" asp-for="Search" />
                                 <br />
-                                <a class="govuk-input" style="color: black; border: none; width: auto; float: left" href="#" onclick="document.getElementById('frm_facets').submit()">Apply filter</a>
+                                <button type="submit" id="btn--filter" class="govuk-button link-button" style="color: black; border: none; width: auto; float: left; text-decoration: underline;">
+                                    Apply filter
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -99,18 +101,18 @@
 
                         <gds-row>
                             <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-                                <a class="govuk-link" href="javascript:;" onclick="document.getElementById('frm_@result.Id').submit();">
+                                <button type="submit" id="btn-@result.Id" class="govuk-button link-button">
                                     <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
-                                </a>
+                                </button>
                                 <p class="govuk-body">
-                                    @result.Category<br />
-                                    @result.Address<br />
+                                    @result.Category<br/>
+                                    @result.Address<br/>
                                     @if (!string.IsNullOrWhiteSpace(result.Address2))
                                     {
-                                        @result.Address2<br />
+                                        @result.Address2<br/>
                                     }
-                                    @result.Town<br />
-                                    @result.PostCode<br />
+                                    @result.Town<br/>
+                                    @result.PostCode<br/>
                                 </p>
                             </gds-column>
                         </gds-row>

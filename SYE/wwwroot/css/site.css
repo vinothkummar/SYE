@@ -181,3 +181,13 @@ label.govuk-label > p.govuk-body {
 .get-help {
     margin-top: 40px;
 }
+
+.link-button, .link-button:hover, .link-button:active {
+    position: initial !important;
+    background: none !important;
+    border: none !important;
+    padding: 0px !important;
+    margin: 0px !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
