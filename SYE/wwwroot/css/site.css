@@ -78,7 +78,7 @@
 
 
 
-@media (max-width: 48.0525em) {
+@media (max-width: 640px) {
 
     #search-results .category {
         text-align: left;
@@ -94,7 +94,9 @@
     }
 }
 
-@media (min-width: 48.0625em) {
+@media (min-width: 48.0526em) {
+
+
 }
 
 
@@ -132,9 +134,8 @@
 
 .govuk-summary-list__key,
 .govuk-summary-list__value {
-    word-break: break-word;
+    word-break: normal !important;
 }
-
 
 .paging-wrapper a {
     display: block;
@@ -190,4 +191,5 @@ label.govuk-label > p.govuk-body {
     margin: 0px !important;
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
+    text-align: left;
 }

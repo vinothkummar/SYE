@@ -39,6 +39,9 @@ namespace SYE.Controllers
                 if (pageViewModel != null)
                 {
                     ViewBag.UrlReferer = urlReferer;
+
+                    ViewBag.ShowBackButton = true;
+                    ViewBag.PreviousPage = urlReferer;
                     return View(nameof(Feedback), pageViewModel);
                 }
             }
@@ -59,16 +62,16 @@ namespace SYE.Controllers
                 pageViewModel = GetPage();
 
                 if (pageViewModel == null)
-                {
                     return StatusCode(500);
-                }
+                
 
                 _gdsValidate.ValidatePage(pageViewModel, Request.Form);
 
                 if (pageViewModel.Questions.Any(m => m.Validation?.IsErrored == true))
                 {
-                    ViewBag.ShowBackButton = false;
-                    ViewBag.UrlReferer = urlReferer;
+                    ViewBag.ShowBackButton = true;
+                    ViewBag.PreviousPage = urlReferer;
+
                     return View(nameof(Feedback), pageViewModel);
                 }
 
@@ -90,7 +93,7 @@ namespace SYE.Controllers
                             .ConfigureAwait(false);
                 });
 
-                return RedirectToAction(nameof(FeedbackThankYou));
+                return RedirectToAction(nameof(FeedbackThankYou), new { urlReferer });
             }
             catch (Exception ex)
             {
@@ -101,25 +104,26 @@ namespace SYE.Controllers
         }
 
         [Route("feedback-thank-you")]
-        public ActionResult FeedbackThankYou()
+        public ActionResult FeedbackThankYou(string urlReferer)
         {
-            ViewBag.ShowBackButton = false;
+            ViewBag.ShowBackButton = true;
+            ViewBag.PreviousPage = urlReferer;
             return View();
         }
 
         private PageVM GetPage()
         {
-            string formName = _configuration?.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<string>("Name");
-            string version = _configuration?.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<string>("Version");
+            var formName = _configuration?.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<string>("Name");
+            var version = _configuration?.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<string>("Version");
 
-            FormVM form = string.IsNullOrEmpty(version) ?
+            var form = string.IsNullOrEmpty(version) ?
                 _formService.GetLatestFormByName(formName).Result :
                 _formService.FindByNameAndVersion(formName, version).Result;
 
             return form.Pages.FirstOrDefault() ?? null;
         }
 
-        private Task SendEmailNotificationAsync(PageVM submission, String urlReferer)
+        private Task SendEmailNotificationAsync(PageVM submission, string urlReferer)
         {
             if (submission == null)
             {
@@ -128,24 +132,24 @@ namespace SYE.Controllers
             return SendEmailNotificationInternalAsync(submission, urlReferer);
         }
 
-        private async Task SendEmailNotificationInternalAsync(PageVM submission, String urlReferer)
+        private async Task SendEmailNotificationInternalAsync(PageVM submission, string urlReferer)
         {
-            string phase = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("Phase");
-            string emailTemplateId = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("EmailTemplateId");
-            string emailAddress = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<String>("ServiceSupportEmailAddress");
+            var phase = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<string>("Phase");
+            var emailTemplateId = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<string>("EmailTemplateId");
+            var emailAddress = _configuration.GetSection("EmailNotification:FeedbackEmail").GetValue<string>("ServiceSupportEmailAddress");
             var fieldMappings = _configuration.GetSection("EmailNotification:FeedbackEmail:FieldMappings").Get<IEnumerable<EmailFieldMapping>>();
 
-            string feedbackMessage = submission?
+            var feedbackMessage = submission?
                 .Questions?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "message").FormField, StringComparison.OrdinalIgnoreCase))?
-                .Answer ?? String.Empty;
-            string feedbackUserName = submission?
+                .Answer ?? string.Empty;
+            var feedbackUserName = submission?
                 .Questions?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "name").FormField, StringComparison.OrdinalIgnoreCase))?
-                .Answer ?? String.Empty;
-            string feedbackUserEmailAddress = submission?
+                .Answer ?? string.Empty;
+            var feedbackUserEmailAddress = submission?
                 .Questions?.FirstOrDefault(x => x.QuestionId.Equals(fieldMappings.FirstOrDefault(y => y.Name == "email").FormField, StringComparison.OrdinalIgnoreCase))?
-                .Answer ?? String.Empty;
+                .Answer ?? string.Empty;
 
-            Dictionary<string, dynamic> personalisation =
+            var personalisation =
                 new Dictionary<string, dynamic> {
                     { "service-phase", phase },
                     { "banner-clicked-on-page", urlReferer },
