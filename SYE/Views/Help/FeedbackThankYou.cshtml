@@ -11,5 +11,15 @@
         <gds-paragraph>
             If we need to reply to you, we'll be in touch within 2 working days.
         </gds-paragraph>
+        <gds-paragraph>
+            <form action="@ViewBag.PreviousPage" method="get">
+                <gds-button button-type="Submit" button-text="Continue" button-id="btnContinue"></gds-button>
+            </form>
+        </gds-paragraph>
     </gds-column>
 </gds-row>
+
+
+@{
+    await Html.RenderPartialAsync("_GetHelpWithThisFormPartial");
+}
