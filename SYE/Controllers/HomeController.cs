@@ -21,6 +21,7 @@ namespace SYE.Controllers
 
         public IActionResult Index(string v = "")
         {
+
             //Set the version for A/B testing
             //This will be used when we load the form
             HttpContext.Session.SetString("FormVersion", v);
@@ -47,17 +48,15 @@ namespace SYE.Controllers
             switch (statusCode)
             {
                 case 404:
-                    // Added usage of statuscode feature. Please adapt to requirements by default AI will capture all errors unless configured not to.
-                    //_logger?.LogError("Page not found path:[{path}] and query:[{query}]", statusCodeReExecuteFeature?.OriginalPath ?? string.Empty, statusCodeReExecuteFeature?.OriginalQueryString ?? string.Empty);
                     _logger.LogError("page not found");
                     ViewBag.ErrorTitle = "Page not found";
-                    ViewBag.ErrorMessage = "Sorry the page you requested could not be found";
+                    ViewBag.ErrorMessage = "If you typed the web address, check it is correct. If you pasted the web address, check you copied the entire address.";
                     break;
                 case 500:
-                    // Added usage of exceptionhandlerpath feature. Please adapt to requirements by default AI will capture all errors unless configured not to.
-                    //_logger?.LogError(exceptionHandlerPathFeature?.Error, "Error at path:[{path}]", exceptionHandlerPathFeature?.Path ?? string.Empty);
-                    ViewBag.ErrorTitle = "Something went wrong";
-                    ViewBag.ErrorMessage = "Sorry something went wrong on the server.";
+                case 503:
+                    _logger.LogError("Sorry, there is a problem with this form");
+                    ViewBag.ErrorTitle = "Sorry, there is a problem with this form";
+                    ViewBag.ErrorMessage = "Try clicking your browser's back button or try again later.";
                     break;
                 default:
                     ViewBag.ErrorTitle = "The service is unavailable";
