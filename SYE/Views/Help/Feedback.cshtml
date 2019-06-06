@@ -4,7 +4,7 @@
 @model GDSHelpers.Models.FormSchema.PageVM
 
 @{
-    ViewData["Title"] = String.Concat(Model.Questions.Any(x => x.Validation.IsErrored) ? "Error:" : "", "Feedback");
+    ViewData["Title"] = string.Concat(Model.Questions.Any(x => x.Validation.IsErrored) ? "Error:" : "", "Feedback");
     Layout = "_Layout";
 }
 
@@ -34,13 +34,13 @@
 
         <gds-heading heading-type="H1" text="Report a problem"></gds-heading>
 
-        <p >Use this form to tell us if:</p>
+        <p class="govuk-body">Use this form to tell us if:</p>
         <ul class="govuk-list govuk-list--bullet">
             <li>there was a technical problem</li>
             <li>something didn't make sense, like you didn't understand one of our questions</li>
         </ul>
 
-        <form asp-action="Index" asp-controller="Help" method="post">
+        <form asp-action="Feedback" asp-controller="Help" method="post">
             @Html.AntiForgeryToken()
             <input name="url-referer" id="url-referer" type="hidden" value="@(ViewBag.UrlReferer)" />
             @if (Model.Questions != null)
