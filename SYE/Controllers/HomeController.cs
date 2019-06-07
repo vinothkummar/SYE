@@ -21,7 +21,6 @@ namespace SYE.Controllers
 
         public IActionResult Index(string v = "")
         {
-
             //Set the version for A/B testing
             //This will be used when we load the form
             HttpContext.Session.SetString("FormVersion", v);
@@ -60,7 +59,7 @@ namespace SYE.Controllers
                     break;
                 default:
                     ViewBag.ErrorTitle = "The service is unavailable";
-                    ViewBag.ErrorMessage = "You will be able to use the service from 9am on Monday 19 November 2018.";
+                    ViewBag.ErrorMessage = "Try clicking your browser's back button or try again later.";
                     break;
             }
             // Ideally default error view "Error.cshtml" should be changed and model removed 
