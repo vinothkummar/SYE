@@ -21,7 +21,6 @@ namespace SYE.Controllers
 
         public IActionResult Index(string v = "")
         {
-
             //Set the version for A/B testing
             //This will be used when we load the form
             HttpContext.Session.SetString("FormVersion", v);
