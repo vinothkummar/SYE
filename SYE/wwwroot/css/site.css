@@ -70,7 +70,7 @@
 }
 
 #search-results button {
-    position: absolute;
+    /*position: absolute;*/
     right: 0;
     bottom: 0;
 }
@@ -95,8 +95,6 @@
 }
 
 @media (min-width: 48.0526em) {
-
-
 }
 
 
@@ -193,3 +191,17 @@ label.govuk-label > p.govuk-body {
     -webkit-box-shadow: none !important;
     text-align: left;
 }
+
+#global-cookie-message {
+    width: 100%;
+    background-color: #d5e8f3;
+    padding: 10px 0;
+}
+
+    #global-cookie-message .govuk-body-s {
+        margin-bottom: 0px;
+    }
+
+    .govuk-button::before {
+        position: initial;
+    }
