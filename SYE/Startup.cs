@@ -41,6 +41,9 @@ namespace SYE
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.ConfigureApplicationCookie(options => options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+
+
             services.AddMemoryCache();
 
             services.AddSession(options =>
@@ -150,6 +153,12 @@ namespace SYE
             app.UseCookiePolicy();
 
             app.UseSession();
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Xss-Protection", "1");
+                await next();
+            });
 
             app.UseMvc(routes =>
             {
