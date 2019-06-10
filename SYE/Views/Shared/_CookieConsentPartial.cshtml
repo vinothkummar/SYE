@@ -1,25 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Http.Features
 
-@{
-    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
-    var showBanner = !consentFeature?.CanTrack ?? false;
-    var cookieString = consentFeature?.CreateConsentCookie();
-}
-
-@if (showBanner)
-{
-    <div id="cookieConsent" class="alert alert-info alert-dismissible fade show" role="alert">
-        Use this space to summarize your privacy and cookie use policy. <a asp-area="" asp-controller="Home" asp-action="Privacy">Learn More</a>.
-        <button type="button" class="accept-policy close" data-dismiss="alert" aria-label="Close" data-cookie-string="@cookieString">
-            <span aria-hidden="true">Accept</span>
-        </button>
+<div id="global-cookie-message" data-module="cookie-banner" style="display: none;">
+    <div class="govuk-width-container">
+        <p class="govuk-body-s">
+            This site uses cookies to make the site simpler.
+            <a class="govuk-link" href="@Url.Action("Index", "Cookies")" data-module="track-click" data-track-category="cookieBanner" data-track-action="Cookie banner clicked">Find out more about cookies</a> <span class="gem-c-cookie-banner__hide-link">or 
+                <a id="cookie-dismiss-button" class="govuk-link" href="#" data-hide-cookie-banner="true" data-module="track-click" data-track-category="cookieBanner" data-track-action="Cookie banner hidden">hide this message</a></span>
+        </p>
     </div>
-    <script>
-        (function () {
-            var button = document.querySelector("#cookieConsent button[data-cookie-string]");
-            button.addEventListener("click", function (event) {
-                document.cookie = button.dataset.cookieString;
-            }, false);
-        })();
-    </script>
-}
+</div>
