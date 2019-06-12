@@ -33,6 +33,14 @@ namespace SYE.EsbWrappers
             var path = Directory.GetCurrentDirectory() + "\\Resources\\GenericAttachmentTemplate.xml";
             using (var client = new WebClient())
             {
+                client.UseDefaultCredentials = true;
+                client.Credentials = new NetworkCredential(username, password);
+                client.Headers.Add("Accept", "application/json");
+                client.Headers.Add("Accept", "text/plain");
+                client.Headers.Add("Accept-Language", "en-US");
+                client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
+                client.Headers["Content-Type"] = "text/plain;charset=UTF-8";
+
                 using (var reader = new StreamReader(path))
                 {
                     var template = @reader.ReadToEnd();
@@ -41,7 +49,7 @@ namespace SYE.EsbWrappers
                         .Replace("{{username}}", username)
                         .Replace("{{password}}", password)
                         .Replace("{{subtype}}", GetFriendlyName(type));
-
+                        //.Replace("{{submissionNumber}}", GetFriendlyName(type));                    
                     client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
                     response = client.UploadString(endpoint, finalPayload);
                 }
@@ -102,6 +110,8 @@ namespace SYE.EsbWrappers
             {
                 case PayloadType.Submission:
                     return "SYE Submission";
+                case PayloadType.Classified:
+                    return "To be classified";
                 default:
                     throw new ArgumentOutOfRangeException("payloadType", payloadType, null);
             }
@@ -109,6 +119,7 @@ namespace SYE.EsbWrappers
     }
     public enum PayloadType
     {
-        Submission
+        Submission,
+        Classified
     }
 }
