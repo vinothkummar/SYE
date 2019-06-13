@@ -46,10 +46,10 @@ namespace SYE.EsbWrappers
                     var template = @reader.ReadToEnd();
                     var finalPayload = template.Replace("{{token}}", token)
                         .Replace("{{payload}}", payload)
-                        .Replace("{{username}}", username)
-                        .Replace("{{password}}", password)
-                        .Replace("{{subtype}}", GetFriendlyName(type));
-                        //.Replace("{{submissionNumber}}", GetFriendlyName(type));                    
+                        //.Replace("{{username}}", username)
+                        //.Replace("{{password}}", password)
+                        .Replace("{{subtype}}", GetFriendlyName(type))
+                        .Replace("{{submissionNumber}}", "1000023");
                     client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
                     response = client.UploadString(endpoint, finalPayload);
                 }
