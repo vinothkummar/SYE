@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +55,11 @@ namespace SYE.Controllers
             }
         }
 
+        private static readonly HashSet<char> allowedChars = new HashSet<char>(@"1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,'()?!#&$£%^@*;:+=_-/ ");
+        private static readonly List<string> restrictedWords = new List<string> { "javascript", "onblur", "onchange", "onfocus", "onfocusin", "onfocusout", "oninput", "onmouseenter", "onmouseleave",
+            "onselect", "onclick", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onscroll", "ontouchstart",
+            "ontouchend", "ontouchmove", "ontouchcancel", "onwheel" };
+
 
         [HttpPost("form/{id}")]
         [ValidateAntiForgeryToken]
@@ -66,7 +73,6 @@ namespace SYE.Controllers
                 //If Null throw NotFound error
                 if (pageVm == null) return NotFound();
 
-
                 var userSession = _sessionService.GetUserSession();
                 var serviceNotFound = userSession.LocationName.Equals("the service");
                 ViewBag.PreviousPage = GetPreviousPage(pageVm, serviceNotFound);
@@ -74,7 +80,7 @@ namespace SYE.Controllers
                 if (Request?.Form != null)
                 {
                     //Validate the Response against the page json and update PageVm to contain the answers
-                    _gdsValidate.ValidatePage(pageVm, Request.Form);
+                    _gdsValidate.ValidatePage(pageVm, Request.Form, true, restrictedWords);
                 }
 
                 //Get the error count

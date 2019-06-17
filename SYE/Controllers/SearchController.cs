@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using GDSHelpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SYE.Models;
@@ -19,13 +20,15 @@ namespace SYE.Controllers
         private readonly ISessionService _sessionService;
         private readonly IOptions<ApplicationSettings> _config;
         private readonly ILogger _logger;
+        private readonly IGdsValidation _gdsValidate;
 
-        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, ILogger<SearchController> logger)
+        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, ILogger<SearchController> logger, IGdsValidation gdsValidate)
         {
             _searchService = searchService;
             _sessionService = sessionService;
             _config = config;
             _logger = logger;
+            _gdsValidate = gdsValidate;
         }
 
         [HttpGet("search/find-a-service")]
@@ -49,25 +52,35 @@ namespace SYE.Controllers
         }
 
 
+    
+        private static readonly HashSet<char> allowedChars = new HashSet<char>(@"1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,'()?!#$£%^@*;:+=_-/ ");
+        private static readonly List<string> restrictedWords = new List<string> { "javascript", "onblur", "onchange", "onfocus", "onfocusin", "onfocusout", "oninput", "onmouseenter", "onmouseleave",
+            "onselect", "onclick", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onscroll", "ontouchstart",
+            "ontouchend", "ontouchmove", "ontouchcancel", "onwheel" };
+
         [HttpGet, Route("/search/results")]//searches
         public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
         {
-            //ViewBag.ShowBackButton = true;
-            //ViewBag.PreviousPage = Url.Action("Index", "Search");
-            return GetSearchResult(search, pageNo, selectedFacets);
+            var cleanSearch = _gdsValidate.CleanText(search, true, restrictedWords, allowedChars);
+            if (string.IsNullOrEmpty(cleanSearch)) return RedirectToAction("Index");
+
+            return GetSearchResult(cleanSearch, pageNo, selectedFacets);
         }
 
 
         [HttpPost, Route("/search/results")]//applies the filter & does a search
         public IActionResult SearchResults(string search, List<SelectItem> facets = null)
         {
+            var cleanSearch = _gdsValidate.CleanText(search, true, restrictedWords, allowedChars);
+            if (string.IsNullOrEmpty(cleanSearch)) return RedirectToAction("Index");
+
             var selectedFacets = string.Empty;
             if (facets != null)
             {
                 selectedFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());
             }
 
-            return GetSearchResult(search, 1, selectedFacets);
+            return GetSearchResult(cleanSearch, 1, selectedFacets);
         }
 
         
