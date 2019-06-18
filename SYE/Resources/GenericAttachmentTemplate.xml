@@ -51,7 +51,7 @@
           <att:ContactEmail>gfcPortal1@cqc.org</att:ContactEmail>
           <att:sourceApplication>Drupal</att:sourceApplication>
           <att:sourceSystem>Drupal</att:sourceSystem>
-          <att:initialReceiptDate>{{receiptDate}}</att:initialReceiptDate>
+          <att:initialReceiptDate>2019-04-18</att:initialReceiptDate>
           <att:Creator>gfcPortal1</att:Creator>
           <att:olsSubmissionNumber>{{submissionNumber}}</att:olsSubmissionNumber>
         </att:Enquiry>

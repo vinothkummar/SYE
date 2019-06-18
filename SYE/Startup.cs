@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Configuration;
+using System.Linq;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
+using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -125,11 +128,25 @@ namespace SYE
             services.TryAddScoped<IFormService, FormService>();
             services.TryAddScoped<ISubmissionService, SubmissionService>();
             services.TryAddScoped<IDocumentService, DocumentService>();
+
+            var module = services.FirstOrDefault(t => t.ImplementationFactory?.GetType() == typeof(Func<IServiceProvider, DependencyTrackingTelemetryModule>));
+            if (module != null)
+            {
+                services.Remove(module);
+                services.AddSingleton<ITelemetryModule>(provider => new DependencyTrackingTelemetryModule() { SetComponentCorrelationHttpHeaders = false });
+            }
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            //var modules = app.ApplicationServices.GetServices<ITelemetryModule>();
+            //var dependencyModule = modules.OfType<DependencyTrackingTelemetryModule>().FirstOrDefault();
 
+            //if (dependencyModule != null)
+            //{
+            //    var domains = dependencyModule.ExcludeComponentCorrelationHttpHeadersOnDomains;
+            //    domains.Add("api-sys.cqc.org.uk");
+            //}
             if (env.IsDevelopment() || env.IsLocal())
             {
                 app.UseDeveloperExceptionPage();

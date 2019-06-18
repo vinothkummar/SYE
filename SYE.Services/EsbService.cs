@@ -51,7 +51,7 @@ namespace SYE.Services
 
         public async Task<bool> PostSubmision(SubmissionVM submission)
         {
-            var submissionString = GenerateEsbPayload(submission);
+            var submissionString = submission.Base64Attachment;//GenerateEsbPayload(submission);
             var result = await _esbWrapper.PostSubmission(submissionString);
             if (result == true)
             {
