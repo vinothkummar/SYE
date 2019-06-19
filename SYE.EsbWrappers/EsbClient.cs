@@ -72,6 +72,7 @@ namespace SYE.EsbWrappers
                             .Replace("{{submissionNumber}}", submissionNumber);
                         client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
                         var response = client.UploadString(endpoint, finalPayload);
+                        //get enquiryId from the responseXml
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(response);
                         //TODO this is clunky
@@ -109,20 +110,20 @@ namespace SYE.EsbWrappers
                 using (var reader = new StreamReader(path))
                 {
                     var template = @reader.ReadToEnd();
-                    var finalPayload = template.Replace("{{username}}", esbCredUsername)
+                    env = template.Replace("{{username}}", esbCredUsername)
                         .Replace("{{password}}", esbCredPassword)
                         .Replace("{{nonce}}", nonce)
                         .Replace("{{created}}", created);
-                    env = finalPayload;
                 }
 
                 var content = new StringContent(env);
                 var result = client.PostAsync(uri, content).ConfigureAwait(false).GetAwaiter().GetResult();
                 if (result.IsSuccessStatusCode)
                 {
-                    var msg = result.Content.ReadAsStringAsync().Result;
+                    //get tokenId from the responseXml
+                    var response = result.Content.ReadAsStringAsync().Result;                    
                     XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(msg);
+                    doc.LoadXml(response);
                     //TODO this is clunky
                     returnString = doc.FirstChild.FirstChild.FirstChild.FirstChild.LastChild.Value;
                 }
