@@ -87,6 +87,10 @@ namespace SYE.Controllers
                 {
                     return NotFound();
                 }
+                if (submission.Status != "Saved")
+                {
+                    return NotFound();
+                }
 
                 var result = GeneratePostsToCrm(new List<string> { submission.SubmissionId });
                 return Ok(result);

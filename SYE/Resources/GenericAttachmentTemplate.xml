@@ -1,7 +1,13 @@
-﻿<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-                  xmlns:mas="http://provider.model.service.ols.cqc.org.uk/masterdata"
-                  xmlns:att="http://provider.model.service.ols.cqc.org.uk/generic/attachment">
+﻿<soapenv:Envelope xmlns:att="http://provider.model.service.ols.cqc.org.uk/generic/attachment" xmlns:mas="http://provider.model.service.ols.cqc.org.uk/masterdata" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+      <wsse:UsernameToken wsu:Id="UsernameToken-3D78C7F7D45CB562D8156092921928438">
+        <wsse:Username>gfcPortal1</wsse:Username>
+        <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">H&amp;xLzwgFRn8P</wsse:Password>
+        <wsse:Nonce EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary">{{nonce}}</wsse:Nonce>
+        <wsu:Created>{{created}}</wsu:Created>
+      </wsse:UsernameToken>
+    </wsse:Security>
     <mas:Credentials>
       <mas:tokenId>{{token}}</mas:tokenId>
       <mas:originatingSystem>SYE</mas:originatingSystem>
@@ -13,7 +19,7 @@
     <att:CreateEnquiry_Input>
       <att:CQCEnquiry>
         <att:Enquiry>
-          <att:OrganisationId>1-1089472276</att:OrganisationId>
+          <att:OrganisationId>{{organisationId}}</att:OrganisationId>
           <att:ListOfDataItems>
             <att:Data>
               <!--Optional:-->
@@ -22,7 +28,7 @@
                 <!--Zero or more repetitions:-->
                 <att:Attachment>
                   <att:PrimaryContent>
-                    <att:FileName>Registration.pdf</att:FileName>
+                    <att:FileName>{{filename}}</att:FileName>
                     <att:FileContent>{{payload}}</att:FileContent>
                     <!--Optional:-->
                     <att:ContentType>Factual Accuracy Comments</att:ContentType>
@@ -44,10 +50,10 @@
           <att:Type>Share your experience</att:Type>
           <att:Subtype>{{subtype}}</att:Subtype>
           <att:SourceChannel>Web</att:SourceChannel>
-          <att:CommMethod></att:CommMethod>
-          <att:ContactPhone></att:ContactPhone>
-          <att:ContactLastName></att:ContactLastName>
-          <att:ContactFirstName></att:ContactFirstName>
+          <att:CommMethod/>
+          <att:ContactPhone/>
+          <att:ContactLastName/>
+          <att:ContactFirstName/>
           <att:ContactEmail>gfcPortal1@cqc.org</att:ContactEmail>
           <att:sourceApplication>Drupal</att:sourceApplication>
           <att:sourceSystem>Drupal</att:sourceSystem>

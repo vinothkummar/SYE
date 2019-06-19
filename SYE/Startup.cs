@@ -128,13 +128,6 @@ namespace SYE
             services.TryAddScoped<IFormService, FormService>();
             services.TryAddScoped<ISubmissionService, SubmissionService>();
             services.TryAddScoped<IDocumentService, DocumentService>();
-
-            var module = services.FirstOrDefault(t => t.ImplementationFactory?.GetType() == typeof(Func<IServiceProvider, DependencyTrackingTelemetryModule>));
-            if (module != null)
-            {
-                services.Remove(module);
-                services.AddSingleton<ITelemetryModule>(provider => new DependencyTrackingTelemetryModule() { SetComponentCorrelationHttpHeaders = false });
-            }
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

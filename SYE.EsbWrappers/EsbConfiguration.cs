@@ -11,6 +11,9 @@ namespace SYE.EsbWrappers
         string EsbAuthenticationPassword { get; set; }
         string EsbAuthenticationCredUsername { get; set; }
         string EsbAuthenticationCredPassword { get; set; }
+        string EsbAuthenticationSubmitKey { get; set; }
+        string EsbAuthenticationSubmitValue { get; set; }
+
         //generic attachment        
         string EsbGenericAttachmentEndpoint { get; set; }
         string EsbGenericAttachmentUsername { get; set; }
@@ -25,6 +28,8 @@ namespace SYE.EsbWrappers
         public string EsbAuthenticationPassword { get; set; }
         public string EsbAuthenticationCredUsername { get; set; }
         public string EsbAuthenticationCredPassword { get; set; }
+        public string EsbAuthenticationSubmitKey { get; set; }
+        public string EsbAuthenticationSubmitValue { get; set; }
         //generic attachment        
         public string EsbGenericAttachmentEndpoint { get; set; }
         public string EsbGenericAttachmentUsername { get; set; }
