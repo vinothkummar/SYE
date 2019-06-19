@@ -78,7 +78,7 @@ namespace SYE.Controllers
             }
         }
         [HttpPost("submission")]
-        public ActionResult<SubmissionPostResultVM> PostToCrm([FromBody] string id)
+        public async Task<ActionResult<SubmissionPostResultVM>> PostToCrm([FromBody] string id)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace SYE.Controllers
                     return NotFound();
                 }
 
-                var result = GeneratePostsToCrm(new List<string> { submission.SubmissionId });
+                var result = await GeneratePostsToCrm(new List<string> { submission.SubmissionId });
                 return Ok(result);
             }
             catch (Exception e)

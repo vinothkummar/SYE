@@ -34,11 +34,24 @@ namespace SYE.EsbWrappers
             if (!string.IsNullOrWhiteSpace(token))
             {
                 var payload = submission.Base64Attachment;
+                var providerId = submission.ProviderId;
+                var locationName = submission.LocationName;
+                string description = string.Empty;
                 //leave organisationId empty ftm
-                var organisationId = string.Empty;//submission.LocationId;
+                var organisationId = string.Empty;//submission.LocationId;                
+                if (submission.LocationId == "0")
+                {
+                    organisationId = string.Empty;//no location selected
+                    description = "(GFC)";
+                }
+                else
+                {
+                    description = "(GFC) Location ID: " + submission.LocationId + " Provider ID: " + submission.ProviderId + " Location name: " + submission.LocationName;
+                }
+
                 //var submissionNumber = Guid.NewGuid().ToString().Substring(0, 8);//use this for testing
                 var submissionNumber = "GFC-" + submission.SubmissionId;
-                var filename = submissionNumber + ".docx";
+                var filename = submissionNumber + ".docx";                
                 var username = _esbConfig.EsbGenericAttachmentUsername;
                 var password = _esbConfig.EsbGenericAttachmentPassword;
                 var endpoint = _esbConfig.EsbGenericAttachmentEndpoint;
@@ -67,6 +80,7 @@ namespace SYE.EsbWrappers
                             .Replace("{{nonce}}", nonce)
                             .Replace("{{created}}", created)
                             .Replace("{{organisationId}}", organisationId)
+                            .Replace("{{description}}", description)
                             .Replace("{{filename}}", filename)
                             .Replace("{{subtype}}", GetFriendlyName(type))
                             .Replace("{{submissionNumber}}", submissionNumber);
@@ -112,6 +126,8 @@ namespace SYE.EsbWrappers
                     var template = @reader.ReadToEnd();
                     env = template.Replace("{{username}}", esbCredUsername)
                         .Replace("{{password}}", esbCredPassword)
+                        .Replace("{authUsername}}", esbAuthUser)
+                        .Replace("{{authPassword}}", esbAuthPassword)
                         .Replace("{{nonce}}", nonce)
                         .Replace("{{created}}", created);
                 }
