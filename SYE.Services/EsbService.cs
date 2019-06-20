@@ -18,7 +18,7 @@ namespace SYE.Services
         Task<IEnumerable<SubmissionVM>> GetAllSubmisions();
         Task<IEnumerable<SubmissionVM>> GetAllSubmisions(string status);
         Task<SubmissionVM> GetSubmision(string id);
-        Task<bool> PostSubmision(SubmissionVM submission);
+        Task<string> PostSubmision(SubmissionVM submission);
     }
     public class EsbService : IEsbService
     {
@@ -49,17 +49,16 @@ namespace SYE.Services
             return result;
         }
 
-        public async Task<bool> PostSubmision(SubmissionVM submission)
+        public async Task<string> PostSubmision(SubmissionVM submission)
         {
             var result = await _esbWrapper.PostSubmission(submission);
-            if (result == true)
+            if (!string.IsNullOrWhiteSpace(result))
             {
                 submission.Status = "Posted";
                 var sub = await _repo.UpdateAsync(submission.Id, submission);
-                return true;
             }
 
-            return false;
+            return result;
         }
         private string GenerateEsbPayload(SubmissionVM payload)
         {

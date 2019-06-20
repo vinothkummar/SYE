@@ -42,8 +42,8 @@ namespace SYE.EsbWrappers
                     description = "(GFC) Location ID: " + submission.LocationId + " Provider ID: " + submission.ProviderId + " Location name: " + submission.LocationName;
                 }
 
-                //var submissionNumber = Guid.NewGuid().ToString().Substring(0, 8);//use this for testing because esb rejects duplicate submissionIds
-                var submissionNumber = "GFC-" + submission.SubmissionId;
+                var submissionNumber = Guid.NewGuid().ToString().Substring(0, 8);//use this for testing because esb rejects duplicate submissionIds
+                //var submissionNumber = "GFC-" + submission.SubmissionId;
                 var filename = submissionNumber + ".docx";                
                 var username = _esbConfig.EsbGenericAttachmentUsername;
                 var password = _esbConfig.EsbGenericAttachmentPassword;
@@ -86,8 +86,8 @@ namespace SYE.EsbWrappers
                         //get enquiryId from the responseXml
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(response);
-                        //TODO this is clunky
-                        returnString = doc.FirstChild.LastChild.LastChild.FirstChild.LastChild.Value;     
+                        XmlElement root = doc.DocumentElement;
+                        returnString = root.GetElementsByTagName("enquiryId").Item(0).FirstChild.Value;
                     }
                 }
             }
@@ -137,8 +137,8 @@ namespace SYE.EsbWrappers
                     var response = result.Content.ReadAsStringAsync().Result;                    
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(response);
-                    //TODO this is clunky
-                    returnString = doc.FirstChild.FirstChild.FirstChild.FirstChild.LastChild.Value;
+                    XmlElement root = doc.DocumentElement;
+                    returnString = root.GetElementsByTagName("tokenId").Item(0).FirstChild.Value;
                 }
             }
 

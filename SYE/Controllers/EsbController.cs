@@ -122,9 +122,13 @@ namespace SYE.Controllers
 
         private async Task<SubmissionPostResultVM> GeneratePostsToCrm(IEnumerable<string> ids)
         {
-            var submissionResult = new SubmissionPostResultVM();
-            submissionResult.DateCreated = DateTime.Now.ToLongDateString();
-            submissionResult.NumberItemsSent = ids.Count();
+            var submissionResult = new SubmissionPostResultVM
+            {
+                DateCreated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                NumberItemsSent = ids.Count(),
+                PostedSubmissions = new List<string>(),
+                FailedSubmissions = new List<string>()
+            };
             foreach (var id in ids)
             {
                 var submission = _esbService.GetSubmision(id).Result;
@@ -135,13 +139,15 @@ namespace SYE.Controllers
                 else
                 {
                     var result = await _esbService.PostSubmision(submission);
-                    if (result == true)
+                    if (!string.IsNullOrWhiteSpace(result))
                     {
                         submissionResult.NumberItemsPosted++;
+                        submissionResult.PostedSubmissions.Add(result);//add the enquiryId
                     }
                     else
                     {
                         submissionResult.NumberItemsFailed++;
+                        submissionResult.FailedSubmissions.Add("GFC-" + id);
                     }
                 }
             }

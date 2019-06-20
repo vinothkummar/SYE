@@ -6,7 +6,7 @@ namespace SYE.EsbWrappers
 {
     public interface IEsbWrapper
     {
-        Task<bool> PostSubmission(SubmissionVM submission);
+        Task<string> PostSubmission(SubmissionVM submission);
     }
     public class EsbWrapper : IEsbWrapper
     {
@@ -15,20 +15,10 @@ namespace SYE.EsbWrappers
         {
             _client = client;
         }
-        public async Task<bool> PostSubmission(SubmissionVM submission)
+        public async Task<string> PostSubmission(SubmissionVM submission)
         {
-            var returnBool = false;
-            try
-            {
-                var result = _client.SendGenericAttachment(submission, PayloadType.Classified);
-                returnBool = (!string.IsNullOrWhiteSpace(result));
-            }
-            catch (Exception e)
-            {
-                //log error           
-            }
-
-            return await Task.FromResult(returnBool);
+            var result = _client.SendGenericAttachment(submission, PayloadType.Classified);
+            return await Task.FromResult(result);
         }
     }
 }
