@@ -1,17 +1,10 @@
-﻿using SYE.EsbWrappers.Authentication;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using SYE.Models.SubmissionSchema;
-using AuthenticationServiceReference;
-using System.ServiceModel;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
 using System.Text;
 using System.Xml;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace SYE.EsbWrappers
 {
@@ -36,9 +29,8 @@ namespace SYE.EsbWrappers
                 var payload = submission.Base64Attachment;
                 var providerId = submission.ProviderId;
                 var locationName = submission.LocationName;
-                string description = string.Empty;
-                //leave organisationId empty ftm
-                var organisationId = string.Empty;//submission.LocationId;                
+                var description = string.Empty;                
+                var organisationId = string.Empty;
                 if (submission.LocationId == "0")
                 {
                     organisationId = string.Empty;//no location selected
@@ -46,15 +38,18 @@ namespace SYE.EsbWrappers
                 }
                 else
                 {
+                    organisationId = submission.LocationId;
                     description = "(GFC) Location ID: " + submission.LocationId + " Provider ID: " + submission.ProviderId + " Location name: " + submission.LocationName;
                 }
 
-                //var submissionNumber = Guid.NewGuid().ToString().Substring(0, 8);//use this for testing
+                //var submissionNumber = Guid.NewGuid().ToString().Substring(0, 8);//use this for testing because esb rejects duplicate submissionIds
                 var submissionNumber = "GFC-" + submission.SubmissionId;
                 var filename = submissionNumber + ".docx";                
                 var username = _esbConfig.EsbGenericAttachmentUsername;
                 var password = _esbConfig.EsbGenericAttachmentPassword;
                 var endpoint = _esbConfig.EsbGenericAttachmentEndpoint;
+                var esbAuthUser = _esbConfig.EsbAuthenticationUsername;
+                var esbAuthPassword = _esbConfig.EsbAuthenticationPassword;
 
                 if (username == null || password == null || endpoint == null) throw new ArgumentException("Could not read UserName, Password or GenericAttachmentEndpoint AppSettings");
 
@@ -76,6 +71,8 @@ namespace SYE.EsbWrappers
                     {                        
                         var template = @reader.ReadToEnd();
                         var finalPayload = template.Replace("{{token}}", token)
+                            .Replace("{{authUsername}}", esbAuthUser)
+                            .Replace("{{authPassword}}", esbAuthPassword)
                             .Replace("{{payload}}", payload)
                             .Replace("{{nonce}}", nonce)
                             .Replace("{{created}}", created)
@@ -90,7 +87,7 @@ namespace SYE.EsbWrappers
                         XmlDocument doc = new XmlDocument();
                         doc.LoadXml(response);
                         //TODO this is clunky
-                        returnString = doc.FirstChild.LastChild.LastChild.FirstChild.LastChild.Value;
+                        returnString = doc.FirstChild.LastChild.LastChild.FirstChild.LastChild.Value;     
                     }
                 }
             }
@@ -126,7 +123,7 @@ namespace SYE.EsbWrappers
                     var template = @reader.ReadToEnd();
                     env = template.Replace("{{username}}", esbCredUsername)
                         .Replace("{{password}}", esbCredPassword)
-                        .Replace("{authUsername}}", esbAuthUser)
+                        .Replace("{{authUsername}}", esbAuthUser)
                         .Replace("{{authPassword}}", esbAuthPassword)
                         .Replace("{{nonce}}", nonce)
                         .Replace("{{created}}", created);

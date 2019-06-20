@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SYE.Models.SubmissionSchema;
 using SYE.Services;
 
@@ -15,11 +16,13 @@ namespace SYE.Controllers
     [ApiController]
     public class EsbController : ControllerBase
     {
+        private readonly ILogger _logger;
         private IEsbService _esbService;
 
-        public EsbController(IEsbService esbService)
+        public EsbController(IEsbService esbService, ILogger<EsbController> logger)
         {
             _esbService = esbService;
+            _logger = logger;
         }
 
         [HttpGet("submissions")]
@@ -35,9 +38,9 @@ namespace SYE.Controllers
 
                 return Ok(results);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error getting submissions.");
                 return StatusCode(500);
             }
         }
@@ -54,9 +57,9 @@ namespace SYE.Controllers
 
                 return Ok(results);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error getting submissions.");
                 return StatusCode(500);
             }
         }
@@ -71,9 +74,9 @@ namespace SYE.Controllers
 
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error getting submission.");
                 return StatusCode(500);
             }
         }
@@ -95,9 +98,9 @@ namespace SYE.Controllers
                 var result = await GeneratePostsToCrm(new List<string> { submission.SubmissionId });
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error posting submission to CRM.");
                 return StatusCode(500);
             }
         }
@@ -110,9 +113,9 @@ namespace SYE.Controllers
                 var result = await GeneratePostsToCrm(allIds);
                 return Ok(result);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                //log error
+                _logger.LogError(ex, "Error posting submissions to CRM.");
                 return StatusCode(500);
             }
         }

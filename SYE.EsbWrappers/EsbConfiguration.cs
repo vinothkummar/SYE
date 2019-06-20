@@ -13,7 +13,6 @@ namespace SYE.EsbWrappers
         string EsbAuthenticationCredPassword { get; set; }
         string EsbAuthenticationSubmitKey { get; set; }
         string EsbAuthenticationSubmitValue { get; set; }
-
         //generic attachment        
         string EsbGenericAttachmentEndpoint { get; set; }
         string EsbGenericAttachmentUsername { get; set; }
