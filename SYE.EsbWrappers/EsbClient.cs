@@ -5,6 +5,7 @@ using SYE.Models.SubmissionSchema;
 using System.Net.Http;
 using System.Text;
 using System.Xml;
+using Microsoft.AspNetCore.Hosting;
 
 namespace SYE.EsbWrappers
 {
@@ -15,9 +16,11 @@ namespace SYE.EsbWrappers
     public class EsbClient : IEsbClient
     {
         private IEsbConfiguration<EsbConfig> _esbConfig;
-        public EsbClient(IEsbConfiguration<EsbConfig> esbConfig)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public EsbClient(IEsbConfiguration<EsbConfig> esbConfig, IHostingEnvironment hostingEnvironment)
         {
             _esbConfig = esbConfig;
+            _hostingEnvironment = hostingEnvironment;
         }
         public string SendGenericAttachment(SubmissionVM submission, PayloadType type)
         {
@@ -53,7 +56,7 @@ namespace SYE.EsbWrappers
 
                 if (username == null || password == null || endpoint == null) throw new ArgumentException("Could not read UserName, Password or GenericAttachmentEndpoint AppSettings");
 
-                var path = Directory.GetCurrentDirectory() + "\\Resources\\GenericAttachmentTemplate.xml";
+                var path = _hostingEnvironment.ContentRootPath + "\\Resources\\GenericAttachmentTemplate.xml";
                 var nonce = GetNonce();
                 var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 
@@ -109,7 +112,7 @@ namespace SYE.EsbWrappers
             var esbCredUsername = _esbConfig.EsbAuthenticationCredUsername;
             var esbCredPassword = _esbConfig.EsbAuthenticationCredPassword;
 
-            var path = Directory.GetCurrentDirectory() + "\\Resources\\GetTokenTemplate.xml";
+            var path = _hostingEnvironment.ContentRootPath + "\\Resources\\GetTokenTemplate.xml";
             using (var client = new HttpClient())
             {
                 var nonce = GetNonce();
