@@ -5,29 +5,37 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
+using SYE.EsbWrappers;
 using SYE.Models.SubmissionSchema;
 using SYE.Services;
 
 namespace SYE.Controllers
 {
-
-    //TODO secure this API!! Temporarity commented out
     [Route("api/[controller]")]
     [ApiController]
     public class EsbController : ControllerBase
     {
+        private readonly string _publicApiKey;
         private readonly ILogger _logger;
         private IEsbService _esbService;
+        private readonly IEsbConfiguration<EsbConfig> _config;
 
-        public EsbController(IEsbService esbService, ILogger<EsbController> logger)
+        public EsbController(IEsbService esbService, ILogger<EsbController> logger, IEsbConfiguration<EsbConfig> config)
         {
             _esbService = esbService;
             _logger = logger;
+            _publicApiKey = config.ApiPublicKey;
         }
 
         [HttpGet("submissions")]
         public async Task<ActionResult<IEnumerable<SubmissionVM>>> GetAll()
         {
+            // Check it's a valid request
+            if (!CheckRequestHeaders(Request))
+            {
+                return BadRequest("Forbidden");
+            }
             try
             {
                 var results = await _esbService.GetAllSubmisions();
@@ -47,6 +55,11 @@ namespace SYE.Controllers
         [HttpGet("submissions/{status}")]
         public async Task<ActionResult<List<SubmissionVM>>> GetAll(string status)
         {
+            // Check it's a valid request
+            if (!CheckRequestHeaders(Request))
+            {
+                return BadRequest("Forbidden");
+            }
             try
             {
                 var results = await _esbService.GetAllSubmisions(status);
@@ -66,6 +79,11 @@ namespace SYE.Controllers
         [HttpGet("submission/{id}")]
         public async Task<ActionResult<SubmissionVM>> Get(string id)
         {
+            // Check it's a valid request
+            if (!CheckRequestHeaders(Request))
+            {
+                return BadRequest("Forbidden");
+            }
             try
             {
                 var result = await _esbService.GetSubmision(id);
@@ -83,6 +101,12 @@ namespace SYE.Controllers
         [HttpPost("submission")]
         public async Task<ActionResult<SubmissionPostResultVM>> PostToCrm([FromBody] string id)
         {
+            // Check it's a valid request
+            if (!CheckRequestHeaders(Request))
+            {
+                return BadRequest("Forbidden");
+            }
+
             try
             {
                 var submission = _esbService.GetSubmision(id).Result;
@@ -107,6 +131,11 @@ namespace SYE.Controllers
         [HttpPost("submissions")]
         public async Task<ActionResult<SubmissionPostResultVM>> PostAllToCrm()
         {
+            // Check it's a valid request
+            if (!CheckRequestHeaders(Request))
+            {
+                return BadRequest("Forbidden");
+            }
             try
             {
                 var allIds = _esbService.GetAllSubmisions("Saved").Result.Select(x => x.SubmissionId);
@@ -156,11 +185,25 @@ namespace SYE.Controllers
             {
                 submissionResult.Status = "Posted";
             }
+            else if (submissionResult.NumberItemsFailed == 0 && submissionResult.NumberItemsPosted == 0)
+            {
+                submissionResult.Status = "None Posted";
+            }
             else
             {
                 submissionResult.Status = "Failed";
             }
             return submissionResult;
+        }
+        private bool CheckRequestHeaders(HttpRequest request)
+        {
+            StringValues headerValues;
+            if (request.Headers.TryGetValue("publicKey", out headerValues))
+            {
+                var publicKey = headerValues.First();
+                if (publicKey == _publicApiKey) return true;
+            }
+            return false;
         }
     }
 }

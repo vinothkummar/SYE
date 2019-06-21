@@ -43,5 +43,7 @@ namespace SYE.Models.SubmissionSchema
 
         [JsonProperty("esbGenericAttachmentSubmitValue")]
         public string EsbGenericAttachmentSubmitValue { get; set; }
-    }
+
+        [JsonProperty("apiPublicKey")]
+        public string ApiPublicKey { get; set; }}
 }

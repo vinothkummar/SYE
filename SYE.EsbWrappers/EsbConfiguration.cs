@@ -19,6 +19,7 @@ namespace SYE.EsbWrappers
         string EsbGenericAttachmentPassword { get; set; }
         string EsbGenericAttachmentSubmitKey { get; set; }
         string EsbGenericAttachmentSubmitValue { get; set; }
+        string ApiPublicKey { get; set; }
     }
     public class EsbConfiguration<T> : IEsbConfiguration<T> where T : class
     {
@@ -35,6 +36,6 @@ namespace SYE.EsbWrappers
         public string EsbGenericAttachmentPassword { get; set; }
         public string EsbGenericAttachmentSubmitKey { get; set; }
         public string EsbGenericAttachmentSubmitValue { get; set; }
+        public string ApiPublicKey { get; set; }
     }
-
 }
