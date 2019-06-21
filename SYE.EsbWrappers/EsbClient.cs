@@ -42,8 +42,8 @@ namespace SYE.EsbWrappers
                     description = "(GFC) Location ID: " + submission.LocationId + " Provider ID: " + submission.ProviderId + " Location name: " + submission.LocationName;
                 }
 
-                var submissionNumber = Guid.NewGuid().ToString().Substring(0, 8);//use this for testing because esb rejects duplicate submissionIds
-                //var submissionNumber = "GFC-" + submission.SubmissionId;
+                //var submissionNumber = Guid.NewGuid().ToString().Substring(0, 8);//use this for testing because esb rejects duplicate submissionIds
+                var submissionNumber = "GFC-" + submission.SubmissionId;
                 var filename = submissionNumber + ".docx";                
                 var username = _esbConfig.EsbGenericAttachmentUsername;
                 var password = _esbConfig.EsbGenericAttachmentPassword;

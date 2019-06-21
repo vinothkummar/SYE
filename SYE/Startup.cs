@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Configuration;
-using System.Linq;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
-using Microsoft.ApplicationInsights.DependencyCollector;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +11,6 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using Notify.Client;
 using Notify.Interfaces;
 using SYE.EsbWrappers;
