@@ -40,6 +40,12 @@
 
 
   <ItemGroup>
+    <None Include="wwwroot\Resources\GenericAttachmentTemplate.xml" />
+    <None Include="wwwroot\Resources\GetTokenTemplate.xml" />
+  </ItemGroup>
+
+
+  <ItemGroup>
     <Content Update="appsettings.json">
       <TransformOnBuild>true</TransformOnBuild>
     </Content>
