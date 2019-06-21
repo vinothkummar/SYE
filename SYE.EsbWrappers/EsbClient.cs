@@ -56,7 +56,7 @@ namespace SYE.EsbWrappers
 
                 if (username == null || password == null || endpoint == null) throw new ArgumentException("Could not read UserName, Password or GenericAttachmentEndpoint AppSettings");
 
-                var path = _hostingEnvironment.ContentRootPath + "\\Resources\\GenericAttachmentTemplate.xml";
+                var path = _hostingEnvironment.WebRootPath + "\\Resources\\GenericAttachmentTemplate.xml";
                 var nonce = GetNonce();
                 var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 
@@ -112,7 +112,7 @@ namespace SYE.EsbWrappers
             var esbCredUsername = _esbConfig.EsbAuthenticationCredUsername;
             var esbCredPassword = _esbConfig.EsbAuthenticationCredPassword;
 
-            var path = _hostingEnvironment.ContentRootPath + "\\Resources\\GetTokenTemplate.xml";
+            var path = _hostingEnvironment.WebRootPath + "\\Resources\\GetTokenTemplate.xml";
             using (var client = new HttpClient())
             {
                 var nonce = GetNonce();
