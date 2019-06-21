@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Connected Services\AuthenticationServiceReference\" />
-    <Folder Include="WSDL\" />
   </ItemGroup>
 
 </Project>

@@ -11,7 +11,6 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using Notify.Client;
 using Notify.Interfaces;
 using SYE.EsbWrappers;
@@ -132,7 +131,6 @@ namespace SYE
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-
             if (env.IsDevelopment() || env.IsLocal())
             {
                 app.UseDeveloperExceptionPage();

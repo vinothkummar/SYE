@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SYE.Models.SubmissionSchema;
+using System;
 using System.Threading.Tasks;
 
 namespace SYE.EsbWrappers
 {
     public interface IEsbWrapper
     {
-        Task<bool> PostSubmission(string submissionJson);
+        Task<string> PostSubmission(SubmissionVM submission);
     }
     public class EsbWrapper : IEsbWrapper
     {
@@ -14,21 +15,10 @@ namespace SYE.EsbWrappers
         {
             _client = client;
         }
-        public async Task<bool> PostSubmission(string submissionJson)
+        public async Task<string> PostSubmission(SubmissionVM submission)
         {
-            var returnBool = false;
-            try
-            {
-                var result = _client.SendGenericAttachment(submissionJson, PayloadType.Submission);
-                returnBool = true;//TODO look at the result before determining true/false
-            }
-            catch (Exception e)
-            {
-                //log error           
-            }
-
-
-            return await Task.FromResult(returnBool);
+            var result = _client.SendGenericAttachment(submission, PayloadType.Classified);
+            return await Task.FromResult(result);
         }
     }
 }

@@ -29,5 +29,11 @@ namespace SYE.Models.SubmissionSchema
 
         [JsonProperty("status")]
         public string Status { get; set; }
+
+        [JsonProperty("posted_submissions")]
+        public List<string> PostedSubmissions { get; set; }
+
+        [JsonProperty("failed_submissions")]
+        public List<string> FailedSubmissions { get; set; }
     }
 }

@@ -22,6 +22,12 @@ namespace SYE.Models.SubmissionSchema
         [JsonProperty("esbAuthenticationCredPassword")]
         public string EsbAuthenticationCredPassword { get; set; }
 
+        [JsonProperty("esbAuthenticationSubmitKey")]
+        public string EsbAuthenticationSubmitKey { get; set; }
+
+        [JsonProperty("esbAuthenticationSubmitValue")]
+        public string EsbAuthenticationSubmitValue { get; set; }
+
         //generic attachment        
         [JsonProperty("esbGenericAttachmentEndpoint")]
         public string EsbGenericAttachmentEndpoint { get; set; }
@@ -37,5 +43,7 @@ namespace SYE.Models.SubmissionSchema
 
         [JsonProperty("esbGenericAttachmentSubmitValue")]
         public string EsbGenericAttachmentSubmitValue { get; set; }
-    }
+
+        [JsonProperty("apiPublicKey")]
+        public string ApiPublicKey { get; set; }}
 }
