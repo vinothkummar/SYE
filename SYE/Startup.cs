@@ -135,14 +135,6 @@ namespace SYE
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            //var modules = app.ApplicationServices.GetServices<ITelemetryModule>();
-            //var dependencyModule = modules.OfType<DependencyTrackingTelemetryModule>().FirstOrDefault();
-
-            //if (dependencyModule != null)
-            //{
-            //    var domains = dependencyModule.ExcludeComponentCorrelationHttpHeadersOnDomains;
-            //    domains.Add("api-sys.cqc.org.uk");
-            //}
             if (env.IsDevelopment() || env.IsLocal())
             {
                 app.UseDeveloperExceptionPage();

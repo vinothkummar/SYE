@@ -142,12 +142,12 @@ namespace SYE.Controllers
                     if (!string.IsNullOrWhiteSpace(result))
                     {
                         submissionResult.NumberItemsPosted++;
-                        submissionResult.PostedSubmissions.Add(result);//add the enquiryId
+                        submissionResult.PostedSubmissions.Add(result);//add the enquiryId returned from the esb
                     }
                     else
                     {
                         submissionResult.NumberItemsFailed++;
-                        submissionResult.FailedSubmissions.Add("GFC-" + id);
+                        submissionResult.FailedSubmissions.Add("GFC-" + id);//add the id of the submisison that we are tring to post
                     }
                 }
             }
