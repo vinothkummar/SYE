@@ -113,36 +113,44 @@ namespace SYE.EsbWrappers
             var esbCredPassword = _esbConfig.EsbAuthenticationCredPassword;
 
             var path = _hostingEnvironment.WebRootPath + "\\Resources\\GetTokenTemplate.xml";
-            using (var client = new HttpClient())
+
+            try
             {
-                var nonce = GetNonce();
-                var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-                client.DefaultRequestHeaders.Add(esbAuthAction, esbAuthValue);
-
-                var uri = new Uri(esbEndpoint);
-                var env = "";
-                using (var reader = new StreamReader(path))
+                using (var client = new HttpClient())
                 {
-                    var template = @reader.ReadToEnd();
-                    env = template.Replace("{{username}}", esbCredUsername)
-                        .Replace("{{password}}", esbCredPassword)
-                        .Replace("{{authUsername}}", esbAuthUser)
-                        .Replace("{{authPassword}}", esbAuthPassword)
-                        .Replace("{{nonce}}", nonce)
-                        .Replace("{{created}}", created);
-                }
+                    var nonce = GetNonce();
+                    var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    client.DefaultRequestHeaders.Add(esbAuthAction, esbAuthValue);
 
-                var content = new StringContent(env);
-                var result = client.PostAsync(uri, content).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (result.IsSuccessStatusCode)
-                {
-                    //get tokenId from the responseXml
-                    var response = result.Content.ReadAsStringAsync().Result;                    
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml(response);
-                    XmlElement root = doc.DocumentElement;
-                    returnString = root.GetElementsByTagName("tokenId").Item(0).FirstChild.Value;
+                    var uri = new Uri(esbEndpoint);
+                    var env = "";
+                    using (var reader = new StreamReader(path))
+                    {
+                        var template = @reader.ReadToEnd();
+                        env = template.Replace("{{username}}", esbCredUsername)
+                            .Replace("{{password}}", esbCredPassword)
+                            .Replace("{{authUsername}}", esbAuthUser)
+                            .Replace("{{authPassword}}", esbAuthPassword)
+                            .Replace("{{nonce}}", nonce)
+                            .Replace("{{created}}", created);
+                    }
+
+                    var content = new StringContent(env);
+                    var result = client.PostAsync(uri, content).ConfigureAwait(false).GetAwaiter().GetResult();
+                    if (result.IsSuccessStatusCode)
+                    {
+                        //get tokenId from the responseXml
+                        var response = result.Content.ReadAsStringAsync().Result;
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(response);
+                        XmlElement root = doc.DocumentElement;
+                        returnString = root.GetElementsByTagName("tokenId").Item(0).FirstChild.Value;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("file path=" + path, e);
             }
 
             return returnString;
