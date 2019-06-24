@@ -31,7 +31,7 @@
                     <att:FileName>{{filename}}</att:FileName>
                     <att:FileContent>{{payload}}</att:FileContent>
                     <!--Optional:-->
-                    <att:ContentType>Factual Accuracy Comments</att:ContentType>
+                    <att:ContentType>Safeguarding</att:ContentType>
                   </att:PrimaryContent>
                   <!--Optional:-->
                   <att:ListOfAlternateFileRepresentations>
