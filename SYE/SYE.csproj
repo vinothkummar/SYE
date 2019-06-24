@@ -14,11 +14,6 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="wwwroot\Resources\GenericAttachmentTemplate.xml" />
-    <Content Remove="wwwroot\Resources\GetTokenTemplate.xml" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="GDSHelpers" Version="2019.6.17.1" />
@@ -45,18 +40,14 @@
 
 
   <ItemGroup>
-    <None Include="wwwroot\Resources\GenericAttachmentTemplate.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\Resources\GetTokenTemplate.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-
-  <ItemGroup>
     <Content Update="appsettings.json">
       <TransformOnBuild>true</TransformOnBuild>
+    </Content>
+    <Content Update="wwwroot\Resources\GenericAttachmentTemplate.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\Resources\GetTokenTemplate.xml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
