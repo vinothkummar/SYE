@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using Microsoft.AspNetCore.Hosting;
 using System.Reflection;
+using Microsoft.Extensions.FileProviders;
 
 namespace SYE.EsbWrappers
 {
@@ -17,11 +18,12 @@ namespace SYE.EsbWrappers
     public class EsbClient : IEsbClient
     {
         private IEsbConfiguration<EsbConfig> _esbConfig;
-        private readonly IHostingEnvironment _hostingEnvironment;
-        public EsbClient(IEsbConfiguration<EsbConfig> esbConfig, IHostingEnvironment hostingEnvironment)
+        private readonly IFileProvider _fileProvider;
+
+        public EsbClient(IEsbConfiguration<EsbConfig> esbConfig, IFileProvider fileProvider)
         {
             _esbConfig = esbConfig;
-            _hostingEnvironment = hostingEnvironment;
+            _fileProvider = fileProvider;
         }
         public string SendGenericAttachment(SubmissionVM submission, PayloadType type)
         {
@@ -57,16 +59,7 @@ namespace SYE.EsbWrappers
 
                 if (username == null || password == null || endpoint == null) throw new ArgumentException("Could not read UserName, Password or GenericAttachmentEndpoint AppSettings");
 
-                var path = string.Empty;
-                if (_hostingEnvironment.IsEnvironment("Local"))
-                {
-                    path = _hostingEnvironment.WebRootPath + "\\Resources\\GenericAttachmentTemplate.xml";
-                }
-                else
-                {
-                    path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Resources\\GenericAttachmentTemplate.xml";
-                }
-
+                var file = _fileProvider.GetFileInfo("wwwroot/Resources/GenericAttachmentTemplate.xml");
                 var nonce = GetNonce();
                 var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 
@@ -80,27 +73,30 @@ namespace SYE.EsbWrappers
                     client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
                     client.Headers["Content-Type"] = "text/plain;charset=UTF-8";
 
-                    using (var reader = new StreamReader(path))
-                    {                        
-                        var template = @reader.ReadToEnd();
-                        var finalPayload = template.Replace("{{token}}", token)
-                            .Replace("{{authUsername}}", esbAuthUser)
-                            .Replace("{{authPassword}}", esbAuthPassword)
-                            .Replace("{{payload}}", payload)
-                            .Replace("{{nonce}}", nonce)
-                            .Replace("{{created}}", created)
-                            .Replace("{{organisationId}}", organisationId)
-                            .Replace("{{description}}", description)
-                            .Replace("{{filename}}", filename)
-                            .Replace("{{subtype}}", GetFriendlyName(type))
-                            .Replace("{{submissionNumber}}", submissionNumber);
-                        client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
-                        var response = client.UploadString(endpoint, finalPayload);
-                        //get enquiryId from the responseXml
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(response);
-                        XmlElement root = doc.DocumentElement;
-                        returnString = root.GetElementsByTagName("enquiryId").Item(0).FirstChild.Value;
+                    using (var stream = file.CreateReadStream())
+                    {
+                        using (var reader = new StreamReader(stream))
+                        {
+                            var template = @reader.ReadToEnd();
+                            var finalPayload = template.Replace("{{token}}", token)
+                                .Replace("{{authUsername}}", esbAuthUser)
+                                .Replace("{{authPassword}}", esbAuthPassword)
+                                .Replace("{{payload}}", payload)
+                                .Replace("{{nonce}}", nonce)
+                                .Replace("{{created}}", created)
+                                .Replace("{{organisationId}}", organisationId)
+                                .Replace("{{description}}", description)
+                                .Replace("{{filename}}", filename)
+                                .Replace("{{subtype}}", GetFriendlyName(type))
+                                .Replace("{{submissionNumber}}", submissionNumber);
+                            client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
+                            var response = client.UploadString(endpoint, finalPayload);
+                            //get enquiryId from the responseXml
+                            XmlDocument doc = new XmlDocument();
+                            doc.LoadXml(response);
+                            XmlElement root = doc.DocumentElement;
+                            returnString = root.GetElementsByTagName("enquiryId").Item(0).FirstChild.Value;
+                        }
                     }
                 }
             }
@@ -122,33 +118,28 @@ namespace SYE.EsbWrappers
             var esbCredUsername = _esbConfig.EsbAuthenticationCredUsername;
             var esbCredPassword = _esbConfig.EsbAuthenticationCredPassword;
 
-            var path = string.Empty;
-            if (_hostingEnvironment.IsEnvironment("Local"))
-            {
-                path = _hostingEnvironment.WebRootPath + "\\Resources\\GetTokenTemplate.xml";
-            }
-            else
-            {
-                path = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + "\\Resources\\GetTokenTemplate.xml";
-            }
-
             using (var client = new HttpClient())
             {
+                var file = _fileProvider.GetFileInfo("wwwroot/Resources/GetTokenTemplate.xml");
                 var nonce = GetNonce();
                 var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
                 client.DefaultRequestHeaders.Add(esbAuthAction, esbAuthValue);
 
                 var uri = new Uri(esbEndpoint);
                 var env = string.Empty;
-                using (var reader = new StreamReader(path))
+
+                using (var stream = file.CreateReadStream())
                 {
-                    var template = @reader.ReadToEnd();
-                    env = template.Replace("{{username}}", esbCredUsername)
-                        .Replace("{{password}}", esbCredPassword)
-                        .Replace("{{authUsername}}", esbAuthUser)
-                        .Replace("{{authPassword}}", esbAuthPassword)
-                        .Replace("{{nonce}}", nonce)
-                        .Replace("{{created}}", created);
+                    using (var reader = new StreamReader(stream))
+                    {
+                        var template = @reader.ReadToEnd();
+                        env = template.Replace("{{username}}", esbCredUsername)
+                            .Replace("{{password}}", esbCredPassword)
+                            .Replace("{{authUsername}}", esbAuthUser)
+                            .Replace("{{authPassword}}", esbAuthPassword)
+                            .Replace("{{nonce}}", nonce)
+                            .Replace("{{created}}", created);
+                    }
                 }
 
                 var content = new StringContent(env);

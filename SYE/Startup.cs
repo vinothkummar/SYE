@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,7 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.FileProviders;
 using Notify.Client;
 using Notify.Interfaces;
 using SYE.EsbWrappers;
@@ -119,6 +121,9 @@ namespace SYE
                 throw new ConfigurationErrorsException($"Failed to load {nameof(esbConfig)} from application configuration.");
             }
             services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
+
+            IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
+            services.AddSingleton<IFileProvider>(physicalProvider);
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.TryAddScoped<IEsbClient, EsbClient>();
