@@ -145,7 +145,7 @@ namespace SYE.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error posting submissions to CRM. " + ex.Message);
-                return StatusCode(500);
+                return StatusCode(500, ex);
             }
         }
 
