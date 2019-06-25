@@ -77,7 +77,7 @@ namespace SYE.EsbWrappers
                     {
                         using (var reader = new StreamReader(stream))
                         {
-                            var template = @reader.ReadToEnd();
+                            var template = @reader.ReadToEndAsync().Result;
                             var finalPayload = template.Replace("{{token}}", token)
                                 .Replace("{{authUsername}}", esbAuthUser)
                                 .Replace("{{authPassword}}", esbAuthPassword)
