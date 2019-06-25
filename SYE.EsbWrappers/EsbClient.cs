@@ -74,29 +74,27 @@ namespace SYE.EsbWrappers
                     client.Headers["Content-Type"] = "text/plain;charset=UTF-8";
 
                     using (var stream = file.CreateReadStream())
+                    using (var reader = new StreamReader(stream))
                     {
-                        using (var reader = new StreamReader(stream))
-                        {
-                            var template = @reader.ReadToEndAsync().Result;
-                            var finalPayload = template.Replace("{{token}}", token)
-                                .Replace("{{authUsername}}", esbAuthUser)
-                                .Replace("{{authPassword}}", esbAuthPassword)
-                                .Replace("{{payload}}", payload)
-                                .Replace("{{nonce}}", nonce)
-                                .Replace("{{created}}", created)
-                                .Replace("{{organisationId}}", organisationId)
-                                .Replace("{{description}}", description)
-                                .Replace("{{filename}}", filename)
-                                .Replace("{{subtype}}", GetFriendlyName(type))
-                                .Replace("{{submissionNumber}}", submissionNumber);
-                            client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
-                            var response = client.UploadString(endpoint, finalPayload);
-                            //get enquiryId from the responseXml
-                            XmlDocument doc = new XmlDocument();
-                            doc.LoadXml(response);
-                            XmlElement root = doc.DocumentElement;
-                            returnString = root.GetElementsByTagName("enquiryId").Item(0).FirstChild.Value;
-                        }
+                        var template = @reader.ReadToEndAsync().Result;
+                        var finalPayload = template.Replace("{{token}}", token)
+                            .Replace("{{authUsername}}", esbAuthUser)
+                            .Replace("{{authPassword}}", esbAuthPassword)
+                            .Replace("{{payload}}", payload)
+                            .Replace("{{nonce}}", nonce)
+                            .Replace("{{created}}", created)
+                            .Replace("{{organisationId}}", organisationId)
+                            .Replace("{{description}}", description)
+                            .Replace("{{filename}}", filename)
+                            .Replace("{{subtype}}", GetFriendlyName(type))
+                            .Replace("{{submissionNumber}}", submissionNumber);
+                        client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
+                        var response = client.UploadString(endpoint, finalPayload);
+                        //get enquiryId from the responseXml
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(response);
+                        XmlElement root = doc.DocumentElement;
+                        returnString = root.GetElementsByTagName("enquiryId").Item(0).FirstChild.Value;
                     }
                 }
             }
