@@ -200,7 +200,12 @@ namespace SYE.Services
         public void ClearSession()
         {
             var context = _httpContextAccessor.HttpContext;
-            context.Session.Clear();
+            context.Session.Remove("ProviderId");
+            context.Session.Remove("LocationId");
+            context.Session.Remove("LocationName");
+            context.Session.Remove("NavOrder");
+
+            //context.Session.Clear();
         }
     }
 
