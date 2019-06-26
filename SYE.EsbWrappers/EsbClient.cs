@@ -127,10 +127,9 @@ namespace SYE.EsbWrappers
                 var env = string.Empty;
 
                 using (var stream = file.CreateReadStream())
-                {
-                    using (var reader = new StreamReader(stream))
+                using (var reader = new StreamReader(stream))
                     {
-                        var template = @reader.ReadToEnd();
+                        var template = @reader.ReadToEndAsync().Result;
                         env = template.Replace("{{username}}", esbCredUsername)
                             .Replace("{{password}}", esbCredPassword)
                             .Replace("{{authUsername}}", esbAuthUser)
@@ -138,8 +137,6 @@ namespace SYE.EsbWrappers
                             .Replace("{{nonce}}", nonce)
                             .Replace("{{created}}", created);
                     }
-                }
-
                 var content = new StringContent(env);
                 var result = client.PostAsync(uri, content).ConfigureAwait(false).GetAwaiter().GetResult();
                 if (result.IsSuccessStatusCode)
@@ -187,10 +184,12 @@ namespace SYE.EsbWrappers
             }
             return builder.ToString();
         }
+
     }
+
     public enum PayloadType
     {
         Submission,
         Classified
-    }
+    }  
 }
