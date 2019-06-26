@@ -7,14 +7,14 @@
 
 <gds-row>
 
-    <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
         <gds-heading heading-type="H1" text="Find the care service you want to tell us about"></gds-heading>
 
-        <gds-heading heading-type="H3" text="Search by service name or address"></gds-heading>
+        <gds-heading heading-type="H2" text="Search by service name or address"></gds-heading>
 
         <gds-row>
-            <gds-column desktop-size="OneHalf" tablet-size="FullWidth">
+            <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
 
                 <form asp-action="SearchResults" method="get">
 
@@ -28,7 +28,7 @@
 
                     <div class="govuk-form-group @errorCss">
                         <label class="govuk-label" for="search">
-                            For example, searching for Great Ormond St London WC1N will find Great Ormond Street hospital in London. You do not need to use the whole name or address.
+                            You do not need to use the whole name or address. For example, 'Great Ormond St WC1N' will find Great Ormond Street hospital.
                         </label>
                         @if (Model.ShowIncompletedSearchMessage)
                         {
