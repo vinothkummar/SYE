@@ -8,6 +8,7 @@ using System.Xml;
 using Microsoft.AspNetCore.Hosting;
 using System.Reflection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace SYE.EsbWrappers
 {
@@ -32,7 +33,6 @@ namespace SYE.EsbWrappers
 
             if (!string.IsNullOrWhiteSpace(token))
             {
-                var payload = submission.Base64Attachment;
                 var providerId = submission.ProviderId;
                 var locationName = submission.LocationName;
                 var description = string.Empty;                
@@ -54,14 +54,8 @@ namespace SYE.EsbWrappers
                 var username = _esbConfig.EsbGenericAttachmentUsername;
                 var password = _esbConfig.EsbGenericAttachmentPassword;
                 var endpoint = _esbConfig.EsbGenericAttachmentEndpoint;
-                var esbAuthUser = _esbConfig.EsbAuthenticationUsername;
-                var esbAuthPassword = _esbConfig.EsbAuthenticationPassword;
 
                 if (username == null || password == null || endpoint == null) throw new ArgumentException("Could not read UserName, Password or GenericAttachmentEndpoint AppSettings");
-
-                var file = _fileProvider.GetFileInfo("wwwroot/Resources/GenericAttachmentTemplate.xml");
-                var nonce = GetNonce();
-                var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 
                 using (var client = new WebClient())
                 {
@@ -73,29 +67,24 @@ namespace SYE.EsbWrappers
                     client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
                     client.Headers["Content-Type"] = "text/plain;charset=UTF-8";
 
-                    using (var stream = file.CreateReadStream())
-                    using (var reader = new StreamReader(stream))
+                    var genPayload = new GenericAttachmentPayload
                     {
-                        var template = @reader.ReadToEndAsync().Result;
-                        var finalPayload = template.Replace("{{token}}", token)
-                            .Replace("{{authUsername}}", esbAuthUser)
-                            .Replace("{{authPassword}}", esbAuthPassword)
-                            .Replace("{{payload}}", payload)
-                            .Replace("{{nonce}}", nonce)
-                            .Replace("{{created}}", created)
-                            .Replace("{{organisationId}}", organisationId)
-                            .Replace("{{description}}", description)
-                            .Replace("{{filename}}", filename)
-                            .Replace("{{subtype}}", GetFriendlyName(type))
-                            .Replace("{{submissionNumber}}", submissionNumber);
-                        client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
-                        var response = client.UploadString(endpoint, finalPayload);
-                        //get enquiryId from the responseXml
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(response);
-                        XmlElement root = doc.DocumentElement;
-                        returnString = root.GetElementsByTagName("enquiryId").Item(0).FirstChild.Value;
-                    }
+                        Token = token,
+                        Payload = submission.Base64Attachment,
+                        OrganisationId = organisationId,
+                        Description = description,
+                        Filename = filename,
+                        SubType = GetFriendlyName(type),
+                        SubmissionNumber = submissionNumber
+                    };
+                    var finalPayload = GenerateXmlEnvelope(XmlType.GenericAttachment, genPayload);
+                    client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
+                    var response = client.UploadString(endpoint, finalPayload);
+                    //get enquiryId from the responseXml
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(response);
+                    XmlElement root = doc.DocumentElement;
+                    returnString = root.GetElementsByTagName("enquiryId").Item(0).FirstChild.Value;
                 }
             }
 
@@ -111,32 +100,13 @@ namespace SYE.EsbWrappers
             var esbAuthAction = _esbConfig.EsbAuthenticationSubmitKey;
             var esbAuthValue = _esbConfig.EsbAuthenticationSubmitValue;
             var esbEndpoint = _esbConfig.EsbAuthenticationEndpoint;
-            var esbAuthUser = _esbConfig.EsbAuthenticationUsername;
-            var esbAuthPassword = _esbConfig.EsbAuthenticationPassword;
-            var esbCredUsername = _esbConfig.EsbAuthenticationCredUsername;
-            var esbCredPassword = _esbConfig.EsbAuthenticationCredPassword;
 
             using (var client = new HttpClient())
             {
-                var file = _fileProvider.GetFileInfo("wwwroot/Resources/GetTokenTemplate.xml");
-                var nonce = GetNonce();
-                var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
                 client.DefaultRequestHeaders.Add(esbAuthAction, esbAuthValue);
 
                 var uri = new Uri(esbEndpoint);
-                var env = string.Empty;
-
-                using (var stream = file.CreateReadStream())
-                using (var reader = new StreamReader(stream))
-                    {
-                        var template = @reader.ReadToEndAsync().Result;
-                        env = template.Replace("{{username}}", esbCredUsername)
-                            .Replace("{{password}}", esbCredPassword)
-                            .Replace("{{authUsername}}", esbAuthUser)
-                            .Replace("{{authPassword}}", esbAuthPassword)
-                            .Replace("{{nonce}}", nonce)
-                            .Replace("{{created}}", created);
-                    }
+                var env = GenerateXmlEnvelope(XmlType.GetToken);
                 var content = new StringContent(env);
                 var result = client.PostAsync(uri, content).ConfigureAwait(false).GetAwaiter().GetResult();
                 if (result.IsSuccessStatusCode)
@@ -151,6 +121,116 @@ namespace SYE.EsbWrappers
             }
             return returnString;
         }
+        private string GenerateXmlEnvelope(XmlType xmlType, GenericAttachmentPayload payload = null)
+        {
+            //load all security settings
+            var esbAuthUser = _esbConfig.EsbAuthenticationUsername;
+            var esbAuthPassword = _esbConfig.EsbAuthenticationPassword;
+            var esbCredUsername = _esbConfig.EsbAuthenticationCredUsername;
+            var esbCredPassword = _esbConfig.EsbAuthenticationCredPassword;
+            var username = _esbConfig.EsbGenericAttachmentUsername;
+            var password = _esbConfig.EsbGenericAttachmentPassword;
+            var endpoint = _esbConfig.EsbGenericAttachmentEndpoint;           
+
+            var sb = new StringBuilder();
+            switch (xmlType)
+            {
+                case XmlType.GetToken:
+                    {
+                        var nonce = GetNonce();
+                        var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                        sb.Append("<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">");
+                        sb.Append("<s:Header>");
+                        sb.Append("<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">");
+                        sb.Append("<wsse:UsernameToken wsu:Id=\"UsernameToken - 3D78C7F7D45CB562D8156078803058926\">");
+                        sb.AppendFormat("<wsse:Username >{0}</wsse:Username>", esbAuthUser);
+                        sb.AppendFormat("<wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{0}</wsse:Password>", esbAuthPassword);
+                        sb.AppendFormat("<wsse:Nonce EncodingType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary\">{0}</wsse:Nonce>", nonce);
+                        sb.AppendFormat("<wsu:Created>{0}</wsu:Created>", created);
+                        sb.Append("</wsse:UsernameToken>");
+                        sb.Append("</wsse:Security>");
+                        sb.Append("</s:Header>");
+                        sb.Append("<s:Body xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
+                        sb.Append("<GetAuthenticationRequest xmlns=\"http://provider.model.service.ols.cqc.org.uk/authenticateSchema\">");
+                        sb.AppendFormat("<userName>{0}</userName>", esbCredUsername);
+                        sb.AppendFormat("<password>{0}</password>", esbCredPassword);
+                        sb.Append("</GetAuthenticationRequest>");
+                        sb.Append("</s:Body>");
+                        sb.Append("</s:Envelope>");
+                        break;
+                    }
+                case XmlType.GenericAttachment:
+                {
+                    var nonce = GetNonce();
+                    var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+                    sb.Append("<soapenv:Envelope xmlns:att=\"http://provider.model.service.ols.cqc.org.uk/generic/attachment\" xmlns:mas=\"http://provider.model.service.ols.cqc.org.uk/masterdata\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">");
+                    sb.Append("<soapenv:Header>");
+                    sb.Append("<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">");
+                    sb.Append("<wsse:UsernameToken wsu:Id=\"UsernameToken-3D78C7F7D45CB562D8156092921928438\">");
+                    sb.AppendFormat("<wsse:Username>{0}</wsse:Username>", esbAuthUser);
+                    sb.AppendFormat("<wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{0}</wsse:Password>", esbAuthPassword);
+                    sb.AppendFormat("<wsse:Nonce EncodingType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary\">{0}</wsse:Nonce>", nonce);
+                    sb.AppendFormat("<wsu:Created>{0}</wsu:Created>", created);
+                    sb.Append("</wsse:UsernameToken>");
+                    sb.Append("</wsse:Security>");
+                    sb.Append("<mas:Credentials>");
+                    sb.AppendFormat("<mas:tokenId>{0}</mas:tokenId>", payload.Token);
+                    sb.Append("<mas:originatingSystem>SYE</mas:originatingSystem>");
+                    sb.Append("<mas:originatingSystemId>GFC</mas:originatingSystemId>");
+                    sb.Append("<mas:status>SUCCESS</mas:status>");
+                    sb.Append("</mas:Credentials>");
+                    sb.Append("</soapenv:Header>");
+                    sb.Append("<soapenv:Body>");
+                    sb.Append("<att:CreateEnquiry_Input>");
+                    sb.Append("<att:CQCEnquiry>");
+                    sb.Append("<att:Enquiry>");
+                    sb.AppendFormat("<att:OrganisationId>{0}</att:OrganisationId>", payload.OrganisationId);
+                    sb.Append("<att:ListOfDataItems>");
+                    sb.Append("<att:Data>");
+                    sb.Append("<att:ListOfAttachments>");
+                    sb.Append("<att:Attachment>");
+                    sb.Append("<att:PrimaryContent>");
+                    sb.AppendFormat("<att:FileName>{0}</att:FileName>", payload.Filename);
+                    sb.AppendFormat("<att:FileContent>{0}</att:FileContent>", payload.Payload);
+                    sb.Append("<att:ContentType>Safeguarding</att:ContentType>");
+                    sb.Append("</att:PrimaryContent>");
+                    sb.Append("<att:ListOfAlternateFileRepresentations>");
+                    sb.Append("<att:AlternateFileRepresentations>");
+                    sb.Append("<att:FileName/>");
+                    sb.Append("<att:FileContent/>");
+                    sb.Append("</att:AlternateFileRepresentations>");
+                    sb.Append("</att:ListOfAlternateFileRepresentations>");
+                    sb.Append("</att:Attachment>");
+                    sb.Append("</att:ListOfAttachments>");
+                    sb.Append("</att:Data>");
+                    sb.Append("</att:ListOfDataItems>");
+                    sb.Append("<att:Category>Monitor and Inspect</att:Category>");
+                    sb.Append("<att:Type>Share your experience</att:Type>");
+                    sb.AppendFormat("<att:Subtype>{0}</att:Subtype>", payload.SubType);
+                    sb.Append("<att:SourceChannel>Web</att:SourceChannel>");
+                    sb.AppendFormat("<att:Description>{0}</att:Description>", payload.Description);
+                    sb.Append("<att:CommMethod/>");
+                    sb.Append("<att:ContactPhone/>");
+                    sb.Append("<att:ContactLastName/>");
+                    sb.Append("<att:ContactFirstName/>");
+                    sb.Append("<att:ContactEmail>gfcPortal1@cqc.org</att:ContactEmail>");
+                    sb.Append("<att:sourceApplication>Drupal</att:sourceApplication>");
+                    sb.Append("<att:sourceSystem>Drupal</att:sourceSystem>");
+                    sb.Append("<att:initialReceiptDate>2019-04-18</att:initialReceiptDate>");
+                    sb.Append("<att:Creator>gfcPortal1</att:Creator>");
+                    sb.AppendFormat("<att:olsSubmissionNumber>{0}</att:olsSubmissionNumber>", payload.SubmissionNumber);
+                    sb.Append("</att:Enquiry>");
+                    sb.Append("</att:CQCEnquiry>");
+                    sb.Append("</att:CreateEnquiry_Input>");
+                    sb.Append("</soapenv:Body>");
+                    sb.Append("</soapenv:Envelope>");
+                    break;
+                }
+            }
+
+            return sb.ToString();
+        }
+
         private string GetFriendlyName(PayloadType payloadType)
         {
             switch (payloadType)
@@ -191,5 +271,21 @@ namespace SYE.EsbWrappers
     {
         Submission,
         Classified
-    }  
+    }
+    internal enum XmlType
+    {
+        GetToken,
+        GenericAttachment
+    }
+
+    internal class GenericAttachmentPayload
+    {
+        public string Token { get; set; }
+        public string Payload { get; set; }
+        public string OrganisationId { get; set; }
+        public string Description { get; set; }
+        public string Filename { get; set; }
+        public string SubType { get; set; }
+        public string SubmissionNumber { get; set; }
+    }
 }
