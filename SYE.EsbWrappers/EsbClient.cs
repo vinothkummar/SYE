@@ -1,14 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using SYE.Models.SubmissionSchema;
 using System.Net.Http;
 using System.Text;
 using System.Xml;
-using Microsoft.AspNetCore.Hosting;
-using System.Reflection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace SYE.EsbWrappers
 {
@@ -18,14 +14,13 @@ namespace SYE.EsbWrappers
     }
     public class EsbClient : IEsbClient
     {
-        private string _loggingString = String.Empty;
         private IEsbConfiguration<EsbConfig> _esbConfig;
-        private readonly IFileProvider _fileProvider;
+        private readonly ILogger _logger;
 
-        public EsbClient(IEsbConfiguration<EsbConfig> esbConfig, IFileProvider fileProvider)
+        public EsbClient(IEsbConfiguration<EsbConfig> esbConfig, ILogger<EsbClient> logger)
         {
             _esbConfig = esbConfig;
-            _fileProvider = fileProvider;
+            _logger = logger;
         }
         public string SendGenericAttachment(SubmissionVM submission, PayloadType type)
         {            
@@ -34,7 +29,6 @@ namespace SYE.EsbWrappers
 
             if (!string.IsNullOrWhiteSpace(token))
             {
-                _loggingString = "1 got token";
                 var providerId = submission.ProviderId;
                 var locationName = submission.LocationName;
                 var description = string.Empty;                
@@ -59,34 +53,30 @@ namespace SYE.EsbWrappers
 
                 if (username == null || password == null || endpoint == null) throw new ArgumentException("Could not read UserName, Password or GenericAttachmentEndpoint AppSettings");
 
-                try
+                using (var client = new WebClient())
                 {
-                    using (var client = new WebClient())
-                    {
-                        _loggingString = "2 added headers";
-                        client.UseDefaultCredentials = true;
-                        client.Credentials = new NetworkCredential(username, password);
-                        client.Headers.Add("Accept", "application/json");
-                        client.Headers.Add("Accept", "text/plain");
-                        client.Headers.Add("Accept-Language", "en-US");
-                        client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
-                        client.Headers["Content-Type"] = "text/plain;charset=UTF-8";
+                    client.UseDefaultCredentials = true;
+                    client.Credentials = new NetworkCredential(username, password);
+                    client.Headers.Add("Accept", "application/json");
+                    client.Headers.Add("Accept", "text/plain");
+                    client.Headers.Add("Accept-Language", "en-US");
+                    client.Headers.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
+                    client.Headers["Content-Type"] = "text/plain;charset=UTF-8";
 
-                        var genPayload = new GenericAttachmentPayload
-                        {
-                            Token = token,
-                            Payload = submission.Base64Attachment,
-                            OrganisationId = organisationId,
-                            Description = description,
-                            Filename = filename,
-                            SubType = GetFriendlyName(type),
-                            SubmissionNumber = submissionNumber
-                        };
-                        _loggingString = "3 loaded payload";
-                        var finalPayload = GenerateXmlEnvelope(XmlType.GenericAttachment, genPayload);
-                        _loggingString = "finalPayload=" + finalPayload;
-                        client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
-                        _loggingString = "calling esb";
+                    var genPayload = new GenericAttachmentPayload
+                    {
+                        Token = token,
+                        Payload = submission.Base64Attachment,
+                        OrganisationId = organisationId,
+                        Description = description,
+                        Filename = filename,
+                        SubType = GetFriendlyName(type),
+                        SubmissionNumber = submissionNumber
+                    };
+                    var finalPayload = GenerateXmlEnvelope(XmlType.GenericAttachment, genPayload);
+                    client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
+                    try
+                    {
                         var response = client.UploadString(endpoint, finalPayload);
                         //get enquiryId from the responseXml
                         XmlDocument doc = new XmlDocument();
@@ -94,11 +84,11 @@ namespace SYE.EsbWrappers
                         XmlElement root = doc.DocumentElement;
                         returnString = root.GetElementsByTagName("enquiryId").Item(0).FirstChild.Value;
                     }
-
-                }
-                catch (Exception e)
-                {
-                    throw new Exception(_loggingString, e);
+                    catch (Exception ex)
+                    {
+                        //log error and move on
+                        _logger.LogError(ex, "Error posting submission to CRM. Submission number:" + submissionNumber);
+                    }
                 }
             }
 
@@ -175,29 +165,22 @@ namespace SYE.EsbWrappers
                     }
                 case XmlType.GenericAttachment:
                 {
-                    _loggingString = "4 building xml";
                     var nonce = GetNonce();
-                    _loggingString = "5 nonce=" + nonce;
                     var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-                    _loggingString = "6 created=" + created;
                     sb.Append("<soapenv:Envelope xmlns:att=\"http://provider.model.service.ols.cqc.org.uk/generic/attachment\" xmlns:mas=\"http://provider.model.service.ols.cqc.org.uk/masterdata\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">");
-                    _loggingString = "7 xml=" + sb.ToString();
                     sb.Append("<soapenv:Header>");
                     sb.Append("<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">");
                     sb.Append("<wsse:UsernameToken wsu:Id=\"UsernameToken-3D78C7F7D45CB562D8156092921928438\">");
                     sb.AppendFormat("<wsse:Username>{0}</wsse:Username>", esbAuthUser);
-                    _loggingString = "8 xml=" + sb.ToString();
                     sb.AppendFormat("<wsse:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{0}</wsse:Password>", esbAuthPassword);
                     sb.AppendFormat("<wsse:Nonce EncodingType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary\">{0}</wsse:Nonce>", nonce);
                     sb.AppendFormat("<wsu:Created>{0}</wsu:Created>", created);
                     sb.Append("</wsse:UsernameToken>");
-                    _loggingString = "9 xml=" + sb.ToString();
                     sb.Append("</wsse:Security>");
                     sb.Append("<mas:Credentials>");
                     sb.AppendFormat("<mas:tokenId>{0}</mas:tokenId>", payload.Token);
                     sb.Append("<mas:originatingSystem>SYE</mas:originatingSystem>");
                     sb.Append("<mas:originatingSystemId>GFC</mas:originatingSystemId>");
-                    _loggingString = "10 xml=" + sb.ToString();
                     sb.Append("<mas:status>SUCCESS</mas:status>");
                     sb.Append("</mas:Credentials>");
                     sb.Append("</soapenv:Header>");
@@ -206,7 +189,6 @@ namespace SYE.EsbWrappers
                     sb.Append("<att:CQCEnquiry>");
                     sb.Append("<att:Enquiry>");
                     sb.AppendFormat("<att:OrganisationId>{0}</att:OrganisationId>", payload.OrganisationId);
-                    _loggingString = "11 xml=" + sb.ToString();
                     sb.Append("<att:ListOfDataItems>");
                     sb.Append("<att:Data>");
                     sb.Append("<att:ListOfAttachments>");
@@ -214,7 +196,6 @@ namespace SYE.EsbWrappers
                     sb.Append("<att:PrimaryContent>");
                     sb.AppendFormat("<att:FileName>{0}</att:FileName>", payload.Filename);
                     sb.AppendFormat("<att:FileContent>{0}</att:FileContent>", payload.Payload);
-                    _loggingString = "12 xml=" + sb.ToString();
                     sb.Append("<att:ContentType>Safeguarding</att:ContentType>");
                     sb.Append("</att:PrimaryContent>");                    
                     sb.Append("<att:ListOfAlternateFileRepresentations>");
@@ -230,10 +211,8 @@ namespace SYE.EsbWrappers
                     sb.Append("<att:Category>Monitor and Inspect</att:Category>");
                     sb.Append("<att:Type>Share your experience</att:Type>");
                     sb.AppendFormat("<att:Subtype>{0}</att:Subtype>", payload.SubType);
-                    _loggingString = "13 xml=" + sb.ToString();
                     sb.Append("<att:SourceChannel>Web</att:SourceChannel>");
                     sb.AppendFormat("<att:Description>{0}</att:Description>", payload.Description);
-                    _loggingString = "14 xml=" + sb.ToString();
                     sb.Append("<att:CommMethod/>");
                     sb.Append("<att:ContactPhone/>");
                     sb.Append("<att:ContactLastName/>");
@@ -244,13 +223,11 @@ namespace SYE.EsbWrappers
                     sb.Append("<att:initialReceiptDate>2019-04-18</att:initialReceiptDate>");
                     sb.Append("<att:Creator>gfcPortal1</att:Creator>");
                     sb.AppendFormat("<att:olsSubmissionNumber>{0}</att:olsSubmissionNumber>", payload.SubmissionNumber);
-                    _loggingString = "15 xml=" + sb.ToString();
                     sb.Append("</att:Enquiry>");
                     sb.Append("</att:CQCEnquiry>");
                     sb.Append("</att:CreateEnquiry_Input>");
                     sb.Append("</soapenv:Body>");
                     sb.Append("</soapenv:Envelope>");
-                    _loggingString = "16 xml=" + sb.ToString();
                     break;
                 }
             }

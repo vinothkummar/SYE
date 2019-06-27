@@ -144,7 +144,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error posting submissions to CRM. " + ex.Message);
+                _logger.LogError(ex, "Error posting submissions to CRM. ");
                 return StatusCode(500, ex);
             }
         }
@@ -183,11 +183,11 @@ namespace SYE.Controllers
 
             if (submissionResult.NumberItemsFailed == 0 && submissionResult.NumberItemsPosted > 0)
             {
-                submissionResult.Status = "Posted";
+                submissionResult.Status = "Sent";
             }
             else if (submissionResult.NumberItemsFailed == 0 && submissionResult.NumberItemsPosted == 0)
             {
-                submissionResult.Status = "None Posted";
+                submissionResult.Status = "None Sent";
             }
             else
             {

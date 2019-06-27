@@ -54,7 +54,7 @@ namespace SYE.Services
             var result = await _esbWrapper.PostSubmission(submission);
             if (!string.IsNullOrWhiteSpace(result))
             {
-                submission.Status = "Posted";
+                submission.Status = "Sent";
                 var sub = await _repo.UpdateAsync(submission.Id, submission);
             }
 
