@@ -136,6 +136,12 @@ namespace SYE
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Xss-Protection", "1");
+                await next();
+            });
+
             if (env.IsDevelopment() || env.IsLocal())
             {
                 app.UseDeveloperExceptionPage();
@@ -156,12 +162,6 @@ namespace SYE
             app.UseCookiePolicy();
 
             app.UseSession();
-
-            app.Use(async (context, next) =>
-            {
-                context.Response.Headers.Add("X-Xss-Protection", "1");
-                await next();
-            });
 
             app.UseMvc(routes =>
             {
