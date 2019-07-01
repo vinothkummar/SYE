@@ -4,8 +4,7 @@
 @inject IOptions<ApplicationSettings> Configuration
 
 <div class="get-help">
-    <h2 class="govuk-heading-m">Get help with this form</h2>
-    <p class="govuk-body">You can get help on the phone if it's hard for you to do things online.</p>
+    <h2 class="govuk-heading-m">Need help with this form?</h2>
     <p class="govuk-body">
         Telephone: @(Configuration.Value.GetHelp.ContactNumber)<br>
         @(Configuration.Value.GetHelp.ContactHours)<br />

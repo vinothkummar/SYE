@@ -10,74 +10,37 @@
 
 <gds-row>
 
-    <gds-column desktop-size="ThreeQuarter" tablet-size="FullWidth">
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
         <gds-heading heading-type="H1" text="Give feedback on care"></gds-heading>
         <gds-paragraph>Use this form to tell us about:</gds-paragraph>
         <ul class="govuk-list govuk-list--bullet">
-            <li>an experience of care from a service like a care home, care agency, hospital or GP it can be good or bad</li>
-            <li>a concern you have about a care service you work for</li>
+            <li>an experience of care - it can be good or bad</li>
+            <li>a concern about a service you work for</li>
         </ul>
 
-        <gds-warning-text message="If someone is in danger of serious harm, call 999" warning-id=""></gds-warning-text>
+        <gds-paragraph>This is different from making a formal complaint. To <a href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider" class="govuk-link" target="_blank">make a formal complaint</a>, you must contact the service itself.</gds-paragraph>
+
+
+        <gds-warning-text message="Call 999 if there's an immediate risk of harm or abuse" warning-id=""></gds-warning-text>
 
         <form asp-controller="Search" asp-action="Index" method="get">
             <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start now" button-type="Submit" start-now="true"></gds-button></p>
         </form>
 
-        <div class="govuk-tabs" data-module="tabs">
-            <h2 class="govuk-tabs__title">
-                Contents
-            </h2>
+        <h2 class="govuk-heading-m">Your feedback helps make care better</h2>
+        <gds-paragraph>
+            We use what people tell us to understand the quality of care they get from services like care homes, care agencies, hospitals and GPs. It helps make care better for everybody.
+        </gds-paragraph>
+        <gds-paragraph>We look at it alongside other information. For example, information from the service itself or what we found when we last visited them.</gds-paragraph>
 
-            <ul class="govuk-tabs__list">
-                <li class="govuk-tabs__list-item">
-                    <a class="govuk-tabs__tab govuk-tabs__tab--selected" href="#feedback" id="tab_feedback" role="tab" aria-controls="feedback" tabindex="-1" aria-selected="false">
-                        How we'll use your feedback
-                    </a>
-                </li>
-                <li class="govuk-tabs__list-item">
-                    <a class="govuk-tabs__tab" href="#get-help" id="tab_get-help" role="tab" aria-controls="get-help" tabindex="-1" aria-selected="false">
-                        Get help with this form
-                    </a>
-                </li>
-            </ul>
+        <h2 class="govuk-heading-m">We may want to contact you</h2>
+        <gds-paragraph>You do not have to give us your name or contact details. But it's more likely we can take action if you do.</gds-paragraph>
+        <gds-paragraph>Find out <a href="@Url.Action("Index", "HowWeUseYourInformation")" class="govuk-link">how we handle personal information</a> like contact details.</gds-paragraph>
 
-            <section class="govuk-tabs__panel" id="feedback">
-                <gds-paragraph>
-                    We use your feedback to help us understand the quality of care the service gives. It helps make care better for everybody else.
-                </gds-paragraph>
-
-                <gds-paragraph>
-                    We’ll pass it to our inspectors. It can tell them what they need to look at when they carry out an inspection.
-                </gds-paragraph>
-
-                <gds-inset-text>
-                    This is different from making a formal complaint. To <a class="govuk-link" target="_blank" href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider">make a formal complaint</a> you must contact the service itself
-                </gds-inset-text>
-
-                <gds-paragraph>
-                    You do not have to give us your name or contact details. But it's more likely we can take action if you do.
-                </gds-paragraph>
-
-                <gds-paragraph>
-                    Find out <a class="govuk-link" href="@Url.Action("Index", "HowWeUseYourInformation")">how we handle information</a> like contact details
-                </gds-paragraph>
-
-            </section>
-
-            <section class="govuk-tabs__panel govuk-tabs__panel--hidden" id="get-help">
-                <gds-paragraph>You can get help on the phone if it's hard for you to do things online.</gds-paragraph>
-                <gds-paragraph>
-                    Telephone: @(Configuration.Value.GetHelp.ContactNumber)<br>
-                    @(Configuration.Value.GetHelp.ContactHours)<br />
-                    @(Configuration.Value.GetHelp.ContactExcluding)
-                </gds-paragraph>
-            </section>
-        </div>
     </gds-column>
 
-    <gds-column desktop-size="OneQuarter" tablet-size="FullWidth">
+    <gds-column desktop-size="OneThird" tablet-size="FullWidth">
 
         <div class="purple-bar"></div>
 
@@ -89,6 +52,14 @@
 
         <gds-paragraph>
             <gds-link class="govuk-link" target="_blank" link-id="regulated-services" link-text="Find out which types of service we regulate" href="https://www.cqc.org.uk/what-we-do/services-we-regulate/services-we-regulate"></gds-link>
+        </gds-paragraph>
+
+        <h2 class="govuk-heading-m">Get help with this form</h2>
+        <gds-paragraph>You can get help on the phone if it's hard for you to do things online.</gds-paragraph>
+        <gds-paragraph>
+            Telephone: 03000 616161<br>
+            Monday to Friday, 8.30am to 5.30pm<br>
+            Excluding bank holidays
         </gds-paragraph>
 
     </gds-column>
