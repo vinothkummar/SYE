@@ -94,10 +94,6 @@
     }
 }
 
-@media (min-width: 48.0526em) {
-}
-
-
 #filter-wrapper {
     border: solid 5px #ccc;
     background-color: #fff;
@@ -147,10 +143,15 @@
 }
 
 .gds-question {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 700;
 }
 
+@media (min-width: 48.0526em) {
+    .gds-question {
+        font-size: 48px;
+    }
+}
 
 #qContact_003_03 label,
 #qContact_003_04 label {
