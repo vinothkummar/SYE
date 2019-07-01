@@ -62,7 +62,7 @@ namespace SYE.Controllers
         public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
         {
             var cleanSearch = _gdsValidate.CleanText(search, true, restrictedWords, allowedChars);
-            if (string.IsNullOrEmpty(cleanSearch)) return RedirectToAction("Index");
+            if (string.IsNullOrEmpty(cleanSearch)) return RedirectToAction("Index", new { isError = "true" });
 
             return GetSearchResult(cleanSearch, pageNo, selectedFacets);
         }
@@ -72,7 +72,7 @@ namespace SYE.Controllers
         public IActionResult SearchResults(string search, List<SelectItem> facets = null)
         {
             var cleanSearch = _gdsValidate.CleanText(search, true, restrictedWords, allowedChars);
-            if (string.IsNullOrEmpty(cleanSearch)) return RedirectToAction("Index");
+            if (string.IsNullOrEmpty(cleanSearch)) return RedirectToAction("Index", new { isError = "true"});
 
             var selectedFacets = string.Empty;
             if (facets != null)

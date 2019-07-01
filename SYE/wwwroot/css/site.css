@@ -185,8 +185,8 @@ label.govuk-label > p.govuk-body {
     position: initial !important;
     background: none !important;
     border: none !important;
-    padding: 0px !important;
-    margin: 0px !important;
+    padding: 0 !important;
+    margin: 0 !important;
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
     text-align: left;
@@ -199,9 +199,21 @@ label.govuk-label > p.govuk-body {
 }
 
     #global-cookie-message .govuk-body-s {
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 
     .govuk-button::before {
         position: initial;
     }
+
+
+#search-results .govuk-body {
+    margin-bottom: 10px;
+}
+#search-results .govuk-body-s {
+    margin-bottom: 0;
+}
+
+label.gds-question h1 {
+    margin-bottom: 0;
+}

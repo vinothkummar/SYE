@@ -8,7 +8,7 @@
 
 <gds-row>
 
-    <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
         <gds-heading heading-type="H1" text="Check your answers before sending your feedback"></gds-heading>
 
@@ -27,7 +27,7 @@
                             }
                             else
                             {
-                                <text>@question.Question.StripHtml()</text>
+                                <text>@question.ShortQuestion.StripHtml()</text>
                             }
                         </dt>
                         <dd class="govuk-summary-list__value">
@@ -56,12 +56,12 @@
 
         <form asp-action="Index" method="post">
 
-            <gds-heading heading-type="H3" text="Now send your feedback"></gds-heading>
+            <gds-heading heading-type="H2" text="Now send your feedback"></gds-heading>
             @Html.HiddenFor(m => m.SendConfirmationEmail)
 
-            <p class="govuk-body">
-                You are about to send feedback about @Model.LocationName.
-            </p>
+        <p class="govuk-body">
+            You are about to send feedback about @Model.LocationName.
+        </p>
 
             <gds-button button-text="Submit feedback" button-type="Submit"></gds-button>
 

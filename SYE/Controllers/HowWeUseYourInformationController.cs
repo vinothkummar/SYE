@@ -4,7 +4,7 @@ namespace SYE.Controllers
 {
     public class HowWeUseYourInformationController : Controller
     {
-        [Route("how-we-use-your-information")]
+        [Route("how-we-handle-information")]
         public IActionResult Index()
         {
             ViewBag.ShowBackButton = true;
