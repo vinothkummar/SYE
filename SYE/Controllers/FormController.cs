@@ -68,8 +68,20 @@ namespace SYE.Controllers
                 //Get the current PageVm from Session
                 var pageVm = _sessionService.GetPageById(vm.PageId, false);
 
-                //If Null throw NotFound error
-                if (pageVm == null) return NotFound();
+                //If Null throw 500 error
+                if (pageVm == null)
+                {
+                    try
+                    {
+                        var tempUserSession = _sessionService.GetUserSession();
+                        _logger.LogInformation("session not found", tempUserSession);                        
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.LogError(e, "Error with session");
+                    }
+                    return StatusCode(500);
+                }                    
 
                 var userSession = _sessionService.GetUserSession();
                 var serviceNotFound = userSession.LocationName.Equals("the service");
