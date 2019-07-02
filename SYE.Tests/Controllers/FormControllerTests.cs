@@ -122,7 +122,7 @@ namespace SYE.Tests.Controllers
 
             //assert
             var statusResult = result as StatusCodeResult;
-            statusResult.StatusCode.Should().Be(404);
+            statusResult.StatusCode.Should().Be(500);
             mockSession.Verify();
         }
 
