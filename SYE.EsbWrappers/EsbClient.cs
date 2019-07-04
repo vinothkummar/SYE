@@ -211,8 +211,8 @@ namespace SYE.EsbWrappers
                     sb.Append("<att:Category>Monitor and Inspect</att:Category>");
                     sb.Append("<att:Type>Share your experience</att:Type>");
                     sb.AppendFormat("<att:Subtype>{0}</att:Subtype>", payload.SubType);
-                    sb.Append("<att:SourceChannel>Web</att:SourceChannel>");
-                    sb.AppendFormat("<att:Description>{0}</att:Description>", payload.Description);
+                    sb.Append("<att:SourceChannel>Share your experience</att:SourceChannel>");
+                    sb.AppendFormat("<att:Description><![CDATA[{0}]]></att:Description>", payload.Description);
                     sb.Append("<att:CommMethod/>");
                     sb.Append("<att:ContactPhone/>");
                     sb.Append("<att:ContactLastName/>");
