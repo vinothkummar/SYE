@@ -20,7 +20,7 @@
 
 .govuk-header__logotype-crown-fallback-image {
     width: auto;
-    height: auto;
+    height: 50px;
 }
 
 .govuk-footer__copyright-logo {
@@ -178,7 +178,7 @@ label.govuk-label > p.govuk-body {
 }
 
 .get-help {
-    margin-top: 40px;
+    margin-top: 0px;
 }
 
 .link-button, .link-button:hover, .link-button:active {
@@ -202,18 +202,33 @@ label.govuk-label > p.govuk-body {
         margin-bottom: 0;
     }
 
-    .govuk-button::before {
-        position: initial;
-    }
+.govuk-button::before {
+    position: initial;
+}
 
 
 #search-results .govuk-body {
     margin-bottom: 10px;
 }
+
 #search-results .govuk-body-s {
     margin-bottom: 0;
 }
 
 label.gds-question h1 {
     margin-bottom: 0;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.04167;
 }
+
+#right-side-bar {
+}
+
+    #right-side-bar a.govuk-link {
+        font-size: 16px;
+    }
+
+    #right-side-bar p.govuk-body {
+        font-size: 16px;
+    }

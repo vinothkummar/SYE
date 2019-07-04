@@ -22,6 +22,8 @@ namespace SYE.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.ShowBackButton = false;
+            ViewBag.HideSiteTitle = true;
             return View();
         }
 
@@ -32,7 +34,6 @@ namespace SYE.Controllers
             //Set the version for A/B testing
             //This will be used when we load the form
             HttpContext.Session.SetString("FormVersion", v);
-            ViewBag.ShowBackButton = false;
             return RedirectToAction("Index");
         }
 
