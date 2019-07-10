@@ -75,7 +75,12 @@
             <gds-logo url="/" url-title="" image-url="/images/cqc-logo.png" alt-text="Share Your Experience"></gds-logo>
 
             <gds-header-content>
-
+                @if (ViewBag.HideSiteTitle != true)
+                {
+                <a href="/" class="govuk-header__link govuk-header__link--service-name">
+                    @(Configuration.GetValue<string>("ApplicationSettings:AppName"))
+                </a>
+                }
             </gds-header-content>
 
         </gds-header-container>
@@ -86,18 +91,8 @@
     <gds-container>
 
         <gds-phase-banner phase="Beta" text="This is a new form. {0} and help us improve it." url-text="Tell us if you find a problem" url="@Url.Action("Feedback", "Help")"></gds-phase-banner>
-
-        @if (ViewBag.ShowBackButton != false)
-        {
-            if (!string.IsNullOrWhiteSpace(ViewBag.PreviousPage))
-            {
-                <gds-back-link link-text="Back" href="@(ViewBag.PreviousPage)"></gds-back-link>
-            }
-            else
-            {
-                <gds-back-link link-text="Back" href="#" onclick="history.go(-1);return false;"></gds-back-link>
-            }
-        }
+        
+        <partial name="_BackLink" />
 
         <gds-main-wrapper id="content" role="main">
 

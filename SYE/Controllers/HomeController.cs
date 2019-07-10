@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SYE.Models;
+using SYE.ViewModels;
 
 namespace SYE.Controllers
 {
@@ -22,6 +23,10 @@ namespace SYE.Controllers
 
         public IActionResult Index()
         {
+            //ViewBag.ShowBackButton = false;
+            ViewBag.HideSiteTitle = true;
+
+            //ViewBag.BackLink = new BackLinkVM {Show = true, Url = "#", Text = "Test" };
             return View();
         }
 
@@ -32,7 +37,6 @@ namespace SYE.Controllers
             //Set the version for A/B testing
             //This will be used when we load the form
             HttpContext.Session.SetString("FormVersion", v);
-            ViewBag.ShowBackButton = false;
             return RedirectToAction("Index");
         }
 

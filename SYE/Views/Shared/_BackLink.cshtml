@@ -1,0 +1,20 @@
+﻿
+@if (ViewBag.BackLink != null && ViewBag.BackLink.Show)
+{
+    @Html.Raw(ViewBag.BackLink.BackLink)
+}
+
+
+
+
+@*@if (ViewBag.ShowBackButton != false)
+{
+    if (!string.IsNullOrWhiteSpace(ViewBag.PreviousPage))
+    {
+        <gds-back-link link-text="Back" href="@(ViewBag.PreviousPage)"></gds-back-link>
+    }
+    else
+    {
+        <gds-back-link link-text="Back" href="#" onclick="history.go(-1);return false;"></gds-back-link>
+    }
+}*@
