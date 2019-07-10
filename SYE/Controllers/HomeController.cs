@@ -23,10 +23,7 @@ namespace SYE.Controllers
 
         public IActionResult Index()
         {
-            //ViewBag.ShowBackButton = false;
             ViewBag.HideSiteTitle = true;
-
-            //ViewBag.BackLink = new BackLinkVM {Show = true, Url = "#", Text = "Test" };
             return View();
         }
 
