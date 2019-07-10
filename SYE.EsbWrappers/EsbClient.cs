@@ -71,7 +71,8 @@ namespace SYE.EsbWrappers
                         Description = description,
                         Filename = filename,
                         SubType = GetFriendlyName(type),
-                        SubmissionNumber = submissionNumber
+                        SubmissionNumber = submissionNumber,
+                        SubmissionDate = submission.DateCreated
                     };
                     var finalPayload = GenerateXmlEnvelope(XmlType.GenericAttachment, genPayload);
                     client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
@@ -220,7 +221,7 @@ namespace SYE.EsbWrappers
                     sb.Append("<att:ContactEmail>gfcPortal1@cqc.org</att:ContactEmail>");
                     sb.Append("<att:sourceApplication>Drupal</att:sourceApplication>");
                     sb.Append("<att:sourceSystem>Drupal</att:sourceSystem>");
-                    sb.Append("<att:initialReceiptDate>2019-04-18</att:initialReceiptDate>");
+                    sb.AppendFormat("<att:initialReceiptDate>{0}</att:initialReceiptDate>", payload.SubmissionDate);
                     sb.Append("<att:Creator>gfcPortal1</att:Creator>");
                     sb.AppendFormat("<att:olsSubmissionNumber>{0}</att:olsSubmissionNumber>", payload.SubmissionNumber);
                     sb.Append("</att:Enquiry>");
@@ -291,5 +292,6 @@ namespace SYE.EsbWrappers
         public string Filename { get; set; }
         public string SubType { get; set; }
         public string SubmissionNumber { get; set; }
+        public string SubmissionDate { get; set; }
     }
 }
