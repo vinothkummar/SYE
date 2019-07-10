@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SYE.ViewModels;
 
 namespace SYE.Controllers
 {
@@ -7,8 +8,7 @@ namespace SYE.Controllers
         [Route("how-we-handle-information")]
         public IActionResult Index()
         {
-            ViewBag.ShowBackButton = true;
-            ViewBag.PreviousPage = "javascript:history.go(-1);";
+            ViewBag.BackLink = new BackLinkVM { Show = true, Url = "javascript:history.go(-1);", Text = "Back" };
             return View();
         }
     }

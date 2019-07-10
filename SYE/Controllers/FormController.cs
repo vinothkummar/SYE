@@ -39,7 +39,7 @@ namespace SYE.Controllers
 
                 if (pageVm == null) return NotFound();
 
-                ViewBag.PreviousPage = GetPreviousPage(pageVm, serviceNotFound);
+                ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
 
                 //Update the users journey
                 _sessionService.UpdateNavOrder(pageVm.PageId);
@@ -85,7 +85,8 @@ namespace SYE.Controllers
 
                 var userSession = _sessionService.GetUserSession();
                 var serviceNotFound = userSession.LocationName.Equals("the service");
-                ViewBag.PreviousPage = GetPreviousPage(pageVm, serviceNotFound);
+                ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
+
 
                 if (Request?.Form != null)
                 {

@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SYE.Repository;
 using SYE.Services;
+using SYE.ViewModels;
 
 namespace SYE.Controllers
 {
@@ -40,8 +41,8 @@ namespace SYE.Controllers
                 {
                     ViewBag.UrlReferer = urlReferer;
 
-                    ViewBag.ShowBackButton = true;
-                    ViewBag.PreviousPage = urlReferer;
+                    ViewBag.BackLink = new BackLinkVM { Show = true, Url = urlReferer, Text = "Back" };
+                    
                     return View(nameof(Feedback), pageViewModel);
                 }
             }
@@ -69,8 +70,7 @@ namespace SYE.Controllers
 
                 if (pageViewModel.Questions.Any(m => m.Validation?.IsErrored == true))
                 {
-                    ViewBag.ShowBackButton = true;
-                    ViewBag.PreviousPage = urlReferer;
+                    ViewBag.BackLink = new BackLinkVM { Show = true, Url = urlReferer, Text = "Back" };
 
                     return View(nameof(Feedback), pageViewModel);
                 }
@@ -106,8 +106,7 @@ namespace SYE.Controllers
         [Route("feedback-thank-you")]
         public ActionResult FeedbackThankYou(string urlReferer)
         {
-            ViewBag.ShowBackButton = true;
-            ViewBag.PreviousPage = urlReferer;
+            ViewBag.BackLink = new BackLinkVM { Show = true, Url = urlReferer, Text = "Back" };
             return View();
         }
 

@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SYE.Models;
-using SYE.ViewModels;
 
 namespace SYE.Controllers
 {
@@ -44,7 +41,7 @@ namespace SYE.Controllers
         [Route("Error/{statusCode?}")]
         public IActionResult Error(int? statusCode = null)
         {
-            ViewBag.ShowBackButton = false;
+            //ViewBag.ShowBackButton = false;
             var statusCodeReExecuteFeature = _httpContextAccessor?.HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
 
             //Following will not be populated on 404

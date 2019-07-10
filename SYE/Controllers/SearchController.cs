@@ -34,8 +34,7 @@ namespace SYE.Controllers
         [HttpGet("search/find-a-service")]
         public IActionResult Index(bool isError)
         {
-            ViewBag.ShowBackButton = true;
-            ViewBag.PreviousPage = Url.Action("Index", "Home");
+            ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
             //Make Sure we have a clean session
             _sessionService.ClearSession();
@@ -170,8 +169,7 @@ namespace SYE.Controllers
 
                 var viewModel = GetViewModel(search, pageNo, selectedFacets, newSearch);
 
-                ViewBag.ShowBackButton = true;
-                ViewBag.PreviousPage = "javascript:history.go(-1);";
+                ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
                 return View(viewModel);
             }
