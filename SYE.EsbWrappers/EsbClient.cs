@@ -71,8 +71,7 @@ namespace SYE.EsbWrappers
                         Description = description,
                         Filename = filename,
                         SubType = GetFriendlyName(type),
-                        SubmissionNumber = submissionNumber,
-                        SubmissionDate = submission.DateCreated
+                        SubmissionNumber = submissionNumber
                     };
                     var finalPayload = GenerateXmlEnvelope(XmlType.GenericAttachment, genPayload);
                     client.Headers.Add(_esbConfig.EsbGenericAttachmentSubmitKey, _esbConfig.EsbGenericAttachmentSubmitValue);
@@ -169,10 +168,6 @@ namespace SYE.EsbWrappers
                     var nonce = GetNonce();
                     var created = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
 
-                    var receiptDate = payload?.SubmissionDate == null 
-                        ? DateTime.Now.Date.ToString("dd/MM/yyyy") 
-                        : payload.SubmissionDate.Substring(0, 10); ;
-
                     sb.Append("<soapenv:Envelope xmlns:att=\"http://provider.model.service.ols.cqc.org.uk/generic/attachment\" xmlns:mas=\"http://provider.model.service.ols.cqc.org.uk/masterdata\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">");
                     sb.Append("<soapenv:Header>");
                     sb.Append("<wsse:Security xmlns:wsse=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">");
@@ -226,7 +221,6 @@ namespace SYE.EsbWrappers
                     sb.Append("<att:ContactEmail>gfcPortal1@cqc.org</att:ContactEmail>");
                     sb.Append("<att:sourceApplication>Drupal</att:sourceApplication>");
                     sb.Append("<att:sourceSystem>Drupal</att:sourceSystem>");
-                    sb.AppendFormat("<att:initialReceiptDate>{0}</att:initialReceiptDate>", receiptDate);
                     sb.Append("<att:Creator>gfcPortal1</att:Creator>");
                     sb.AppendFormat("<att:olsSubmissionNumber>{0}</att:olsSubmissionNumber>", payload.SubmissionNumber);
                     sb.Append("</att:Enquiry>");
@@ -297,6 +291,5 @@ namespace SYE.EsbWrappers
         public string Filename { get; set; }
         public string SubType { get; set; }
         public string SubmissionNumber { get; set; }
-        public string SubmissionDate { get; set; }
     }
 }
