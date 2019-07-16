@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Globalization;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.AspNetCore.Diagnostics;
@@ -22,13 +23,21 @@ namespace SYE.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public IActionResult Index(string v = "")
+        public IActionResult Index()
+        {
+            ViewBag.ShowBackButton = false;
+            ViewBag.HideSiteTitle = true;
+            return View();
+        }
+
+
+        [Route("set-version")]
+        public IActionResult SetVersion(string v = "")
         {
             //Set the version for A/B testing
             //This will be used when we load the form
             HttpContext.Session.SetString("FormVersion", v);
-            ViewBag.ShowBackButton = false;
-            return View();
+            return RedirectToAction("Index");
         }
 
         // Error return pages are can be configured here. 
