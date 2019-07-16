@@ -50,7 +50,7 @@
           <att:Type>Share your experience</att:Type>
           <att:Subtype>{{subtype}}</att:Subtype>
           <att:SourceChannel>Share your experience</att:SourceChannel>
-          <att:Description>{{description}}</att:Description>
+          <att:Description><![CDATA[{{description}}]]></att:Description>
           <att:CommMethod/>
           <att:ContactPhone/>
           <att:ContactLastName/>
