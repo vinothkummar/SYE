@@ -172,10 +172,9 @@ label.govuk-label > p.govuk-body {
     margin-bottom: 0;
 }
 
-.purple-bar {
-    width: 100%;
-    height: 10px;
-    background: #5f2861;
+.app-related-items {
+    border-top: 10px solid #602662;
+    padding-top: 10px;
 }
 
 .get-help {
@@ -217,7 +216,7 @@ label.govuk-label > p.govuk-body {
 }
 
 label.gds-question h1 {
-    margin-bottom: 0;
+    margin-bottom: 50px;
     font-size: 3rem;
     font-weight: 700;
     line-height: 1.04167;

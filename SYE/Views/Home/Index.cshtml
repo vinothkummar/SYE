@@ -10,7 +10,7 @@
 
 <gds-row>
 
-    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+    <gds-column tablet-size="TwoThirds">
 
         <gds-heading heading-type="H1" text="Give feedback on care"></gds-heading>
         <gds-paragraph>Use this form to tell us about:</gds-paragraph>
@@ -36,23 +36,25 @@
 
         <h2 class="govuk-heading-m">We may want to contact you</h2>
         <gds-paragraph>You do not have to give us your name or contact details. But it's more likely we can take action if you do.</gds-paragraph>
-        <gds-paragraph>Find out <a href="@Url.Action("Index", "HowWeUseYourInformation")" class="govuk-link">how we handle personal information</a> like contact details.</gds-paragraph>
+        <gds-paragraph>Find out <a href="@Url.Action("Index", "HowWeUseYourInformation" )" class="govuk-link">how we handle personal information</a> like contact details.</gds-paragraph>
 
     </gds-column>
 
-    <gds-column id="right-side-bar" desktop-size="OneThird" tablet-size="FullWidth">
+    <gds-column tablet-size="OneThird">
 
-        <div class="purple-bar"></div>
+        <aside class="app-related-items" role="complementary">
 
-        <h2 class="govuk-heading-m">Related content</h2>
+            <h2 class="govuk-heading-m">Related content</h2>
 
-        <gds-paragraph>
-            <gds-link class="govuk-link" target="_blank" link-id="related-content" link-text="How to make a formal complaint to a service or provider" href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider"></gds-link>
-        </gds-paragraph>
+            <gds-paragraph>
+                <gds-link class="govuk-link" target="_blank" link-id="related-content" link-text="How to make a formal complaint to a service or provider" href="https://www.cqc.org.uk/contact-us/how-complain/complain-about-service-or-provider"></gds-link>
+            </gds-paragraph>
 
-        <gds-paragraph>
-            <gds-link class="govuk-link" target="_blank" link-id="regulated-services" link-text="Find out which types of service we regulate" href="https://www.cqc.org.uk/what-we-do/services-we-regulate/services-we-regulate"></gds-link>
-        </gds-paragraph>
+            <gds-paragraph>
+                <gds-link class="govuk-link" target="_blank" link-id="regulated-services" link-text="Find out which types of service we regulate" href="https://www.cqc.org.uk/what-we-do/services-we-regulate/services-we-regulate"></gds-link>
+            </gds-paragraph>
+
+        </aside>
 
         <h2 class="govuk-heading-m">Get help with this form</h2>
         <gds-paragraph>You can get help on the phone if it's hard for you to do things online.</gds-paragraph>
@@ -61,7 +63,7 @@
             Monday to Friday, 8.30am to 5.30pm<br>
             Excluding bank holidays
         </gds-paragraph>
-
+        
     </gds-column>
 
 </gds-row>
