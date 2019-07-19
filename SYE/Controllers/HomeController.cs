@@ -25,7 +25,6 @@ namespace SYE.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.ShowBackButton = false;
             ViewBag.HideSiteTitle = true;
             return View();
         }
@@ -47,7 +46,7 @@ namespace SYE.Controllers
         [Route("Error/{statusCode?}")]
         public IActionResult Error(int? statusCode = null)
         {
-            ViewBag.ShowBackButton = false;
+            //ViewBag.ShowBackButton = false;
             var statusCodeReExecuteFeature = _httpContextAccessor?.HttpContext?.Features?.Get<IStatusCodeReExecuteFeature>();
 
             //Following will not be populated on 404
