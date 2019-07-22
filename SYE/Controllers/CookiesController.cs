@@ -9,7 +9,7 @@ namespace SYE.Controllers
         [HttpGet, Route("cookies")]
         public IActionResult Index()
         {
-            ViewBag.BackLink = new BackLinkVM { Show = true, Url = "/", Text = "Home" };
+            ViewData["HomeLink"] = true;
             return View();
         }
     }
