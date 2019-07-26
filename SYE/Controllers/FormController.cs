@@ -81,8 +81,15 @@ namespace SYE.Controllers
                         _logger.LogError(e, "Error with session");
                     }
                     return StatusCode(500);
-                }                    
-
+                }
+                if (!string.IsNullOrWhiteSpace(_sessionService.PageForEdit))
+                {
+                    if (_sessionService.PageForEdit == pageVm.PageId)
+                    {
+                        //this page was revisited and edited
+                        _sessionService.RemoveNavOrderFrom(pageVm.PageId);
+                    }
+                }
                 var userSession = _sessionService.GetUserSession();
                 var serviceNotFound = userSession.LocationName.Equals("the service");
                 ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
