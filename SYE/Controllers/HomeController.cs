@@ -35,8 +35,9 @@ namespace SYE.Controllers
         {
             //Set the version for A/B testing
             //This will be used when we load the form
+            ViewBag.HideSiteTitle = true;
             HttpContext.Session.SetString("FormVersion", v);
-            return RedirectToAction("Index");
+            return View("Index");
         }
 
         // Error return pages are can be configured here. 
