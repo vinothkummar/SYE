@@ -11,7 +11,6 @@ namespace SYE.Services
     public interface ISessionService
     {
         void UpdateNavOrder(string currentPage);
-        void RemoveNavOrderFrom(string fromPage);
         List<string> GetNavOrder();
         PageVM GetPageById(string pageId, bool notFoundFlag);
         FormVM LoadLatestFormIntoSession(Dictionary<string, string> replacements);
@@ -23,7 +22,6 @@ namespace SYE.Services
         void SaveUserSearch(string search);
         string GetUserSearch();
         void ClearSession();
-        string PageForEdit { get; set; }
     }
 
     public class SessionService : ISessionService
@@ -49,7 +47,7 @@ namespace SYE.Services
             if (userSession.NavOrder == null)
             {
                 //First page
-                userSession.NavOrder = new List<string>{ currentPage };
+                userSession.NavOrder = new List<string> { currentPage };
             }
             else
             {
@@ -60,8 +58,17 @@ namespace SYE.Services
                 }
                 else
                 {
-                    //been here before......now editing
-                    PageForEdit = currentPage;
+                    //We have been here do delete everything after, just in case it changes
+                    var newNav = new List<string>();
+
+                    var index = userSession.NavOrder.IndexOf(currentPage);
+                    foreach (var page in userSession.NavOrder)
+                    {
+                        if (userSession.NavOrder.IndexOf(page) <= index) newNav.Add(page);
+                    }
+
+                    //Update the users navigation history
+                    userSession.NavOrder = newNav;
                 }
             }
 
@@ -199,34 +206,6 @@ namespace SYE.Services
             context.Session.Remove("NavOrder");
 
             //context.Session.Clear();
-        }
-        public void RemoveNavOrderFrom(string fromPage)
-        {
-            var userSession = GetUserSession();
-            var newNav = new List<string>();
-
-            var index = userSession.NavOrder.IndexOf(fromPage);
-            foreach (var page in userSession.NavOrder)
-            {
-                if (userSession.NavOrder.IndexOf(page) <= index) newNav.Add(page);
-            }
-
-            //Update the users navigation history
-            userSession.NavOrder = newNav;
-            SetUserSessionVars(userSession);
-        }
-        public string PageForEdit
-        {
-            get
-            {
-                var context = _httpContextAccessor.HttpContext;
-                return context.Session.GetString("PageForEdit");
-            }
-            set
-            {
-                var context = _httpContextAccessor.HttpContext;
-                context.Session.SetString("PageForEdit", value);
-            }
         }
     }
 
