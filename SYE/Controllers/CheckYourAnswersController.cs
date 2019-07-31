@@ -81,8 +81,16 @@ namespace SYE.Controllers
                 }
 
                 var submission = GenerateSubmission(formVm);
+                var reference = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
+
+                if (string.IsNullOrWhiteSpace(reference))
+                {
+                    _logger.LogError("Error submitting feedback!  Null or empty submission Id");
+                    return StatusCode(500);
+                }
+
+                submission.SubmissionId = reference;
                 submission = _submissionService.CreateAsync(submission).Result;
-                var reference = submission?.SubmissionId ?? string.Empty;
 
                 if (vm?.SendConfirmationEmail == true && !string.IsNullOrWhiteSpace(reference))
                 {
@@ -148,8 +156,7 @@ namespace SYE.Controllers
                 FormName = formVm.FormName,
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
-                LocationName = HttpContext.Session.GetString("LocationName"),
-                SubmissionId = _submissionService.GenerateUniqueUserRefAsync().Result.ToString(),
+                LocationName = HttpContext.Session.GetString("LocationName")                
             };
 
             var answers = new List<AnswerVM>();
