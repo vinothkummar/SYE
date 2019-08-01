@@ -31,7 +31,14 @@
                             }
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            @question.Answer
+                            @if (@pageVm.PageId == "give-your-feedback" || @pageVm.PageId == "tell-us-which-service")
+                            {
+                                <div style="white-space: pre-line">
+                                    @question.Answer
+                                </div>
+                            }
+                            else
+                            { @question.Answer}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class="govuk-link" href="@Url.Action("Index", "Form", new { id = pageVm.PageId} )">
