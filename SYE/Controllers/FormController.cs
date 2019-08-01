@@ -31,7 +31,7 @@ namespace SYE.Controllers
         public IActionResult Index(string id = "")
         {
             try
-            {
+            {                
                 var userSession = _sessionService.GetUserSession();
                 var serviceNotFound = userSession.LocationName.Equals("the service");
 
@@ -43,6 +43,8 @@ namespace SYE.Controllers
 
                 //Update the users journey
                 _sessionService.UpdateNavOrder(pageVm.PageId);
+                
+                ViewBag.Title = pageVm.PageId.Replace("-"," ");
 
                 return View(pageVm);
             }
