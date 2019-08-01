@@ -10,7 +10,7 @@ namespace SYE.Controllers
         public IActionResult Index(string id)
         {
             ViewBag.Reference = HttpContext.Session.GetString("ReferenceNumber");
-            //ViewBag.ShowBackButton = false;
+            ViewBag.Title = "you have sent your feedback";
             return View();
         }
     }

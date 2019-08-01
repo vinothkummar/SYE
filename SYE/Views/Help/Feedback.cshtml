@@ -4,7 +4,6 @@
 @model GDSHelpers.Models.FormSchema.PageVM
 
 @{
-    ViewData["Title"] = string.Concat(Model.Questions.Any(x => x.Validation.IsErrored) ? "Error:" : "", "Feedback");
     Layout = "_Layout";
 }
 

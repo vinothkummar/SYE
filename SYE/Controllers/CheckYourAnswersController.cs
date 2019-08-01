@@ -56,7 +56,8 @@ namespace SYE.Controllers
                     PageHistory =  _sessionService.GetNavOrder()
                 };
 
-                //ViewBag.ShowBackButton = false;
+                ViewBag.Title = "check your answers";
+
                 return View(vm);
             }
             catch (Exception ex)

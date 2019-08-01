@@ -9,6 +9,7 @@ namespace SYE.Controllers
         public IActionResult Index()
         {
             ViewBag.BackLink = new BackLinkVM { Show = true, Url = "javascript:history.go(-1);", Text = "Back" };
+            ViewBag.Title = "how we handle information";
             return View();
         }
     }

@@ -10,14 +10,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--BuildNumber: @(Configuration.GetValue<string>("ApplicationSettings:BuildNumber"))-->
-
-    <title>@(Configuration.GetValue<string>("ApplicationSettings:AppName")) - Care Quality Commission</title>
+    
+    <title>@(Configuration.GetValue<string>("ApplicationSettings:AppName")) - @ViewBag.Title</title>
 
     <meta name="theme-color" content="#5f2861" />
 
     @if (Configuration.GetValue<bool>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:Enabled") == true)
     {
-       
+
         <!-- Google Tag Manager -->
         <script>
             (function(w, d, s, l, i) {
