@@ -43,9 +43,8 @@ namespace SYE.Controllers
 
                 //Update the users journey
                 _sessionService.UpdateNavOrder(pageVm.PageId);
-                
-                ViewBag.Title = pageVm.PageId.Replace("-"," ");
 
+                ViewBag.Title = pageVm.PageName + " - Give feedback on care";
                 return View(pageVm);
             }
             catch (Exception ex)

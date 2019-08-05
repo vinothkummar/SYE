@@ -25,6 +25,7 @@ namespace SYE.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
             return View();
         }
