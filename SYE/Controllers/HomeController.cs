@@ -61,20 +61,20 @@ namespace SYE.Controllers
             {
                 case 404:
                     _logger.LogError("page not found");
-                    ViewBag.Title = "Error. Page not found - Give feedback on care";
+                    ViewBag.Title = "Page not found - Give feedback on care";
                     ViewBag.ErrorTitle = "Page not found";
                     ViewBag.ErrorMessage = "If you typed the web address, check it is correct. If you pasted the web address, check you copied the entire address.";
                     break;
                 case 500:
                 case 503:
                     _logger.LogError("Sorry, there is a problem with this form");
-                    ViewBag.Title = "Error. Sorry, there is a problem with this form - Give feedback on care";
+                    ViewBag.Title = "There’s a problem - Give feedback on care";
                     ViewBag.ErrorTitle = "Sorry, there is a problem with this form";
                     ViewBag.ErrorMessage = "Try clicking your browser's back button or try again later.";
                     break;
                 default:
                     ViewBag.ErrorTitle = "The service is unavailable";
-                    ViewBag.Title = "Error. The service is unavailable, there is a problem with this form - Give feedback on care";
+                    ViewBag.Title = "This form is unavailable - Give feedback on care";
                     ViewBag.ErrorMessage = "Try clicking your browser's back button or try again later.";
                     break;
             }
