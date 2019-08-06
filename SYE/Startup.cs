@@ -146,7 +146,7 @@ namespace SYE
             {
                 app.UseDeveloperExceptionPage();
                 // Uncomment following to test error pages locally
-                app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                //app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
             else
             {
