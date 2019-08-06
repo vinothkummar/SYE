@@ -33,11 +33,27 @@ namespace SYE.Controllers
             try
             {                
                 var userSession = _sessionService.GetUserSession();
+                if (userSession == null)
+                {
+                    _logger.LogError("Error with user session. Session is null id=:" + id );
+                    return StatusCode(440);
+                }
+
+                if (userSession.LocationName == null)
+                {
+                    _logger.LogError("Error with user session. Location is null id=:" + id);
+                    return StatusCode(440);
+                }
+
                 var serviceNotFound = userSession.LocationName.Equals("the service");
 
                 var pageVm = _sessionService.GetPageById(id, serviceNotFound);
 
-                if (pageVm == null) return NotFound();
+                if (pageVm == null)
+                {
+                    _logger.LogError("Error with user session. PageVm is null. id=:" + id);
+                    return NotFound();
+                }
 
                 ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
 
@@ -50,7 +66,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading PageVM.");
+                _logger.LogError(ex, "Error loading PageVM. id=:" + id); 
                 return StatusCode(500);
             }
         }

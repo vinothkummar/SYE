@@ -58,6 +58,11 @@ namespace SYE.Controllers
             // Alternatively you can also add specific error views like 400.cshtml and "return view("400");"
             switch (statusCode)
             {
+                case 440:
+                    _logger.LogError("session not found");
+                    ViewBag.ErrorTitle = "Session not found";
+                    ViewBag.ErrorMessage = "You need to start at the beginning of the quesionnaire.";
+                    break;
                 case 404:
                     _logger.LogError("page not found");
                     ViewBag.ErrorTitle = "Page not found";
