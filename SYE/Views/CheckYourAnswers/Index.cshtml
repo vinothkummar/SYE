@@ -17,9 +17,8 @@
             @foreach (var pageVm in Model.FormVm.Pages.Where(m => Model.PageHistory.Contains(m.PageId)).OrderBy(m => Model.PageHistory.IndexOf(m.PageId)))
             {
                 foreach (var question in pageVm.Questions.Where(m => !string.IsNullOrEmpty(m.Answer)))
-                {
-
-                    <div class="govuk-summary-list__row">
+                {                    
+                    <div class="govuk-summary-list__row" style="@((pageVm.PageId == "give-your-feedback" || @pageVm.PageId == "tell-us-which-service") ? "white-space: pre-line" : "white-space: normal")">
                         <dt class="govuk-summary-list__key">
                             @if (string.IsNullOrEmpty(question.Question))
                             {
@@ -40,7 +39,6 @@
                             </a>
                         </dd>
                     </div>
-
                 }
             }
 

@@ -6,10 +6,19 @@
 <gds-row>
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
-        <gds-heading heading-type="H1" text="@(ViewBag.ErrorTitle)"></gds-heading>
+        <gds-heading heading-type="H1" text="@(Model.ErrorTitle)"></gds-heading>
 
-        <gds-paragraph>@(ViewBag.ErrorMessage)</gds-paragraph>
+        <gds-paragraph>
+            @(Model.ErrorMessage)
+            @if (Model.InsertLink)
+            {
+                @(Model.LinkPreMessage)
+                <gds-link class="govuk-link" link-text=@(Model.LinkMessage) href="@Url.Action("Index", "Home")"></gds-link>
+                @(Model.LinkPostMessage)
+            }
 
+        </gds-paragraph>
+        
         <gds-heading heading-type="H2" text="Get help with this form"></gds-heading>
 
         <gds-paragraph>

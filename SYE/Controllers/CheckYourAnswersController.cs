@@ -46,7 +46,13 @@ namespace SYE.Controllers
                 var formVm = _sessionService.GetFormVmFromSession();
                 if (formVm == null)
                 {
+                    _logger.LogError("Error with user session. formVm is null.");
                     return NotFound();
+                }
+                if ((_sessionService.GetUserSession().LocationName) == null)
+                {
+                    _logger.LogError("Error with user session. Location is null");
+                    return StatusCode(440);
                 }
                 var vm = new CheckYourAnswersVm
                 {
@@ -55,6 +61,12 @@ namespace SYE.Controllers
                     LocationName = _sessionService.GetUserSession().LocationName,
                     PageHistory =  _sessionService.GetNavOrder()
                 };
+                //check for feedback
+                if(! vm.PageHistory.Contains("give-your-feedback"))
+                {
+                    _logger.LogError("Error with user session. No feedback found");
+                    return StatusCode(440);
+                }
 
                 ViewBag.Title = "Check your answers - Give feedback on care";
 
