@@ -53,6 +53,10 @@ namespace SYE.Controllers
             //Following will not be populated on 404
             var exceptionHandlerPathFeature = _httpContextAccessor?.HttpContext?.Features?.Get<IExceptionHandlerPathFeature>();
 
+            var model = new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
             // 400, 500 and default are coded if you need to add more error codes, add them here
             // Please change error messages and if needed View for error page.
             // Alternatively you can also add specific error views like 400.cshtml and "return view("400");"
@@ -60,33 +64,32 @@ namespace SYE.Controllers
             {
                 case 440:
                     _logger.LogError("session not found");
-                    ViewBag.ErrorTitle = "Session not found";
-                    ViewBag.ErrorMessage = "You need to start at the beginning of the quesionnaire.";
+                    model.ErrorTitle = "This page no longer exists";
+                    model.InsertLink = true;
+                    model.ErrorMessage = "We cannot find the page you’re looking for. ";
+                    model.LinkPreMessage="This might be because you’re returning to a form you have not finished or you’re using an old link. You’ll need to ";
+                    model.LinkMessage = "go back to the start";
+                    model.LinkPostMessage = " to enter your feedback.";
                     break;
                 case 404:
                     _logger.LogError("page not found");
-                    ViewBag.ErrorTitle = "Page not found";
-                    ViewBag.ErrorMessage = "If you typed the web address, check it is correct. If you pasted the web address, check you copied the entire address.";
+                    model.ErrorTitle = "Page not found";
+                    model.ErrorMessage = "If you typed the web address, check it is correct. If you pasted the web address, check you copied the entire address.";
                     break;
                 case 500:
                 case 503:
                     _logger.LogError("Sorry, there is a problem with this form");
-                    ViewBag.ErrorTitle = "Sorry, there is a problem with this form";
-                    ViewBag.ErrorMessage = "Try clicking your browser's back button or try again later.";
+                    model.ErrorTitle = "Sorry, there is a problem with this form";
+                    model.ErrorMessage = "Try clicking your browser's back button or try again later.";
                     break;
                 default:
-                    ViewBag.ErrorTitle = "The service is unavailable";
-                    ViewBag.ErrorMessage = "Try clicking your browser's back button or try again later.";
+                    model.ErrorTitle = "The service is unavailable";
+                    model.ErrorMessage = "Try clicking your browser's back button or try again later.";
                     break;
             }
             // Ideally default error view "Error.cshtml" should be changed and model removed 
             // as we do not require Trace/Activity Id there
-            return View(
-                new ErrorViewModel
-                {
-                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-                }
-            );
+            return View(model);
         }
 
         [Route("Clear-Data")]

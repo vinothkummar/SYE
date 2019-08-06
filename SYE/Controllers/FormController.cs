@@ -31,7 +31,7 @@ namespace SYE.Controllers
         public IActionResult Index(string id = "")
         {
             try
-            {                
+            {
                 var userSession = _sessionService.GetUserSession();
                 if (userSession == null)
                 {
