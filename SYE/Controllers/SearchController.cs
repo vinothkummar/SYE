@@ -41,6 +41,7 @@ namespace SYE.Controllers
 
             try
             {
+                ViewBag.Title = "Find a service - Give feedback on care";
                 return View(new SearchResultsVM { ShowIncompletedSearchMessage = isError });
             }
             catch (Exception ex)
@@ -63,6 +64,8 @@ namespace SYE.Controllers
             var cleanSearch = _gdsValidate.CleanText(search, true, restrictedWords, allowedChars);
             if (string.IsNullOrEmpty(cleanSearch)) return RedirectToAction("Index", new { isError = "true" });
 
+            ViewBag.Title = "Results for " + cleanSearch + " - Give feedback on care";
+
             return GetSearchResult(cleanSearch, pageNo, selectedFacets);
         }
 
@@ -78,6 +81,8 @@ namespace SYE.Controllers
             {
                 selectedFacets = string.Join(',', facets.Where(x => x.Selected).Select(x => x.Text).ToList());
             }
+
+            ViewBag.Title = "Results for " + cleanSearch + " - Give feedback on care";
 
             return GetSearchResult(cleanSearch, 1, selectedFacets);
         }

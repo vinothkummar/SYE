@@ -25,6 +25,7 @@ namespace SYE.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
             return View();
         }
@@ -57,13 +58,14 @@ namespace SYE.Controllers
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
             };
-            // 400, 500 and default are coded if you need to add more error codes, add them here
+            // 440,404,500,503 and default are coded if you need to add more error codes, add them here
             // Please change error messages and if needed View for error page.
             // Alternatively you can also add specific error views like 400.cshtml and "return view("400");"
             switch (statusCode)
             {
                 case 440:
                     _logger.LogError("session not found");
+                    ViewBag.Title = "Page no longer exists - Give feedback on care";
                     model.ErrorTitle = "This page no longer exists";
                     model.InsertLink = true;
                     model.ErrorMessage = "We cannot find the page you’re looking for. ";
@@ -73,17 +75,20 @@ namespace SYE.Controllers
                     break;
                 case 404:
                     _logger.LogError("page not found");
+                    ViewBag.Title = "Page not found - Give feedback on care";
                     model.ErrorTitle = "Page not found";
                     model.ErrorMessage = "If you typed the web address, check it is correct. If you pasted the web address, check you copied the entire address.";
                     break;
                 case 500:
                 case 503:
                     _logger.LogError("Sorry, there is a problem with this form");
+                    ViewBag.Title = "There’s a problem - Give feedback on care";
                     model.ErrorTitle = "Sorry, there is a problem with this form";
                     model.ErrorMessage = "Try clicking your browser's back button or try again later.";
                     break;
                 default:
                     model.ErrorTitle = "The service is unavailable";
+                    ViewBag.Title = "This form is unavailable - Give feedback on care";
                     model.ErrorMessage = "Try clicking your browser's back button or try again later.";
                     break;
             }

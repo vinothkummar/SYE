@@ -1,6 +1,7 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
 @using Microsoft.Extensions.Configuration
 @using GDSHelpers.Models
+@using Microsoft.CodeAnalysis
 @inject IConfiguration Configuration
 <!DOCTYPE html>
 <html lang="en-GB">
@@ -11,7 +12,7 @@
 
     <!--BuildNumber: @(Configuration.GetValue<string>("ApplicationSettings:BuildNumber"))-->
     
-    <title>@(Configuration.GetValue<string>("ApplicationSettings:AppName")) - @ViewBag.Title</title>
+    <title>@Html.Raw(ViewBag.Title)</title>
 
     <meta name="theme-color" content="#5f2861" />
 

@@ -43,7 +43,7 @@ namespace SYE.Controllers
 
                     ViewBag.BackLink = new BackLinkVM { Show = true, Url = urlReferer, Text = "Back" };
 
-                    ViewBag.Title = "report a problem";
+                    ViewBag.Title = "Report a problem - Give feedback on care";
 
                     return View(nameof(Feedback), pageViewModel);
                 }
@@ -108,7 +108,7 @@ namespace SYE.Controllers
         [Route("feedback-thank-you")]
         public ActionResult FeedbackThankYou(string urlReferer)
         {
-            ViewBag.Title = "feedback thank you";
+            ViewBag.Title = "You've sent your feedback - Give feedback on care";
 
             ViewBag.BackLink = new BackLinkVM { Show = true, Url = urlReferer, Text = "Back" };
             return View();
