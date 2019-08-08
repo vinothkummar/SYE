@@ -1,5 +1,5 @@
 {
-  "id": "690afc01-ce7a-478e-91ee-9f99c3bae03c",
+  "id": "691afc01-ce7a-478e-91ee-9f99c3bae03c",
   "version": "6.9.1",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
@@ -172,19 +172,19 @@
         {
           "question_id": "abuse-or-neglect-01",
           "document_order": 8,
-          "question": "<h1 class=\"govuk-heading-xl\">Is someone at immediate risk of harm?</h1>",
+          "question": "<h1 class=\"govuk-fieldset__heading\">Is someone at risk of abuse or neglect?</h1>",
           "short_question": "Is someone at risk of harm?",
-          "html_content": "<p class=\"govuk-body\">If they are, we'll need to take urgent action. This is called safeguarding.</p><p class=\"govuk-body\">Examples of harm are things like abuse or neglect.</p><details class=\"govuk-details\"><summary class=\"govuk-details__summary\"><span class=\"govuk-details__summary-text\">What counts as abuse or neglect</span></summary><div class=\"govuk-details__text\"><p class=\"govuk-body\">Abuse is when someone harms or mistreats someone else.</p><p class=\"govuk-body\">Neglect is when someone is not cared for properly. For example, the staff do not let them have enough water, food, heating or medicine. Or they're not getting the help they need to wash or being helped to the toilet.</p></div></details>",
+          "html_content": "<p class=\"govuk-body\">If they are, we'll need to take urgent action. This is called safeguarding.</p><div class=\"govuk-inset-text\"><p class=\"govuk-body\">Abuse is when someone harms or mistreats someone else.</p><p class=\"govuk-body\">Neglect is when someone is not cared for properly. For example, the staff do not let them have enough water, food, heating or medicine. Or they're not getting the help they need to wash or being helped to the toilet.</p></div>",
           "data_type": "string",
           "input_type": "optionlist",
           "options": [
             {
-              "value": "No, I do not think someone's at risk of immediate harm",
-              "text": "No, I do not think someone's at risk of immediate harm"
+              "value": "No, no one's at risk of abuse or neglect",
+              "text": "No, no one's at risk of abuse or neglect"
             },
             {
-              "value": "Yes, I think someone's at risk of immediate harm",
-              "text": "Yes, I think someone's at risk of immediate harm"
+              "value": "Yes, someone's at risk of abuse or neglect",
+              "text": "Yes, someone's at risk of abuse or neglect"
             }
           ],
           "validation": {
@@ -197,7 +197,7 @@
           },
           "answer_logic": [
             {
-              "value": "Yes, I think someone's at risk of immediate harm",
+              "value": "Yes, someone's at risk of abuse or neglect",
               "next_page_id": "have-you-told-the-police-or-council"
             }
           ],
@@ -275,7 +275,7 @@
       "previous_pages": [
         {
           "question_id": "abuse-or-neglect-01",
-          "answer": "Yes, I think someone's at risk of immediate harm",
+          "answer": "Yes, someone's at risk of abuse or neglect",
           "page_id": "abuse-or-neglect"
         }
       ],
@@ -289,7 +289,7 @@
         {
           "question_id": "we-may-have-to-tell-them-01",
           "question": "<h1 class=\"govuk-heading-xl\">We may have to tell them</h1>",
-          "html_content": "<p class=\"govuk-body\">We may have to share the information you have given us with the police or local council.</p>"
+          "html_content": "<p class=\"govuk-body\">We may have to share the information you have given us with the police, the local council safeguarding team or both.</p>"
         }
       ],
       "buttons": [
@@ -334,10 +334,11 @@
         {
           "question_id": "give-your-feedback-02",
           "document_order": 13,
-          "question": "<p class=\"govuk-body\">Can you be more exact about where you're telling us about? For example, if it's a hospital, which ward or department? (optional)</p>",
+          "question": "<p class=\"govuk-body\">Can you be more exact about where it happened? For example, if it's a hospital, which ward or department? (optional)</p>",
           "short_question": "Exact location",
           "data_type": "text",
           "input_type": "textbox",
+          "input_css": "govuk-!-width-two-thirds",
           "validation": {
             "required": {
               "is_required": false,
@@ -355,6 +356,7 @@
           "short_question": "Date",
           "data_type": "text",
           "input_type": "textbox",
+          "input_css": "govuk-!-width-two-thirds",
           "validation": {
             "required": {
               "is_required": false,
@@ -380,7 +382,7 @@
         },
         {
           "question_id": "abuse-or-neglect-01",
-          "answer": "No, I do not think someone's at risk of immediate harm",
+          "answer": "No, no one's at risk of abuse or neglect",
           "page_id": "abuse-or-neglect"
         },
         {
@@ -527,7 +529,7 @@
         {
           "question_id": "check-if-the-law-will-protect-you-01",
           "question": "<h1 class=\"govuk-heading-xl\">Check if the law will protect you</h1>",
-          "html_content": "<p class=\"govuk-body\">In some circumstances, the law will protect you if you raise a concern about somewhere you work. This is sometimes called whistleblowing</p><p class=\"govuk-body\">Your rights are set out in the Public Interest Disclosure Act (PIDA).</p><p class=\"govuk-body\">Before you tell us about your concern, it's important to check if PIDA applies to you. This might mean talking to a lawyer, a trade union or an organisation like Public Concern at Work.</p>"
+          "html_content": "<p class=\"govuk-body-l\">In some circumstances, the law will protect you if you raise a concern about somewhere you work. This is sometimes called whistleblowing</p><p class=\"govuk-body\">Your rights are set out in the <a href=\"https://www.gov.uk/government/publications/the-public-interest-disclosure-act\" target=\"_blank\"> Public Interest Disclosure Act </a> (PIDA).</p><p class=\"govuk-body\">Before you tell us about your concern, it's important to check if PIDA applies to you. This might mean talking to a lawyer, a trade union or an organisation like <a href=\"https://www.pcaw.org.uk\" target=\"_blank\"> Public Concern at Work.</a></p>"
         }
       ],
       "buttons": [
@@ -663,14 +665,13 @@
       "page_id": "your-contact-details",
       "page_title": "Your contact details",
       "page_name": "",
-      "post_amble": "<p class=\"govuk-body\">You must enter either an email address or a telephone number.</p>",
       "questions": [
         {
           "question_id": "your-contact-details-01",
           "document_order": 3,
           "question": "<h1 class=\"govuk-heading-xl\">Your contact details</h1>",
           "short_question": "Name",
-          "html_content": "<p class=\"govuk-body\">Full name</p>",
+          "html_content": "<label class=\"govuk-label\" for=\"Full-name\">Full name</label>",
           "data_type": "text",
           "input_type": "textbox",
           "validation": {
@@ -686,6 +687,7 @@
         {
           "question_id": "your-contact-details-02",
           "document_order": 4,
+          "instruction_text": "Give us at least one way to contact you",
           "question": "<p class=\"govuk-body\">Email address</p>",
           "short_question": "Email address",
           "data_type": "text",
@@ -819,16 +821,16 @@
               "text": "Mind"
             },
             {
-              "value": "The National Autistic Society",
-              "text": "The National Autistic Society"
+              "value": "National Autistic Society",
+              "text": "National Autistic Society"
             },
             {
               "value": "The Patients Association",
               "text": "The Patients Association"
             },
             {
-              "value": "The Relatives and Residents Association",
-              "text": "The Relatives and Residents Association"
+              "value": "Relatives & Residents Association",
+              "text": "Relatives & Residents Association"
             },
             {
               "value": "another charity",
@@ -852,6 +854,7 @@
           "short_question": "Name of charity",
           "data_type": "text",
           "input_type": "textbox",
+          "input_css": "govuk-!-width-two-thirds",
           "show_when": {
             "question_id": "tell-us-which-charity-01",
             "answer": "another charity"
