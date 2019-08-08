@@ -275,7 +275,7 @@
       "previous_pages": [
         {
           "question_id": "abuse-or-neglect-01",
-          "answer": "Yes, I think someone's at risk of immediate harm",
+          "answer": "Yes, someone's at risk of abuse or neglect",
           "page_id": "abuse-or-neglect"
         }
       ],
@@ -382,7 +382,7 @@
         },
         {
           "question_id": "abuse-or-neglect-01",
-          "answer": "No, I do not think someone's at risk of immediate harm",
+          "answer": "No, no one's at risk of abuse or neglect",
           "page_id": "abuse-or-neglect"
         },
         {
