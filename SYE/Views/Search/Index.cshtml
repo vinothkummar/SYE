@@ -29,11 +29,11 @@
                         </label>
                         @if (Model.ShowIncompletedSearchMessage)
                         {
-                            <label class="govuk-error-message" for="search">
-                                Enter the name of a service, its address or both. Just enter whichever part you can remember.
-                            </label>
+                        <label class="govuk-error-message" for="search">
+                            Enter the name of a service, its address, postcode or a combination of these
+                        </label>
                         }
-                        <input class="govuk-input govuk-!-width-two-thirds" id="search" name="search" type="text" value="@Model.Search">
+                        <input class="@(Model.ShowIncompletedSearchMessage ? "govuk-input govuk-input--error govuk-!-width-two-thirds" : "govuk-input govuk-!-width-two-thirds")" id="search" name="search" type="text" value="@Model.Search">
                     </div>
 
                     <gds-button button-type="Submit" button-text="Search"></gds-button>
