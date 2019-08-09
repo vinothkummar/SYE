@@ -235,11 +235,11 @@ label.gds-question h1 {
 
 
 
-pre.gfc-multi-line-text {
+.gfc-multi-line-text {
     font-size: 1.1875rem;
     line-height: 1.31579;
     font-family: nta,Arial,sans-serif;
     -webkit-font-smoothing: antialiased;
-    margin-top: 0;
+    margin-top: -24px;
     white-space: pre-line;
 }
