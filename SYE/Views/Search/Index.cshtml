@@ -30,7 +30,7 @@
                         @if (Model.ShowIncompletedSearchMessage)
                         {
                         <label class="govuk-error-message" for="search">
-                            Enter the name of a service, its address, postcode or a combination of these
+                            @(Model.ErrorMessage)
                         </label>
                         }
                         <input class="@(Model.ShowIncompletedSearchMessage ? "govuk-input govuk-input--error govuk-!-width-two-thirds" : "govuk-input govuk-!-width-two-thirds")" id="search" name="search" type="text" value="@Model.Search">

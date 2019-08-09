@@ -1,6 +1,6 @@
 {
-  "id": "690afc01-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.9.1",
+  "id": "6100afc01-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.0",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -67,7 +67,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select one option to tell us what sort of feedback you want to give. Select whichever one describes the experience best."
+              "error_message": "Select the type of feedback you want to give - just choose whichever describes your experience best"
             },
             "is_errored": false,
             "error_message": ""
@@ -119,7 +119,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select one option to tell us when the thing happened. Just choose whichever one describes your feedback best."
+              "error_message": "Select when it happened - just choose the option that describes your experience best"
             },
             "is_errored": false,
             "error_message": ""
@@ -190,7 +190,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if you think someone is in danger of immediate harm. You do not have to be sure. Just tell us what you think."
+              "error_message": "Select if you think someone is in danger of abuse or neglect"
             },
             "is_errored": false,
             "error_message": ""
@@ -252,7 +252,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if you think someone is in danger of immediate harm. You do not have to be sure. Just tell us what you think."
+              "error_message": "Select if you’ve told the police, the council safeguarding team or both - or select ‘neither or these’"
             },
             "is_errored": false,
             "error_message": ""
@@ -324,7 +324,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Describe your experience of !!location_name!!"
+              "error_message": "Enter your feedback about !!location_name!!"
             },
             "is_errored": false,
             "error_message": ""
@@ -436,7 +436,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if your feedback is about a service you’ve worked at."
+              "error_message": "Select if you’ve already told the service you’re not happy"
             },
             "is_errored": false,
             "error_message": ""
@@ -486,7 +486,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if your feedback is about a service you’ve worked at."
+              "error_message": "Select if your feedback is about somewhere you’ve worked"
             },
             "is_errored": false,
             "error_message": ""
@@ -571,7 +571,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select one option to tell us if you’re happy for us to show your feedback to the service or if you’d rather they did not see it."
+              "error_message": "Select if you’re happy for us to share your feedback with the service"
             },
             "is_errored": false,
             "error_message": ""
@@ -630,7 +630,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if you’re happy for us to get in touch to talk about your feedback."
+              "error_message": "Select if you’re happy for us to contact you"
             },
             "is_errored": false,
             "error_message": ""
@@ -663,7 +663,7 @@
       "page_id": "your-contact-details",
       "page_title": "Your contact details",
       "page_name": "",
-      "post_amble": "<p class=\"govuk-body\">You must enter either an email address or a telephone number.</p>",
+      "post_amble": "<p class=\"govuk-body\">You must enter either an email address or a telephone number</p>",
       "questions": [
         {
           "question_id": "your-contact-details-01",
@@ -676,7 +676,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Enter your full name.<br />You can only enter letters, apostrophes and hyphens."
+              "error_message": "Enter your name<br />Name must only include letters a to z, hyphens, spaces and apostrophes"
             },
             "is_errored": false,
             "error_message": ""
@@ -693,7 +693,7 @@
           "validation": {
             "required": {
               "is_required": false,
-              "error_message": "Enter an email address in the correct format, like<br />name@example.com."
+              "error_message": "Enter an email address in the correct format, like name@example.com"
             },
             "is_errored": false,
             "error_message": ""
@@ -710,7 +710,7 @@
           "validation": {
             "required": {
               "is_required": false,
-              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982<br />or +44 0808 157 0192."
+              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192"
             },
             "is_errored": false,
             "error_message": ""
@@ -759,7 +759,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select one option to tell us how you came to this form."
+              "error_message": "Select whether a charity told you about this form"
             },
             "is_errored": false,
             "error_message": ""
@@ -838,7 +838,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select the name of the charity that told you about this form. Or select ‘Another charity’ if you heard about it from one that is not in the list."
+              "error_message": "Select the name of the charity that told you about this form or select ‘another charity’"
             },
             "is_errored": false,
             "error_message": ""
