@@ -27,7 +27,7 @@ namespace SYE.Services.Helpers
 
         public static string BuildFilter(string refinementFacets)
         {
-            return string.Join(" or ", refinementFacets.Split(',').Select(x => string.Concat("inspectionDirectorate eq '", x.Trim(), "'")));
+            return string.Join(" or ", refinementFacets.Split(',').Select(x => string.Concat("syeInspectionCategories eq '", x.Trim(), "'")));
         }
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace SYE.Services.Helpers
                 Address2 = GetValue(doc, "postalAddressLine2"),
                 Town = GetValue(doc, "postalAddressTownCity"),
                 PostCode = GetValue(doc, "postalCode"),
-                Region = GetValue(doc, "region"),
-                Category = GetValue(doc, "inspectionDirectorate")
+                Region = GetValue(doc, "region"),                
+                Category = GetInspectionCategories(doc, "syeInspectionCategories")
             };
             return searchResult;
         }
@@ -73,5 +73,12 @@ namespace SYE.Services.Helpers
             return returnStr;
         }
 
+        private static string GetInspectionCategories(Document inspectionCategory, string key)
+        {
+            var category = ((object[]) inspectionCategory.Where(cn => cn.Key == "syeInspectionCategories").FirstOrDefault().Value)[0].ToString();
+
+            return category;            
+            
+        }
     }
 }

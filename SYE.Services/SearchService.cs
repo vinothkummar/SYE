@@ -56,7 +56,7 @@ namespace SYE.Services
                 IncludeTotalResultCount = true,
                 Skip = ((currentPage - 1) * pageSize),
                 Top = pageSize,
-                Facets = new List<String> { "inspectionDirectorate" }
+                Facets = new List<String> { "syeInspectionCategories" }
             };
 
             sp.Filter = "registrationStatus eq 'Registered'";
