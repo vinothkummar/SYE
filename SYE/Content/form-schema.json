@@ -23,6 +23,16 @@
               "is_required": true,
               "error_message": "Tell us which service you want to give feedback about"
             },
+            "min_length": {
+              "type": "string",
+              "min": 15,
+              "error_message": "Enter between 15 and 1,500 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 1500,
+              "error_message": "Enter between 15 and 1,500 characters"
+            },
             "is_errored": false,
             "error_message": ""
           },
@@ -326,6 +336,16 @@
               "is_required": true,
               "error_message": "Enter your feedback about !!location_name!!"
             },
+            "min_length": {
+              "type": "string",
+              "min": 50,
+              "error_message": "Your feedback must be between 50 and 8,000 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 8000,
+              "error_message": "Your feedback must be between 50 and 8,000 characters"
+            },
             "is_errored": false,
             "error_message": ""
           },
@@ -343,6 +363,16 @@
               "is_required": false,
               "error_message": ""
             },
+            "min_length": {
+              "type": "string",
+              "min": 2,
+              "error_message": "The location details must be between 2 and 100 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 100,
+              "error_message": "Details about when it happened must be between 2 and 100 characters"
+            },
             "is_errored": false,
             "error_message": ""
           },
@@ -359,6 +389,16 @@
             "required": {
               "is_required": false,
               "error_message": ""
+            },
+            "min_length": {
+              "type": "string",
+              "min": 2,
+              "error_message": "Details about when it happened must be between 2 and 100 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 100,
+              "error_message": "Details about when it happened must be between 2 and 100 characters"
             },
             "is_errored": false,
             "error_message": ""

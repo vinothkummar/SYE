@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29102.190
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.438
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYE", "SYE\SYE.csproj", "{B1B1F6FD-9057-4FD6-9EBB-E1A690537000}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYE.Repository", "SYE.Repository\SYE.Repository.csproj", "{A33385E8-0996-4702-B64D-053B53E529EF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SYE.EsbWrappers", "SYE.EsbWrappers\SYE.EsbWrappers.csproj", "{5C105737-B315-443F-A212-86C3AA703CAA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GDSHelpers", "..\GdsHelpers\GDSHelpers\GDSHelpers.csproj", "{E7AD891B-A43D-4603-A8E0-7DA6961B42E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{5C105737-B315-443F-A212-86C3AA703CAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C105737-B315-443F-A212-86C3AA703CAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C105737-B315-443F-A212-86C3AA703CAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7AD891B-A43D-4603-A8E0-7DA6961B42E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7AD891B-A43D-4603-A8E0-7DA6961B42E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7AD891B-A43D-4603-A8E0-7DA6961B42E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7AD891B-A43D-4603-A8E0-7DA6961B42E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
