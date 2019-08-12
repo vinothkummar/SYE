@@ -30,9 +30,7 @@
                             }
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            <div class="gfc-multi-line-text">
-                                @question.Answer
-                            </div>
+                            <span class="gfc-multi-line-text">@question.Answer</span>
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a class="govuk-link" href="@Url.Action("Index", "Form", new { id = pageVm.PageId} )">
