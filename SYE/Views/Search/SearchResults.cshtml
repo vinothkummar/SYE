@@ -7,26 +7,28 @@
 
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
 
-        <gds-heading heading-type="H1" text="Search"></gds-heading>
+        <label for="search">
+            <gds-heading heading-type="H1" text="Search"></gds-heading>
+        </label>
 
-        <gds-row>
-            <gds-column desktop-size="TwoThirds" tablet-size="TwoThirds">
+            <gds-row>
+                <gds-column desktop-size="TwoThirds" tablet-size="TwoThirds">
 
-                <form asp-action="SearchResults" method="get">
-                    <div class="govuk-form-group">
-                        @if (Model.ShowExceededMaxLengthMessage)
-                        {
-                            <label class="govuk-error-message" for="event-name">
-                                Please reduce the number of characters in the text field below. (Max 1000)
-                            </label>
-                        }
-                        <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
-                        <input type="image" name="submit" src="~/images/search.png" style="height: 40px; vertical-align: middle" />
-                    </div>
-                </form>
+                    <form asp-action="SearchResults" method="get">
+                        <div class="govuk-form-group">
+                            @if (Model.ShowExceededMaxLengthMessage)
+                            {
+                                <label class="govuk-error-message" for="event-name">
+                                    Please reduce the number of characters in the text field below. (Max 1000)
+                                </label>
+                            }
+                            <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
+                            <input type="image" name="submit" src="~/images/search.png" style="height: 40px; vertical-align: middle" />
+                        </div>
+                    </form>
 
-            </gds-column>
-        </gds-row>
+                </gds-column>
+            </gds-row>
 
     </gds-column>
 
@@ -122,7 +124,7 @@
             @if (Model.TotalPages > 1)
             {
                 <form asp-action="SearchResults" method="get">
-                    <input type="hidden" id="search" name="search" value="@Model.Search" />
+                    <input type="hidden" id="search2" name="search" value="@Model.Search" />
                     <input type="hidden" id="selectedFacets" name="search" value="@Model.SelectedFacets" />
 
                     <div class="govuk-body paging-wrapper">
