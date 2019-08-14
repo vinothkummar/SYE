@@ -27,7 +27,7 @@ namespace SYE.Services.Helpers
 
         public static string BuildFilter(string refinementFacets)
         {
-            return string.Join(" or ", refinementFacets.Split(',').Select(x => string.Concat("syeInspectionCategories eq '", x.Trim(), "'")));
+            return string.Join(" or ", refinementFacets.Split(',').Select(x => string.Concat("syeInspectionCategories/any(ins: ins eq '", x.Trim(), "')")));
         }
 
         /// <summary>
@@ -75,10 +75,7 @@ namespace SYE.Services.Helpers
 
         private static string GetInspectionCategories(Document inspectionCategory, string key)
         {
-            var category = ((object[]) inspectionCategory.Where(cn => cn.Key == "syeInspectionCategories").FirstOrDefault().Value)[0].ToString();
-
-            return category;            
-            
+            return string.Join(" ,", ((object[])inspectionCategory.Where(cn => cn.Key == "syeInspectionCategories").FirstOrDefault().Value));
         }
     }
 }
