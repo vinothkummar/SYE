@@ -56,12 +56,13 @@ namespace SYE.Services
                 IncludeTotalResultCount = true,
                 Skip = ((currentPage - 1) * pageSize),
                 Top = pageSize,
-                Facets = new List<String> { "inspectionDirectorate" }
+                Facets = new List<String> { "syeInspectionCategories,count:100" }
             };
 
             sp.Filter = "registrationStatus eq 'Registered'";
             if (!string.IsNullOrWhiteSpace(refinementFacets))
             {
+                sp.QueryType = QueryType.Full;                
                 sp.Filter = string.Concat(sp.Filter, " and (", SearchHelper.BuildFilter(refinementFacets), ")");
             }
 
@@ -82,7 +83,7 @@ namespace SYE.Services
                 new SearchServiceResult()
                 {
                     Count = searchResult.Count ?? 0,
-                    Facets = _facets,
+                    Facets = _facets.OrderBy(o => o).ToList(),
                     Data = searchResult?.Results?.Select(x => SearchHelper.GetSearchResult(x.Document))?.ToList() ?? new List<SearchResult>()
                 };
         }

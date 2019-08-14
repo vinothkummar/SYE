@@ -27,7 +27,7 @@ namespace SYE.Tests.Services
                 PostCode = "12345",
                 Town = "test town",
                 Region = "test region",
-                Category = "test category"
+                Category = "test category1"
             };
             var doc = new Document
             {
@@ -37,7 +37,7 @@ namespace SYE.Tests.Services
                 {"postalAddressTownCity", expectedResult.Town},
                 {"postalCode", expectedResult.PostCode},
                 {"region", expectedResult.Region},
-                {"inspectionDirectorate", "test category"}
+                {"syeInspectionCategories", new[] {"test category1"} }
             };
 
             var mockedIndexClient = new Mock<ICustomSearchIndexClient>();
@@ -83,7 +83,7 @@ namespace SYE.Tests.Services
                 {"postalAddressTownCity", setupResult.Town},
                 {"postalCode", setupResult.PostCode},
                 {"region", setupResult.Region},
-                {"inspectionDirectorate", "test category"}
+                {"syeInspectionCategories", new[] {"test category1", "test category2"} }
             };
 
             var mockedIndexClient = new Mock<ICustomSearchIndexClient>();
@@ -140,7 +140,7 @@ namespace SYE.Tests.Services
                 {"postalAddressTownCity", setupResult.Town},
                 {"postalCode", setupResult.PostCode},
                 {"region", setupResult.Region},
-                {"inspectionDirectorate", "test category"}
+                {"syeInspectionCategories", new[] {"test category1", "test category2"} }
             };
 
             var mockedIndexClient = new Mock<ICustomSearchIndexClient>();
@@ -181,7 +181,7 @@ namespace SYE.Tests.Services
                 {"postalAddressTownCity", setupResult.Town},
                 {"postalCode", setupResult.PostCode},
                 {"region", setupResult.Region},
-                {"inspectionDirectorate", "test category"}
+                {"syeInspectionCategories", new[] {"test category1", "test category2"}}
             };
 
             var mockedIndexClient = new Mock<ICustomSearchIndexClient>();
