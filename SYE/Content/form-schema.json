@@ -703,7 +703,7 @@
       "page_id": "your-contact-details",
       "page_title": "Your contact details",
       "page_name": "",
-      "post_amble": "<p class=\"govuk-body\">You must enter either an email address or a telephone number</p>",
+      "post_amble": "",
       "questions": [
         {
           "question_id": "your-contact-details-01",
@@ -716,7 +716,22 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Enter your name<br />Name must only include letters a to z, hyphens, spaces and apostrophes"
+              "error_message": "Enter your name"
+            },
+            "min_length": {
+              "type": "string",
+              "min": 5,
+              "error_message": "Name must be between 5 and 70 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 70,
+              "error_message": "Name must be between 5 and 70 characters"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "name",
+              "error_message": "Name must only include letters a to z, hyphens, spaces and apostrophes"
             },
             "is_errored": false,
             "error_message": ""
@@ -726,13 +741,24 @@
         {
           "question_id": "your-contact-details-02",
           "document_order": 4,
-          "question": "<p class=\"govuk-body\">Email address</p>",
+          "question": "<p class=\"govuk-body\">Give us at least one way to contact you.</p><p class=\"govuk-body\"><br/>Email address</p>",
           "short_question": "Email address",
           "data_type": "text",
           "input_type": "textbox",
           "validation": {
             "required": {
               "is_required": false,
+              "error_message": ""
+            },
+            "required_if": {
+              "inclusive_logic": "or",
+              "parent_id": "your-contact-details-01",
+              "linked_ids": "your-contact-details-03",
+              "error_message": "You must enter either an email address or a telephone number"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "email",
               "error_message": "Enter an email address in the correct format, like name@example.com"
             },
             "is_errored": false,
@@ -750,6 +776,27 @@
           "validation": {
             "required": {
               "is_required": false,
+              "error_message": ""
+            },
+            "required_if": {
+              "inclusive_logic": "or",
+              "parent_id": "your-contact-details-01",
+              "linked_ids": "your-contact-details-02",
+              "error_message": ""
+            },
+            "min_length": {
+              "type": "string",
+              "min": 11,
+              "error_message": "Telephone number must be between 11 and 33 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 33,
+              "error_message": "Telephone number must be between 11 and 33 characters"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "phone",
               "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192"
             },
             "is_errored": false,

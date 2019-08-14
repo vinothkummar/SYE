@@ -17,6 +17,7 @@
 
 
   <ItemGroup>
+    <PackageReference Include="GDSHelpers" Version="2019.8.14.2" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.0.3" />
@@ -28,7 +29,6 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\GdsHelpers\GDSHelpers\GDSHelpers.csproj" />
     <ProjectReference Include="..\SYE.EsbWrappers\SYE.EsbWrappers.csproj" />
     <ProjectReference Include="..\SYE.Models\SYE.Models.csproj" />
     <ProjectReference Include="..\SYE.Services\SYE.Services.csproj" />
