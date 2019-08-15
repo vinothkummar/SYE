@@ -7,7 +7,6 @@
     <Company>CQC - Care Quality Commission</Company>
     <Product>GFC - Give Feedback on Care</Product>
     <PackageId>GFC</PackageId>
-    <Version>1.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
