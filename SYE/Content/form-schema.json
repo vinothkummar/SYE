@@ -951,6 +951,16 @@
               "is_required": false,
               "error_message": "You must give a valid charity name"
             },
+            "max_length": {
+              "type": "string",
+              "max": 49,
+              "error_message": "Charity name must be less than 50 characters"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "freetext",
+              "error_message": "Charity name must only include letters a to z, numbers, hyphens, spaces, apostrophes, exclamation marks, ampersands, brackets, plus and equals symbols, colons and forward slashes"
+            },
             "is_errored": false,
             "error_message": ""
           },
