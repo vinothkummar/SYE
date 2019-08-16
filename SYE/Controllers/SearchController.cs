@@ -15,7 +15,8 @@ namespace SYE.Controllers
     public class SearchController : Controller
     {
         private readonly int _pageSize = 20;
-        private readonly int _maxSearchChars = 1000;
+        private readonly int _maxSearchChars = 100;
+        private readonly int _minSearchChars = 2;
         private readonly ISearchService _searchService;
         private readonly ISessionService _sessionService;
         private readonly IOptions<ApplicationSettings> _config;
@@ -32,7 +33,7 @@ namespace SYE.Controllers
         }
 
         [HttpGet("search/find-a-service")]
-        public IActionResult Index(bool isError)
+        public IActionResult Index(string errorMessage, string search)
         {
             ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
@@ -42,7 +43,7 @@ namespace SYE.Controllers
             try
             {
                 ViewBag.Title = "Find a service - Give feedback on care";
-                return View(new SearchResultsVM { ShowIncompletedSearchMessage = isError });
+                return View(new SearchResultsVM { ErrorMessage = errorMessage, ShowIncompletedSearchMessage = (errorMessage != null), Search = search});
             }
             catch (Exception ex)
             {
@@ -62,7 +63,12 @@ namespace SYE.Controllers
         public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
         {
             var cleanSearch = _gdsValidate.CleanText(search, true, restrictedWords, allowedChars);
-            if (string.IsNullOrEmpty(cleanSearch)) return RedirectToAction("Index", new { isError = "true" });
+
+            var errorMessage = ValidateSearch(cleanSearch);
+            if (errorMessage != null)
+            {
+                return RedirectToAction("Index", new {errorMessage, search = cleanSearch});
+            }
 
             ViewBag.Title = "Results for " + cleanSearch + " - Give feedback on care";
 
@@ -145,6 +151,23 @@ namespace SYE.Controllers
             }
         }
 
+        private string ValidateSearch(string cleanSearch)
+        {
+            string errorMessage = null;
+            if (string.IsNullOrEmpty(cleanSearch))
+            {
+                errorMessage = "Enter the name of a service, its address, postcode or a combination of these";
+            }
+            else
+            {
+                if (! (cleanSearch.Length < _maxSearchChars && cleanSearch.Length > _minSearchChars))
+                {
+                    errorMessage = string.Format("Enter between {0} and {1} characters", _minSearchChars, _maxSearchChars);
+                }
+            }
+
+            return errorMessage;
+        }
         private IActionResult GetSearchResult(string search, int pageNo, string selectedFacets)
         {
             //This is commented out as it is causing Facets to not work
