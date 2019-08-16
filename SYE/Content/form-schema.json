@@ -551,6 +551,7 @@
       "page_id": "can-we-share",
       "page_title": "Can we share your feedback?",
       "page_name": "",
+      "show_related_content": true,
       "questions": [
         {
           "question_id": "can-we-share-01",
