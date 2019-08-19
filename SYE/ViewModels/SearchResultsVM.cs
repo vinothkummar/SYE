@@ -27,6 +27,7 @@ namespace SYE.ViewModels
         public bool ShowNext => CurrentPage < TotalPages;
         public bool ShowIncompletedSearchMessage { get; set; }
         public bool ShowExceededMaxLengthMessage { get; set; }
+        public string ErrorMessage { get; set; }
 
         [Required(ErrorMessage = "Please enter a search")]
         public string Search { get; set; }

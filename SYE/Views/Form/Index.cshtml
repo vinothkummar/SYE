@@ -44,6 +44,22 @@
         </form>
 
     </gds-column>
+    @if (Model.ShowRelatedContent)
+    {
+        <gds-column tablet-size="OneThird">
+
+            <aside class="app-related-items" role="complementary">
+
+                <h2 class="govuk-heading-m">Related content</h2>
+
+                <gds-paragraph>
+                    <gds-link class="govuk-link" link-id="related-content" link-text="How we handle information and privacy" href="@Url.Action("Index", "HowWeUseYourInformation")"></gds-link>
+                </gds-paragraph>
+
+            </aside>
+
+        </gds-column>
+    }
 
 </gds-row>
 

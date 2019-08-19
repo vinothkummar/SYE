@@ -1,6 +1,6 @@
 {
-  "id": "691afc01-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.9.1",
+  "id": "6101afc01-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.1",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -22,6 +22,16 @@
             "required": {
               "is_required": true,
               "error_message": "Tell us which service you want to give feedback about"
+            },
+            "min_length": {
+              "type": "string",
+              "min": 15,
+              "error_message": "Enter between 15 and 1,500 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 1500,
+              "error_message": "Enter between 15 and 1,500 characters"
             },
             "is_errored": false,
             "error_message": ""
@@ -67,7 +77,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select one option to tell us what sort of feedback you want to give. Select whichever one describes the experience best."
+              "error_message": "Select the type of feedback you want to give - just choose whichever describes your experience best"
             },
             "is_errored": false,
             "error_message": ""
@@ -119,7 +129,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select one option to tell us when the thing happened. Just choose whichever one describes your feedback best."
+              "error_message": "Select when it happened - just choose the option that describes your experience best"
             },
             "is_errored": false,
             "error_message": ""
@@ -190,7 +200,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if you think someone is in danger of immediate harm. You do not have to be sure. Just tell us what you think."
+              "error_message": "Select if you think someone is in danger of abuse or neglect"
             },
             "is_errored": false,
             "error_message": ""
@@ -252,7 +262,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if you think someone is in danger of immediate harm. You do not have to be sure. Just tell us what you think."
+              "error_message": "Select if you’ve told the police, the council safeguarding team or both - or select ‘neither or these’"
             },
             "is_errored": false,
             "error_message": ""
@@ -324,7 +334,17 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Describe your experience of !!location_name!!"
+              "error_message": "Enter your feedback about !!location_name!!"
+            },
+            "min_length": {
+              "type": "string",
+              "min": 50,
+              "error_message": "Your feedback must be between 50 and 8,000 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 8000,
+              "error_message": "Your feedback must be between 50 and 8,000 characters"
             },
             "is_errored": false,
             "error_message": ""
@@ -344,6 +364,16 @@
               "is_required": false,
               "error_message": ""
             },
+            "min_length": {
+              "type": "string",
+              "min": 2,
+              "error_message": "The location details must be between 2 and 100 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 100,
+              "error_message": "Details about when it happened must be between 2 and 100 characters"
+            },
             "is_errored": false,
             "error_message": ""
           },
@@ -361,6 +391,16 @@
             "required": {
               "is_required": false,
               "error_message": ""
+            },
+            "min_length": {
+              "type": "string",
+              "min": 2,
+              "error_message": "Details about when it happened must be between 2 and 100 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 100,
+              "error_message": "Details about when it happened must be between 2 and 100 characters"
             },
             "is_errored": false,
             "error_message": ""
@@ -438,7 +478,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if your feedback is about a service you’ve worked at."
+              "error_message": "Select if you’ve already told the service you’re not happy"
             },
             "is_errored": false,
             "error_message": ""
@@ -488,7 +528,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if your feedback is about a service you’ve worked at."
+              "error_message": "Select if your feedback is about somewhere you’ve worked"
             },
             "is_errored": false,
             "error_message": ""
@@ -551,6 +591,7 @@
       "page_id": "can-we-share",
       "page_title": "Can we share your feedback?",
       "page_name": "",
+      "show_related_content": true,
       "questions": [
         {
           "question_id": "can-we-share-01",
@@ -573,7 +614,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select one option to tell us if you’re happy for us to show your feedback to the service or if you’d rather they did not see it."
+              "error_message": "Select if you’re happy for us to share your feedback with the service"
             },
             "is_errored": false,
             "error_message": ""
@@ -632,7 +673,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if you’re happy for us to get in touch to talk about your feedback."
+              "error_message": "Select if you’re happy for us to contact you"
             },
             "is_errored": false,
             "error_message": ""
@@ -677,7 +718,22 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Enter your full name.<br />You can only enter letters, apostrophes and hyphens."
+              "error_message": "Enter your name"
+            },
+            "min_length": {
+              "type": "string",
+              "min": 5,
+              "error_message": "Name must be between 5 and 70 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 70,
+              "error_message": "Name must be between 5 and 70 characters"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "name",
+              "error_message": "Name must only include letters a to z, hyphens, spaces and apostrophes"
             },
             "is_errored": false,
             "error_message": ""
@@ -695,7 +751,18 @@
           "validation": {
             "required": {
               "is_required": false,
-              "error_message": "Enter an email address in the correct format, like<br />name@example.com."
+              "error_message": ""
+            },
+            "required_if": {
+              "inclusive_logic": "or",
+              "parent_id": "your-contact-details-01",
+              "linked_ids": "your-contact-details-03",
+              "error_message": "You must enter either an email address or a telephone number"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "email",
+              "error_message": "Enter an email address in the correct format, like name@example.com"
             },
             "is_errored": false,
             "error_message": ""
@@ -712,7 +779,28 @@
           "validation": {
             "required": {
               "is_required": false,
-              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982<br />or +44 0808 157 0192."
+              "error_message": ""
+            },
+            "required_if": {
+              "inclusive_logic": "or",
+              "parent_id": "your-contact-details-01",
+              "linked_ids": "your-contact-details-02",
+              "error_message": ""
+            },
+            "min_length": {
+              "type": "string",
+              "min": 11,
+              "error_message": "Telephone number must be between 11 and 33 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 33,
+              "error_message": "Telephone number must be between 11 and 33 characters"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "phone",
+              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192"
             },
             "is_errored": false,
             "error_message": ""
@@ -761,7 +849,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select one option to tell us how you came to this form."
+              "error_message": "Select whether a charity told you about this form"
             },
             "is_errored": false,
             "error_message": ""
@@ -840,7 +928,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select the name of the charity that told you about this form. Or select ‘Another charity’ if you heard about it from one that is not in the list."
+              "error_message": "Select the name of the charity that told you about this form or select ‘another charity’"
             },
             "is_errored": false,
             "error_message": ""
@@ -863,6 +951,16 @@
             "required": {
               "is_required": false,
               "error_message": "You must give a valid charity name"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 49,
+              "error_message": "Charity name must be less than 50 characters"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "freetext",
+              "error_message": "Charity name must only include letters a to z, numbers, hyphens, spaces, apostrophes, exclamation marks, ampersands, brackets, plus and equals symbols, colons and forward slashes"
             },
             "is_errored": false,
             "error_message": ""
