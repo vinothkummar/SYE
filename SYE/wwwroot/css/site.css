@@ -23,6 +23,17 @@
     height: 50px;
 }
 
+.govuk-header__logotype-cqc {
+    fill: #fff;
+    height: 50px;
+    width: 152px
+}
+
+
+.govuk-header__logotype-cqc-fallback-image {
+    width: auto;
+    height: 50px;
+}
 .govuk-footer__copyright-logo {
     background-image: url('../images/govuk-crest.png');
 }
