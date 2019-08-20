@@ -7,26 +7,28 @@
 
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
 
-        <gds-heading heading-type="H1" text=@("Results for " + Model.Search)></gds-heading>
+        <label for="search">
+            <gds-heading heading-type="H1" text=@("Results for " + Model.Search)></gds-heading>
+        </label>
 
-        <gds-row>
-            <gds-column desktop-size="TwoThirds" tablet-size="TwoThirds">
+            <gds-row>
+                <gds-column desktop-size="TwoThirds" tablet-size="TwoThirds">
 
-                <form asp-action="SearchResults" method="get">
-                    <div class="govuk-form-group">
-                        @if (Model.ShowExceededMaxLengthMessage)
-                        {
-                            <label class="govuk-error-message" for="event-name">
-                                Please reduce the number of characters in the text field below. (Max 1000)
-                            </label>
-                        }
-                        <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
-                        <input type="image" alt="Search For A Service" name="submit" src="~/images/search.png" style="height: 40px; vertical-align: middle" />
-                    </div>
-                </form>
+                    <form asp-action="SearchResults" method="get">
+                        <div class="govuk-form-group">
+                            @if (Model.ShowExceededMaxLengthMessage)
+                            {
+                                <label class="govuk-error-message" for="event-name">
+                                    Please reduce the number of characters in the text field below. (Max 1000)
+                                </label>
+                            }
+                            <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
+                            <input alt="Search For A Service" class="search-button" type="image" name="submit" src="~/images/search.png" />
+                        </div>
+                    </form>
 
-            </gds-column>
-        </gds-row>
+                </gds-column>
+            </gds-row>
 
     </gds-column>
 
@@ -60,14 +62,16 @@
                             <form id="frm_facets" asp-action="SearchResults" method="post">
                                 @for (var index = 0; index < Model.Facets.Count; index++)
                                 {
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
-                                        <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Text" style="font-size: 18px">
-                                            @Model.Facets[index].Text
-                                        </label>
-                                        <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
-                                        <input asp-for="@Model.Facets[index].Text" type="hidden" />
-                                    </div>
+                                <div class="govuk-checkboxes__item">
+                                    
+                                    <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Selected" style="font-size: 18px">
+                                        @Model.Facets[index].Text
+                                    </label>
+                                    <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
+                                    <input asp-for="@Model.Facets[index].Text" type="hidden" />
+
+                                </div>
                                 }
                                 <input type="hidden" asp-for="Search" />
                                 <br />
