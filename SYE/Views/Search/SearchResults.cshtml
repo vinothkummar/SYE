@@ -52,7 +52,7 @@
                         <label class="govuk-input" style="color: black; border: none; width: auto; float: left">
                             Type of service
                         </label>
-                        <img alt="Search For A Service" src="~/images/select.png" style="height: 40px; width: 40px; vertical-align: middle; float: right" />
+                        <img alt="Select Type Of Service" src="~/images/select.png" style="height: 40px; width: 40px; vertical-align: middle; float: right" />
                     </span>
                 </summary>
                 @if (Model.Facets.Count > 0)
@@ -105,8 +105,7 @@
                                 <button type="submit" id="btn-@result.Id" class="govuk-button link-button">
                                     <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
                                 </button>
-                                <p class="govuk-body">
-                                    @result.Category<br/>
+                                <p class="govuk-body">                                    
                                     @result.Address<br/>
                                     @if (!string.IsNullOrWhiteSpace(result.Address2))
                                     {
