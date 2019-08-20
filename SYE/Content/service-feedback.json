@@ -1,7 +1,7 @@
 {
-  "id": "1DF7D321-606B-4112-9C23-F547FE7B0AD1",
+  "id": "1001DF7D-606B-4112-9C23-F547FE7B0AD1",
   "form_name": "service-feedback",
-  "version": "1.0.0.0",
+  "version": "1.0.0.1",
   "last_modified": "ISODate(\"2019-05-01T00:00:00.000Z\")",
   "pre_amble": "",
   "pages": [
@@ -19,10 +19,15 @@
               "is_required": true,
               "error_message": "Provide your feedback or describe what went wrong"
             },
+            "min_length": {
+              "type": "string",
+              "min": 50,
+              "error_message": "Your feedback must be between 50 and 1500 characters"
+            },
             "max_length": {
-              "type": "maxlength",
-              "max": "1500",
-              "error_message": "Please enter 1500 characters or less."
+              "type": "string",
+              "max": 1500,
+              "error_message": "Your feedback must be between 50 and 1500 characters"
             },
             "is_errored": false,
             "error_message": ""
@@ -38,6 +43,21 @@
             "required": {
               "is_required": false
             },
+            "min_length": {
+              "type": "string",
+              "min": 5,
+              "error_message": "Name must be between 5 and 70 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 70,
+              "error_message": "Name must be between 5 and 70 characters"
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "name",
+              "error_message": "Name must only include letters a to z, hyphens, spaces and apostrophes"
+            },
             "is_errored": false,
             "error_message": ""
           },
@@ -52,6 +72,11 @@
           "validation": {
             "required": {
               "is_required": false
+            },
+            "regex": {
+              "type": "regex",
+              "regex": "email",
+              "error_message": "Enter an email address in the correct format, like name@example.com"
             },
             "is_errored": false,
             "error_message": ""
