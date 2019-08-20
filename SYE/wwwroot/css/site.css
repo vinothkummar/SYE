@@ -10,11 +10,9 @@
 
 .govuk-header__link:focus {
     outline: none;
-    background-color: #5f2861;
 }
 
 .govuk-header__link--homepage:hover {
-    /*border-bottom: none;*/
     border-bottom-color: #5f2861;
 }
 
@@ -243,3 +241,14 @@ pre.gfc-multi-line-text {
     margin-top: 0;
     white-space: pre-line;
 }
+
+
+.search-button {
+    height: 40px;
+    vertical-align: middle;
+}
+
+    .search-button:focus {
+        outline: 3px solid #ffbf47;
+        outline-offset: 0;
+    }

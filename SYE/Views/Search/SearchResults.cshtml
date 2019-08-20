@@ -23,7 +23,7 @@
                                 </label>
                             }
                             <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
-                            <input type="image" name="submit" src="~/images/search.png" style="height: 40px; vertical-align: middle" />
+                            <input class="search-button" type="image" name="submit" src="~/images/search.png" />
                         </div>
                     </form>
 
@@ -62,14 +62,36 @@
                             <form id="frm_facets" asp-action="SearchResults" method="post">
                                 @for (var index = 0; index < Model.Facets.Count; index++)
                                 {
-                                    <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
-                                        <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Text" style="font-size: 18px">
-                                            @Model.Facets[index].Text
-                                        </label>
-                                        <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
-                                        <input asp-for="@Model.Facets[index].Text" type="hidden" />
-                                    </div>
+                                <div class="govuk-checkboxes__item">
+                                    
+                                    <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Selected" style="font-size: 18px">
+                                        @Model.Facets[index].Text
+                                    </label>
+                                    <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
+                                    <input asp-for="@Model.Facets[index].Text" type="hidden" />
+                                    
+                                    
+                                    
+
+                                    @*<input id="facet_@index" class="govuk-checkboxes__input" name="facet_@index" type="checkbox" value="carcasses">
+                                    <label class="govuk-label govuk-checkboxes__label" for="facet_@index">
+                                        @Model.Facets[index].Text
+                                    </label>
+
+                                    <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
+                                    <input asp-for="@Model.Facets[index].Text" type="hidden" />*@
+
+
+                                    @*
+                                    <input id="facet_@index" class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
+                                    <label class="govuk-label govuk-checkboxes__label" asp-for="facet_@index" style="font-size: 18px">
+                                        @Model.Facets[index].Text
+                                    </label>
+                                    <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden"/>
+                                    <input asp-for="@Model.Facets[index].Text" type="hidden"/>
+                                    *@
+                                </div>
                                 }
                                 <input type="hidden" asp-for="Search" />
                                 <br />
