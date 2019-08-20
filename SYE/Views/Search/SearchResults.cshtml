@@ -23,7 +23,7 @@
                                 </label>
                             }
                             <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
-                            <input alt="Search" class="search-button" type="image" name="submit" src="~/images/search.png" />
+                            <input alt="Search For A Service" class="search-button" type="image" name="submit" src="~/images/search.png" />
                         </div>
                     </form>
 
@@ -52,7 +52,7 @@
                         <label class="govuk-input" style="color: black; border: none; width: auto; float: left">
                             Type of service
                         </label>
-                        <img alt="Search" src="~/images/select.png" style="height: 40px; width: 40px; vertical-align: middle; float: right" />
+                        <img alt="Search For A Service" src="~/images/select.png" style="height: 40px; width: 40px; vertical-align: middle; float: right" />
                     </span>
                 </summary>
                 @if (Model.Facets.Count > 0)
@@ -126,7 +126,7 @@
             @if (Model.TotalPages > 1)
             {
                 <form asp-action="SearchResults" method="get">
-                    <input type="hidden" id="search2" name="search" value="@Model.Search" />
+                    <input type="hidden" id="search" name="search" value="@Model.Search" />
                     <input type="hidden" id="selectedFacets" name="search" value="@Model.SelectedFacets" />
 
                     <div class="govuk-body paging-wrapper">
