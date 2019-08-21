@@ -22,7 +22,7 @@
                             errorCss = "govuk-form-group--error";
                         }
                     }
-
+                    
                     <div class="govuk-form-group @errorCss">
                         <label class="govuk-label" for="search">
                             You do not need to use the whole name or address. For example, 'Great Ormond St WC1N' will find Great Ormond Street hospital.
@@ -33,7 +33,13 @@
                             @(Model.ErrorMessage)
                         </label>
                         }
-                        <input class="@(Model.ShowIncompletedSearchMessage ? "govuk-input govuk-input--error govuk-!-width-two-thirds" : "govuk-input govuk-!-width-two-thirds")" id="search" name="search" type="text" value="@Model.Search">
+                                                             
+                        <div class="govuk-character-count " id="qsearch" data-module="character-count" data-maxlength="100">
+                            <div class="govuk-form-group ">
+                                <textarea name="search" class="@(Model.ShowIncompletedSearchMessage ? "govuk-textarea js-character-count govuk-textarea--error" : "govuk-textarea js-character-count")" id="search" rows="5">@Model.Search</textarea><span class="govuk-hint govuk-character-count__search" id="search-info" aria-live="polite">You have 100 characters remaining</span>
+                            </div>
+                        </div>
+
                     </div>
 
                     <gds-button button-type="Submit" button-text="Search"></gds-button>

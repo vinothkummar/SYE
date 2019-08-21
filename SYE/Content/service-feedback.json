@@ -73,6 +73,16 @@
             "required": {
               "is_required": false
             },
+            "min_length": {
+              "type": "string",
+              "min": 5,
+              "error_message": "Email address must be between 5 and 50 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 50,
+              "error_message": "Email address must be between 5 and 50 characters"
+            },
             "regex": {
               "type": "regex",
               "regex": "email",
