@@ -1,5 +1,5 @@
 {
-  "id": "6101afc01-ce7a-478e-91ee-9f99c3bae03c",
+  "id": "6101afc0-ce7a-478e-91ee-9f99c3bae03c",
   "version": "6.10.1",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
@@ -21,7 +21,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Tell us which service you want to give feedback about"
+              "error_message": "Tell us which service your feedback is about"
             },
             "min_length": {
               "type": "string",
@@ -262,7 +262,7 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Select if you’ve told the police, the council safeguarding team or both - or select ‘neither or these’"
+              "error_message": "Select if you’ve told the police, the council safeguarding team or both - or select ‘neither of these’"
             },
             "is_errored": false,
             "error_message": ""
@@ -372,7 +372,7 @@
             "max_length": {
               "type": "string",
               "max": 100,
-              "error_message": "Details about when it happened must be between 2 and 100 characters"
+              "error_message": "The location details must be between 2 and 100 characters"
             },
             "is_errored": false,
             "error_message": ""
@@ -752,6 +752,16 @@
             "required": {
               "is_required": false,
               "error_message": ""
+            },
+            "min_length": {
+              "type": "string",
+              "min": 5,
+              "error_message": "Email address must be between 5 and 50 characters"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 50,
+              "error_message": "Email address must be between 5 and 50 characters"
             },
             "required_if": {
               "inclusive_logic": "or",
