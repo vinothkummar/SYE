@@ -258,3 +258,22 @@ label.gds-question h1 {
         outline: 3px solid #ffbf47;
         outline-offset: 0;
     }
+
+.govuk-details__summaryboarder {
+    width: 90%;
+    outline-color: lightgray;
+    border-top-color: lightgray;
+    outline-style: solid;
+    border-left-color: lightgray;
+    background-color: lightgray;
+    border-style: hidden;
+    border-width: unset;
+    content: none
+}
+
+    .govuk-details__summaryboarder:focus {        
+        outline: 3px solid #ffbf47;
+        outline-offset: 0;
+        background-color: lightgray;       
+    }
+    
