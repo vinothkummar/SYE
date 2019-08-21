@@ -160,7 +160,7 @@ namespace SYE.Controllers
             }
             else
             {
-                if (! (cleanSearch.Length < _maxSearchChars && cleanSearch.Length > _minSearchChars))
+                if (! (cleanSearch.Length <= _maxSearchChars && cleanSearch.Length >= _minSearchChars))
                 {
                     errorMessage = string.Format("Enter between {0} and {1} characters", _minSearchChars, _maxSearchChars);
                 }
