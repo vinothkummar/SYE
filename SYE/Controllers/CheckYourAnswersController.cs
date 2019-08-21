@@ -92,9 +92,9 @@ namespace SYE.Controllers
                 {
                     return NotFound();
                 }
-
-                var submission = GenerateSubmission(formVm);
+                
                 var reference = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
+                var submission = GenerateSubmission(formVm, reference);
 
                 if (string.IsNullOrWhiteSpace(reference))
                 {
@@ -159,7 +159,7 @@ namespace SYE.Controllers
             }
         }
 
-        private SubmissionVM GenerateSubmission(FormVM formVm)
+        private SubmissionVM GenerateSubmission(FormVM formVm, string gfcReference)
         {
             var submissionVm = new SubmissionVM
             {
@@ -169,7 +169,8 @@ namespace SYE.Controllers
                 FormName = formVm.FormName,
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
-                LocationName = HttpContext.Session.GetString("LocationName")                
+                LocationName = HttpContext.Session.GetString("LocationName"),
+                SubmissionId = gfcReference
             };
 
             var answers = new List<AnswerVM>();
