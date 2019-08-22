@@ -33,13 +33,15 @@
                             @(Model.ErrorMessage)
                         </label>
                         }
-                                                             
-                        <div class="govuk-character-count " id="qsearch" data-module="character-count" data-maxlength="100">
+                          
+                        <!--Uncomment this to get client sided validation-->
+                        @*<div class="govuk-character-count " id="qsearch" data-module="character-count" data-maxlength="100">
                             <div class="govuk-form-group ">
-                                <textarea name="search" class="@(Model.ShowIncompletedSearchMessage ? "govuk-textarea js-character-count govuk-textarea--error" : "govuk-textarea js-character-count")" id="search" rows="5">@Model.Search</textarea><span class="govuk-hint govuk-character-count__search" id="search-info" aria-live="polite">You have 100 characters remaining</span>
+                                <textarea name="search" class="@(Model.ShowIncompletedSearchMessage ? "govuk-textarea js-character-count govuk-textarea--error" : "govuk-textarea js-character-count")" id="search" rows="1">@Model.Search</textarea><span class="govuk-hint govuk-character-count__search" id="search-info" aria-live="polite" style="resize: none">You have 100 characters remaining</span>
                             </div>
-                        </div>
+                        </div>*@
 
+                        <input class="@(Model.ShowIncompletedSearchMessage ? "govuk-input govuk-input--error govuk-!-width-two-thirds" : "govuk-input govuk-!-width-two-thirds")" id="search" name="search" type="text" value="@Model.Search">
                     </div>
 
                     <gds-button button-type="Submit" button-text="Search"></gds-button>
