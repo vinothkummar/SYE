@@ -11,13 +11,13 @@
 }
 
 .govuk-link:focus, .app-prose-scope a:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0;
-    background-color: #ffbf47
+    background-color: #ffdd00
 }
 
 .govuk-link:link, .app-prose-scope a:link {
-    color: #005ea5
+    color: #1d70b8
 }
 
 .govuk-link:visited, .app-prose-scope a:visited {
@@ -63,11 +63,11 @@
 }
 
 .govuk-link--no-visited-state:link {
-    color: #005ea5
+    color: #1d70b8
 }
 
 .govuk-link--no-visited-state:visited {
-    color: #005ea5
+    color: #1d70b8
 }
 
 .govuk-link--no-visited-state:hover {
@@ -159,7 +159,7 @@
 }
 
 .govuk-template {
-    background-color: #dee0e2;
+    background-color: #f3f2f1;
     -webkit-text-size-adjust: 100%;
     -moz-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -1092,7 +1092,7 @@
     -moz-osx-font-smoothing: grayscale;
     display: inline;
     border-width: 0;
-    color: #005ea5;
+    color: #1d70b8;
     background: none;
     cursor: pointer
 }
@@ -1125,9 +1125,9 @@
 }
 
 .js-enabled .govuk-accordion__open-all:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0;
-    background-color: #ffbf47
+    background-color: #ffdd00
 }
 
 .js-enabled .govuk-accordion__open-all:focus {
@@ -1151,7 +1151,7 @@
 }
 
 .js-enabled .govuk-accordion__section-header--focused {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -1167,7 +1167,7 @@
     padding-bottom: 0;
     padding-left: 0;
     border-width: 0;
-    color: #005ea5;
+    color: #1d70b8;
     background: none;
     text-align: left;
     cursor: pointer
@@ -1180,9 +1180,9 @@
 }
 
 .js-enabled .govuk-accordion__section-button:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0;
-    background-color: #ffbf47
+    background-color: #ffdd00
 }
 
 .js-enabled .govuk-accordion__section-button:focus {
@@ -1279,9 +1279,9 @@
 }
 
 .govuk-back-link:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0;
-    background-color: #ffbf47
+    background-color: #ffdd00
 }
 
 .govuk-back-link:link, .govuk-back-link:visited, .govuk-back-link:hover, .govuk-back-link:active, .govuk-back-link:focus {
@@ -1419,9 +1419,9 @@
 }
 
 .govuk-breadcrumbs__link:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0;
-    background-color: #ffbf47
+    background-color: #ffdd00
 }
 
 .govuk-breadcrumbs__link:link, .govuk-breadcrumbs__link:visited, .govuk-breadcrumbs__link:hover, .govuk-breadcrumbs__link:active, .govuk-breadcrumbs__link:focus {
@@ -1453,7 +1453,7 @@
     border: 2px solid transparent;
     border-radius: 0;
     color: #fff;
-    background-color: #00823b;
+    background-color: #00703c;
     -webkit-box-shadow: 0 2px 0 #003618;
     box-shadow: 0 2px 0 #003618;
     text-align: center;
@@ -1484,7 +1484,7 @@
 }
 
 .govuk-button:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -1537,11 +1537,11 @@
 
 .govuk-button--disabled, .govuk-button[disabled="disabled"], .govuk-button[disabled] {
     opacity: 0.5;
-    background: #00823b
+    background: #00703c
 }
 
     .govuk-button--disabled:hover, .govuk-button[disabled="disabled"]:hover, .govuk-button[disabled]:hover {
-        background-color: #00823b;
+        background-color: #00703c;
         cursor: default
     }
 
@@ -2146,8 +2146,8 @@
 .govuk-checkboxes__input:focus + .govuk-checkboxes__label::before {
     outline: 3px solid transparent;
     outline-offset: 3px;
-    -webkit-box-shadow: 0 0 0 3px #ffbf47;
-    box-shadow: 0 0 0 3px #ffbf47
+    -webkit-box-shadow: 0 0 0 3px #ffdd00;
+    box-shadow: 0 0 0 3px #ffdd00
 }
 
 .govuk-checkboxes__input:checked + .govuk-checkboxes__label::after {
@@ -2405,7 +2405,7 @@
 }
 
 .govuk-input:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -2525,7 +2525,7 @@
     position: relative;
     margin-bottom: 5px;
     padding-left: 25px;
-    color: #005ea5;
+    color: #1d70b8;
     cursor: pointer
 }
 
@@ -2538,10 +2538,10 @@
 }
 
 .govuk-details__summary:focus {
-    outline: 4px solid #ffbf47;
+    outline: 4px solid #ffdd00;
     outline-offset: -1px;
     color: #0b0c0c;
-    background: #ffbf47
+    background: #ffdd00
 }
 
 .govuk-details__summary::-webkit-details-marker {
@@ -2619,7 +2619,7 @@
 }
 
 .govuk-error-summary:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -2720,9 +2720,9 @@
     }
 
         .govuk-error-summary__list a:focus {
-            outline: 3px solid #ffbf47;
+            outline: 3px solid #ffdd00;
             outline-offset: 0;
-            background-color: #ffbf47
+            background-color: #ffdd00
         }
 
         .govuk-error-summary__list a:link, .govuk-error-summary__list a:visited, .govuk-error-summary__list a:hover, .govuk-error-summary__list a:active {
@@ -2772,7 +2772,7 @@
 }
 
 .govuk-file-upload:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -2792,7 +2792,7 @@
     padding-bottom: 15px;
     border-top: 1px solid #a1acb2;
     color: #454a4c;
-    background: #dee0e2
+    background: #f3f2f1
 }
 
 @media print {
@@ -2829,9 +2829,9 @@
 }
 
 .govuk-footer__link:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0;
-    background-color: #ffbf47
+    background-color: #ffdd00
 }
 
 .govuk-footer__link:link, .govuk-footer__link:visited {
@@ -3071,7 +3071,7 @@
 
 .govuk-header__container--full-width {
     padding: 0 15px;
-    border-color: #005ea5
+    border-color: #1d70b8
 }
 
     .govuk-header__container--full-width .govuk-header__menu-button {
@@ -3082,7 +3082,7 @@
     position: relative;
     margin-bottom: -10px;
     padding-top: 10px;
-    border-bottom: 10px solid #005ea5
+    border-bottom: 10px solid #1d70b8
 }
 
     .govuk-header__container:after {
@@ -3146,9 +3146,9 @@
 }
 
     .govuk-header__link:focus {
-        outline: 3px solid #ffbf47;
+        outline: 3px solid #ffdd00;
         outline-offset: 0;
-        background-color: #ffbf47
+        background-color: #ffdd00
     }
 
     .govuk-header__link:link, .govuk-header__link:visited {
@@ -3313,7 +3313,7 @@
 }
 
 .govuk-header__menu-button:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -3665,7 +3665,7 @@
     outline: 2px solid transparent;
     outline-offset: -2px;
     color: #fff;
-    background-color: #005ea5;
+    background-color: #1d70b8;
     letter-spacing: 1px;
     text-decoration: none;
     text-transform: uppercase
@@ -3886,13 +3886,13 @@
 }
 
 .govuk-tabs__tab:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0;
-    background-color: #ffbf47
+    background-color: #ffdd00
 }
 
 .govuk-tabs__tab:link {
-    color: #005ea5
+    color: #1d70b8
 }
 
 .govuk-tabs__tab:visited {
@@ -4123,8 +4123,8 @@
 .govuk-radios__input:focus + .govuk-radios__label::before {
     outline: 3px solid transparent;
     outline-offset: 3px;
-    -webkit-box-shadow: 0 0 0 4px #ffbf47;
-    box-shadow: 0 0 0 4px #ffbf47
+    -webkit-box-shadow: 0 0 0 4px #ffdd00;
+    box-shadow: 0 0 0 4px #ffdd00
 }
 
 .govuk-radios__input:checked + .govuk-radios__label::after {
@@ -4258,13 +4258,13 @@
 }
 
 .govuk-select:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
     .govuk-select option:active, .govuk-select option:checked, .govuk-select:focus::-ms-value {
         color: #fff;
-        background-color: #005ea5
+        background-color: #1d70b8
     }
 
 .govuk-select--error {
@@ -4310,9 +4310,9 @@
 }
 
 .govuk-skip-link:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0;
-    background-color: #ffbf47
+    background-color: #ffdd00
 }
 
 .govuk-skip-link:link, .govuk-skip-link:visited, .govuk-skip-link:hover, .govuk-skip-link:active, .govuk-skip-link:focus {
@@ -4468,7 +4468,7 @@
 }
 
 .govuk-textarea:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -5907,7 +5907,7 @@
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 15px;
-    background-color: #005ea5
+    background-color: #1d70b8
 }
 
 @media (min-width: 40.0625em) {
@@ -6074,7 +6074,7 @@
 .app-example {
     position: relative;
     border: 1px solid #bfc1c3;
-    background: #dee0e2
+    background: #f3f2f1
 }
 
 .app-example--tabs {
@@ -6106,7 +6106,7 @@
     font-size: 12px;
     font-size: .75rem;
     line-height: 1.25;
-    background: #dee0e2
+    background: #f3f2f1
 }
 
 @media print {
@@ -6131,7 +6131,7 @@
 }
 
 .app-example__new-window a {
-    color: #005ea5;
+    color: #1d70b8;
     text-decoration: none
 }
 
@@ -6204,7 +6204,7 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 100%;
-    border-bottom: 10px solid #005ea5;
+    border-bottom: 10px solid #1d70b8;
     color: #fff;
     background: #0b0c0c
 }
@@ -6465,14 +6465,14 @@
 }
 
 .app-button--inverted, .app-button--inverted:link, .app-button--inverted:visited {
-    color: #005ea5;
+    color: #1d70b8;
     background-color: #fff;
     -webkit-box-shadow: 0 2px 0 #004274;
     box-shadow: 0 2px 0 #004274
 }
 
     .app-button--inverted:hover, .app-button--inverted:focus {
-        color: #005ea5 !important;
+        color: #1d70b8 !important;
         background-color: #e6eff6
     }
 
@@ -6490,7 +6490,7 @@
     padding-top: 20px;
     padding-bottom: 20px;
     color: #fff;
-    background-color: #005ea5
+    background-color: #1d70b8
 }
 
 @media (min-width: 40.0625em) {
@@ -6598,7 +6598,7 @@
 }
 
     .app-mobile-nav__list > li > a:hover, .app-mobile-nav__list > li > a:focus, .app-mobile-nav__list > li > a:visited {
-        color: #005ea5;
+        color: #1d70b8;
         background-color: inherit
     }
 
@@ -6607,8 +6607,8 @@
     margin: 0;
     padding: 10px 0 0 0;
     list-style: none;
-    border-top: 1px solid #dee0e2;
-    border-bottom: 1px solid #dee0e2;
+    border-top: 1px solid #f3f2f1;
+    border-bottom: 1px solid #f3f2f1;
     background-color: #fff
 }
 
@@ -6647,7 +6647,7 @@
 }
 
 .app-mobile-nav__subnav > li.current-page a {
-    border-left: 4px solid #005ea5
+    border-left: 4px solid #1d70b8
 }
 
 .js-enabled .app-mobile-nav__subnav--active {
@@ -6655,7 +6655,7 @@
 }
 
 .app-mobile-nav__current-page {
-    border-left: 4px solid #005ea5
+    border-left: 4px solid #1d70b8
 }
 
 .app-mobile-nav__theme {
@@ -6713,7 +6713,7 @@
 
 .app-mobile-nav__theme-nav > li.current-page a {
     padding-left: 16px;
-    border-left: 4px solid #005ea5
+    border-left: 4px solid #1d70b8
 }
 
 .app-mobile-nav__theme-nav > li:last-child a {
@@ -6789,23 +6789,23 @@
         }
 
         .app-navigation__list > li.app-navigation--current-page {
-            border-bottom: 4px solid #005ea5 !important
+            border-bottom: 4px solid #1d70b8 !important
         }
 
             .app-navigation__list > li.app-navigation--current-page a:hover {
-                color: #005ea5
+                color: #1d70b8
             }
 
         .app-navigation__list > li a {
             font-weight: 700;
             display: block;
             padding: 0 15px;
-            color: #005ea5;
+            color: #1d70b8;
             text-decoration: none
         }
 
             .app-navigation__list > li a:visited {
-                color: #005ea5
+                color: #1d70b8
             }
 
             .app-navigation__list > li a:hover, .app-navigation__list > li a:focus {
@@ -7068,7 +7068,7 @@
     display: block;
     position: relative;
     height: 40px;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' width='40' height='40'%3E%3Cpath d='M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z' fill='white'%3E%3C/path%3E%3C/svg%3E") #005ea5 no-repeat top left;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' width='40' height='40'%3E%3Cpath d='M25.7 24.8L21.9 21c.7-1 1.1-2.2 1.1-3.5 0-3.6-2.9-6.5-6.5-6.5S10 13.9 10 17.5s2.9 6.5 6.5 6.5c1.6 0 3-.6 4.1-1.5l3.7 3.7 1.4-1.4zM12 17.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5-2 4.5-4.5 4.5-4.5-2-4.5-4.5z' fill='white'%3E%3C/path%3E%3C/svg%3E") #1d70b8 no-repeat top left;
     background-size: 40px 40px
 }
 
@@ -7103,7 +7103,7 @@
 .app-site-search__input--focused {
     width: 100%;
     margin-left: 0;
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -7179,10 +7179,10 @@
 }
 
 .app-site-search__option--focused, .app-site-search__option:hover {
-    border-color: #005ea5;
+    border-color: #1d70b8;
     outline: none;
     color: #fff;
-    background-color: #005ea5
+    background-color: #1d70b8
 }
 
     .app-site-search__option--focused .app-site-search--section, .app-site-search__option:hover .app-site-search--section {
@@ -7353,7 +7353,7 @@
     }
 
     .app-subnav__link:hover, .app-subnav__link:active, .app-subnav__link:visited {
-        color: #005ea5
+        color: #1d70b8
     }
 
     .app-subnav__link:hover {
@@ -7361,7 +7361,7 @@
     }
 
 .app-subnav__section-item--current .app-subnav__link {
-    border-left-color: #005ea5;
+    border-left-color: #1d70b8;
     background: #f8f8f8;
     font-weight: bold
 }
@@ -7441,19 +7441,19 @@
         padding: 15px;
         border-top: 2px solid transparent;
         border-bottom: 2px solid transparent;
-        color: #005ea5;
+        color: #1d70b8;
         background: inherit;
         font-weight: bold;
         text-decoration: none
     }
 
 .app-prose-scope .app-tabs__item a:focus {
-    color: #005ea5;
+    color: #1d70b8;
     background: inherit
 }
 
 .app-prose-scope .app-tabs__item a:visited {
-    color: #005ea5
+    color: #1d70b8
 }
 
 .app-prose-scope .app-tabs__item {
@@ -7461,8 +7461,8 @@
 }
 
 .app-tabs__item--current a {
-    border-top-color: #005ea5;
-    border-bottom-color: #005ea5;
+    border-top-color: #1d70b8;
+    border-bottom-color: #1d70b8;
     background-color: #f0f0f0
 }
 
@@ -7473,14 +7473,14 @@
     padding: 15px;
     border: 1px solid #bfc1c3;
     border-top: 0;
-    color: #005ea5;
+    color: #1d70b8;
     background: inherit;
     font-weight: bold;
     text-decoration: none
 }
 
     .app-tabs__heading a:visited {
-        color: #005ea5
+        color: #1d70b8
     }
 
     .app-tabs__heading a:focus {
@@ -7643,7 +7643,7 @@ body {
 }
 
 .app-content video:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
@@ -7716,8 +7716,8 @@ body {
     right: 20px;
     min-width: 110px;
     padding: 4px 10px 2px 10px;
-    border: 1px solid #00823b;
-    color: #00823b;
+    border: 1px solid #00703c;
+    color: #00703c;
     background-color: #fff;
     -webkit-box-shadow: 0 2px 0 0 #006435;
     box-shadow: 0 2px 0 0 #006435;
@@ -7748,7 +7748,7 @@ body {
 }
 
 .app-copy-button:focus {
-    outline: 3px solid #ffbf47;
+    outline: 3px solid #ffdd00;
     outline-offset: 0
 }
 
