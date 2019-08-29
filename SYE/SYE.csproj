@@ -16,7 +16,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="GDSHelpers" Version="2019.8.15.6" />
+    <PackageReference Include="GDSHelpers" Version="2019.8.28.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.0.3" />
