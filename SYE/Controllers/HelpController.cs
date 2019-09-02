@@ -72,7 +72,9 @@ namespace SYE.Controllers
 
                 if (pageViewModel.Questions.Any(m => m.Validation?.IsErrored == true))
                 {
-                    ViewBag.BackLink = new BackLinkVM { Show = true, Url = urlReferer, Text = "Back" };
+                    var cleanUrlReferer = urlReferer.Replace("feedback-thank-you", "");
+                    ViewBag.BackLink = new BackLinkVM { Show = true, Url = cleanUrlReferer, Text = "Back" };
+                    ViewBag.UrlReferer = cleanUrlReferer;
 
                     return View(nameof(Feedback), pageViewModel);
                 }
