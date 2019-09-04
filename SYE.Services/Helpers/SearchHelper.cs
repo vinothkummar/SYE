@@ -75,7 +75,7 @@ namespace SYE.Services.Helpers
 
         private static string GetInspectionCategories(Document inspectionCategory, string key)
         {
-            return string.Join(" ,", ((object[])inspectionCategory.Where(cn => cn.Key == "syeInspectionCategories").FirstOrDefault().Value));
+            return string.Join(" ,", ((object[])inspectionCategory.Where(cn => cn.Key == "syeInspectionCategories").FirstOrDefault().Value).Distinct());
         }
     }
 }
