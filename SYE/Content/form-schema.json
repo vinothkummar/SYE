@@ -810,7 +810,7 @@
             "regex": {
               "type": "regex",
               "regex": "phone",
-              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192"
+              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 8081 570 192"
             },
             "is_errored": false,
             "error_message": ""
