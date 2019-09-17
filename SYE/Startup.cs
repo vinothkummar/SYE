@@ -17,6 +17,7 @@ using Notify.Client;
 using Notify.Interfaces;
 using SYE.EsbWrappers;
 using SYE.Helpers;
+using SYE.MiddlewareExtensions;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
@@ -28,10 +29,22 @@ namespace SYE
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public static IConfiguration StaticConfig { get; private set; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            StaticConfig = configuration;
+        }
+
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -58,80 +71,82 @@ namespace SYE
             services.AddHttpContextAccessor();
             services.AddOptions();
 
-            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+            services.AddCustomServices();
 
-            services.TryAddScoped<ISessionService, SessionService>();
+            // services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
 
-            services.TryAddSingleton<IGdsValidation, GdsValidation>();
+            //services.TryAddScoped<ISessionService, SessionService>();
 
-            string notificationApiKey = Configuration.GetSection("ConnectionStrings:GovUkNotify").GetValue<String>("ApiKey");
-            if (string.IsNullOrWhiteSpace(notificationApiKey))
-            {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(notificationApiKey)} from application configuration.");
-            }
-            services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(notificationApiKey));
-            services.TryAddScoped<INotificationService, NotificationService>();
+            //services.TryAddSingleton<IGdsValidation, GdsValidation>();
 
-            var searchConfiguration = Configuration.GetSection("ConnectionStrings:SearchDb").Get<SearchConfiguration>();
-            if (searchConfiguration == null)
-            {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(searchConfiguration)} from application configuration.");
-            }
-            services.TryAddSingleton<ICustomSearchIndexClient>(new CustomSearchIndexClient(searchConfiguration.SearchServiceName, searchConfiguration.IndexName, searchConfiguration.SearchApiKey));
-            services.TryAddScoped<ISearchService, SearchService>();
+            //string notificationApiKey = Configuration.GetSection("ConnectionStrings:GovUkNotify").GetValue<String>("ApiKey");
+            //if (string.IsNullOrWhiteSpace(notificationApiKey))
+            //{
+            //    throw new ConfigurationErrorsException($"Failed to load {nameof(notificationApiKey)} from application configuration.");
+            //}
+            //services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(notificationApiKey));
+            //services.TryAddScoped<INotificationService, NotificationService>();
 
-            var cosmosDatabaseConnectionConfiguration = Configuration.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
-            if (cosmosDatabaseConnectionConfiguration == null)
-            {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(cosmosDatabaseConnectionConfiguration)} from application configuration.");
-            }
-            var cosmosDatabaseConnectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
-            services.TryAddSingleton<IDocumentClient>(
-                new DocumentClient(
-                    new Uri(cosmosDatabaseConnectionConfiguration.Endpoint),
-                    cosmosDatabaseConnectionConfiguration.Key,
-                    cosmosDatabaseConnectionPolicy
-                )
-            );
+            //var searchConfiguration = Configuration.GetSection("ConnectionStrings:SearchDb").Get<SearchConfiguration>();
+            //if (searchConfiguration == null)
+            //{
+            //    throw new ConfigurationErrorsException($"Failed to load {nameof(searchConfiguration)} from application configuration.");
+            //}
+            //services.TryAddSingleton<ICustomSearchIndexClient>(new CustomSearchIndexClient(searchConfiguration.SearchServiceName, searchConfiguration.IndexName, searchConfiguration.SearchApiKey));
+            //services.TryAddScoped<ISearchService, SearchService>();
 
-            var formSchemaDatabase = Configuration.GetSection("CosmosDBCollections:FormSchemaDb").Get<AppConfiguration<FormVM>>();
-            if (formSchemaDatabase == null)
-            {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(formSchemaDatabase)} from application configuration.");
-            }
-            services.TryAddSingleton<IAppConfiguration<FormVM>>(formSchemaDatabase);
+            //var cosmosDatabaseConnectionConfiguration = Configuration.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
+            //if (cosmosDatabaseConnectionConfiguration == null)
+            //{
+            //    throw new ConfigurationErrorsException($"Failed to load {nameof(cosmosDatabaseConnectionConfiguration)} from application configuration.");
+            //}
+            //var cosmosDatabaseConnectionPolicy = Configuration.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
+            //services.TryAddSingleton<IDocumentClient>(
+            //    new DocumentClient(
+            //        new Uri(cosmosDatabaseConnectionConfiguration.Endpoint),
+            //        cosmosDatabaseConnectionConfiguration.Key,
+            //        cosmosDatabaseConnectionPolicy
+            //    )
+            //);
 
-            var submissionsDatabase = Configuration.GetSection("CosmosDBCollections:SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
-            if (submissionsDatabase == null)
-            {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(submissionsDatabase)} from application configuration.");
-            }
-            services.TryAddSingleton<IAppConfiguration<SubmissionVM>>(submissionsDatabase);
+            //var formSchemaDatabase = Configuration.GetSection("CosmosDBCollections:FormSchemaDb").Get<AppConfiguration<FormVM>>();
+            //if (formSchemaDatabase == null)
+            //{
+            //    throw new ConfigurationErrorsException($"Failed to load {nameof(formSchemaDatabase)} from application configuration.");
+            //}
+            //services.TryAddSingleton<IAppConfiguration<FormVM>>(formSchemaDatabase);
 
-            var configDatabase = Configuration.GetSection("CosmosDBCollections:ConfigDb").Get<AppConfiguration<ConfigVM>>();
-            if (configDatabase == null)
-            {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(configDatabase)} from application configuration.");
-            }
-            services.TryAddSingleton<IAppConfiguration<ConfigVM>>(configDatabase);
+            //var submissionsDatabase = Configuration.GetSection("CosmosDBCollections:SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
+            //if (submissionsDatabase == null)
+            //{
+            //    throw new ConfigurationErrorsException($"Failed to load {nameof(submissionsDatabase)} from application configuration.");
+            //}
+            //services.TryAddSingleton<IAppConfiguration<SubmissionVM>>(submissionsDatabase);
 
-            var esbConfig = Configuration.GetSection("ConnectionStrings:EsbConfig").Get<EsbConfiguration<EsbConfig>>();
-            if (esbConfig == null)
-            {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(esbConfig)} from application configuration.");
-            }
-            services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
+            //var configDatabase = Configuration.GetSection("CosmosDBCollections:ConfigDb").Get<AppConfiguration<ConfigVM>>();
+            //if (configDatabase == null)
+            //{
+            //    throw new ConfigurationErrorsException($"Failed to load {nameof(configDatabase)} from application configuration.");
+            //}
+            //services.TryAddSingleton<IAppConfiguration<ConfigVM>>(configDatabase);
 
-            IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
-            services.AddSingleton<IFileProvider>(physicalProvider);
+            //var esbConfig = Configuration.GetSection("ConnectionStrings:EsbConfig").Get<EsbConfiguration<EsbConfig>>();
+            //if (esbConfig == null)
+            //{
+            //    throw new ConfigurationErrorsException($"Failed to load {nameof(esbConfig)} from application configuration.");
+            //}
+            //services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
 
-            services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.TryAddScoped<IEsbClient, EsbClient>();
-            services.TryAddScoped<IEsbWrapper, EsbWrapper>();
-            services.TryAddScoped<IEsbService, EsbService>();
-            services.TryAddScoped<IFormService, FormService>();
-            services.TryAddScoped<ISubmissionService, SubmissionService>();
-            services.TryAddScoped<IDocumentService, DocumentService>();
+            //IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
+            //services.AddSingleton<IFileProvider>(physicalProvider);
+
+            //services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            //services.TryAddScoped<IEsbClient, EsbClient>();
+            //services.TryAddScoped<IEsbWrapper, EsbWrapper>();
+            //services.TryAddScoped<IEsbService, EsbService>();
+            //services.TryAddScoped<IFormService, FormService>();
+            //services.TryAddScoped<ISubmissionService, SubmissionService>();
+            //services.TryAddScoped<IDocumentService, DocumentService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
