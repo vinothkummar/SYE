@@ -37,13 +37,8 @@ namespace SYE.Tests.Controllers
             mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = "" }).Verifiable();
             mockSession.Setup(x => x.GetFormVmFromSession()).Returns(new FormVM());
 
-            //            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             ApplicationSettings appSettings = new ApplicationSettings() { FormStartPage = "123" };
             IOptions<ApplicationSettings> options = Options.Create(appSettings);
-
-            //var serviceNotFoundPage = _config.Value.ServiceNotFoundPage;
-            //var startPage = _config.Value.FormStartPage;
-            //var targetPage = _config.Value.DefaultBackLink;
 
             var sut = new FormController(mockValidation.Object, mockSession.Object, options, mockLogger.Object);
             sut.Url = mockUrlHelper.Object;

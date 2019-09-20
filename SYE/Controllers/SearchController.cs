@@ -8,11 +8,11 @@ using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
 using SYE.Helpers;
-using Microsoft.Extensions.Logging;
+using SYE.Helpers.Enums;
 
 namespace SYE.Controllers
 {
-    public class SearchController : Controller
+    public class SearchController : BaseController
     {
         private readonly int _pageSize = 20;
         private readonly int _maxSearchChars = 100;
@@ -20,15 +20,13 @@ namespace SYE.Controllers
         private readonly ISearchService _searchService;
         private readonly ISessionService _sessionService;
         private readonly IOptions<ApplicationSettings> _config;
-        private readonly ILogger _logger;
         private readonly IGdsValidation _gdsValidate;
 
-        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, ILogger<SearchController> logger, IGdsValidation gdsValidate)
+        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, IGdsValidation gdsValidate)
         {
             _searchService = searchService;
             _sessionService = sessionService;
             _config = config;
-            _logger = logger;
             _gdsValidate = gdsValidate;
         }
 
@@ -47,8 +45,8 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading search page.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Error loading search page.");
+                throw ex;
             }
         }
 
@@ -61,7 +59,7 @@ namespace SYE.Controllers
 
         [HttpGet, Route("/search/results")]//searches
         public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
-        {
+        {            
             var cleanSearch = _gdsValidate.CleanText(search, true, restrictedWords, allowedChars);
 
             var errorMessage = ValidateSearch(cleanSearch);
@@ -118,15 +116,14 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading location not found page.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error selecting location.");
+                throw ex;
             }
-
         }
 
         [HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
-        {
+        {            
             try
             {
                 //Store the location we are giving feedback about
@@ -137,17 +134,22 @@ namespace SYE.Controllers
                 {
                     {"!!location_name!!", vm.LocationName}
                 };
-
-                //Load the Form into Session
-                _sessionService.LoadLatestFormIntoSession(replacements);
-
-                var startPage = _config.Value.FormStartPage;
-                return RedirectToAction("Index", "Form", new { id = startPage });
+                try
+                {
+                    //Load the Form into Session
+                    _sessionService.LoadLatestFormIntoSession(replacements);
+                    var startPage = _config.Value.FormStartPage;
+                    return RedirectToAction("Index", "Form", new { id = startPage });
+                }
+                catch
+                {
+                    return GetCustomErrorCode(EnumStatusCode.SearchNotFoundJsonError, "Error selecting location. json form not loaded");
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error selecting location.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Error selecting location: '" + vm.LocationName + "'");
+                throw ex;
             }
         }
 
@@ -203,8 +205,8 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting search results.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Error in search :'" + search + "'");
+                throw ex;
             }
         }
 
@@ -261,11 +263,6 @@ namespace SYE.Controllers
             }
 
             return newSearch;
-        }
-        private string GetPreviousSearch()
-        {
-            var previousSearch = _sessionService.GetUserSearch();
-            return previousSearch;
-        }
+        }      
     }
 }

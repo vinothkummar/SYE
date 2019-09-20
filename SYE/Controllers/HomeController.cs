@@ -40,7 +40,7 @@ namespace SYE.Controllers
             HttpContext.Session.SetString("FormVersion", v);
             return View("Index");
         }
-
+/*
         // Error return pages are can be configured here. 
         // I have added basics here. Add and adapt as appropriate
         // once tickets are raised with specific requirements.
@@ -96,6 +96,7 @@ namespace SYE.Controllers
             // as we do not require Trace/Activity Id there
             return View(model);
         }
+*/
 
         [Route("Clear-Data")]
         public IActionResult ClearData()

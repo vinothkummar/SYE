@@ -35,6 +35,7 @@
 
 
   <ItemGroup>
+    <Folder Include="Helpers\Response\" />
     <Folder Include="wwwroot\assets\images\" />
   </ItemGroup>
 
