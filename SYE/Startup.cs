@@ -12,13 +12,11 @@ namespace SYE
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public static IConfiguration StaticConfig { get; private set; }
+        public IConfiguration Configuration { get; }     
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-            StaticConfig = configuration;
+            Configuration = configuration;      
         }       
 
         public void ConfigureServices(IServiceCollection services)
@@ -45,7 +43,7 @@ namespace SYE
             services.AddHttpContextAccessor();
             services.AddOptions();
 
-            services.AddCustomServices();            
+            services.AddCustomServices(Configuration);            
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
