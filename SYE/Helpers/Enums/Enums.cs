@@ -9,9 +9,9 @@
         SearchLocationSelectError = 554,
         SearchLocationNotFoundPageLoadError = 555,
         //Report a problem errors
-        RPPageLoadError = 556,
-        RPEmailError = 557,
-        RPSubmissionError = 558,
+        RPPageLoadJsonError = 556,
+        //RPEmailError = 557,
+        RPSubmissionJsonError = 558,
         //Questionnaire journey errors
         FormPageLoadError = 560,
         FormLocationNullError = 561,

@@ -47,13 +47,20 @@ namespace SYE.Controllers
                     return View("ResourceNotFound");
 
                 case 500:                
-                    var test = exceptionDetails.Error.Data?["GFCError"];
                     _logger.LogError("500 Type Error Occured. " +
                                      $"The message {exceptionDetails.Error.Data?["GFCError"]} " +
                                      $"The path {exceptionDetails.Path} " +
                                      $"threw an exception: {exceptionDetails.Error}");
                     return View("GenericException");
+                case 551:
+                    _logger.LogError($"{statusCode} Search Error Occured. " +
+                                     $"Message = {message}, " +
+                                     $"Path = {statusCodeResult?.OriginalPath}, " +
+                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("GenericException");
                 case 553:
+                case 556:
+                case 558:
                     _logger.LogError($"{statusCode} Form json Not Found Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +

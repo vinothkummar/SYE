@@ -8,15 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SYE.Helpers.Enums;
 using SYE.Repository;
 using SYE.Services;
 using SYE.ViewModels;
 
 namespace SYE.Controllers
 {
-    public class HelpController : Controller
+    public class HelpController : BaseController
     {
-        private readonly ILogger _logger;        
+        private readonly ILogger _logger;//keep logger because extra logs are generated in this controller
         private readonly IFormService _formService;
         private readonly IGdsValidation _gdsValidate;
 		private readonly IConfiguration _configuration;
@@ -32,32 +33,34 @@ namespace SYE.Controllers
         }
 
         [HttpGet("report-a-problem")]
-        public ActionResult Feedback([FromHeader(Name = "referer")] string urlReferer)
+        public IActionResult Feedback([FromHeader(Name = "referer")] string urlReferer)
         {
             try
             {
                 var pageViewModel = GetPage();
-                if (pageViewModel != null)
+                if (pageViewModel == null)
                 {
-                    ViewBag.UrlReferer = urlReferer;
-
-                    ViewBag.BackLink = new BackLinkVM { Show = true, Url = urlReferer, Text = "Back" };
-
-                    ViewBag.Title = "Report a problem - Give feedback on care";
-
-                    return View(nameof(Feedback), pageViewModel);
+                    return GetCustomErrorCode(EnumStatusCode.RPPageLoadJsonError, "Error loading service feedback form. pageViewModel is null");
                 }
+
+                ViewBag.UrlReferer = urlReferer;
+
+                ViewBag.BackLink = new BackLinkVM { Show = true, Url = urlReferer, Text = "Back" };
+
+                ViewBag.Title = "Report a problem - Give feedback on care";
+
+                return View(nameof(Feedback), pageViewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading service feedback form.");
+                ex.Data.Add("GFCError", "Unexpected error loading service feedback form.");
+                throw ex;
             }
-            return StatusCode(500);
         }
 
         [HttpPost("report-a-problem"), ActionName("Feedback")]
         [ValidateAntiForgeryToken]
-        public ActionResult SubmitFeedback([FromForm(Name = "url-referer")] string urlReferer)
+        public IActionResult SubmitFeedback([FromForm(Name = "url-referer")] string urlReferer)
         {
             PageVM pageViewModel = null;
             try
@@ -65,8 +68,9 @@ namespace SYE.Controllers
                 pageViewModel = GetPage();
 
                 if (pageViewModel == null)
-                    return StatusCode(500);
-                
+                {
+                    return GetCustomErrorCode(EnumStatusCode.RPSubmissionJsonError, "Error submitting service feedback.  pageViewModel is null");
+                }
 
                 _gdsValidate.ValidatePage(pageViewModel, Request.Form);
 
@@ -101,14 +105,13 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error submitting service feedback.");
+                ex.Data.Add("GFCError", "Unexpected error submitting service feedback");
+                throw ex;
             }
-
-            return StatusCode(500);
         }
 
         [Route("feedback-thank-you")]
-        public ActionResult FeedbackThankYou(string urlReferer)
+        public IActionResult FeedbackThankYou(string urlReferer)
         {
             ViewBag.Title = "You've sent your feedback - Give feedback on care";
 
@@ -121,11 +124,18 @@ namespace SYE.Controllers
             var formName = _configuration?.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<string>("Name");
             var version = _configuration?.GetSection("FormsConfiguration:ServiceFeedbackForm").GetValue<string>("Version");
 
-            var form = string.IsNullOrEmpty(version) ?
-                _formService.GetLatestFormByName(formName).Result :
-                _formService.FindByNameAndVersion(formName, version).Result;
+            try
+            {
+                var form = string.IsNullOrEmpty(version) ?
+                    _formService.GetLatestFormByName(formName).Result :
+                    _formService.FindByNameAndVersion(formName, version).Result;
 
-            return form.Pages.FirstOrDefault() ?? null;
+                return form.Pages.FirstOrDefault() ?? null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private Task SendEmailNotificationAsync(PageVM submission, string urlReferer)

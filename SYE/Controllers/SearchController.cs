@@ -198,6 +198,11 @@ namespace SYE.Controllers
                 var newSearch = SetNewSearch(search);
 
                 var viewModel = GetViewModel(search, pageNo, selectedFacets, newSearch);
+                if (viewModel == null)
+                {
+                    return GetCustomErrorCode(EnumStatusCode.SearchUnavailableError,
+                        "Search unavailable: Search string='" + search + "'");
+                }
 
                 ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
@@ -224,7 +229,15 @@ namespace SYE.Controllers
 
             if (!string.IsNullOrEmpty(search) && pageNo > 0)
             {
-                var searchResult = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets, newSearch).Result;
+                SearchServiceResult searchResult = null;
+                try
+                {
+                    searchResult = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets, newSearch).Result;
+                }
+                catch
+                {
+                    return null;//search is not working for some reason
+                }                
                 returnViewModel.Data = searchResult?.Data?.ToList() ?? new List<SearchResult>();
                 returnViewModel.ShowResults = true;
                 returnViewModel.Search = search;
