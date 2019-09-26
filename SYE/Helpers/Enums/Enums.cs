@@ -13,8 +13,8 @@
         //RPEmailError = 557,
         RPSubmissionJsonError = 558,
         //Questionnaire journey errors
-        FormPageLoadError = 560,
-        FormLocationNullError = 561,
+        FormPageLoadSessionNullError = 560,
+        FormPageLoadLocationNullError = 561,
         FormPageNullError = 562,
         FormSessionNullError = 563,
         FormSessionIncompleteError = 564,

@@ -31,21 +31,6 @@ namespace SYE.Controllers
 
             switch (statusCode)
             {
-                case 440:
-                case 563:
-                case 417:
-                    _logger.LogError($"{statusCode} Session Not Found Error Occured. " +
-                                     $"Message = {message}, " +
-                                     $"Path = {statusCodeResult?.OriginalPath}, " +
-                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
-                    return View("SessionNotFound");
-
-                case 404:
-                    _logger.LogError("404 Not Found Error Occured. " +
-                                     $"Path = {statusCodeResult?.OriginalPath}, " +
-                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
-                    return View("ResourceNotFound");
-
                 case 500:                
                     _logger.LogError("500 Type Error Occured. " +
                                      $"The message {exceptionDetails.Error.Data?["GFCError"]} " +
@@ -66,12 +51,21 @@ namespace SYE.Controllers
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("GenericException");
-                case 578:
-                case 579:
-                    _logger.LogError($"{statusCode} ESB Error Occured. " +
+                case 560:
+                case 561:
+                case 562:
+                    _logger.LogError($"{statusCode} Form Page Load Error Occured. " +
+                                     $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
-                    return View("EsbError");
+                    return View("GenericException");
+                case 563:
+                case 564:
+                    _logger.LogError($"{statusCode} Form Continue Error Occured. " +
+                                     $"Message = {message}, " +
+                                     $"Path = {statusCodeResult?.OriginalPath}, " +
+                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("GenericException");
 
                 default:
                     _logger.LogError("Other Type of Error Occured. " +
