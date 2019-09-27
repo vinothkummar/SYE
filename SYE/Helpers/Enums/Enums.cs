@@ -3,23 +3,19 @@
     public enum EnumStatusCode
     {
         //search errors
-        SearchPageLoadError = 550,//not used
-        SearchUnavailableError = 551,
-        SearchSelectLocationJsonError = 553,
-        SearchLocationNotFoundJsonError = 554,
-        SearchLocationNotFoundPageLoadError = 555,//not used
+        SearchUnavailableError = 550,
+        SearchSelectLocationJsonError = 551,
+        SearchLocationNotFoundJsonError = 552,
         //Report a problem errors
-        RPPageLoadJsonError = 556,
-        RPSubmissionJsonError = 557,
-        RPEmailError = 558,//not used       
+        RPPageLoadJsonError = 555,
+        RPSubmissionJsonError = 556,
         //Questionnaire journey errors        
-        FormPageLoadSessionNullError = 559,
-        FormPageLoadLocationNullError = 560,
-        FormPageLoadNullError = 561,
-        FormPageContinueSessionNullError = 562,
-        FormPageContinueNullError = 563,
-        FormContinueLocationNullError = 564,
-        FormPageUpdateError = 565,//not used
+        FormPageLoadSessionNullError = 560,
+        FormPageLoadLocationNullError = 561,
+        FormPageLoadNullError = 562,
+        FormPageContinueSessionNullError = 563,
+        FormPageContinueNullError = 564,
+        FormContinueLocationNullError = 565,
         //Check your answers errors
         CYAPageLoadError = 570,
         CYASessionNullError = 571,
