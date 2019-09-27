@@ -40,7 +40,7 @@ namespace SYE.Controllers
                 var pageViewModel = GetPage();
                 if (pageViewModel == null)
                 {
-                    return GetCustomErrorCode(EnumStatusCode.RPPageLoadJsonError, "Error loading service feedback form. pageViewModel is null");
+                    return GetCustomErrorCode(EnumStatusCode.RPPageLoadJsonError, "Error loading service feedback form. Json form not loaded");
                 }
 
                 ViewBag.UrlReferer = urlReferer;
@@ -69,7 +69,7 @@ namespace SYE.Controllers
 
                 if (pageViewModel == null)
                 {
-                    return GetCustomErrorCode(EnumStatusCode.RPSubmissionJsonError, "Error submitting service feedback.  pageViewModel is null");
+                    return GetCustomErrorCode(EnumStatusCode.RPSubmissionJsonError, "Error submitting service feedback. Json form not loaded");
                 }
 
                 _gdsValidate.ValidatePage(pageViewModel, Request.Form);

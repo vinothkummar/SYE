@@ -45,27 +45,28 @@ namespace SYE.Controllers
                     return View("GenericException");
                 case 553:
                 case 556:
-                case 558:
+                case 557:
                     _logger.LogError($"{statusCode} Form json Not Found Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("GenericException");
+                case 559:
                 case 560:
                 case 561:
                 case 562:
-                    _logger.LogError($"{statusCode} Form Page Load Error Occured. " +
+                    _logger.LogError($"{statusCode} Form Page Load Session Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
-                    return View("GenericException");
+                    return View("SessionNotFound");                
                 case 563:
                 case 564:
-                    _logger.LogError($"{statusCode} Form Continue Error Occured. " +
+                    _logger.LogError($"{statusCode} Form Continue Session Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
-                    return View("GenericException");
+                    return View("SessionNotFound");
 
                 default:
                     _logger.LogError("Other Type of Error Occured. " +

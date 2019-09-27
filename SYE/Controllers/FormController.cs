@@ -48,7 +48,7 @@ namespace SYE.Controllers
 
                 if (pageVm == null)
                 {
-                    return GetCustomErrorCode(EnumStatusCode.FormPageNullError, "Error with user session. pageVm is null: Id='" + id + "'");
+                    return GetCustomErrorCode(EnumStatusCode.FormPageLoadNullError, "Error with user session. pageVm is null: Id='" + id + "'");
                 }
 
                 ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
@@ -78,21 +78,20 @@ namespace SYE.Controllers
         {
             try
             {
-                //Get the current PageVm from Session
-                var pageVm = _sessionService.GetPageById(vm.PageId, false);
+                PageVM pageVm = null;
+                try
+                {
+                    //Get the current PageVm from Session (throws exception if session is null/timed out)
+                    pageVm = _sessionService.GetPageById(vm.PageId, false);
+                }
+                catch
+                {
+                    return GetCustomErrorCode(EnumStatusCode.FormPageContinueSessionNullError, "Error with user session. Session is null: Id='" + vm.PageId + "'");
+                }
 
-                //If Null throw error
                 if (pageVm == null)
                 {
-                    try
-                    {
-                        var tempUserSession = _sessionService.GetUserSession();
-                        return GetCustomErrorCode(EnumStatusCode.FormSessionIncompleteError, "Error with user session. Session is incomplete: Id='" + vm.PageId + "'");
-                    }
-                    catch
-                    {
-                        return GetCustomErrorCode(EnumStatusCode.FormSessionNullError, "Error with user session. Session is null: Id='" + vm.PageId + "'");
-                    }
+                    return GetCustomErrorCode(EnumStatusCode.FormPageContinueNullError, "Error with user session. pageVm is null: Id='" + vm.PageId + "'");
                 }
                 if (!string.IsNullOrWhiteSpace(_sessionService.PageForEdit))
                 {
@@ -103,24 +102,18 @@ namespace SYE.Controllers
                     }
                 }
 
-                try
+                var userSession = _sessionService.GetUserSession();
+                if (userSession == null)//shouldn't happen as it's handled above
                 {
-                    var userSession = _sessionService.GetUserSession();
-                    if (userSession == null)
-                    {
-                        return GetCustomErrorCode(EnumStatusCode.FormSessionNullError, "Error with user session. Session is null: Id='" + vm.PageId + "'");
-                    }                    
-                    if (string.IsNullOrWhiteSpace(userSession.LocationName))
-                    {
-                        return GetCustomErrorCode(EnumStatusCode.FormSessionIncompleteError, "Error with user session. Session is incomplete: Id='" + vm.PageId + "'");
-                    }
-                    var serviceNotFound = userSession.LocationName.Equals("the service");
-                    ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
+                    return GetCustomErrorCode(EnumStatusCode.FormPageContinueSessionNullError, "Error with user session. Session is null: Id='" + vm.PageId + "'");
                 }
-                catch
+                if (string.IsNullOrWhiteSpace(userSession.LocationName))
                 {
-                    return GetCustomErrorCode(EnumStatusCode.FormSessionNullError, "Error with user session. Session is null: Id='" + vm.PageId + "'");
+                    return GetCustomErrorCode(EnumStatusCode.FormContinueLocationNullError, "Error with user session. Location is null: Id='" + vm.PageId + "'");
                 }
+
+                var serviceNotFound = userSession.LocationName.Equals("the service");
+                ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
 
                 if (Request?.Form != null)
                 {

@@ -45,7 +45,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                ex.Data.Add("GFCError", "Error loading search page.");
+                ex.Data.Add("GFCError", "Unexpected error loading search page.");
                 throw ex;
             }
         }
@@ -108,15 +108,22 @@ namespace SYE.Controllers
                     {"!!location_name!!", defaultServiceName}
                 };
 
-                //Load the Form into Session
-                _sessionService.LoadLatestFormIntoSession(replacements);
+                try
+                {
+                    //Load the Form into Session
+                    _sessionService.LoadLatestFormIntoSession(replacements);
+                }
+                catch
+                {
+                    return GetCustomErrorCode(EnumStatusCode.SearchLocationNotFoundJsonError, "Error in location not found. json form not loaded");
+                }
 
                 var serviceNotFoundPage = _config.Value.ServiceNotFoundPage;
                 return RedirectToAction("Index", "Form", new { id = serviceNotFoundPage });
             }
             catch (Exception ex)
             {
-                ex.Data.Add("GFCError", "Unexpected error selecting location.");
+                ex.Data.Add("GFCError", "Unexpected error in location not found.");
                 throw ex;
             }
         }
@@ -143,12 +150,12 @@ namespace SYE.Controllers
                 }
                 catch
                 {
-                    return GetCustomErrorCode(EnumStatusCode.SearchNotFoundJsonError, "Error selecting location. json form not loaded");
+                    return GetCustomErrorCode(EnumStatusCode.SearchSelectLocationJsonError, "Error selecting location. json form not loaded");
                 }
             }
             catch (Exception ex)
             {
-                ex.Data.Add("GFCError", "Error selecting location: '" + vm.LocationName + "'");
+                ex.Data.Add("GFCError", "Unexpected error selecting location: '" + vm.LocationName + "'");
                 throw ex;
             }
         }
@@ -210,7 +217,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                ex.Data.Add("GFCError", "Error in search :'" + search + "'");
+                ex.Data.Add("GFCError", "Unexpected error in search :'" + search + "'");
                 throw ex;
             }
         }
