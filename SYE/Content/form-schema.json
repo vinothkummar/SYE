@@ -1,6 +1,6 @@
 {
-  "id": "6101afc0-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.10.1",
+  "id": "6102afc0-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.2",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -655,19 +655,19 @@
         {
           "question_id": "can-we-contact-you-01",
           "document_order": 2,
-          "question": "<h1 class=\"govuk-heading-xl\">Can we contact you if we need more information?</h1>",
+          "question": "<h1 class=\"govuk-heading-xl\">Can we contact you?</h1>",
           "short_question": "Can we contact you?",
-          "additional_text": "<p class=\"govuk-body\">We will only use your contact details if we need to ask you about your feedback.</p><p class=\"govuk-body\">The only reasons we'd need to pass your details to anyone else are if you tell us:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>someone's in danger of serious harm</li><li>there's been a serious crime</li></ul></p>",
+          "additional_text": "<div class=\"govuk-inset-text\">You can give anonymous feedback. But it helps us more if we can ask questions or check details with you. You can choose whether we phone or email you.</div><p class=\"govuk-body\">We'll only use your details to ask you about your feedback. We'll keep them confidential. The only exception is if you tell us about:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>abuse or serious neglect</li><li>a serious crime</li></ul></p>",
           "data_type": "string",
           "input_type": "optionlist",
           "options": [
             {
-              "value": "Yes, I am happy for you to contact me",
-              "text": "Yes, I am happy for you to contact me"
+              "value": "Yes, you can contact me",
+              "text": "Yes, you can contact me"
             },
             {
-              "value": "No, I do not want to give my name or contact details",
-              "text": "No, I do not want to give my name or contact details"
+              "value": "No, I'd prefer you not to contact me",
+              "text": "No, I'd prefer you not to contact me"
             }
           ],
           "validation": {
@@ -680,7 +680,7 @@
           },
           "answer_logic": [
             {
-              "value": "No, I do not want to give my name or contact details",
+              "value": "No, I'd prefer you not to contact me",
               "next_page_id": "did-you-hear-about-this-form-from-a-charity"
             }
           ],
@@ -882,12 +882,12 @@
       "previous_pages": [
         {
           "question_id": "can-we-contact-you-01",
-          "answer": "No, I do not want to give my name or contact details",
+          "answer": "No, I'd prefer you not to contact me",
           "page_id": "can-we-contact-you"
         },
         {
           "question_id": "can-we-contact-you-01",
-          "answer": "Yes, I am happy for you to contact me",
+          "answer": "Yes, you can contact me",
           "page_id": "your-contact-details"
         }
       ],
