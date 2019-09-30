@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SYE.Models;
+using SYE.ViewModels;
 
 namespace SYE.Controllers
 {
@@ -27,7 +28,17 @@ namespace SYE.Controllers
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
-            return View();
+            var emptyModel = new ProviderDetailsVM();
+            return View(emptyModel);
+        }
+
+        [Route("Index/{locationId}/{providerId}/{locationName}")]
+        public IActionResult Index(string locationId, string providerId, string locationName)
+        {
+            ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
+            ViewBag.HideSiteTitle = true;
+            var providerDetails = new ProviderDetailsVM() { LocationId = locationId, ProviderId = providerId, LocationName = locationName };
+            return View(providerDetails);
         }
 
 

@@ -1,5 +1,6 @@
 ﻿@using Microsoft.Extensions.Options
 @using SYE.ViewModels
+@model SYE.ViewModels.ProviderDetailsVM
 @inject IOptions<ApplicationSettings> Configuration
 
 
@@ -23,9 +24,19 @@
 
         <gds-warning-text message="Call 999 if there's an immediate risk of harm or abuse" warning-id=""></gds-warning-text>
 
-        <form asp-controller="Search" asp-action="Index" method="get">
-            <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start now" button-type="Submit" start-now="true"></gds-button></p>
-        </form>
+        @if (!string.IsNullOrEmpty(Model.LocationId))
+        {
+            <form asp-controller="Search" asp-action="SelectLocation" asp-route-LocationId="@Model.LocationId" asp-route-ProviderId="@Model.ProviderId" asp-route-LocationName="@Model.LocationName" method="post">       
+                <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start now" button-type="Submit" start-now="true"></gds-button></p>
+            </form>
+        }
+        else
+        {
+            <form asp-controller="Search" asp-action="Index" method="get">
+                <p class="govuk-body"><gds-button button-status="Enabled" button-text="Start now" button-type="Submit" start-now="true"></gds-button></p>
+            </form>
+        }
+
 
         <h2 class="govuk-heading-m">Your feedback helps make care better</h2>
         <gds-paragraph>
