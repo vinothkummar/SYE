@@ -48,7 +48,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting submissions.");
+                _logger.LogError(ex, "Error getting submissions: 'GetAll()'");
                 return StatusCode(500);
             }
         }
@@ -72,7 +72,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting submissions.");
+                _logger.LogError(ex, "Error getting submissions by status: 'GetAll(" + status + ")'");
                 return StatusCode(500);
             }
         }
@@ -94,7 +94,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting submission.");
+                _logger.LogError(ex, "Error getting submission: 'Id=" + id + "'");
                 return StatusCode(500);
             }
         }
@@ -124,7 +124,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error posting submission to CRM.");
+                _logger.LogError(ex, "Error posting submission to CRM: 'Id=" + id + "'");
                 return StatusCode(500);
             }
         }
@@ -144,7 +144,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error posting submissions to CRM. ");
+                _logger.LogError(ex, "Error posting submissions to CRM: 'PostAllToCrm()'");
                 return StatusCode(500, ex);
             }
         }
