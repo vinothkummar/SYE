@@ -17,14 +17,15 @@
         FormPageContinueNullError = 564,
         FormContinueLocationNullError = 565,
         //Check your answers errors
-        CYAPageLoadError = 570,
-        CYASessionNullError = 571,
-        CYAFormNullError = 572,
-        CYALocationNullError = 573,
-        CYAFeedbackNullError = 574,
-        CYASubmissionIdNullError = 575,
-        CYASubmissionError = 576,
-        CYASubmissionEmailError = 577,
+        CYAFormNullError = 570,
+        CYALocationNullError = 571,
+        CYAFeedbackNullError = 572,
+        CYASubmissionFormNullError = 573,
+        CYASubmissionReferenceNullError = 574,
+        
+        //CYASubmissionIdNullError = 575,
+        //CYASubmissionError = 576,
+        //CYASubmissionEmailError = 577,
         //ESB errors
         EsbSubmissionError = 578,
         EsbNotAvailable = 579

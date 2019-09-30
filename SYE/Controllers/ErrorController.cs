@@ -51,7 +51,6 @@ namespace SYE.Controllers
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("GenericException");
-                case 559:
                 case 560:
                 case 561:
                 case 562:
@@ -67,7 +66,21 @@ namespace SYE.Controllers
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("SessionNotFound");
-
+                case 570:
+                case 571:
+                case 572:
+                    _logger.LogError($"{statusCode} Check Your Answers Page Load Session Error Occured. " +
+                                     $"Message = {message}, " +
+                                     $"Path = {statusCodeResult?.OriginalPath}, " +
+                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("SessionNotFound");
+                case 573:
+                case 574:
+                    _logger.LogError($"{statusCode} Check Your Answers Page Submission Error Occured. " +
+                                     $"Message = {message}, " +
+                                     $"Path = {statusCodeResult?.OriginalPath}, " +
+                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("GenericException");
                 default:
                     _logger.LogError("Other Type of Error Occured. " +
                                      $"The path {exceptionDetails.Path} " +
