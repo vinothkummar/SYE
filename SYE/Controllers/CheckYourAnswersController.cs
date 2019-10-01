@@ -15,10 +15,11 @@ using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
 using SYE.ViewModels;
+using SYE.Helpers.Enums;
 
 namespace SYE.Controllers
 {
-    public class CheckYourAnswersController : Controller
+    public class CheckYourAnswersController : BaseController
     {
         private readonly ILogger _logger;
         private readonly ISubmissionService _submissionService;
@@ -46,13 +47,11 @@ namespace SYE.Controllers
                 var formVm = _sessionService.GetFormVmFromSession();
                 if (formVm == null)
                 {
-                    _logger.LogError("Error with user session. formVm is null.");
-                    return NotFound();
+                    return GetCustomErrorCode(EnumStatusCode.CYAFormNullError, "Error with user session. formVm is null.");
                 }
                 if ((_sessionService.GetUserSession().LocationName) == null)
                 {
-                    _logger.LogError("Error with user session. Location is null");
-                    return StatusCode(440);
+                    return GetCustomErrorCode(EnumStatusCode.CYALocationNullError, "Error with user session. Location is null.");
                 }
                 var vm = new CheckYourAnswersVm
                 {
@@ -64,8 +63,7 @@ namespace SYE.Controllers
                 //check for feedback
                 if(! vm.PageHistory.Contains("give-your-feedback"))
                 {
-                    _logger.LogError("Error with user session. No feedback found");
-                    return StatusCode(440);
+                    return GetCustomErrorCode(EnumStatusCode.CYAFeedbackNullError, "Error with user submission. No feedback found");
                 }
 
                 ViewBag.Title = "Check your answers - Give feedback on care";
@@ -74,8 +72,8 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading FormVM.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error loading FormVM.");
+                throw ex;
             }
 
         }
@@ -90,7 +88,7 @@ namespace SYE.Controllers
                 var formVm = _sessionService.GetFormVmFromSession();
                 if (formVm == null)
                 {
-                    return NotFound();
+                    return GetCustomErrorCode(EnumStatusCode.CYASubmissionFormNullError, "Error submitting service feedback. Null or empty formVm.");
                 }
                 
                 var reference = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
@@ -98,8 +96,7 @@ namespace SYE.Controllers
 
                 if (string.IsNullOrWhiteSpace(reference))
                 {
-                    _logger.LogError("Error submitting feedback!  Null or empty submission Id");
-                    return StatusCode(500);
+                    return GetCustomErrorCode(EnumStatusCode.CYASubmissionReferenceNullError, "Error submitting feedback!  Null or empty submission Id");
                 }
 
                 submission.SubmissionId = reference;
@@ -136,11 +133,7 @@ namespace SYE.Controllers
                                         if (notificationTask.IsFaulted)
                                         {
                                             _logger.LogError(notificationTask.Exception, $"Error sending confirmation email with submission id: [{reference}].");
-                                        }
-                                        else
-                                        {
-                                            _logger.LogInformation($"Confirmation email for submission id: [{reference}] sent successfully.");
-                                        }
+                                        }                                
                                     })
                                     .ConfigureAwait(false);
                         });
@@ -154,7 +147,7 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error submitting feedback!");
+                _logger.LogError(ex, "Unexpected error submitting feedback!");
                 return StatusCode(500);
             }
         }
