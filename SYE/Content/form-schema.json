@@ -1,6 +1,6 @@
 {
-  "id": "6102afc0-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.10.2",
+  "id": "6104afc0-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.4",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -23,15 +23,11 @@
               "is_required": true,
               "error_message": "Tell us which service your feedback is about"
             },
-            "min_length": {
-              "type": "string",
-              "min": 15,
-              "error_message": "Enter between 15 and 1,500 characters"
-            },
             "max_length": {
               "type": "string",
               "max": 1500,
-              "error_message": "Enter between 15 and 1,500 characters"
+              "threshold": "95",
+              "error_message": "Enter 1,500 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -336,15 +332,11 @@
               "is_required": true,
               "error_message": "Enter your feedback about !!location_name!!"
             },
-            "min_length": {
-              "type": "string",
-              "min": 50,
-              "error_message": "Your feedback must be between 50 and 8,000 characters"
-            },
             "max_length": {
               "type": "string",
-              "max": 8000,
-              "error_message": "Your feedback must be between 50 and 8,000 characters"
+              "max": 20000,
+              "threshold": 95,
+              "error_message": "Your feedback must be 20,000 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -364,16 +356,6 @@
               "is_required": false,
               "error_message": ""
             },
-            "min_length": {
-              "type": "string",
-              "min": 2,
-              "error_message": "The location details must be between 2 and 100 characters"
-            },
-            "max_length": {
-              "type": "string",
-              "max": 100,
-              "error_message": "The location details must be between 2 and 100 characters"
-            },
             "is_errored": false,
             "error_message": ""
           },
@@ -391,16 +373,6 @@
             "required": {
               "is_required": false,
               "error_message": ""
-            },
-            "min_length": {
-              "type": "string",
-              "min": 2,
-              "error_message": "Details about when it happened must be between 2 and 100 characters"
-            },
-            "max_length": {
-              "type": "string",
-              "max": 100,
-              "error_message": "Details about when it happened must be between 2 and 100 characters"
             },
             "is_errored": false,
             "error_message": ""
@@ -994,9 +966,9 @@
       "next_page_id": "CheckYourAnswers"
     }
   ],
-  "_rid": "9MwhAMui6ocBAAAAAAAAAA==",
-  "_self": "dbs/9MwhAA==/colls/9MwhAMui6oc=/docs/9MwhAMui6ocBAAAAAAAAAA==/",
-  "_etag": "\"00006f00-0000-1100-0000-5d1344a90000\"",
+  "_rid": "dmRGAIl2ERkDAAAAAAAACA==",
+  "_self": "dbs/dmRGAA==/colls/dmRGAIl2ERk=/docs/dmRGAIl2ERkDAAAAAAAACA==/",
+  "_etag": "\"00000000-0000-0000-77a0-c3e88e8f01d5\"",
   "_attachments": "attachments/",
-  "_ts": 1561543849
+  "_ts": 1569856044
 }
