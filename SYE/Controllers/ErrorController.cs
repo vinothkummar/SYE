@@ -37,15 +37,16 @@ namespace SYE.Controllers
                                      $"The path {exceptionDetails.Path} " +
                                      $"threw an exception: {exceptionDetails.Error}");
                     return View("GenericException");
-                case 551:
+                case 550:
                     _logger.LogError($"{statusCode} Search Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("GenericException");
-                case 553:
+                case 551:
+                case 552:
+                case 555:
                 case 556:
-                case 557:
                     _logger.LogError($"{statusCode} Form json Not Found Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
@@ -61,19 +62,20 @@ namespace SYE.Controllers
                     return View("SessionNotFound");                
                 case 563:
                 case 564:
+                case 565:
                     _logger.LogError($"{statusCode} Form Continue Session Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("SessionNotFound");
                 case 570:
-                case 571:
-                case 572:
+                case 571:                
                     _logger.LogError($"{statusCode} Check Your Answers Page Load Session Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("SessionNotFound");
+                case 572:
                 case 573:
                 case 574:
                     _logger.LogError($"{statusCode} Check Your Answers Page Submission Error Occured. " +
