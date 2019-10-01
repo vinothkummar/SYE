@@ -133,11 +133,7 @@ namespace SYE.Controllers
                                         if (notificationTask.IsFaulted)
                                         {
                                             _logger.LogError(notificationTask.Exception, $"Error sending confirmation email with submission id: [{reference}].");
-                                        }
-                                        else
-                                        {
-                                            _logger.LogInformation($"Confirmation email for submission id: [{reference}] sent successfully.");
-                                        }
+                                        }                                
                                     })
                                     .ConfigureAwait(false);
                         });

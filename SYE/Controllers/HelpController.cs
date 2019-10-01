@@ -92,11 +92,6 @@ namespace SYE.Controllers
                                     {
                                         _logger.LogError(notificationTask.Exception, "Error sending service feedback email.");
                                     }
-                                    else
-                                    {
-                                        _logger.LogInformation($"Service feedback email sent successfully.");
-                                    }
-
                                 })
                             .ConfigureAwait(false);
                 });
