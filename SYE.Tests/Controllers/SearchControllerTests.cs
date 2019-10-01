@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
 using GDSHelpers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using SYE.Controllers;
-using SYE.Helpers;
 using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
