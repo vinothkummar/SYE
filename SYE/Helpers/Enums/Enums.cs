@@ -21,13 +21,6 @@
         CYALocationNullError = 571,
         CYAFeedbackNullError = 572,
         CYASubmissionFormNullError = 573,
-        CYASubmissionReferenceNullError = 574,
-        
-        //CYASubmissionIdNullError = 575,
-        //CYASubmissionError = 576,
-        //CYASubmissionEmailError = 577,
-        //ESB errors
-        EsbSubmissionError = 578,
-        EsbNotAvailable = 579
+        CYASubmissionReferenceNullError = 574
     }
 }
