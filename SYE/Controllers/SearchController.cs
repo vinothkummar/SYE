@@ -15,8 +15,8 @@ namespace SYE.Controllers
     public class SearchController : BaseController
     {
         private readonly int _pageSize = 20;
-        private readonly int _maxSearchChars = 100;
-        private readonly int _minSearchChars = 2;
+        private readonly int _maxSearchChars = 1000;
+        private readonly int _minSearchChars = 1;
         private readonly ISearchService _searchService;
         private readonly ISessionService _sessionService;
         private readonly IOptions<ApplicationSettings> _config;
@@ -171,7 +171,7 @@ namespace SYE.Controllers
             {
                 if (! (cleanSearch.Length <= _maxSearchChars && cleanSearch.Length >= _minSearchChars))
                 {
-                    errorMessage = string.Format("Enter between {0} and {1} characters", _minSearchChars, _maxSearchChars);
+                    errorMessage = $"Your search must be 1,000 characters or less";
                 }
             }
 

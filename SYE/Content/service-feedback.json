@@ -1,7 +1,7 @@
 {
-  "id": "1001DF7D-606B-4112-9C23-F547FE7B0AD1",
+  "id": "101ADF7D-606B-4112-9C23-F547FE7B0AD1",
   "form_name": "service-feedback",
-  "version": "1.0.0.1",
+  "version": "1.0.1",
   "last_modified": "ISODate(\"2019-05-01T00:00:00.000Z\")",
   "pre_amble": "",
   "pages": [
@@ -17,17 +17,13 @@
           "validation": {
             "required": {
               "is_required": true,
-              "error_message": "Provide your feedback or describe what went wrong"
-            },
-            "min_length": {
-              "type": "string",
-              "min": 50,
-              "error_message": "Your feedback must be between 50 and 1500 characters"
+              "error_message": "Tell us what went wrong"
             },
             "max_length": {
               "type": "string",
               "max": 1500,
-              "error_message": "Your feedback must be between 50 and 1500 characters"
+              "threshold": "95",
+              "error_message": "Enter 1,500 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -43,20 +39,10 @@
             "required": {
               "is_required": false
             },
-            "min_length": {
-              "type": "string",
-              "min": 5,
-              "error_message": "Name must be between 5 and 70 characters"
-            },
             "max_length": {
               "type": "string",
-              "max": 70,
-              "error_message": "Name must be between 5 and 70 characters"
-            },
-            "regex": {
-              "type": "regex",
-              "regex": "name",
-              "error_message": "Name must only include letters a to z, hyphens, spaces and apostrophes"
+              "max": 500,
+              "error_message": "Name must be 500 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -75,13 +61,13 @@
             },
             "min_length": {
               "type": "string",
-              "min": 5,
-              "error_message": "Email address must be between 5 and 50 characters"
+              "max": 6,
+              "error_message": "Enter an email address in the correct format, like name@example.com"
             },
             "max_length": {
               "type": "string",
               "max": 50,
-              "error_message": "Email address must be between 5 and 50 characters"
+              "error_message": "Enter an email address in the correct format, like name@example.com"
             },
             "regex": {
               "type": "regex",
@@ -104,9 +90,9 @@
       "next_page_id": null
     }
   ],
-  "_rid": "gvVzALaMRu0EAAAAAAAAAA==",
-  "_self": "dbs/gvVzAA==/colls/gvVzALaMRu0=/docs/gvVzALaMRu0EAAAAAAAAAA==/",
-  "_etag": "\"00000000-0000-0000-070e-96293bbd01d5\"",
+  "_rid": "dmRGAIl2ERkDAAAAAAAAAA==",
+  "_self": "dbs/dmRGAA==/colls/dmRGAIl2ERk=/docs/dmRGAIl2ERkDAAAAAAAAAA==/",
+  "_etag": "\"00000000-0000-0000-73b4-ba00e5da01d5\"",
   "_attachments": "attachments/",
-  "_ts": 1557478730
+  "_ts": 1569424812
 }
