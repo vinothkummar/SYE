@@ -14,6 +14,17 @@ using SYE.Repository;
 using SYE.Services;
 using SYE.ViewModels;
 using Xunit;
+using System.Text;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using Moq.Protected;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using SYE.Models.Response;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace SYE.Tests.Controllers
 {
@@ -57,6 +68,12 @@ namespace SYE.Tests.Controllers
         {
             const string id = "123";
             //arrange
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
             PageVM returnPage = null;
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
@@ -65,14 +82,14 @@ namespace SYE.Tests.Controllers
             mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = "" }).Verifiable();
 
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
-            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object);
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object){ControllerContext = controllerContext};
 
             //act
             var result = sut.Index(id);
 
             //assert
-            var statusResult = result as StatusCodeResult;
-            statusResult.StatusCode.Should().Be(404);
+            var statusResult = result as StatusResult;
+            statusResult.StatusCode.Should().Be(562);
             mockSession.Verify();
         }
 
@@ -80,7 +97,6 @@ namespace SYE.Tests.Controllers
         public void Index_Should_Return_Internal_Error()
         {
             const string id = "123";
-            //arrange
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
             var mockLogger = new Mock<ILogger<FormController>>();
@@ -89,35 +105,36 @@ namespace SYE.Tests.Controllers
 
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object);
-
-            //act
-            var result = sut.Index(id);
-
-            //assert
-            var statusResult = result as StatusCodeResult;
-            statusResult.StatusCode.Should().Be(500);
+            // Act
+            Action action = () => sut.Index(id);
+            // Assert
+            action.Should().Throw<Exception>().Where(x => x.Data["GFCError"].ToString() == "Unexpected error loading form: Id='" + id + "'");
             mockSession.Verify();
         }
 
         [Fact]
         public void Index_Post_Should_Return_Not_Found()
         {
-            const string id = "123";
             //arrange
+            const string id = "123";
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
             PageVM returnPage = null;
             var mockValidation = new Mock<IGdsValidation>();
             var mockSession = new Mock<ISessionService>();
             var mockLogger = new Mock<ILogger<FormController>>();
             mockSession.Setup(x => x.GetPageById(id, false)).Returns(returnPage).Verifiable();
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
-            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object);
-
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object){ControllerContext = controllerContext};
             //act
             var result = sut.Index(new CurrentPageVM { PageId = id });
-
             //assert
-            var statusResult = result as StatusCodeResult;
-            statusResult.StatusCode.Should().Be(500);
+            var statusResult = result as StatusResult;
+            statusResult.StatusCode.Should().Be(564);
             mockSession.Verify();
         }
 

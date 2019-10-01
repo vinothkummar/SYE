@@ -9,7 +9,10 @@ namespace SYE.Models.Response
     {
         public StatusResult(int statusCode, string message, HttpContext context)
         {
+            StatusCode = statusCode;
             context.Features.Get<IHttpResponseFeature>().SetResponse(message, statusCode);
         }
+
+        public int StatusCode { get; }//needed for testing
     }
 }
