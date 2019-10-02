@@ -1,6 +1,6 @@
 {
-  "id": "6104afc0-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.10.4",
+  "id": "6105afc0-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.5",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -692,15 +692,10 @@
               "is_required": true,
               "error_message": "Enter your name"
             },
-            "min_length": {
-              "type": "string",
-              "min": 5,
-              "error_message": "Name must be between 5 and 70 characters"
-            },
             "max_length": {
               "type": "string",
-              "max": 70,
-              "error_message": "Name must be between 5 and 70 characters"
+              "max": 500,
+              "error_message": "Name must be 500 characters or less"
             },
             "regex": {
               "type": "regex",
@@ -727,13 +722,13 @@
             },
             "min_length": {
               "type": "string",
-              "min": 5,
-              "error_message": "Email address must be between 5 and 50 characters"
+              "max": 6,
+              "error_message": "Email address must be at least 6 characters and no more than 256 characters"
             },
             "max_length": {
               "type": "string",
-              "max": 50,
-              "error_message": "Email address must be between 5 and 50 characters"
+              "max": 256,
+              "error_message": "Email address must be at least 6 characters and no more than 256 characters"
             },
             "required_if": {
               "inclusive_logic": "or",
@@ -772,17 +767,17 @@
             "min_length": {
               "type": "string",
               "min": 11,
-              "error_message": "Telephone number must be between 11 and 33 characters"
+              "error_message": "Telephone number must be between 11 and 100 characters"
             },
             "max_length": {
               "type": "string",
-              "max": 33,
-              "error_message": "Telephone number must be between 11 and 33 characters"
+              "max": 100,
+              "error_message": "Telephone number must be between 11 and 100 characters"
             },
             "regex": {
               "type": "regex",
               "regex": "phone",
-              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 8081 570 192"
+              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192"
             },
             "is_errored": false,
             "error_message": ""
@@ -966,9 +961,9 @@
       "next_page_id": "CheckYourAnswers"
     }
   ],
-  "_rid": "dmRGAIl2ERkDAAAAAAAACA==",
-  "_self": "dbs/dmRGAA==/colls/dmRGAIl2ERk=/docs/dmRGAIl2ERkDAAAAAAAACA==/",
-  "_etag": "\"00000000-0000-0000-77a0-c3e88e8f01d5\"",
+  "_rid": "dmRGAIl2ERkGAAAAAAAAAA==",
+  "_self": "dbs/dmRGAA==/colls/dmRGAIl2ERk=/docs/dmRGAIl2ERkGAAAAAAAAAA==/",
+  "_etag": "\"00000000-0000-0000-7847-db02c02d01d5\"",
   "_attachments": "attachments/",
-  "_ts": 1569856044
+  "_ts": 1569927808
 }
