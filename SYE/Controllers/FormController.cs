@@ -43,8 +43,17 @@ namespace SYE.Controllers
                 }
 
                 var serviceNotFound = userSession.LocationName.Equals("the service");
-
-                var pageVm = _sessionService.GetPageById(id, serviceNotFound);
+                PageVM pageVm = null;
+                try
+                {
+                    //if we've got this far then the session is ok
+                    //if there an exception then the json cant be found
+                    pageVm = _sessionService.GetPageById(id, serviceNotFound);
+                }
+                catch
+                {
+                    return GetCustomErrorCode(EnumStatusCode.FormPageLoadJsonError, "Error with json file: Id='" + id + "'");
+                }                
 
                 if (pageVm == null)
                 {

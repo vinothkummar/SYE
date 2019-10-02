@@ -47,6 +47,7 @@ namespace SYE.Controllers
                 case 552:
                 case 555:
                 case 556:
+                case 566:
                     _logger.LogCritical($"{statusCode} Form json Not Found Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
