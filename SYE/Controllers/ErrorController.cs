@@ -38,7 +38,7 @@ namespace SYE.Controllers
                                      $"threw an exception: {exceptionDetails.Error}");
                     return View("GenericException");
                 case 550:
-                    _logger.LogError($"{statusCode} Search Error Occured. " +
+                    _logger.LogCritical($"{statusCode} Search Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
@@ -47,19 +47,24 @@ namespace SYE.Controllers
                 case 552:
                 case 555:
                 case 556:
-                    _logger.LogError($"{statusCode} Form json Not Found Error Occured. " +
+                    _logger.LogCritical($"{statusCode} Form json Not Found Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("GenericException");
                 case 560:
                 case 561:
-                case 562:
-                    _logger.LogError($"{statusCode} Form Page Load Session Error Occured. " +
+                    _logger.LogWarning($"{statusCode} Form Page Load Session Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
-                    return View("SessionNotFound");                
+                    return View("SessionNotFound");
+                case 562:
+                    _logger.LogError($"{statusCode} Form Page Load Session Error Occured. " +
+                                       $"Message = {message}, " +
+                                       $"Path = {statusCodeResult?.OriginalPath}, " +
+                                       $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("SessionNotFound");
                 case 563:
                 case 564:
                 case 565:
@@ -70,7 +75,7 @@ namespace SYE.Controllers
                     return View("SessionNotFound");
                 case 570:
                 case 571:                
-                    _logger.LogError($"{statusCode} Check Your Answers Page Load Session Error Occured. " +
+                    _logger.LogWarning($"{statusCode} Check Your Answers Page Load Session Error Occured. " +
                                      $"Message = {message}, " +
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
