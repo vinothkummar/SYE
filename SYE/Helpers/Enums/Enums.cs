@@ -16,6 +16,7 @@
         FormPageContinueSessionNullError = 563,
         FormPageContinueNullError = 564,
         FormContinueLocationNullError = 565,
+        FormPageLoadJsonError = 566,
         //Check your answers errors
         CYAFormNullError = 570,
         CYALocationNullError = 571,
