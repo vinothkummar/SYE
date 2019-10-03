@@ -147,8 +147,8 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error submitting feedback!");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error submitting feedback!");
+                throw ex;
             }
         }
 
