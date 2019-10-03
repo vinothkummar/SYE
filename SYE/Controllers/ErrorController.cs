@@ -37,6 +37,11 @@ namespace SYE.Controllers
                                      $"The path {exceptionDetails.Path} " +
                                      $"threw an exception: {exceptionDetails.Error}");
                     return View("GenericException");
+                case 404:
+                    _logger.LogWarning("404 Type Error Occured. " +
+                                     $"Path = {statusCodeResult?.OriginalPath}, " +
+                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("ResourceNotFound");
                 case 550:
                     _logger.LogCritical($"{statusCode} Search Error Occured. " +
                                      $"Message = {message}, " +

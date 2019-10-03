@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!--BuildNumber: @(Configuration.GetValue<string>("ApplicationSettings:BuildNumber"))-->
-    
+
     <title>@Html.Raw(ViewBag.Title)</title>
 
     <meta name="theme-color" content="#5f2861" />
@@ -52,6 +52,8 @@
         <link href="~/css/govuk-frontend-ie8-2.13.0.min.css" rel="stylesheet" />
     <![endif]-->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <partial name="_Favicons" />
 
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
