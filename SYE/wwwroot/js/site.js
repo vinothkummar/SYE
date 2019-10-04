@@ -27,11 +27,39 @@ function showWhen($this, answer, valToCheck) {
     }
 }
 
+function checkForDynamicQuestions() {
+    jQuery("[data-showwhen-questionid]").each(function(s, e) {
+
+        var $this = jQuery(this);
+        var childId = $this.attr("id");
+        var parentQuestionId = $this.data("showwhen-questionid");
+        var parentAnswerToCheckFor = $this.data("showwhen-value").toString();
+        var parentType = $("[name=" + parentQuestionId + "]").attr("type");
+        var parentAnswer;
+
+        switch (parentType) {
+            case "radio":
+            case "checkbox":
+                parentAnswer = jQuery("[name=" + parentQuestionId + "]:checked").val();
+                break;
+            case "text": parentAnswer = jQuery("[name=" + parentQuestionId + "]").val();
+                break;
+        }
+
+        if (parentAnswerToCheckFor === parentAnswer) {
+            jQuery("#" + childId).show();
+        }
+
+    });
+}
+
 
 (function () {
 
+    checkForDynamicQuestions();
+
     var cookieSeen = getCookie("gfc-cookie-info-seen");
-    if (cookieSeen !== 'true') {
+    if (cookieSeen !== "true") {
         jQuery("#global-cookie-message").show();
     }
 
@@ -54,11 +82,11 @@ function setCookie(name, value, days) {
 }
 function getCookie(name) {
     var nameEQ = name + "=";
-    var ca = document.cookie.split(';');
+    var ca = document.cookie.split(";");
     for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        while (c.charAt(0) === " ") c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
 }

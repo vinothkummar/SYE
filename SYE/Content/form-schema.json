@@ -1,6 +1,6 @@
 {
-  "id": "6105afc0-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.10.5",
+  "id": "6106afc0-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.6",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -926,18 +926,8 @@
           },
           "validation": {
             "required": {
-              "is_required": false,
+              "is_required": true,
               "error_message": "You must give a valid charity name"
-            },
-            "max_length": {
-              "type": "string",
-              "max": 49,
-              "error_message": "Charity name must be less than 50 characters"
-            },
-            "regex": {
-              "type": "regex",
-              "regex": "freetext",
-              "error_message": "Charity name must only include letters a to z, numbers, hyphens, spaces, apostrophes, exclamation marks, ampersands, brackets, plus and equals symbols, colons and forward slashes"
             },
             "is_errored": false,
             "error_message": ""
@@ -961,9 +951,9 @@
       "next_page_id": "CheckYourAnswers"
     }
   ],
-  "_rid": "dmRGAIl2ERkGAAAAAAAAAA==",
-  "_self": "dbs/dmRGAA==/colls/dmRGAIl2ERk=/docs/dmRGAIl2ERkGAAAAAAAAAA==/",
-  "_etag": "\"00000000-0000-0000-7847-db02c02d01d5\"",
+  "_rid": "dmRGAIl2ERkEAAAAAAAACA==",
+  "_self": "dbs/dmRGAA==/colls/dmRGAIl2ERk=/docs/dmRGAIl2ERkEAAAAAAAACA==/",
+  "_etag": "\"00000000-0000-0000-7a9f-e4bb089201d5\"",
   "_attachments": "attachments/",
-  "_ts": 1569927808
+  "_ts": 1570185523
 }
