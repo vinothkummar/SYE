@@ -8,8 +8,7 @@ namespace SYE.Controllers
         [Route("how-we-handle-information")]
         public IActionResult Index()
         {
-            ViewBag.BackLink = new BackLinkVM { Show = true, Url = "javascript:history.go(-1);", Text = "Back" };
-            ViewBag.Title = "How we handle information - Give feedback on care";
+            ViewBag.BackLink = new BackLinkVM { Show = true, Url = "javascript:history.go(-1);", Text = "Back" };           
             return View();
         }
     }
