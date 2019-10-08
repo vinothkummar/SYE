@@ -58,8 +58,8 @@ namespace SYE
             {
                 //app.UseDeveloperExceptionPage();
                 // Uncomment following to test error pages locally
-                //app.UseExceptionHandler("/Error/500");
-                //app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                app.UseExceptionHandler("/Error/500");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
             else
             {
