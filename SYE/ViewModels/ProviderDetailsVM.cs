@@ -10,6 +10,6 @@ namespace SYE.ViewModels
         public string ProviderId { get; set; }
         public string LocationId { get; set; }
         public string LocationName { get; set; }
-        public List<string> NavOrder { get; set; }
+        //public List<string> NavOrder { get; set; }
     }
 }

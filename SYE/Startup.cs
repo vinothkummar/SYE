@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SYE.Helpers;
 using SYE.MiddlewareExtensions;
+using SYE.Models;
 using System;
 
 namespace SYE
@@ -17,7 +18,7 @@ namespace SYE
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;      
-        }       
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -42,6 +43,11 @@ namespace SYE
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpContextAccessor();
             services.AddOptions();
+            services.AddAuthorization(authConfig =>
+                {
+                    authConfig.AddPolicy("ApiKeyPolicy", policyBuilder => policyBuilder
+                               .AddRequirements(new ApiKeyRequirement(new[] { "my-secret-key" })));
+                });
 
             services.AddCustomServices(Configuration);            
         }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SYE.Models;
 using SYE.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SYE.Controllers
 {
@@ -32,13 +33,23 @@ namespace SYE.Controllers
             return View(emptyModel);
         }
 
-        [Route("Index/{locationId}/{providerId}/{locationName}")]
-        public IActionResult Index(string locationId, string providerId, string locationName)
+        //[Route("Index/{locationId}/{providerId}/{locationName}")]
+        //public IActionResult Index(string locationId, string providerId, string locationName)
+        //{
+        //    ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
+        //    ViewBag.HideSiteTitle = true;
+        //    var providerDetails = new ProviderDetailsVM() { LocationId = locationId, ProviderId = providerId, LocationName = locationName };
+        //    return View(providerDetails);
+        //}
+
+        [Authorize(Policy = "ApiKeyPolicy")]
+        [HttpPost, Route("cqc-redirect")]
+        public IActionResult CqcRedirect([FromBody] ProviderDetailsVM providerDetails)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
-            var providerDetails = new ProviderDetailsVM() { LocationId = locationId, ProviderId = providerId, LocationName = locationName };
-            return View(providerDetails);
+           // var providerDetails = new ProviderDetailsVM() { LocationId = locationId, ProviderId = providerId, LocationName = locationName };
+            return View("Index",providerDetails);
         }
 
 
