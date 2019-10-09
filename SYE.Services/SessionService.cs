@@ -10,6 +10,7 @@ namespace SYE.Services
 {
     public interface ISessionService
     {
+        void ClearNavOrder();
         void UpdateNavOrder(string currentPage);
         void RemoveNavOrderFrom(string fromPage);
         List<string> GetNavOrder();
@@ -72,6 +73,11 @@ namespace SYE.Services
         {
             var userSession = GetUserSession();
             return userSession.NavOrder ?? new List<string>();
+        }
+        public void ClearNavOrder()
+        {
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.Remove("NavOrder");
         }
 
 
@@ -215,6 +221,7 @@ namespace SYE.Services
             userSession.NavOrder = newNav;
             SetUserSessionVars(userSession);
         }
+
         public string PageForEdit
         {
             get
