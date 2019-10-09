@@ -101,7 +101,7 @@ namespace SYE.Controllers
             {
                 //Store the user entered details
                 _sessionService.SetUserSessionVars(new UserSessionVM { LocationId = "0", LocationName = defaultServiceName, ProviderId = "" });
-
+                  _sessionService.ClearNavOrder();
                 //Set up our replacement text
                 var replacements = new Dictionary<string, string>
                 {
