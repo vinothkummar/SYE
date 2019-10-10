@@ -124,7 +124,7 @@ namespace SYE.Controllers
 
         }
 
-        [HttpPost]
+        //[HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
         {
             try

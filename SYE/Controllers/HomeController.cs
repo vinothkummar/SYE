@@ -43,13 +43,19 @@ namespace SYE.Controllers
         //}
 
         [Authorize(Policy = "ApiKeyPolicy")]
-        [HttpPost, Route("GFC")]        
+        [HttpPost, Route("GFC")]
         public IActionResult Index([FromBody] ProviderDetailsVM providerDetails)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
-            // var providerDetails = new ProviderDetailsVM() { LocationId = locationId, ProviderId = providerId, LocationName = locationName };
-            return View("Index", providerDetails);
+            if(providerDetails != null)
+            {
+                return RedirectToAction("SelectLocation", "Search", providerDetails);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Search");
+            }
         }
 
 
