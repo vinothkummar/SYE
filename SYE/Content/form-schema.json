@@ -629,7 +629,7 @@
           "document_order": 2,
           "question": "<h1 class=\"govuk-heading-xl\">Can we contact you?</h1>",
           "short_question": "Can we contact you?",
-          "additional_text": "<div class=\"govuk-inset-text\">You can give anonymous feedback. But it helps us more if we can ask questions or check details with you. You can choose whether we phone or email you.</div><p class=\"govuk-body\">We'll only use your details to ask you about your feedback. We'll keep them confidential. The only exception is if you tell us about:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>abuse or serious neglect</li><li>a serious crime</li></ul></p>",
+          "html_content": "<div class=\"govuk-inset-text\">You can give anonymous feedback. But it helps us more if we can ask questions or check details with you. You can choose whether we phone or email you.</div><p class=\"govuk-body\">We'll only use your details to ask you about your feedback. We'll keep them confidential. The only exception is if you tell us about:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>abuse or serious neglect</li><li>a serious crime</li></ul></p>",
           "data_type": "string",
           "input_type": "optionlist",
           "options": [
@@ -722,7 +722,7 @@
             },
             "min_length": {
               "type": "string",
-              "max": 6,
+              "min": 6,
               "error_message": "Email address must be at least 6 characters and no more than 256 characters"
             },
             "max_length": {
@@ -926,8 +926,13 @@
           },
           "validation": {
             "required": {
-              "is_required": true,
+              "is_required": false,
               "error_message": "You must give a valid charity name"
+            },
+            "max_length": {
+              "type": "string",
+              "max": 50,
+              "error_message": "Charity name must be 50 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -951,9 +956,9 @@
       "next_page_id": "CheckYourAnswers"
     }
   ],
-  "_rid": "dmRGAIl2ERkEAAAAAAAACA==",
-  "_self": "dbs/dmRGAA==/colls/dmRGAIl2ERk=/docs/dmRGAIl2ERkEAAAAAAAACA==/",
-  "_etag": "\"00000000-0000-0000-7a9f-e4bb089201d5\"",
+  "_rid": "tQM+ALIWgkMJAAAAAAAAAA==",
+  "_self": "dbs/tQM+AA==/colls/tQM+ALIWgkM=/docs/tQM+ALIWgkMJAAAAAAAAAA==/",
+  "_etag": "\"4300882c-0000-1100-0000-5d9c5cfe0000\"",
   "_attachments": "attachments/",
-  "_ts": 1570185523
+  "_ts": 1570528510
 }
