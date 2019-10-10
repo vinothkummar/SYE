@@ -1,6 +1,6 @@
 {
-  "id": "6106afc0-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.10.6",
+  "id": "6107afc0-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.7",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -777,7 +777,7 @@
             "regex": {
               "type": "regex",
               "regex": "phone",
-              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 0808 157 0192"
+              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192"
             },
             "is_errored": false,
             "error_message": ""
@@ -878,8 +878,8 @@
               "text": "Carers UK"
             },
             {
-              "value": "Disability rights UK",
-              "text": "Disability rights UK"
+              "value": "Disability Rights UK",
+              "text": "Disability Rights UK"
             },
             {
               "value": "Mind",
