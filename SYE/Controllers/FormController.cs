@@ -189,6 +189,7 @@ namespace SYE.Controllers
             var serviceNotFoundPage = _config.Value.ServiceNotFoundPage;
             var startPage = _config.Value.FormStartPage;
             var targetPage = _config.Value.DefaultBackLink;
+            var searchUrl = _sessionService.GetSearchUrl();
 
             //Get all the back options for the current page
             var previousPageOptions = currentPage.PreviousPages?.ToList();
@@ -200,7 +201,7 @@ namespace SYE.Controllers
                     return Url.Action("Index", "Search");
 
                 if (!serviceNotFound && currentPage.PageId == startPage)
-                    return Url.Action("Index", "Search");
+                    return searchUrl;
 
                 if (serviceNotFound && currentPage.PageId == startPage)
                     return Url.Action("Index", "Form", new { id = serviceNotFoundPage });

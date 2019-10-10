@@ -101,7 +101,7 @@ namespace SYE.Controllers
             {
                 //Store the user entered details
                 _sessionService.SetUserSessionVars(new UserSessionVM { LocationId = "0", LocationName = defaultServiceName, ProviderId = "" });
-                  _sessionService.ClearNavOrder();
+                _sessionService.ClearNavOrder();
                 //Set up our replacement text
                 var replacements = new Dictionary<string, string>
                 {
@@ -143,8 +143,11 @@ namespace SYE.Controllers
                 };
                 try
                 {
-                    //Load the Form into Session
+                    //Load the Form and the search url into Session
                     _sessionService.LoadLatestFormIntoSession(replacements);
+                    var searchUrl = Request.Headers["Referer"].ToString();
+                    _sessionService.SaveSearchUrl(searchUrl);
+
                     var startPage = _config.Value.FormStartPage;
                     return RedirectToAction("Index", "Form", new { id = startPage });
                 }

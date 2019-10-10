@@ -23,6 +23,8 @@ namespace SYE.Services
         void UpdatePageVmInFormVm(PageVM vm);
         void SaveUserSearch(string search);
         string GetUserSearch();
+        void SaveSearchUrl(string searchUrl);
+        string GetSearchUrl();
         void ClearSession();
         string PageForEdit { get; set; }
     }
@@ -79,7 +81,6 @@ namespace SYE.Services
             var context = _httpContextAccessor.HttpContext;
             context.Session.Remove("NavOrder");
         }
-
 
         public PageVM GetPageById(string pageId, bool notFoundFlag)
         {
@@ -195,6 +196,16 @@ namespace SYE.Services
             var context = _httpContextAccessor.HttpContext;
             return context.Session.GetString("Search");
         }
+        public void SaveSearchUrl(string searchUrl)
+        {
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.SetString("SearchUrl", searchUrl);
+        }
+        public string GetSearchUrl()
+        {
+            var context = _httpContextAccessor.HttpContext;
+            return context.Session.GetString("SearchUrl");
+        }
 
         public void ClearSession()
         {
@@ -203,6 +214,7 @@ namespace SYE.Services
             context.Session.Remove("LocationId");
             context.Session.Remove("LocationName");
             context.Session.Remove("NavOrder");
+            context.Session.Remove("SearchUrl");
 
             //context.Session.Clear();
         }

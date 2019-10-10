@@ -7,6 +7,7 @@ namespace SYE.Models
         public string ProviderId { get; set; }
         public string LocationId { get; set; }
         public string LocationName { get; set; }
+        public string SearchUrl { get; set; }
         public List<string> NavOrder { get; set; }
     }
 }
