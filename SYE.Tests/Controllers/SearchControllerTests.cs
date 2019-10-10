@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using GDSHelpers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -453,6 +454,13 @@ namespace SYE.Tests.Controllers
         public void SelectLocationShouldRedirectToFormIndex()
         {
             //arrange
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             ApplicationSettings appSettings = new ApplicationSettings() { FormStartPage = "test" };
@@ -463,6 +471,7 @@ namespace SYE.Tests.Controllers
 
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object, options, mockValidation.Object);
+            sut.ControllerContext = controllerContext;
             var result = sut.SelectLocation(new UserSessionVM());
 
             //assert
@@ -476,6 +485,13 @@ namespace SYE.Tests.Controllers
         public void SelectLocationShouldCallSessionToSaveProvider()
         {
             //arrange
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
             var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location" };
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
@@ -487,6 +503,7 @@ namespace SYE.Tests.Controllers
 
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object, options, mockValidation.Object);
+            sut.ControllerContext = controllerContext;
             sut.SelectLocation(userVm);
 
             //assert
@@ -497,6 +514,13 @@ namespace SYE.Tests.Controllers
         public void SelectLocationShouldCallSessionToSaveForm()
         {
             //arrange
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
             var locationName = "test location";
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
@@ -512,6 +536,7 @@ namespace SYE.Tests.Controllers
 
             //act
             var sut = new SearchController(mockService.Object, mockSession.Object, options, mockValidation.Object);
+            sut.ControllerContext = controllerContext;
             sut.SelectLocation(new UserSessionVM { LocationName = locationName });
 
             //assert
