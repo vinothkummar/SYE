@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using SYE.Models;
 using SYE.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace SYE.Controllers
 {
@@ -42,13 +43,13 @@ namespace SYE.Controllers
         //    return View(providerDetails);
         //}
 
-        [Authorize(Policy = "ApiKeyPolicy")]
-        [HttpPost, Route("GFC")]
+        [Authorize(Policy = "ApiKeyPolicy")]        
+        [HttpPost, Route("website-redirect")]
         public IActionResult Index([FromBody] ProviderDetailsVM providerDetails)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
-            if(providerDetails != null)
+            if (providerDetails != null)
             {
                 return RedirectToAction("SelectLocation", "Search", providerDetails);
             }

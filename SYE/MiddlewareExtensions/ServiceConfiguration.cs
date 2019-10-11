@@ -20,6 +20,8 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using SYE.MiddlewareExtensions;
 
 namespace SYE.MiddlewareExtensions
 {
@@ -95,6 +97,13 @@ namespace SYE.MiddlewareExtensions
             IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
             services.AddSingleton<IFileProvider>(physicalProvider);
 
+            services.AddTransient<IAuthorizationHandler, ApiKeyRequirementHandler>();
+            services.AddAuthorization(authConfig =>
+            {
+                authConfig.AddPolicy("ApiKeyPolicy", policyBuilder => policyBuilder
+                           .AddRequirements(new ApiKeyRequirement(new[] { "my-secret-key" })));
+            });
+
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.TryAddScoped<IEsbClient, EsbClient>();
             services.TryAddScoped<IEsbWrapper, EsbWrapper>();
@@ -102,6 +111,7 @@ namespace SYE.MiddlewareExtensions
             services.TryAddScoped<IFormService, FormService>();
             services.TryAddScoped<ISubmissionService, SubmissionService>();
             services.TryAddScoped<IDocumentService, DocumentService>();
+           
         }
     }
 }

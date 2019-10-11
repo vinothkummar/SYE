@@ -128,7 +128,7 @@ namespace SYE.Controllers
         public IActionResult SelectLocation(UserSessionVM vm)
         {
             try
-            {
+            {                
                 //Store the location we are giving feedback about
                 _sessionService.SetUserSessionVars(vm);
 

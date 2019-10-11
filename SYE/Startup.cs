@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,8 @@ namespace SYE
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }     
+        public IConfiguration Configuration { get; }
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -24,7 +26,7 @@ namespace SYE
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                options.CheckConsentNeeded = context => false;
+                options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
@@ -40,15 +42,18 @@ namespace SYE
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(MyAllowSpecificOrigins,
+                builder =>
+                {
+                    builder.WithOrigins("https://www.cqc.org.uk/");
+                });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpContextAccessor();
-            services.AddOptions();
-            services.AddAuthorization(authConfig =>
-                {
-                    authConfig.AddPolicy("ApiKeyPolicy", policyBuilder => policyBuilder
-                               .AddRequirements(new ApiKeyRequirement(new[] { "my-secret-key" })));
-                });
-
+            services.AddOptions();            
             services.AddCustomServices(Configuration);            
         }
 
@@ -62,16 +67,20 @@ namespace SYE
 
             if (env.IsDevelopment() || env.IsLocal())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
                 // Uncomment following to test error pages locally
-                //app.UseStatusCodePagesWithReExecute("/Error/{0}");
+                app.UseExceptionHandler("/Error/500");
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
             else
             {
+                app.UseExceptionHandler("/Error/500");
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseHttpsRedirection();
 
@@ -79,7 +88,7 @@ namespace SYE
 
             app.UseCookiePolicy();
 
-            app.UseSession();
+            app.UseSession();           
 
             app.UseMvc(routes =>
             {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SYE.Models
+namespace SYE.MiddlewareExtensions
 {
     public class ApiKeyRequirement : IAuthorizationRequirement
     {

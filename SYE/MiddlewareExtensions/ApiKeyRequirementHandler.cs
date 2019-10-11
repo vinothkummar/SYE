@@ -10,7 +10,7 @@ namespace SYE.MiddlewareExtensions
 {
     public class ApiKeyRequirementHandler : AuthorizationHandler<ApiKeyRequirement>
     {
-        public const string API_KEY_HEADER_NAME = "X-API-KEY";
+        public const string API_KEY_HEADER_NAME = "GFC-API-KEY";
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ApiKeyRequirement requirement)
         {

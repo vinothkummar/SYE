@@ -7,9 +7,8 @@ namespace SYE.ViewModels
 {  
     public class ProviderDetailsVM
     {
-        public string ProviderId { get; set; }
         public string LocationId { get; set; }
-        public string LocationName { get; set; }
-        //public List<string> NavOrder { get; set; }
+        public string ProviderId { get; set; }        
+        public string LocationName { get; set; }        
     }
 }
