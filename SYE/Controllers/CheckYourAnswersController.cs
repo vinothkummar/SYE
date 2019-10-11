@@ -91,14 +91,18 @@ namespace SYE.Controllers
                     return GetCustomErrorCode(EnumStatusCode.CYASubmissionFormNullError, "Error submitting service feedback. Null or empty formVm.");
                 }
                 
-                var reference = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();
-                var submission = GenerateSubmission(formVm, reference);
+                var reference = _submissionService.GenerateUniqueUserRefAsync().Result.ToString();                
 
                 if (string.IsNullOrWhiteSpace(reference))
                 {
                     return GetCustomErrorCode(EnumStatusCode.CYASubmissionReferenceNullError, "Error submitting feedback!  Null or empty submission Id");
                 }
+                if (int.Parse(reference) == 0)
+                {
+                    return GetCustomErrorCode(EnumStatusCode.CYASubmissionReferenceNullError, "Error submitting feedback!  zero submission Id");
+                }
 
+                var submission = GenerateSubmission(formVm, reference);
                 submission.SubmissionId = reference;
                 submission = _submissionService.CreateAsync(submission).Result;
 

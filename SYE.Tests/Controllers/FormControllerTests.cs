@@ -10,21 +10,11 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using SYE.Controllers;
 using SYE.Models;
-using SYE.Repository;
 using SYE.Services;
 using SYE.ViewModels;
 using Xunit;
-using System.Text;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using Moq.Protected;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using SYE.Models.Response;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace SYE.Tests.Controllers
 {
@@ -64,7 +54,37 @@ namespace SYE.Tests.Controllers
         }
 
         [Fact]
-        public void Index_Should_Return_Not_Found()
+        public void Index_Should_Return_561_Error()
+        {
+            const string id = "123";
+            //arrange
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+
+            var mockValidation = new Mock<IGdsValidation>();
+            var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
+            mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = null }).Verifiable();
+
+            ApplicationSettings appSettings = new ApplicationSettings() { FormStartPage = "123" };
+            IOptions<ApplicationSettings> options = Options.Create(appSettings);
+
+            var sut = new FormController(mockValidation.Object, mockSession.Object, options, mockLogger.Object){ControllerContext = controllerContext};
+
+            //act
+            var result = sut.Index(id);
+
+            //assert
+            var statusResult = result as StatusResult;
+            statusResult.StatusCode.Should().Be(561);
+            mockSession.Verify();
+        }
+        [Fact]
+        public void Index_Should_Return_562_Error()
         {
             const string id = "123";
             //arrange
@@ -82,7 +102,7 @@ namespace SYE.Tests.Controllers
             mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = "" }).Verifiable();
 
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
-            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object){ControllerContext = controllerContext};
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object) { ControllerContext = controllerContext };
 
             //act
             var result = sut.Index(id);
@@ -93,6 +113,93 @@ namespace SYE.Tests.Controllers
             mockSession.Verify();
         }
 
+        [Fact]
+        public void Index_Should_Return_563_Error()
+        {
+            const string id = "123";
+            //arrange
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            var mockValidation = new Mock<IGdsValidation>();
+            var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
+            mockSession.Setup(x => x.GetPageById(id, false)).Throws(new Exception());
+
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object) { ControllerContext = controllerContext };
+
+            //act
+            var result = sut.Index(new CurrentPageVM { PageId = id });
+
+            //assert
+            var statusResult = result as StatusResult;
+            statusResult.StatusCode.Should().Be(563);
+            mockSession.Verify();
+        }
+
+        [Fact]
+        public void Index_Should_Return_565_Error()
+        {
+            const string id = "123";
+            //arrange
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            PageVM returnPage = new PageVM();
+            var mockValidation = new Mock<IGdsValidation>();
+            var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
+            mockSession.Setup(x => x.GetPageById(It.IsAny<string>(), It.IsAny<bool>())).Returns(returnPage).Verifiable();
+            mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = "" }).Verifiable();
+
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object) { ControllerContext = controllerContext };
+
+            //act
+            var result = sut.Index(new CurrentPageVM { PageId = id });
+
+            //assert
+            var statusResult = result as StatusResult;
+            statusResult.StatusCode.Should().Be(565);
+            mockSession.Verify();
+        }
+
+        [Fact]
+        public void Index_Should_Return_566_Error()
+        {
+            const string id = "123";
+            //arrange
+            //Controller needs a controller context
+            var httpContext = new DefaultHttpContext();
+            var controllerContext = new ControllerContext()
+            {
+                HttpContext = httpContext,
+            };
+            PageVM returnPage = new PageVM();
+            var mockValidation = new Mock<IGdsValidation>();
+            var mockSession = new Mock<ISessionService>();
+            var mockLogger = new Mock<ILogger<FormController>>();
+            mockSession.Setup(x => x.GetPageById(id, false)).Throws(new Exception());
+            mockSession.Setup(x => x.GetUserSession()).Returns(new UserSessionVM { LocationName = "" }).Verifiable();
+
+            var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            var sut = new FormController(mockValidation.Object, mockSession.Object, mockSettings.Object, mockLogger.Object) { ControllerContext = controllerContext };
+
+            //act
+            var result = sut.Index(id);
+
+            //assert
+            var statusResult = result as StatusResult;
+            statusResult.StatusCode.Should().Be(566);
+            mockSession.Verify();
+        }
         [Fact]
         public void Index_Should_Return_Internal_Error()
         {
