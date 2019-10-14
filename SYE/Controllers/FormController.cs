@@ -6,25 +6,24 @@ using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SYE.Helpers.Enums;
 using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
 
 namespace SYE.Controllers
 {
-    public class FormController : Controller
+    public class FormController : BaseController
     {
         private readonly IGdsValidation _gdsValidate;
         private readonly ISessionService _sessionService;
         private readonly IOptions<ApplicationSettings> _config;
-        private readonly ILogger _logger;
 
         public FormController(IGdsValidation gdsValidate, ISessionService sessionService, IOptions<ApplicationSettings> config, ILogger<FormController> logger)
         {
             _gdsValidate = gdsValidate;
             _sessionService = sessionService;
             _config = config;
-            _logger = logger;
         }
 
         [HttpGet("form/{id}")]
@@ -35,24 +34,30 @@ namespace SYE.Controllers
                 var userSession = _sessionService.GetUserSession();
                 if (userSession == null)
                 {
-                    _logger.LogError("Error with user session. Session is null id=:" + id );
-                    return StatusCode(440);
+                    return GetCustomErrorCode(EnumStatusCode.FormPageLoadSessionNullError, "Error with user session. Session is null: Id='" + id + "'");
                 }
 
                 if (userSession.LocationName == null)
                 {
-                    _logger.LogError("Error with user session. Location is null id=:" + id);
-                    return StatusCode(440);
+                    return GetCustomErrorCode(EnumStatusCode.FormPageLoadLocationNullError, "Error with user session. Location is null: Id='" + id + "'");
                 }
 
                 var serviceNotFound = userSession.LocationName.Equals("the service");
-
-                var pageVm = _sessionService.GetPageById(id, serviceNotFound);
+                PageVM pageVm = null;
+                try
+                {
+                    //if we've got this far then the session is ok
+                    //if there an exception then the json cant be found
+                    pageVm = _sessionService.GetPageById(id, serviceNotFound);
+                }
+                catch
+                {
+                    return GetCustomErrorCode(EnumStatusCode.FormPageLoadJsonError, "Error with json file: Id='" + id + "'");
+                }                
 
                 if (pageVm == null)
                 {
-                    _logger.LogError("Error with user session. PageVm is null. id=:" + id);
-                    return NotFound();
+                    return GetCustomErrorCode(EnumStatusCode.FormPageLoadNullError, "Error with user session. pageVm is null: Id='" + id + "'");
                 }
 
                 ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
@@ -65,8 +70,8 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading PageVM. id=:" + id); 
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error loading form: Id='" + id + "'");
+                throw ex;
             }
         }
 
@@ -82,22 +87,20 @@ namespace SYE.Controllers
         {
             try
             {
-                //Get the current PageVm from Session
-                var pageVm = _sessionService.GetPageById(vm.PageId, false);
+                PageVM pageVm = null;
+                try
+                {
+                    //Get the current PageVm from Session (throws exception if session is null/timed out)
+                    pageVm = _sessionService.GetPageById(vm.PageId, false);
+                }
+                catch
+                {
+                    return GetCustomErrorCode(EnumStatusCode.FormPageContinueSessionNullError, "Error with user session. Session is null: Id='" + vm.PageId + "'");
+                }
 
-                //If Null throw 500 error
                 if (pageVm == null)
                 {
-                    try
-                    {
-                        var tempUserSession = _sessionService.GetUserSession();
-                        _logger.LogInformation("session not found", tempUserSession);                        
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.LogError(e, "Error with session");
-                    }
-                    return StatusCode(500);
+                    return GetCustomErrorCode(EnumStatusCode.FormPageContinueNullError, "Error with user session. pageVm is null: Id='" + vm.PageId + "'");
                 }
                 if (!string.IsNullOrWhiteSpace(_sessionService.PageForEdit))
                 {
@@ -107,10 +110,19 @@ namespace SYE.Controllers
                         _sessionService.RemoveNavOrderFrom(pageVm.PageId);
                     }
                 }
+
                 var userSession = _sessionService.GetUserSession();
+                if (userSession == null)//shouldn't happen as it's handled above
+                {
+                    return GetCustomErrorCode(EnumStatusCode.FormPageContinueSessionNullError, "Error with user session. Session is null: Id='" + vm.PageId + "'");
+                }
+                if (string.IsNullOrWhiteSpace(userSession.LocationName))
+                {
+                    return GetCustomErrorCode(EnumStatusCode.FormContinueLocationNullError, "Error with user session. Location is null: Id='" + vm.PageId + "'");
+                }
+
                 var serviceNotFound = userSession.LocationName.Equals("the service");
                 ViewBag.BackLink = new BackLinkVM { Show = true, Url = GetPreviousPage(pageVm, serviceNotFound), Text = "Back" };
-
 
                 if (Request?.Form != null)
                 {
@@ -131,9 +143,6 @@ namespace SYE.Controllers
                 var nextPageId = pageVm.NextPageId;
 
 
-
-
-
                 //************************************************
                 //Hack to make Good Journey work
                 //Need to refactor into GDS Helpers when we have time
@@ -149,12 +158,6 @@ namespace SYE.Controllers
                     }
                 }
                 //************************************************
-
-
-
-
-
-
 
                 //Check the nextPageId for preset controller names
                 switch (nextPageId)
@@ -175,13 +178,10 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error updating PageVM.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error updating PageVM. Id:='" + vm.PageId + "'");
+                throw ex;
             }
         }
-
-
-
 
         private string GetPreviousPage(PageVM currentPage, bool serviceNotFound)
         {
@@ -189,6 +189,7 @@ namespace SYE.Controllers
             var serviceNotFoundPage = _config.Value.ServiceNotFoundPage;
             var startPage = _config.Value.FormStartPage;
             var targetPage = _config.Value.DefaultBackLink;
+            var searchUrl = _sessionService.GetSearchUrl();
 
             //Get all the back options for the current page
             var previousPageOptions = currentPage.PreviousPages?.ToList();
@@ -200,7 +201,7 @@ namespace SYE.Controllers
                     return Url.Action("Index", "Search");
 
                 if (!serviceNotFound && currentPage.PageId == startPage)
-                    return Url.Action("Index", "Search");
+                    return searchUrl;
 
                 if (serviceNotFound && currentPage.PageId == startPage)
                     return Url.Action("Index", "Form", new { id = serviceNotFoundPage });
@@ -222,7 +223,6 @@ namespace SYE.Controllers
 
             return targetPage;
         }
-
 
     }
 }

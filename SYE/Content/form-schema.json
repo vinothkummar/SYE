@@ -1,6 +1,6 @@
 {
-  "id": "6102afc0-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.10.2",
+  "id": "6107afc0-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.7",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -23,15 +23,11 @@
               "is_required": true,
               "error_message": "Tell us which service your feedback is about"
             },
-            "min_length": {
-              "type": "string",
-              "min": 15,
-              "error_message": "Enter between 15 and 1,500 characters"
-            },
             "max_length": {
               "type": "string",
               "max": 1500,
-              "error_message": "Enter between 15 and 1,500 characters"
+              "threshold": "95",
+              "error_message": "Enter 1,500 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -336,15 +332,11 @@
               "is_required": true,
               "error_message": "Enter your feedback about !!location_name!!"
             },
-            "min_length": {
-              "type": "string",
-              "min": 50,
-              "error_message": "Your feedback must be between 50 and 8,000 characters"
-            },
             "max_length": {
               "type": "string",
-              "max": 8000,
-              "error_message": "Your feedback must be between 50 and 8,000 characters"
+              "max": 20000,
+              "threshold": 95,
+              "error_message": "Your feedback must be 20,000 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -364,16 +356,6 @@
               "is_required": false,
               "error_message": ""
             },
-            "min_length": {
-              "type": "string",
-              "min": 2,
-              "error_message": "The location details must be between 2 and 100 characters"
-            },
-            "max_length": {
-              "type": "string",
-              "max": 100,
-              "error_message": "The location details must be between 2 and 100 characters"
-            },
             "is_errored": false,
             "error_message": ""
           },
@@ -391,16 +373,6 @@
             "required": {
               "is_required": false,
               "error_message": ""
-            },
-            "min_length": {
-              "type": "string",
-              "min": 2,
-              "error_message": "Details about when it happened must be between 2 and 100 characters"
-            },
-            "max_length": {
-              "type": "string",
-              "max": 100,
-              "error_message": "Details about when it happened must be between 2 and 100 characters"
             },
             "is_errored": false,
             "error_message": ""
@@ -657,7 +629,7 @@
           "document_order": 2,
           "question": "<h1 class=\"govuk-heading-xl\">Can we contact you?</h1>",
           "short_question": "Can we contact you?",
-          "additional_text": "<div class=\"govuk-inset-text\">You can give anonymous feedback. But it helps us more if we can ask questions or check details with you. You can choose whether we phone or email you.</div><p class=\"govuk-body\">We'll only use your details to ask you about your feedback. We'll keep them confidential. The only exception is if you tell us about:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>abuse or serious neglect</li><li>a serious crime</li></ul></p>",
+          "html_content": "<div class=\"govuk-inset-text\">You can give anonymous feedback. But it helps us more if we can ask questions or check details with you. You can choose whether we phone or email you.</div><p class=\"govuk-body\">We'll only use your details to ask you about your feedback. We'll keep them confidential. The only exception is if you tell us about:</p><p class=\"govuk-body\"><ul class=\"govuk-list govuk-list--bullet\"><li>abuse or serious neglect</li><li>a serious crime</li></ul></p>",
           "data_type": "string",
           "input_type": "optionlist",
           "options": [
@@ -720,15 +692,10 @@
               "is_required": true,
               "error_message": "Enter your name"
             },
-            "min_length": {
-              "type": "string",
-              "min": 5,
-              "error_message": "Name must be between 5 and 70 characters"
-            },
             "max_length": {
               "type": "string",
-              "max": 70,
-              "error_message": "Name must be between 5 and 70 characters"
+              "max": 500,
+              "error_message": "Name must be 500 characters or less"
             },
             "regex": {
               "type": "regex",
@@ -755,13 +722,13 @@
             },
             "min_length": {
               "type": "string",
-              "min": 5,
-              "error_message": "Email address must be between 5 and 50 characters"
+              "min": 6,
+              "error_message": "Email address must be at least 6 characters and no more than 256 characters"
             },
             "max_length": {
               "type": "string",
-              "max": 50,
-              "error_message": "Email address must be between 5 and 50 characters"
+              "max": 256,
+              "error_message": "Email address must be at least 6 characters and no more than 256 characters"
             },
             "required_if": {
               "inclusive_logic": "or",
@@ -800,17 +767,17 @@
             "min_length": {
               "type": "string",
               "min": 11,
-              "error_message": "Telephone number must be between 11 and 33 characters"
+              "error_message": "Telephone number must be between 11 and 100 characters"
             },
             "max_length": {
               "type": "string",
-              "max": 33,
-              "error_message": "Telephone number must be between 11 and 33 characters"
+              "max": 100,
+              "error_message": "Telephone number must be between 11 and 100 characters"
             },
             "regex": {
               "type": "regex",
               "regex": "phone",
-              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 8081 570 192"
+              "error_message": "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192"
             },
             "is_errored": false,
             "error_message": ""
@@ -911,8 +878,8 @@
               "text": "Carers UK"
             },
             {
-              "value": "Disability rights UK",
-              "text": "Disability rights UK"
+              "value": "Disability Rights UK",
+              "text": "Disability Rights UK"
             },
             {
               "value": "Mind",
@@ -964,13 +931,8 @@
             },
             "max_length": {
               "type": "string",
-              "max": 49,
-              "error_message": "Charity name must be less than 50 characters"
-            },
-            "regex": {
-              "type": "regex",
-              "regex": "freetext",
-              "error_message": "Charity name must only include letters a to z, numbers, hyphens, spaces, apostrophes, exclamation marks, ampersands, brackets, plus and equals symbols, colons and forward slashes"
+              "max": 50,
+              "error_message": "Charity name must be 50 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -994,9 +956,9 @@
       "next_page_id": "CheckYourAnswers"
     }
   ],
-  "_rid": "9MwhAMui6ocBAAAAAAAAAA==",
-  "_self": "dbs/9MwhAA==/colls/9MwhAMui6oc=/docs/9MwhAMui6ocBAAAAAAAAAA==/",
-  "_etag": "\"00006f00-0000-1100-0000-5d1344a90000\"",
+  "_rid": "tQM+ALIWgkMJAAAAAAAAAA==",
+  "_self": "dbs/tQM+AA==/colls/tQM+ALIWgkM=/docs/tQM+ALIWgkMJAAAAAAAAAA==/",
+  "_etag": "\"4300882c-0000-1100-0000-5d9c5cfe0000\"",
   "_attachments": "attachments/",
-  "_ts": 1561543849
+  "_ts": 1570528510
 }

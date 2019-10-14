@@ -8,11 +8,11 @@ using SYE.Models;
 using SYE.Services;
 using SYE.ViewModels;
 using SYE.Helpers;
-using Microsoft.Extensions.Logging;
+using SYE.Helpers.Enums;
 
 namespace SYE.Controllers
 {
-    public class SearchController : Controller
+    public class SearchController : BaseController
     {
         private readonly int _pageSize = 20;
         private readonly int _maxSearchChars = 1000;
@@ -20,15 +20,13 @@ namespace SYE.Controllers
         private readonly ISearchService _searchService;
         private readonly ISessionService _sessionService;
         private readonly IOptions<ApplicationSettings> _config;
-        private readonly ILogger _logger;
         private readonly IGdsValidation _gdsValidate;
 
-        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, ILogger<SearchController> logger, IGdsValidation gdsValidate)
+        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, IGdsValidation gdsValidate)
         {
             _searchService = searchService;
             _sessionService = sessionService;
             _config = config;
-            _logger = logger;
             _gdsValidate = gdsValidate;
         }
 
@@ -47,8 +45,8 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading search page.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error loading search page.");
+                throw ex;
             }
         }
 
@@ -61,7 +59,7 @@ namespace SYE.Controllers
 
         [HttpGet, Route("/search/results")]//searches
         public IActionResult SearchResults(string search, int pageNo = 1, string selectedFacets = "")
-        {
+        {            
             var cleanSearch = _gdsValidate.CleanText(search, true, restrictedWords, allowedChars);
 
             var errorMessage = ValidateSearch(cleanSearch);
@@ -103,30 +101,36 @@ namespace SYE.Controllers
             {
                 //Store the user entered details
                 _sessionService.SetUserSessionVars(new UserSessionVM { LocationId = "0", LocationName = defaultServiceName, ProviderId = "" });
-
+                _sessionService.ClearNavOrder();
                 //Set up our replacement text
                 var replacements = new Dictionary<string, string>
                 {
                     {"!!location_name!!", defaultServiceName}
                 };
 
-                //Load the Form into Session
-                _sessionService.LoadLatestFormIntoSession(replacements);
+                try
+                {
+                    //Load the Form into Session
+                    _sessionService.LoadLatestFormIntoSession(replacements);
+                }
+                catch
+                {
+                    return GetCustomErrorCode(EnumStatusCode.SearchLocationNotFoundJsonError, "Error in location not found. json form not loaded");
+                }
 
                 var serviceNotFoundPage = _config.Value.ServiceNotFoundPage;
                 return RedirectToAction("Index", "Form", new { id = serviceNotFoundPage });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error loading location not found page.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error in location not found.");
+                throw ex;
             }
-
         }
 
         //[HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
-        {
+        {            
             try
             {                
                 //Store the location we are giving feedback about
@@ -137,17 +141,25 @@ namespace SYE.Controllers
                 {
                     {"!!location_name!!", vm.LocationName}
                 };
+                try
+                {
+                    //Load the Form and the search url into Session
+                    _sessionService.LoadLatestFormIntoSession(replacements);
+                    var searchUrl = Request.Headers["Referer"].ToString();
+                    _sessionService.SaveSearchUrl(searchUrl);
 
-                //Load the Form into Session
-                _sessionService.LoadLatestFormIntoSession(replacements);
-
-                var startPage = _config.Value.FormStartPage;
-                return RedirectToAction("Index", "Form", new { id = startPage });
+                    var startPage = _config.Value.FormStartPage;
+                    return RedirectToAction("Index", "Form", new { id = startPage });
+                }
+                catch
+                {
+                    return GetCustomErrorCode(EnumStatusCode.SearchSelectLocationJsonError, "Error selecting location. json form not loaded");
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error selecting location.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error selecting location: '" + vm.LocationName + "'");
+                throw ex;
             }
         }
 
@@ -196,6 +208,11 @@ namespace SYE.Controllers
                 var newSearch = SetNewSearch(search);
 
                 var viewModel = GetViewModel(search, pageNo, selectedFacets, newSearch);
+                if (viewModel == null)
+                {
+                    return GetCustomErrorCode(EnumStatusCode.SearchUnavailableError,
+                        "Search unavailable: Search string='" + search + "'");
+                }
 
                 ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
@@ -203,8 +220,8 @@ namespace SYE.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting search results.");
-                return StatusCode(500);
+                ex.Data.Add("GFCError", "Unexpected error in search :'" + search + "'");
+                throw ex;
             }
         }
 
@@ -222,7 +239,15 @@ namespace SYE.Controllers
 
             if (!string.IsNullOrEmpty(search) && pageNo > 0)
             {
-                var searchResult = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets, newSearch).Result;
+                SearchServiceResult searchResult = null;
+                try
+                {
+                    searchResult = _searchService.GetPaginatedResult(search, pageNo, _pageSize, refinementFacets, newSearch).Result;
+                }
+                catch
+                {
+                    return null;//search is not working for some reason
+                }                
                 returnViewModel.Data = searchResult?.Data?.ToList() ?? new List<SearchResult>();
                 returnViewModel.ShowResults = true;
                 returnViewModel.Search = search;
@@ -261,11 +286,6 @@ namespace SYE.Controllers
             }
 
             return newSearch;
-        }
-        private string GetPreviousSearch()
-        {
-            var previousSearch = _sessionService.GetUserSearch();
-            return previousSearch;
-        }
+        }      
     }
 }
