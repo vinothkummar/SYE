@@ -51,6 +51,27 @@ namespace SYE.Controllers
             }
         }
 
+        [Authorize(Policy = "ApiKeyPolicy")]
+        [HttpGet, Route("website-redirect/{staticpage}")]
+        public IActionResult Index(string staticpage)
+        {
+            ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
+            ViewBag.HideSiteTitle = true;
+
+            switch (staticpage)
+            {
+                case "how-we-handle-information":
+                    return RedirectToAction("Index", "HowWeUseYourInformation");
+                case "Accessibility":
+                    return RedirectToAction("Index", "Accessibility");
+                case "Cookies":
+                    return RedirectToAction("Index", "Cookies");
+                default:
+                    break;
+            }
+            return RedirectToAction("Index", "Home");
+        }
+
         [Route("set-version")]
         public IActionResult SetVersion(string v = "")
         {
