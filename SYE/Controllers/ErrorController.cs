@@ -32,10 +32,9 @@ namespace SYE.Controllers
             switch (statusCode)
             {
                 case 500:                
-                    _logger.LogError("500 Type Error Occured. " +
+                    _logger.LogError(exceptionDetails.Error, "500 Type Error Occured. " +
                                      $"The message {exceptionDetails.Error.Data?["GFCError"]} " +
-                                     $"The path {exceptionDetails.Path} " +
-                                     $"threw an exception: {exceptionDetails.Error}");
+                                     $"The path {exceptionDetails.Path} ");
                     return View("GenericException");
                 case 404:
                     _logger.LogWarning("404 Type Error Occured. " +
