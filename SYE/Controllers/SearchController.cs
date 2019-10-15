@@ -41,7 +41,7 @@ namespace SYE.Controllers
             try
             {
                 ViewBag.Title = "Find a service - Give feedback on care";
-                return View(new SearchResultsVM { ErrorMessage = errorMessage, ShowIncompletedSearchMessage = (errorMessage != null), Search = TempData["search"] != null ? TempData["search"].ToString() : search });
+                return View(new SearchResultsVM { ErrorMessage = errorMessage, ShowIncompletedSearchMessage = (errorMessage != null), Search = TempData.ContainsKey("search") ? TempData["search"].ToString() : search });
             }
             catch (Exception ex)
             {
