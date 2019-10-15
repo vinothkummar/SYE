@@ -35,7 +35,7 @@ namespace SYE
             services.AddSession(options =>
             {
                 options.Cookie.HttpOnly = true;
-                options.IdleTimeout = TimeSpan.FromMinutes(120);
+                options.IdleTimeout = TimeSpan.FromSeconds(20);
                 options.Cookie.IsEssential = true;
             });
 
