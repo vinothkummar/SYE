@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.Search.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
@@ -44,8 +43,7 @@ namespace SYE.Controllers
         public IActionResult Index()
         {
             try
-            {
-                throw new Exception("THis is a test exeption!");
+            {                
                 var formVm = _sessionService.GetFormVmFromSession();
                 if (formVm == null)
                 {
