@@ -16,6 +16,7 @@ using SYE.Repository;
 using SYE.Services;
 using SYE.ViewModels;
 using SYE.Helpers.Enums;
+using SYE.Helpers.Extensions;
 
 namespace SYE.Controllers
 {
@@ -80,6 +81,7 @@ namespace SYE.Controllers
 
 
         [HttpPost, Route("form/check-your-answers")]
+        //[PreventDuplicateRequest]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CheckYourAnswersVm vm)
         {
