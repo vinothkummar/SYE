@@ -19,6 +19,8 @@ namespace SYE.Controllers
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
+            if (TempData.ContainsKey("search"))
+                TempData.Remove("search");
             return View();
         }
 
