@@ -9,7 +9,7 @@ namespace SYE.Controllers
 {
     public class AccessibilityController : Controller
     {
-        [Route("Accessibility")]
+        [Route("accessibility")]
         public IActionResult Index()
         {
             ViewData["HomeLink"] = true;
