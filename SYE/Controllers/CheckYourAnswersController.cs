@@ -43,7 +43,7 @@ namespace SYE.Controllers
         public IActionResult Index()
         {
             try
-            {
+            {                
                 var formVm = _sessionService.GetFormVmFromSession();
                 if (formVm == null)
                 {

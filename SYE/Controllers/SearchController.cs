@@ -41,7 +41,7 @@ namespace SYE.Controllers
             try
             {
                 ViewBag.Title = "Find a service - Give feedback on care";
-                return View(new SearchResultsVM { ErrorMessage = errorMessage, ShowIncompletedSearchMessage = (errorMessage != null), Search = search});
+                return View(new SearchResultsVM { ErrorMessage = errorMessage, ShowIncompletedSearchMessage = (errorMessage != null), Search = TempData.ContainsKey("search") ? TempData["search"].ToString() : search });
             }
             catch (Exception ex)
             {
@@ -213,8 +213,10 @@ namespace SYE.Controllers
                     return GetCustomErrorCode(EnumStatusCode.SearchUnavailableError,
                         "Search unavailable: Search string='" + search + "'");
                 }
+                
+                ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Search"), Text = "Back" };
 
-                ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
+                TempData["search"] = search;
 
                 return View(viewModel);
             }

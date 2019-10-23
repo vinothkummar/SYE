@@ -4,6 +4,7 @@ using FluentAssertions;
 using GDSHelpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Options;
 using Moq;
 using SYE.Controllers;
@@ -415,9 +416,13 @@ namespace SYE.Tests.Controllers
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockUrlHelper = new Mock<IUrlHelper>();
             var mockValidation = new Mock<IGdsValidation>();
+            var mockHttpContext = new Mock<HttpContext>();
+            var mockTempDataProvider = new Mock<SessionStateTempDataProvider>();
             mockValidation.Setup(x => x.CleanText(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>>(), It.IsAny<HashSet<char>>())).Returns("abc");
 
             var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object, mockValidation.Object);
+
+            sut.TempData = new TempDataDictionary(mockHttpContext.Object, mockTempDataProvider.Object);
             sut.Url = mockUrlHelper.Object;
 
             //act
