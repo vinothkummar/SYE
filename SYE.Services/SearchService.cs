@@ -79,14 +79,16 @@ namespace SYE.Services
                 }
             }
 
-            return
-                new SearchServiceResult()
-                {
-                    Count = searchResult.Count ?? 0,
-                    Facets = _facets.OrderBy(o => o).ToList(),
-                    Data = searchResult?.Results?.Select(x => SearchHelper.GetSearchResult(x.Document))?.ToList() ?? new List<SearchResult>()
-                };
+            var returnResults = new SearchServiceResult()
+            {
+                Count = searchResult.Count ?? 0,
+                Facets = _facets.OrderBy(o => o).ToList(),
+                Data = searchResult?.Results?.Select(x => SearchHelper.GetSearchResult(x.Document, (int )searchResult?.Results.IndexOf(x), currentPage, pageSize))?.ToList() ?? new List<SearchResult>()
+            };
+
+            return returnResults;
         }
+   
         #endregion
 
         #region commented out code probably use later

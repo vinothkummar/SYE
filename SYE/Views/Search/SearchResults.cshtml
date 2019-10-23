@@ -95,29 +95,30 @@
 
                 @foreach (var result in Model.Data)
                 {
-                    <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
-                        <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
-                        <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
-                        <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
+                <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
+                    <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
+                    <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
+                    <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
+                    <input id="SelectedIndex" name="SelectedIndex" value="@result.Index" type="hidden" />
 
-                        <gds-row>
-                            <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-                                <button type="submit" id="btn-@result.Id" class="govuk-button link-button">
-                                    <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
-                                </button>
-                                <p class="govuk-body">                                    
-                                    @result.Address<br/>
-                                    @if (!string.IsNullOrWhiteSpace(result.Address2))
-                                    {
-                                        @result.Address2<br/>
-                                    }
-                                    @result.Town<br/>
-                                    @result.PostCode<br/>
-                                </p>
-                                <p class="govuk-body-s">@result.Category</p>
-                            </gds-column>
-                        </gds-row>
-                    </form>
+                    <gds-row>
+                        <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+                            <button type="submit" id="btn-@result.Id" class="govuk-button link-button">
+                                <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
+                            </button>
+                            <p class="govuk-body">
+                                @result.Address<br />
+                                @if (!string.IsNullOrWhiteSpace(result.Address2))
+                                {
+                                    @result.Address2<br />
+                                }
+                                @result.Town<br />
+                                @result.PostCode<br />
+                            </p>
+                            <p class="govuk-body-s">@result.Category</p>
+                        </gds-column>
+                    </gds-row>
+                </form>
                 }
 
             </div>
