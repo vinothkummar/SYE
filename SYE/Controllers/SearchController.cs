@@ -31,7 +31,7 @@ namespace SYE.Controllers
         }
 
         [HttpGet("search/find-a-service")]
-        public IActionResult Index(string errorMessage, string search)
+        public IActionResult Index(string errorMessage, string search, bool cookieDisplay)
         {
             ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 

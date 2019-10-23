@@ -18,6 +18,7 @@ namespace SYE.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        [HttpGet, Route("GFC-Test-Start")]
         public IActionResult Index()
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
@@ -41,24 +42,24 @@ namespace SYE.Controllers
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
-            if (providerDetails != null)
+            if (providerDetails.LocationId != null)
             {
                 return RedirectToAction("SelectLocation", "Search", providerDetails);
             }
             else
             {
-                return RedirectToAction("Index", "Search");
+                return RedirectToAction("Index", "Search", new { CookieDisplay = providerDetails.CookieDisplay });
             }
         }
 
         [Authorize(Policy = "ApiKeyPolicy")]
-        [HttpGet, Route("website-redirect/{staticpage}")]
-        public IActionResult Index(string staticpage)
+        [HttpGet, Route("website-redirect/{staticPage}/{cookieDisplay}")]
+        public IActionResult Index(string staticPage, bool cookieDisplay)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
 
-            switch (staticpage)
+            switch (staticPage)
             {
                 case "how-we-handle-information":
                     return RedirectToAction("Index", "HowWeUseYourInformation");

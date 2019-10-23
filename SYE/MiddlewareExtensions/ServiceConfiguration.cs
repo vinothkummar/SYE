@@ -101,7 +101,7 @@ namespace SYE.MiddlewareExtensions
             services.AddAuthorization(authConfig =>
             {
                 authConfig.AddPolicy("ApiKeyPolicy", policyBuilder => policyBuilder
-                           .AddRequirements(new ApiKeyRequirement(new[] { "my-secret-key" })));
+                           .AddRequirements(new ApiKeyRequirement(new[] { "3BD16362-C5EB-4419-A709-7F4F8816270B" })));
             });
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

@@ -9,6 +9,7 @@ namespace SYE.ViewModels
     {
         public string LocationId { get; set; }
         public string ProviderId { get; set; }        
-        public string LocationName { get; set; }        
+        public string LocationName { get; set; }
+        public bool CookieDisplay { get; set; }
     }
 }
