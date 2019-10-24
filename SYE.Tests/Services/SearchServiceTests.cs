@@ -60,6 +60,8 @@ namespace SYE.Tests.Services
             result.PostCode.Should().Be(expectedResult.PostCode);
             result.Region.Should().Be(expectedResult.Region);
             result.Category.Should().Be(expectedResult.Category);
+            result.Page.Should().Be(1);
+            result.Index.Should().Be(1);
         }
         [Fact]
         public void Search_Should_Get_One_Record()
