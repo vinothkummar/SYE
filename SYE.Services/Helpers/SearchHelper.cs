@@ -31,7 +31,7 @@ namespace SYE.Services.Helpers
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static SearchResult GetSearchResult(Document doc, int index, int currentPage, int pageSize)
+        public static SearchResult GetSearchResult(Document doc, int index, int currentPage)
         {      
             var searchResult = new SearchResult
             {
@@ -44,7 +44,8 @@ namespace SYE.Services.Helpers
                 PostCode = GetValue(doc, "postalCode"),
                 Region = GetValue(doc, "region"),                
                 Category = GetInspectionCategories(doc, "syeInspectionCategories"),
-                Index = index + 1 + ((currentPage - 1) * pageSize)
+                Index = index + 1,
+                Page = currentPage
             };
             return searchResult;
         }

@@ -8,6 +8,7 @@ namespace SYE.Models
     public class SearchResult
     {
         public int Index { get; set; }
+        public int Page { get; set; }
         public string Id { get; set; }
         public string ProviderId { get; set; }
         public string Name { get; set; }

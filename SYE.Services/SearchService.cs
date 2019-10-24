@@ -83,121 +83,12 @@ namespace SYE.Services
             {
                 Count = searchResult.Count ?? 0,
                 Facets = _facets.OrderBy(o => o).ToList(),
-                Data = searchResult?.Results?.Select(x => SearchHelper.GetSearchResult(x.Document, (int )searchResult?.Results.IndexOf(x), currentPage, pageSize))?.ToList() ?? new List<SearchResult>()
+                Data = searchResult?.Results?.Select(x => SearchHelper.GetSearchResult(x.Document, (int )searchResult?.Results.IndexOf(x), currentPage))?.ToList() ?? new List<SearchResult>()
             };
 
             return returnResults;
         }
    
-        #endregion
-
-        #region commented out code probably use later
-        /*         
-using System.Collections.Generic;
-using System.Linq;
-using LocationImporterApi.Models;
-using Microsoft.AspNetCore.Mvc;
-using POC.Model;
-using Microsoft.Azure.Search;
-using Microsoft.Azure.Search.Models;
-
-namespace SYE_POC.Controllers
-{
-    public class AzureSearchController : Controller
-    {
-        private static SearchServiceClient _searchClient;
-        private static ISearchIndexClient _indexClientWrapper;
-        private static string _indexName = "sye-poc-index";
-
-        public static string errorMessage;
-
-        private void InitSearch()
-        {
-            var searchServiceName = "sye-poc-azure-search";
-            var apiKey = "636F112CE66183702BCB07925E6EBB59";
-
-            _searchClient = new SearchServiceClient(searchServiceName, new SearchCredentials(apiKey));
-            _indexClientWrapper = _searchClient.Indexes.GetClient(_indexName);
-        }
-
-
-        [HttpGet]
-        public IActionResult Index()
-        {
-            var vm = new SearchResultVM
-            {
-                CurrentPage = 1
-            };
-            return View(vm);
-        }
-
-
-        [HttpPost]
-        public IActionResult Index(SearchResultVM vm)
-        {
-            if (!ModelState.IsValid)
-                return View(vm);
-            
-            var sp = new SearchParameters();
-
-            var results = _indexClientWrapper.Documents.Search(vm.SearchTerm, sp).Results.Select(m => m.Document).ToList();
-
-
-            return View(vm);
-        }
-
-
-        public ActionResult Suggest(bool highlights, bool fuzzy, string term)
-        {
-            InitSearch();
-
-            // Call suggest API and return results
-            var sp = new SuggestParameters()
-            {
-                UseFuzzyMatching = fuzzy,
-                Top = 5
-            };
-
-            if (highlights)
-            {
-                sp.HighlightPreTag = "<b>";
-                sp.HighlightPostTag = "</b>";
-            }
-
-            var resp = _indexClientWrapper.Documents.Suggest(term, "sg", sp);
-
-            // Convert the suggest query results to a list that can be displayed in the client.
-            var suggestions = resp.Results.Select(x => x.Text).ToList();
-            return Json(suggestions);
-
-        }
-
-
-        public ActionResult AutoComplete(string term)
-        {
-            InitSearch();
-
-            //Call autocomplete API and return results
-
-            var ap = new AutocompleteParameters()
-            {
-                AutocompleteMode = AutocompleteMode.OneTermWithContext,
-                UseFuzzyMatching = false,
-                Top = 5
-            };
-            var autocompleteResult = _indexClientWrapper.Documents.Autocomplete(term, "sg", ap);
-
-            // Conver the Suggest results to a list that can be displayed in the client.
-            var autocomplete = autocompleteResult.Results.Select(x => x.Text).ToList();
-            return Json(autocomplete);
-
-        }
-
-
-    }
-}         
-
-         */
         #endregion
 
     }
