@@ -99,8 +99,7 @@
                     <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
                     <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
                     <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
-                    <input id="search-pos-@result.Index" name="SelectedIndex" value="search-pos-@result.Index" type="hidden" />
-                    <input id="page-num-@result.Page" name="SelectedPage" value="page-num-@result.Page" type="hidden" />
+                    <input id="page-@result.Page-page-pos-@result.Index" name="SelectedPosition" value="page-@result.Page-page-pos-@result.Index" type="hidden" />
                     <gds-row>
                         <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
                             <button type="submit" id="btn-@result.Id" class="govuk-button link-button">
