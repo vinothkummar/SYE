@@ -4,6 +4,8 @@ namespace SYE.Models
 {
     public class UserSessionVM
     {
+        public string SelectedIndex { get; set; }
+        public string SelectedPage { get; set; }
         public string ProviderId { get; set; }
         public string LocationId { get; set; }
         public string LocationName { get; set; }

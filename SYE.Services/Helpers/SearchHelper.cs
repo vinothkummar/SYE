@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿using System.Linq;
 using Document = Microsoft.Azure.Search.Models.Document;
 using SearchResult = SYE.Models.SearchResult;
 
@@ -35,8 +31,8 @@ namespace SYE.Services.Helpers
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static SearchResult GetSearchResult(Document doc)
-        {
+        public static SearchResult GetSearchResult(Document doc, int index, int currentPage)
+        {      
             var searchResult = new SearchResult
             {
                 Id = GetValue(doc, "id"),
@@ -47,7 +43,9 @@ namespace SYE.Services.Helpers
                 Town = GetValue(doc, "postalAddressTownCity"),
                 PostCode = GetValue(doc, "postalCode"),
                 Region = GetValue(doc, "region"),                
-                Category = GetInspectionCategories(doc, "syeInspectionCategories")
+                Category = GetInspectionCategories(doc, "syeInspectionCategories"),
+                Index = index + 1,
+                Page = currentPage
             };
             return searchResult;
         }
