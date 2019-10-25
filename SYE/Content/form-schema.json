@@ -359,7 +359,6 @@
             "max_length": {
               "type": "string",
               "max": "1000",
-              "threshold": 95,
               "error_message": "Enter 1,000 characters or less"
             },
             "is_errored": false,
@@ -383,7 +382,6 @@
             "max_length": {
               "type": "string",
               "max": "1000",
-              "threshold": 95,
               "error_message": "Enter 1,000 characters or less"
             },
             "is_errored": false,
