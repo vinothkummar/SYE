@@ -7,7 +7,7 @@
     <Company>CQC - Care Quality Commission</Company>
     <Product>GFC - Give Feedback on Care</Product>
     <PackageId>GFC</PackageId>
-    <UserSecretsId>e1aee044-5b64-4652-8d8f-df4850ba3663</UserSecretsId>
+    <UserSecretsId>00f5e7fd-0e92-4038-a4ff-c58a436638d7</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,7 +17,7 @@
 
 
   <ItemGroup>
-    <PackageReference Include="GDSHelpers" Version="2019.10.4.3" />
+    <PackageReference Include="GDSHelpers" Version="2019.10.25.2" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.6.1" />
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
