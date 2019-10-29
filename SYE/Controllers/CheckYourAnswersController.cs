@@ -81,7 +81,7 @@ namespace SYE.Controllers
 
 
         [HttpPost, Route("form/check-your-answers")]
-        //[PreventDuplicateRequest]
+        [PreventDuplicateRequest]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CheckYourAnswersVm vm)
         {
