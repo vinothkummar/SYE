@@ -97,7 +97,7 @@ namespace SYE.Controllers
                     _logger.LogError("Other Type of Error Occured. " +
                                      $"The path {exceptionDetails.Path} " +
                                      $"threw an exception: {exceptionDetails.Error}");
-                    return View("GenericError");
+                    return View("GenericException");
             }
 
         }

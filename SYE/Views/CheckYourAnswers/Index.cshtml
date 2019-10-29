@@ -52,7 +52,7 @@
 
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
-        <form asp-action="Index" method="post">
+        <form id="submit-your-answers" asp-action="Index" method="post">
 
             <gds-heading heading-type="H2" text="Now send your feedback"></gds-heading>
             @Html.HiddenFor(m => m.SendConfirmationEmail)
@@ -61,7 +61,7 @@
                 You are about to send feedback about @Model.LocationName.
             </p>
 
-            <gds-button button-text="Submit feedback" button-type="Submit"></gds-button>
+            <gds-button data-prevent-double-click="true" button-id="btn-submit" button-text="Submit feedback" button-type="Submit"></gds-button>
 
         </form>
 
