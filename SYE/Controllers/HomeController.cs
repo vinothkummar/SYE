@@ -28,14 +28,14 @@ namespace SYE.Controllers
             return View();
         }
 
-        //[Route("Index/{locationId}/{providerId}/{locationName}")]
-        //public IActionResult Index(string locationId, string providerId, string locationName)
-        //{
-        //    ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
-        //    ViewBag.HideSiteTitle = true;
-        //    var providerDetails = new ProviderDetailsVM() { LocationId = locationId, ProviderId = providerId, LocationName = locationName };
-        //    return View(providerDetails);
-        //}
+        [Route("Index/{locationId}/{providerId}/{locationName}")]
+        public IActionResult Index(string locationId, string providerId, string locationName)
+        {
+            ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
+            ViewBag.HideSiteTitle = true;
+            var providerDetails = new ProviderDetailsVM() { LocationId = locationId, ProviderId = providerId, LocationName = locationName };
+            return View(providerDetails);
+        }
 
         [EnableCors("GfcAllowedOrigins")]
         [Authorize(Policy = "ApiKeyPolicy")]        
@@ -66,10 +66,10 @@ namespace SYE.Controllers
             {
                 case "how-we-handle-information":
                     return RedirectToAction("Index", "HowWeUseYourInformation");
-                case "Accessibility":
+                case "accessibility":
                     return RedirectToAction("Index", "Accessibility");
-                case "Cookies":
-                    return RedirectToAction("Index", "Cookies");
+                case "report-a-problem":
+                    return RedirectToAction("Feedback", "Help");
                 default:
                     break;
             }
