@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml;
@@ -136,7 +137,8 @@ namespace SYE.Services
         private string GetUkDateStringFromZulu(string dateCreated)
         {
             DateTime ukDate = DateTime.Parse(dateCreated).AddHours(1);
-            return ukDate.ToShortDateString() + ": " + ukDate.ToShortTimeString();
+            string formattedDate = ukDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            return formattedDate + ": " + ukDate.ToShortTimeString();
         }
 
         /// <summary>
