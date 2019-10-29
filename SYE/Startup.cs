@@ -15,7 +15,8 @@ namespace SYE
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+        readonly string GfcAllowedOrigins = "GfcAllowedOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -24,6 +25,16 @@ namespace SYE
 
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(GfcAllowedOrigins,
+                builder =>
+                {
+                    builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://www.cqc.org.uk");
+                });
+            });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -42,14 +53,7 @@ namespace SYE
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy(MyAllowSpecificOrigins,
-                builder =>
-                {
-                    builder.WithOrigins("https://www.cqc.org.uk/");
-                });
-            });
+            
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpContextAccessor();
@@ -80,7 +84,7 @@ namespace SYE
                 app.UseHsts();
             }
 
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(GfcAllowedOrigins);
 
             app.UseHttpsRedirection();
 

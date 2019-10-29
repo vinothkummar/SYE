@@ -18,15 +18,14 @@ namespace SYE.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        [HttpGet, Route("GFC-Test-Start")]
+        [HttpGet, Route("GFC-Local-Start")]
         public IActionResult Index()
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
             if (TempData.ContainsKey("search"))
-                TempData.Remove("search");
-            var emptyModel = new ProviderDetailsVM();
-            return View(emptyModel);
+                TempData.Remove("search");            
+            return View();
         }
 
         //[Route("Index/{locationId}/{providerId}/{locationName}")]
@@ -38,6 +37,7 @@ namespace SYE.Controllers
         //    return View(providerDetails);
         //}
 
+        [EnableCors("GfcAllowedOrigins")]
         [Authorize(Policy = "ApiKeyPolicy")]        
         [HttpPost, Route("website-redirect")]
         public IActionResult Index([FromBody] ProviderDetailsVM providerDetails)
@@ -45,18 +45,19 @@ namespace SYE.Controllers
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
             if (providerDetails.LocationId != null)
-            {
+            {                
                 return RedirectToAction("SelectLocation", "Search", providerDetails);
             }
             else
             {
-                return RedirectToAction("Index", "Search", new { CookieDisplay = providerDetails.CookieDisplay });
+                return RedirectToAction("Index", "Search", new { CookieDisplay = providerDetails.CookieAccepted });
             }
         }
 
+        [EnableCors("GfcAllowedOrigins")]
         [Authorize(Policy = "ApiKeyPolicy")]
         [HttpGet, Route("website-redirect/{staticPage}/{cookieDisplay}")]
-        public IActionResult Index(string staticPage, bool cookieDisplay)
+        public IActionResult Index(string staticPage, bool CookieAccepted)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
