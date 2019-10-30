@@ -97,11 +97,16 @@ namespace SYE.MiddlewareExtensions
             IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
             services.AddSingleton<IFileProvider>(physicalProvider);
 
+            string cqcRedirectionApiKey = Config.GetSection("ConnectionStrings:CQCRedirection").GetValue<String>("ApiKey");
+            if (string.IsNullOrWhiteSpace(cqcRedirectionApiKey))
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(cqcRedirectionApiKey)} from application configuration.");
+            }
             services.AddTransient<IAuthorizationHandler, ApiKeyRequirementHandler>();
             services.AddAuthorization(authConfig =>
             {
                 authConfig.AddPolicy("ApiKeyPolicy", policyBuilder => policyBuilder
-                           .AddRequirements(new ApiKeyRequirement(new[] { "3BD16362-C5EB-4419-A709-7F4F8816270B" })));
+                           .AddRequirements(new ApiKeyRequirement(new[] {cqcRedirectionApiKey})));
             });
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
