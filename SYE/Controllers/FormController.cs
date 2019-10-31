@@ -29,6 +29,8 @@ namespace SYE.Controllers
         [HttpGet("form/{id}")]
         public IActionResult Index(string id = "")
         {
+            
+
             try
             {
                 var userSession = _sessionService.GetUserSession();
