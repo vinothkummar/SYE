@@ -1,6 +1,6 @@
 {
-  "id": "6109afc0-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.10.9",
+  "id": "61010afc0-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.10",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -710,7 +710,7 @@
             "regex": {
               "type": "regex",
               "regex": "name",
-              "error_message": "Name must only include letters a to z, hyphens full stops, spaces and apostrophes"
+              "error_message": "Name must only include letters a to z, hyphens, full stops, spaces and apostrophes"
             },
             "is_errored": false,
             "error_message": ""
