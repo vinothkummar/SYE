@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using SYE.EsbWrappers;
+using SYE.Helpers.Extensions;
 using SYE.Models.SubmissionSchema;
 using SYE.Services;
 
@@ -153,7 +154,7 @@ namespace SYE.Controllers
         {
             var submissionResult = new SubmissionPostResultVM
             {
-                DateCreated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                DateCreated = new DateTime().GetLocalDateTime().ToString("yyyy-MM-ddTHH:mm:ss"),
                 NumberItemsSent = ids.Count(),
                 PostedSubmissions = new List<string>(),
                 FailedSubmissions = new List<string>()
