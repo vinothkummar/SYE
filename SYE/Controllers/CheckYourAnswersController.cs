@@ -164,14 +164,13 @@ namespace SYE.Controllers
             {
                 Version = formVm.Version,
                 Id = Guid.NewGuid().ToString(),
-                DateCreated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                DateCreated = new DateTime().GetLocalDateTime(),
                 FormName = formVm.FormName,
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
                 LocationName = HttpContext.Session.GetString("LocationName"),
                 SubmissionId = gfcReference
             };
-
             var answers = new List<AnswerVM>();
 
             var pageHistory = _sessionService.GetNavOrder();
