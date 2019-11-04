@@ -4,10 +4,11 @@ using Microsoft.Extensions.Logging;
 using SYE.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using SYE.Helpers.Enums;
 
 namespace SYE.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         private readonly ILogger _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -28,36 +29,33 @@ namespace SYE.Controllers
             return View();
         }
 
-        //[Route("Index/{locationId}/{providerId}/{locationName}")]
-        //public IActionResult Index(string locationId, string providerId, string locationName)
-        //{
-        //    ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
-        //    ViewBag.HideSiteTitle = true;
-        //    var providerDetails = new ProviderDetailsVM() { LocationId = locationId, ProviderId = providerId, LocationName = locationName };
-        //    return View(providerDetails);
-        //}
-
         [EnableCors("GfcAllowedOrigins")]
-        [Authorize(Policy = "ApiKeyPolicy")]        
+        [Authorize(Policy = "ApiKeyPolicy")]
         [HttpPost, Route("website-redirect")]
         public IActionResult Index([FromBody] ProviderDetailsVM providerDetails)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
-            if (providerDetails.LocationId != null)
-            {                
+
+            if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && providerDetails.CookieAccepted != null)
+            {
                 return RedirectToAction("SelectLocation", "Search", providerDetails);
             }
-            else
+            else if (providerDetails.CookieAccepted != null)
             {
                 return RedirectToAction("Index", "Search", new { CookieDisplay = providerDetails.CookieAccepted });
-            }
-        }
+            }             
+            else            
+            {
+                return GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNullError, "Error with CQC PayLoad null on the redirection post request");                
+            }            
+           
+        }       
 
         [EnableCors("GfcAllowedOrigins")]
         [Authorize(Policy = "ApiKeyPolicy")]
         [HttpGet, Route("website-redirect/{staticPage}/{cookieDisplay}")]
-        public IActionResult Index(string staticPage, bool CookieAccepted)
+        public IActionResult Index(string staticPage, bool cookieAccepted)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;

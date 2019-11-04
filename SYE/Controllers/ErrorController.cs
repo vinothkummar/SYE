@@ -93,6 +93,12 @@ namespace SYE.Controllers
                                      $"Path = {statusCodeResult?.OriginalPath}, " +
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("GenericException");
+                case 575:
+                    _logger.LogError($"{statusCode} Check Your Answers Page Submission Error Occured. " +
+                                    $"Message = {message}, " +
+                                    $"Path = {statusCodeResult?.OriginalPath}, " +
+                                    $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("CQCIntegrationException");
                 default:
                     _logger.LogError("Other Type of Error Occured. " +
                                      $"The path {exceptionDetails.Path} " +
