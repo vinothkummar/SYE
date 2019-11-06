@@ -5,6 +5,7 @@ using SYE.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using SYE.Helpers.Enums;
+using SYE.Services;
 
 namespace SYE.Controllers
 {
@@ -12,12 +13,14 @@ namespace SYE.Controllers
     {
         private readonly ILogger _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        public ISessionService _sessionService { get; }
 
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, ISessionService sessionService)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
-        }
+            _sessionService = sessionService;
+    }
 
         [HttpGet, Route("GFC-Local-Start")]
         public IActionResult Index()
@@ -35,15 +38,18 @@ namespace SYE.Controllers
         public IActionResult Index([FromBody] ProviderDetailsVM providerDetails)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
-            ViewBag.HideSiteTitle = true;
 
-            if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && providerDetails.CookieAccepted != null)
+            ViewBag.HideSiteTitle = true;           
+
+            if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && !string.IsNullOrEmpty(providerDetails.CookieAccepted))
             {
+                _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.Trim());
                 return RedirectToAction("SelectLocation", "Search", providerDetails);
             }
-            else if (providerDetails.CookieAccepted != null)
+            else if (!string.IsNullOrEmpty(providerDetails.CookieAccepted))
             {
-                return RedirectToAction("Index", "Search", new { CookieDisplay = providerDetails.CookieAccepted });
+                _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.Trim());
+                return RedirectToAction("Index", "Search");
             }             
             else            
             {
@@ -54,11 +60,12 @@ namespace SYE.Controllers
 
         [EnableCors("GfcAllowedOrigins")]
         [Authorize(Policy = "ApiKeyPolicy")]
-        [HttpGet, Route("website-redirect/{staticPage}/{cookieDisplay}")]
-        public IActionResult Index(string staticPage, bool cookieAccepted)
+        [HttpGet, Route("website-redirect/{staticPage}/{cookieAccepted}")]
+        public IActionResult Index(string staticPage, string cookieAccepted)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
+            _sessionService.SetCookieFlagOnSession(cookieAccepted.Trim());
 
             switch (staticPage)
             {

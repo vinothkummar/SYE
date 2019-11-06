@@ -94,7 +94,7 @@ namespace SYE.Controllers
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("GenericException");
                 case 575:
-                    _logger.LogError($"{statusCode} Check Your Answers Page Submission Error Occured. " +
+                    _logger.LogError($"{statusCode} CQC Redirection PayLoad null Error Occured. " +
                                     $"Message = {message}, " +
                                     $"Path = {statusCodeResult?.OriginalPath}, " +
                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");

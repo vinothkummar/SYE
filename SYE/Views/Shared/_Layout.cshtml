@@ -1,8 +1,10 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
 @using Microsoft.Extensions.Configuration
 @using GDSHelpers.Models
+@using SYE.Services;
 @using Microsoft.CodeAnalysis
 @inject IConfiguration Configuration
+@inject ISessionService SessionService
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -71,7 +73,16 @@
     </script>
     <a href="#content" class="govuk-skip-link">Skip to main content</a>
 
-    <partial name="_CookieConsentPartial" />
+    @{
+        var cookieAccepted = SessionService.GetCookieFlagFromSession() ?? "false";
+
+        if (cookieAccepted != "true")
+        {
+            <partial name="_CookieConsentPartial" />
+            SessionService.SetCookieFlagOnSession("true");
+        }
+    }
+
 
     <gds-header>
 
@@ -84,10 +95,10 @@
             }
 
             <gds-logo role="presentation" focusable="true" url="https://www.cqc.org.uk" url-title="Go to the CQC homepage"
-                        svg-path=@svgPath svg-viewbox=@svgViewBox 
-                        svg-image-height=@height svg-image-width=@width
-                        image-url="/images/logocqc-transparent.png" alt-text="Care Quality Commission logo"></gds-logo>
-            
+                      svg-path=@svgPath svg-viewbox=@svgViewBox
+                      svg-image-height=@height svg-image-width=@width
+                      image-url="/images/logocqc-transparent.png" alt-text="Care Quality Commission logo"></gds-logo>
+
             <gds-header-content>
                 @if (ViewBag.HideSiteTitle != true)
                 {

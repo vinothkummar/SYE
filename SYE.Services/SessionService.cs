@@ -25,6 +25,8 @@ namespace SYE.Services
         string GetUserSearch();
         void SaveSearchUrl(string searchUrl);
         string GetSearchUrl();
+        void SetCookieFlagOnSession(string cookieAccepted);
+        string GetCookieFlagFromSession();
         void ClearSession();
         string PageForEdit { get; set; }
     }
@@ -207,6 +209,18 @@ namespace SYE.Services
             return context.Session.GetString("SearchUrl");
         }
 
+        public void SetCookieFlagOnSession(string cookieAccepted)
+        {
+            var context = _httpContextAccessor.HttpContext;
+            context.Session.SetString("CookieAccepted", cookieAccepted);
+        }
+
+        public string GetCookieFlagFromSession()
+        {
+            var context = _httpContextAccessor.HttpContext;
+            return context.Session.GetString("CookieAccepted");
+        }
+
         public void ClearSession()
         {
             var context = _httpContextAccessor.HttpContext;
@@ -214,7 +228,7 @@ namespace SYE.Services
             context.Session.Remove("LocationId");
             context.Session.Remove("LocationName");
             context.Session.Remove("NavOrder");
-            context.Session.Remove("SearchUrl");
+            context.Session.Remove("SearchUrl");            
 
             //context.Session.Clear();
         }

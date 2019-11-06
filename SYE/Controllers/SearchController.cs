@@ -31,7 +31,7 @@ namespace SYE.Controllers
         }
 
         [HttpGet("search/find-a-service")]
-        public IActionResult Index(string errorMessage, string search, bool cookieDisplay)
+        public IActionResult Index(string errorMessage, string search)
         {
             ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
@@ -40,7 +40,7 @@ namespace SYE.Controllers
 
             try
             {
-                ViewBag.Title = "Find a service - Give feedback on care";
+               ViewBag.Title = "Find a service - Give feedback on care";                            
                 return View(new SearchResultsVM { ErrorMessage = errorMessage, ShowIncompletedSearchMessage = (errorMessage != null), Search = TempData.ContainsKey("search") ? TempData["search"].ToString() : search });
             }
             catch (Exception ex)

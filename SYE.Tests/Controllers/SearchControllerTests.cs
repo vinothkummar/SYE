@@ -426,7 +426,7 @@ namespace SYE.Tests.Controllers
             sut.Url = mockUrlHelper.Object;
 
             //act
-            var result = sut.Index("error message", null, false);
+            var result = sut.Index("error message", null);
 
             //assert
             var viewResult = result as ViewResult;
