@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="esbhelpers" Version="1.0.0.1" />
     <PackageReference Include="GDSHelpers" Version="2019.11.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Search.Data" Version="5.0.3" />
@@ -14,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SYE.EsbWrappers\SYE.EsbWrappers.csproj" />
     <ProjectReference Include="..\SYE.Models\SYE.Models.csproj" />
     <ProjectReference Include="..\SYE.Repository\SYE.Repository.csproj" />
   </ItemGroup>

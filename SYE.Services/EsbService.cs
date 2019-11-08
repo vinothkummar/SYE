@@ -3,13 +3,11 @@ using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SYE.EsbWrappers;
-using System.Xml.Serialization;
-using System.Web;
-using System.IO;
-using System.Text;
-using System.Xml.Linq;
+using ESBHelpers.Models;
+using ESBHelpers.Helpers;
+using Microsoft.Extensions.DependencyInjection;
+using ESBHelpers.Config;
+using Microsoft.Extensions.Logging;
 
 namespace SYE.Services
 {
@@ -18,17 +16,19 @@ namespace SYE.Services
         Task<IEnumerable<SubmissionVM>> GetAllSubmisions();
         Task<IEnumerable<SubmissionVM>> GetAllSubmisions(string status);
         Task<SubmissionVM> GetSubmision(string id);
-        Task<string> PostSubmision(SubmissionVM submission);
+        Task<string> PostSubmision(SubmissionVM submission, ILogger logger);
     }
     public class EsbService : IEsbService
     {
+        private IEsbConfiguration<EsbConfig> _esbConfig;
         private readonly IGenericRepository<SubmissionVM> _repo;
         private IEsbWrapper _esbWrapper;
 
-        public EsbService(IGenericRepository<SubmissionVM> repo, IEsbWrapper esbWrapper)
+        public EsbService(IGenericRepository<SubmissionVM> repo, IServiceProvider service)
         {
+            _esbConfig = service?.GetRequiredService<IEsbConfiguration<EsbConfig>>();
+            _esbWrapper = service?.GetService<IEsbWrapper>();
             _repo = repo;
-            _esbWrapper = esbWrapper;
         }
 
         public async Task<IEnumerable<SubmissionVM>> GetAllSubmisions()
@@ -49,43 +49,51 @@ namespace SYE.Services
             return result;
         }
 
-        public async Task<string> PostSubmision(SubmissionVM submission)
+        public async Task<string> PostSubmision(SubmissionVM submission, ILogger logger)
         {
-            var result = await _esbWrapper.PostSubmission(submission);
-            if (!string.IsNullOrWhiteSpace(result))
+            var response = await _esbWrapper.PostSubmission(GetGenericAttachmentPayload(submission), logger);
+
+            if (response.Success && !string.IsNullOrWhiteSpace(response.EnquiryId))
             {
                 submission.Status = "Sent";
                 var sub = await _repo.UpdateAsync(submission.Id, submission);
             }
 
-            return result;
+            return response.EnquiryId;
         }
-        private string GenerateEsbPayload(SubmissionVM payload)
+   
+        private GenericAttachmentPayload GetGenericAttachmentPayload(SubmissionVM submission)
         {
-            string serialized;
+            var description = string.Empty;
+            var organisationId = string.Empty;
+            if (submission.LocationId == "0")
+            {
+                organisationId = string.Empty;//no location selected
+                description = "(GFC)";
+            }
+            else
+            {
+                organisationId = submission.LocationId;
+                description = "(GFC) Location ID: " + submission.LocationId + " Provider ID: " + submission.ProviderId + " Location name: " + submission.LocationName;
+            }
 
-            serialized = SerializePayload<SubmissionVM>(payload);
+            //var submissionNumber = Guid.NewGuid().ToString().Substring(0, 8);//use this for testing because esb rejects duplicate submissionIds
+            var submissionNumber = "GFC-" + submission.SubmissionId;
+            var filename = submissionNumber + ".docx";
 
-            return serialized;
+            var genPayload = new GenericAttachmentPayload
+            {
+                Payload = submission.Base64Attachment,
+                OrganisationId = organisationId,
+                Description = description,
+                Filename = filename,
+                SubType = PayloadType.Classified,
+                SubmissionNumber = submissionNumber
+            };
+
+            return genPayload;
         }
 
-        private string SerializePayload<T>(SubmissionVM payload)
-        {
-            var serializer = new XmlSerializer(typeof(T));
-            var writer = new Utf8StringWriter();
-            serializer.Serialize(writer, payload);
-            var escapedPayload = HttpUtility.HtmlEncode(writer.ToString());
-
-            if (escapedPayload == null) throw new ArgumentException("Payload cannot be null.");
-            var serialized = new XCData(escapedPayload);
-            return serialized.ToString();
-        }
-
-    }
-  
-    internal class Utf8StringWriter : StringWriter
-    {
-        public override Encoding Encoding => Encoding.UTF8;
     }
 
 }
