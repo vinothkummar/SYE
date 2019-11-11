@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="esbhelpers" Version="1.0.0.1" />
+    <PackageReference Include="esbhelpers" Version="1.0.0" />
     <PackageReference Include="GDSHelpers" Version="2019.11.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Search.Data" Version="5.0.3" />
