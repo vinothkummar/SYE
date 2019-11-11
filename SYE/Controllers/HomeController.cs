@@ -33,27 +33,31 @@ namespace SYE.Controllers
         }
 
         [EnableCors("GfcAllowedOrigins")]
-        [Authorize(Policy = "ApiKeyPolicy")]
+        //[Authorize(Policy = "ApiKeyPolicy")]
         [HttpPost, Route("website-redirect")]
-        public IActionResult Index([FromBody] ProviderDetailsVM providerDetails)
+        public IActionResult Index([FromForm] ProviderDetailsVM providerDetails)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
 
-            ViewBag.HideSiteTitle = true;           
+            ViewBag.HideSiteTitle = true;        
+            
+            var context =_httpContextAccessor.HttpContext;
 
             if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && !string.IsNullOrEmpty(providerDetails.CookieAccepted))
             {
-                _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.Trim());
-                return RedirectToAction("SelectLocation", "Search", providerDetails);
+                _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
+               
+                return RedirectToAction("SelectLocation", "Search", routeValues: null);
+               
             }
             else if (!string.IsNullOrEmpty(providerDetails.CookieAccepted))
             {
-                _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.Trim());
+                _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
                 return RedirectToAction("Index", "Search");
             }             
             else            
             {
-                return GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNullError, "Error with CQC PayLoad null on the redirection post request");                
+                return GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNullError, "Error with CQC PayLoad null on the redirection post request"); 
             }            
            
         }       
@@ -65,7 +69,7 @@ namespace SYE.Controllers
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
-            _sessionService.SetCookieFlagOnSession(cookieAccepted.Trim());
+            _sessionService.SetCookieFlagOnSession(cookieAccepted.ToLower().Trim());
 
             switch (staticPage)
             {

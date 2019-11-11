@@ -25,7 +25,11 @@ namespace SYE
                 .SuppressStatusMessages(false)
                 .ConfigureAppConfiguration((builderContext, configurationBuilder) =>
                 {
-                    if (!builderContext.HostingEnvironment.IsLocal())
+                    if (builderContext.HostingEnvironment.IsLocal())
+                    {
+                        configurationBuilder.AddUserSecrets<Startup>();
+                    }
+                    else
                     {
                         var builtConfig = configurationBuilder.Build();
                         string keyVaultEndpoint = builtConfig?.GetValue<string>("KeyVaultName");

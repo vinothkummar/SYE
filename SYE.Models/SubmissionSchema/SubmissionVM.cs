@@ -9,7 +9,6 @@ namespace SYE.Models.SubmissionSchema
         public SubmissionVM()
         {
             Id = Guid.NewGuid().ToString();
-            DateCreated = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
         }
 
 
@@ -26,7 +25,7 @@ namespace SYE.Models.SubmissionSchema
         
 
         [JsonProperty("date_created")]
-        public string DateCreated { get; set; }
+        public DateTime DateCreated { get; set; }
 
 
         [JsonProperty("provider_id")]

@@ -16,6 +16,7 @@ using SYE.Repository;
 using SYE.Services;
 using SYE.ViewModels;
 using SYE.Helpers.Enums;
+using SYE.Helpers.Extensions;
 
 namespace SYE.Controllers
 {
@@ -80,6 +81,7 @@ namespace SYE.Controllers
 
 
         [HttpPost, Route("form/check-your-answers")]
+        [PreventDuplicateRequest]
         [ValidateAntiForgeryToken]
         public IActionResult Index(CheckYourAnswersVm vm)
         {
@@ -162,14 +164,13 @@ namespace SYE.Controllers
             {
                 Version = formVm.Version,
                 Id = Guid.NewGuid().ToString(),
-                DateCreated = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                DateCreated = new DateTime().GetLocalDateTime(),
                 FormName = formVm.FormName,
                 ProviderId = HttpContext.Session.GetString("ProviderId"),
                 LocationId = HttpContext.Session.GetString("LocationId"),
                 LocationName = HttpContext.Session.GetString("LocationName"),
                 SubmissionId = gfcReference
             };
-
             var answers = new List<AnswerVM>();
 
             var pageHistory = _sessionService.GetNavOrder();

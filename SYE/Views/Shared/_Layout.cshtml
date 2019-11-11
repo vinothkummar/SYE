@@ -76,7 +76,7 @@
     @{
         var cookieAccepted = SessionService.GetCookieFlagFromSession() ?? "false";
 
-        if (cookieAccepted != "true")
+         if (cookieAccepted != "true")
         {
             <partial name="_CookieConsentPartial" />
             SessionService.SetCookieFlagOnSession("true");
@@ -146,7 +146,7 @@
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@Url.Action("Index", "Cookies")">
+                            <a class="govuk-footer__link" href="https://www.cqc.org.uk/cookies" target="_blank">
                                 Cookies
                             </a>
                         </li>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SYE.Helpers;
@@ -31,9 +32,19 @@ namespace SYE
                 options.AddPolicy(GfcAllowedOrigins,
                 builder =>
                 {
-                    builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://www.cqc.org.uk");
+                    builder
+                    .AllowCredentials()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    //.AllowAnyOrigin();
+                    .WithOrigins("https://www.cqc.org.uk", "http://dev.cqc.org.uk/give-feedback-on-care", "https://localhost:44309");
                 });
             });
+
+            //services.Configure<MvcOptions>(options =>
+            //{
+            //    options.Filters.Add(new CorsAuthorizationFilterFactory(GfcAllowedOrigins));
+            //});
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -41,10 +52,14 @@ namespace SYE
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.ConfigureApplicationCookie(options => options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+            services.ConfigureApplicationCookie(options =>
+            {
+               options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+               
+            });
 
 
-            services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
             {

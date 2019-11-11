@@ -10,11 +10,15 @@
     <None Remove="Resources\submission-schema-contact-details-no-location.json" />
     <None Remove="Resources\submission-schema-contact-details.json" />
     <None Remove="Resources\submission-schema-no-contact-details-no-location.json" />
+    <None Remove="Resources\submission-schema-no-contact-new-date-format.json" />
     <None Remove="Resources\submission-schema-no-contact.json" />
     <None Remove="Resources\submission-schema-no-email.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\submission-schema-no-contact-new-date-format.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="Resources\submission-schema-no-email.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -34,7 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.6.0" />
-    <PackageReference Include="GDSHelpers" Version="2019.10.4.3" />
+    <PackageReference Include="GDSHelpers" Version="2019.11.5.2" />
     <PackageReference Include="Microsoft.Azure.Search.Data" Version="5.0.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
     <PackageReference Include="Moq" Version="4.10.1" />

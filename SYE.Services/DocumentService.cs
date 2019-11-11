@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml;
@@ -130,13 +131,14 @@ namespace SYE.Services
             GetDataSection(body, "Response Id :", new List<string> { submissionVm.Id }, false);
             GetDataSection(body, "Channel :", new List<string> { "GFC" }, false);
             GetDataSection(body, "GFC reference number :", new List<string> { submissionVm.SubmissionId }, false);
-            GetDataSection(body, "Completed :", new List<string> { GetUkDateStringFromZulu(submissionVm.DateCreated) }, false);
+            GetDataSection(body, "Completed :", new List<string> { GetUkDateStringFromZulu(submissionVm.DateCreated.ToString()) }, false);
         }
 
         private string GetUkDateStringFromZulu(string dateCreated)
         {
-            DateTime ukDate = DateTime.Parse(dateCreated).AddHours(1);
-            return ukDate.ToShortDateString() + ": " + ukDate.ToShortTimeString();
+            DateTime ukDate = DateTime.Parse(dateCreated);
+            string formattedDate = ukDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+            return formattedDate + ": " + ukDate.ToShortTimeString();
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 {
-  "id": "6107afc0-ce7a-478e-91ee-9f99c3bae03c",
-  "version": "6.10.7",
+  "id": "61010afc0-ce7a-478e-91ee-9f99c3bae03c",
+  "version": "6.10.10",
   "form_name": "give-feedback-on-care",
   "pre_amble": "",
   "last_modified": "ISODate(\"2019-08-05T13:00:00.000Z\")",
@@ -356,6 +356,11 @@
               "is_required": false,
               "error_message": ""
             },
+            "max_length": {
+              "type": "string",
+              "max": "1000",
+              "error_message": "Enter 1,000 characters or less"
+            },
             "is_errored": false,
             "error_message": ""
           },
@@ -373,6 +378,11 @@
             "required": {
               "is_required": false,
               "error_message": ""
+            },
+            "max_length": {
+              "type": "string",
+              "max": "1000",
+              "error_message": "Enter 1,000 characters or less"
             },
             "is_errored": false,
             "error_message": ""
@@ -700,7 +710,7 @@
             "regex": {
               "type": "regex",
               "regex": "name",
-              "error_message": "Name must only include letters a to z, hyphens, spaces and apostrophes"
+              "error_message": "Name must only include letters a to z, hyphens, full stops, spaces and apostrophes"
             },
             "is_errored": false,
             "error_message": ""

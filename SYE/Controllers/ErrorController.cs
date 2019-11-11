@@ -94,7 +94,7 @@ namespace SYE.Controllers
                                      $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("GenericException");
                 case 575:
-                    _logger.LogError($"{statusCode} CQC Redirection PayLoad null Error Occured. " +
+                    _logger.LogCritical($"{statusCode} CQC Redirection PayLoad null Error Occured. " +
                                     $"Message = {message}, " +
                                     $"Path = {statusCodeResult?.OriginalPath}, " +
                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
@@ -103,7 +103,7 @@ namespace SYE.Controllers
                     _logger.LogError("Other Type of Error Occured. " +
                                      $"The path {exceptionDetails.Path} " +
                                      $"threw an exception: {exceptionDetails.Error}");
-                    return View("GenericError");
+                    return View("GenericException");
             }
 
         }
