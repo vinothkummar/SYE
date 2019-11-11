@@ -33,21 +33,20 @@ namespace SYE.Controllers
         }
 
         [EnableCors("GfcAllowedOrigins")]
-        //[Authorize(Policy = "ApiKeyPolicy")]
+        [Authorize(Policy = "ApiKeyPolicy")]
         [HttpPost, Route("website-redirect")]
-        public IActionResult Index([FromForm] ProviderDetailsVM providerDetails)
+        public IActionResult Index([FromBody] ProviderDetailsVM providerDetails)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
 
-            ViewBag.HideSiteTitle = true;        
-            
-            var context =_httpContextAccessor.HttpContext;
+            ViewBag.HideSiteTitle = true;
 
+            
             if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && !string.IsNullOrEmpty(providerDetails.CookieAccepted))
             {
                 _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
                
-                return RedirectToAction("SelectLocation", "Search", routeValues: null);
+                return RedirectToAction("SelectLocation", "Search", routeValues: providerDetails);
                
             }
             else if (!string.IsNullOrEmpty(providerDetails.CookieAccepted))

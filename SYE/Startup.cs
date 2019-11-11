@@ -37,7 +37,7 @@ namespace SYE
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     //.AllowAnyOrigin();
-                    .WithOrigins("https://www.cqc.org.uk", "http://dev.cqc.org.uk/give-feedback-on-care", "https://localhost:44309");
+                    .WithOrigins("https://www.cqc.org.uk", "http://dev.cqc.org.uk", "https://localhost:44309");
                 });
             });
 
