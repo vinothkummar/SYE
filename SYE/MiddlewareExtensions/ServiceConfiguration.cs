@@ -1,4 +1,6 @@
-﻿using GDSHelpers;
+﻿using ESBHelpers.Config;
+using ESBHelpers.Models;
+using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -8,18 +10,14 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Notify.Client;
 using Notify.Interfaces;
-using SYE.EsbWrappers;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
 using SYE.Services.Wrappers;
 using SYE.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SYE.MiddlewareExtensions
 {
@@ -91,14 +89,14 @@ namespace SYE.MiddlewareExtensions
                 throw new ConfigurationErrorsException($"Failed to load {nameof(esbConfig)} from application configuration.");
             }
             services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
+            services.TryAddSingleton<ESBHelpers.Models.IEsbWrapper>(new  EsbWrapper(esbConfig));
 
             IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
             services.AddSingleton<IFileProvider>(physicalProvider);
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.TryAddScoped<IEsbClient, EsbClient>();
-            services.TryAddScoped<IEsbWrapper, EsbWrapper>();
             services.TryAddScoped<IEsbService, EsbService>();
+            services.TryAddScoped<IEsbConfiguration<EsbConfig>, EsbConfiguration<EsbConfig>>();
             services.TryAddScoped<IFormService, FormService>();
             services.TryAddScoped<ISubmissionService, SubmissionService>();
             services.TryAddScoped<IDocumentService, DocumentService>();
