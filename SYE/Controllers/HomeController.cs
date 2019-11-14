@@ -35,7 +35,7 @@ namespace SYE.Controllers
         [EnableCors("GfcAllowedOrigins")]
         [Authorize(Policy = "ApiKeyPolicy")]
         [HttpPost, Route("website-redirect")]
-        public IActionResult Index([FromBody] ProviderDetailsVM providerDetails)
+        public IActionResult Index([FromForm] ProviderDetailsVM providerDetails)
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
 
@@ -68,7 +68,17 @@ namespace SYE.Controllers
         {
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
-            _sessionService.SetCookieFlagOnSession(cookieAccepted.ToLower().Trim());
+
+            if (!string.IsNullOrEmpty(cookieAccepted))
+            {
+                _sessionService.SetCookieFlagOnSession(cookieAccepted.ToLower().Trim());
+            }
+
+            else
+            {
+                return GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNullError, "Error with CQC Cookiee PayLoad redirection");
+            }
+           
 
             switch (staticPage)
             {
