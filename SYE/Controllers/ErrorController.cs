@@ -99,6 +99,12 @@ namespace SYE.Controllers
                                     $"Path = {statusCodeResult?.OriginalPath}, " +
                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
                     return View("CQCIntegrationException");
+                case 576:
+                    _logger.LogCritical($"{statusCode} CQC Cross Domain Origin Resources Sharing Error Occured." +
+                                    $"Message = {message}, " +
+                                    $"Path = {statusCodeResult?.OriginalPath}, " +
+                                    $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("CQCIntegrationException");
                 default:
                     _logger.LogError("Other Type of Error Occured. " +
                                      $"The path {exceptionDetails.Path} " +

@@ -32,16 +32,11 @@ namespace SYE
                 options.AddPolicy(GfcAllowedOrigins,
                 builder =>
                 {
-                    builder                            
+                    builder
                     .WithOrigins("https://www.cqc.org.uk", "http://dev.cqc.org.uk");
                 });
             });
-
-            services.Configure<MvcOptions>(options =>
-            {
-                options.Filters.Add(new CorsAuthorizationFilterFactory(GfcAllowedOrigins));
-            });
-
+            
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;

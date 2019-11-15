@@ -6,6 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using SYE.Helpers.Enums;
 using SYE.Services;
+using Microsoft.AspNetCore.Http.Internal;
+using System.IO;
+using System.Text;
+using System;
+using System.Linq;
 
 namespace SYE.Controllers
 {
@@ -36,12 +41,12 @@ namespace SYE.Controllers
         [Authorize(Policy = "ApiKeyPolicy")]
         [HttpPost, Route("website-redirect")]
         public IActionResult Index([FromForm] ProviderDetailsVM providerDetails)
-        {
+        {          
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
 
             ViewBag.HideSiteTitle = true;
-
             
+
             if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && !string.IsNullOrEmpty(providerDetails.CookieAccepted))
             {
                 _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
@@ -60,12 +65,11 @@ namespace SYE.Controllers
             }            
            
         }       
-
-        [EnableCors("GfcAllowedOrigins")]
-        [Authorize(Policy = "ApiKeyPolicy")]
+             
         [HttpGet, Route("website-redirect/{staticPage}/{cookieAccepted}")]
         public IActionResult Index(string staticPage, string cookieAccepted)
-        {
+        {           
+
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
 
@@ -73,7 +77,6 @@ namespace SYE.Controllers
             {
                 _sessionService.SetCookieFlagOnSession(cookieAccepted.ToLower().Trim());
             }
-
             else
             {
                 return GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNullError, "Error with CQC Cookiee PayLoad redirection");
@@ -109,6 +112,6 @@ namespace SYE.Controllers
         {
             ControllerContext.HttpContext.Session.Clear();
             return new RedirectResult("/");
-        }
+        }   
     }
 }

@@ -24,6 +24,7 @@
         CYASubmissionFormNullError = 573,
         CYASubmissionReferenceNullError = 574,
         //CQCIntegration errors
-        CQCIntegrationPayLoadNullError = 575
+        CQCIntegrationPayLoadNullError = 575,
+        CrossDomainOriginResourcesSharing = 576
     }
 }

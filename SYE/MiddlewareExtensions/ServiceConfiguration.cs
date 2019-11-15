@@ -97,16 +97,30 @@ namespace SYE.MiddlewareExtensions
             IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
             services.AddSingleton<IFileProvider>(physicalProvider);
 
-            string cqcRedirectionApiKey = Config.GetSection("ConnectionStrings:CQCRedirection").GetValue<String>("GFC-Key");
-            if (string.IsNullOrWhiteSpace(cqcRedirectionApiKey))
-            {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(cqcRedirectionApiKey)} from application configuration.");
-            }
             services.AddTransient<IAuthorizationHandler, KeyRequirementHandler>();
+
+            //string cqcRedirectionApiKey = Config.GetSection("ConnectionStrings:CQCRedirection").GetValue<String>("ApiKey");
+            //if (string.IsNullOrWhiteSpace(cqcRedirectionApiKey))
+            //{
+            //    throw new ConfigurationErrorsException($"Failed to load {nameof(cqcRedirectionApiKey)} from application configuration.");
+            //}
+            //services.AddAuthorization(authConfig =>
+            //{
+            //    authConfig.AddPolicy("ApiKeyPolicy", policyBuilder => policyBuilder
+            //                  .AddRequirements(new KeyRequirement(new[] { cqcRedirectionApiKey })));
+            //});
+
+            string cqcRedirectionGfcKey = Config.GetSection("ConnectionStrings:CQCRedirection").GetValue<String>("GFC-Key");
+            string cqcRedirectionGfcPassword = Config.GetSection("ConnectionStrings:CQCRedirection").GetValue<String>("GFC-Password");
+            if (string.IsNullOrWhiteSpace(cqcRedirectionGfcKey) && string.IsNullOrWhiteSpace(cqcRedirectionGfcPassword))
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(cqcRedirectionGfcKey)} or {nameof(cqcRedirectionGfcPassword)} from application configuration.");
+            }
+
             services.AddAuthorization(authConfig =>
             {
                 authConfig.AddPolicy("ApiKeyPolicy", policyBuilder => policyBuilder
-                           .AddRequirements(new KeyRequirement(new[] {"A+W2nzdpbEe3UHrCBZU5Qw==", "Ra3qCjUWGFC" })));
+                           .AddRequirements(new KeyRequirement(new[] { cqcRedirectionGfcKey, cqcRedirectionGfcPassword })));
             });
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
