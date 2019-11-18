@@ -36,8 +36,7 @@ namespace SYE.Controllers
                 TempData.Remove("search");            
             return View();
         }
-
-        [EnableCors("GfcAllowedOrigins")]
+       
         [Authorize(Policy = "ApiKeyPolicy")]
         [HttpPost, Route("website-redirect")]
         public IActionResult Index([FromForm] ProviderDetailsVM providerDetails)

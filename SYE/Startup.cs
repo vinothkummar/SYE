@@ -15,9 +15,7 @@ namespace SYE
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-
-        readonly string GfcAllowedOrigins = "GfcAllowedOrigins";
+        public IConfiguration Configuration { get; }        
 
         public Startup(IConfiguration configuration)
         {
@@ -25,18 +23,7 @@ namespace SYE
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {
-
-            services.AddCors(options =>
-            {
-                options.AddPolicy(GfcAllowedOrigins,
-                builder =>
-                {
-                    builder
-                    .WithOrigins("https://www.cqc.org.uk", "http://dev.cqc.org.uk");
-                });
-            });
-            
+        {   
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -88,9 +75,7 @@ namespace SYE
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
-
-            app.UseCors(GfcAllowedOrigins);
+            }           
 
             app.UseHttpsRedirection();
 

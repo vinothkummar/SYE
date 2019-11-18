@@ -33,7 +33,7 @@ namespace SYE.MiddlewareExtensions
                     _logger.LogError("Cross Domain Origin Resources Sharing Post Error Occured", EnumStatusCode.CQCIntegrationPayLoadNullError);
                     context.Fail();
                 }
-                    
+
 
                 //requested data using form-urlencoded
                 var encryptedString = authorizationFilterContext.HttpContext.Request.Form[GFC_KEY_NAME].FirstOrDefault();
