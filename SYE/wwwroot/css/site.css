@@ -284,13 +284,6 @@ label.gds-question h1 {
         background-color: lightgray;       
     }
 
-.app-back-to-top--fixed {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 30px;
-    margin-bottom: 30px
-}
-
 .govuk-link,
 .govuk-list,
 .govuk-heading-xl,
