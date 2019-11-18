@@ -251,6 +251,10 @@ label.gds-question h1 {
     white-space: pre-line;
 }
 
+/*Class to hide items if javascript is disabled (e.g. javascript-only functionality)*/
+.jsOnly {
+    display: none !important;
+}
 
 .search-button {
     height: 40px;

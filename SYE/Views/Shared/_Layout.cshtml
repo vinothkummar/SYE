@@ -51,6 +51,7 @@
     <!--[if lt IE 9]>
         <link href="~/css/govuk-frontend-ie8-2.13.0.min.css" rel="stylesheet" />
     <![endif]-->
+    <link rel="stylesheet" href="~/css/govuk-publishing-components-CQC-1.0.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     <partial name="_Favicons" />
@@ -68,6 +69,7 @@
     }
     <script>
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+
     </script>
     <a href="#content" class="govuk-skip-link">Skip to main content</a>
 
@@ -84,10 +86,10 @@
             }
 
             <gds-logo role="presentation" focusable="true" url="https://www.cqc.org.uk" url-title="Go to the CQC homepage"
-                        svg-path=@svgPath svg-viewbox=@svgViewBox 
-                        svg-image-height=@height svg-image-width=@width
-                        image-url="/images/logocqc-transparent.png" alt-text="Care Quality Commission logo"></gds-logo>
-            
+                      svg-path=@svgPath svg-viewbox=@svgViewBox
+                      svg-image-height=@height svg-image-width=@width
+                      image-url="/images/logocqc-transparent.png" alt-text="Care Quality Commission logo"></gds-logo>
+
             <gds-header-content>
                 @if (ViewBag.HideSiteTitle != true)
                 {
@@ -118,6 +120,8 @@
 
     </gds-container>
 
+    @RenderSection("Footer", required: false)
+
     <footer class="govuk-footer " role="contentinfo">
         <div class="govuk-width-container ">
             <div class="govuk-footer__meta">
@@ -125,17 +129,17 @@
                     <h2 class="govuk-visually-hidden">Support links</h2>
                     <ul class="govuk-footer__inline-list">
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@Url.Action("Index", "HowWeUseYourInformation")">
+                            <a class="govuk-footer__link" href="@Url.Action("Index", "HowWeUseYourInformation")" target="_blank">
                                 How we handle information
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@Url.Action("Index", "Accessibility")">
+                            <a class="govuk-footer__link" href="@Url.Action("Index", "Accessibility")" target="_blank">
                                 Accessibility
                             </a>
                         </li>
                         <li class="govuk-footer__inline-list-item">
-                            <a class="govuk-footer__link" href="@Url.Action("Index", "Cookies")">
+                            <a class="govuk-footer__link" href="@Url.Action("Index", "Cookies")" target="_blank">
                                 Cookies
                             </a>
                         </li>
@@ -156,8 +160,9 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     <script src="~/js/govuk-frontend-2.13.0.min.js" asp-append-version="true"></script>
     <script>window.GOVUKFrontend.initAll()</script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>showJsOnly();</script>
+@RenderSection("Scripts", required: false)
 
 </body>
 </html>
