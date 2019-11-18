@@ -251,6 +251,10 @@ label.gds-question h1 {
     white-space: pre-line;
 }
 
+/*Class to hide items if javascript is disabled (e.g. javascript-only functionality)*/
+.jsOnly {
+    display: none !important;
+}
 
 .search-button {
     height: 40px;
@@ -279,6 +283,13 @@ label.gds-question h1 {
         outline-offset: 0;
         background-color: lightgray;       
     }
+
+.app-back-to-top--fixed {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 30px;
+    margin-bottom: 30px
+}
 
 .govuk-link,
 .govuk-list,

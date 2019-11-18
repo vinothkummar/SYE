@@ -10,8 +10,36 @@
 
     <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
 
-        <gds-heading text="How we handle information" heading-type="H1"></gds-heading>
-        <gds-heading text="What we use feedback for" heading-type="H2"></gds-heading>
+        <gds-heading text="How we handle information" id="How-we-handle-information" heading-type="H1"></gds-heading>
+
+        <h2 class="gem-c-contents-list__title">Contents</h2>
+        <gds-ol list-id="Contents" class="gem-c-contents-list__list">
+            <gds-li class="gem-c-contents-list__list-item gem-c-contents-list__list-item--dashed">
+                <a href="#What-we-use-feedback-for" class="gem-c-contents-list__link govuk-link">What we use feedback for</a>
+            </gds-li>
+            <gds-li class="gem-c-contents-list__list-item gem-c-contents-list__list-item--dashed">
+                <a href="#How-we-store-feedback-and-contact-details" class="gem-c-contents-list__link govuk-link">How we store feedback and contact details</a>
+            </gds-li>
+            <gds-li class="gem-c-contents-list__list-item gem-c-contents-list__list-item--dashed">
+                <a href="#How-long-we-keep-them-for" class="gem-c-contents-list__link govuk-link">How long we keep them for</a>
+            </gds-li>
+            <gds-li class="gem-c-contents-list__list-item gem-c-contents-list__list-item--dashed">
+                <a href="#Data-protection-laws-and-standards" class="gem-c-contents-list__link govuk-link">Data protection laws and standards</a>
+            </gds-li>
+            <gds-li class="gem-c-contents-list__list-item gem-c-contents-list__list-item--dashed">
+                <a href="#Staying-anonymous-can-affect-how-we-use-feedback" class="gem-c-contents-list__link govuk-link">Staying anonymous can affect how we use feedback</a>
+            </gds-li>
+            <gds-li class="gem-c-contents-list__list-item gem-c-contents-list__list-item--dashed">
+                <a href="#When-we-can-and-can’t-keep-your-name-confidential" class="gem-c-contents-list__link govuk-link">When we can and can’t keep your name confidential</a>
+            </gds-li>
+            <gds-li class="gem-c-contents-list__list-item gem-c-contents-list__list-item--dashed">
+                <a href="#The-service-might-still-work-out-who-you-are" class="gem-c-contents-list__link govuk-link">The service might still work out who you are</a>
+            </gds-li>
+        </gds-ol>
+
+        <br />
+
+        <gds-heading text="What we use feedback for" id="What-we-use-feedback-for" heading-type="H2"></gds-heading>
         <gds-heading text="We monitor services" heading-type="H3"></gds-heading>
 
         <gds-paragraph>
@@ -45,7 +73,7 @@
             We either use people's actual words or a summary of what they said. We never give their names or quote them in a way that makes it obvious who they are - we only use anonymous quotes.
         </gds-paragraph>
 
-        <gds-heading text="How we store feedback and contact details" heading-type="H2"></gds-heading>
+        <gds-heading text="How we store feedback and contact details" id="How-we-store-feedback-and-contact-details" heading-type="H2"></gds-heading>
         <gds-paragraph>
             We store your feedback in a database. We own the database and it's hosted in the UK. If you give us your name and contact details, we store them in the same way.
         </gds-paragraph>
@@ -54,7 +82,7 @@
         </gds-paragraph>
 
 
-        <gds-heading text="How long we keep them for" heading-type="H3"></gds-heading>
+        <gds-heading text="How long we keep them for" id="How-long-we-keep-them-for" heading-type="H3"></gds-heading>
         <gds-paragraph>
             There are several things we do with the information we collect through this form. How long we keep the information depends on what we use it for. This table gives some examples.
         </gds-paragraph>
@@ -91,7 +119,7 @@
         </gds-paragraph>
 
 
-        <gds-heading text="Data protection laws and standards" heading-type="H3"></gds-heading>
+        <gds-heading text="Data protection laws and standards" id="Data-protection-laws-and-standards" heading-type="H3"></gds-heading>
         <gds-paragraph>
             To keep your information safe, we follow:
         </gds-paragraph>
@@ -106,7 +134,7 @@
         </gds-paragraph>
 
 
-        <gds-heading text="Staying anonymous can affect how we use feedback" heading-type="H2"></gds-heading>
+        <gds-heading text="Staying anonymous can affect how we use feedback" id="Staying-anonymous-can-affect-how-we-use-feedback" heading-type="H2"></gds-heading>
         <gds-paragraph>
             You do not have to give your name or contact details when you give us feedback about an experience of care. But if you do stay
             anonymous, it can make it harder for us to take action.
@@ -116,7 +144,7 @@
         </gds-paragraph>
 
 
-        <gds-heading text="When we can and can’t keep your name confidential" heading-type="H3"></gds-heading>
+        <gds-heading text="When we can and can’t keep your name confidential" id="When-we-can-and-can’t-keep-your-name-confidential" heading-type="H3"></gds-heading>
         <gds-paragraph>
             If you give us your name, we’ll keep it confidential unless you tell us:
         </gds-paragraph>
@@ -128,7 +156,7 @@
             If that’s the case, we may have to pass everything you’ve told us to the police, the council or another public body.
         </gds-paragraph>
 
-        <gds-heading text="The service might still work out who you are" heading-type="H3"></gds-heading>
+        <gds-heading text="The service might still work out who you are" id="The-service-might-still-work-out-who-you-are" heading-type="H3"></gds-heading>
 
         <gds-paragraph>
             You can also ask us not to share your feedback with the service at all. This can help if it's important they do not find out who you are.
@@ -137,10 +165,54 @@
             We may still have to act on your concern. For example, if you tell us a service has falsified their records, we may visit them and ask to see the records. This could lead them to guess someone has contacted us.
         </gds-paragraph>
 
-        <gds-paragraph>
-            <gds-button button-text="Continue" button-type="Button" onclick="history.go(-1);return false;"></gds-button>
-        </gds-paragraph>
+        <gds-button button-text="Close" button-id="closeButton" class="jsOnly" onclick="windowClose();"></gds-button>
 
     </gds-column>
 
+    <gds-column tablet-size="OneThird">
+
+        <aside class="app-related-items" role="complementary">
+
+            <h2 class="govuk-heading-m">Related content</h2>
+
+            <gds-paragraph>
+                <gds-link class="govuk-link" target="_blank" link-id="privacy-statement" link-text="Read our full privacy statement" href="https://www.cqc.org.uk/about-us/our-policies/privacy-statement"></gds-link>
+            </gds-paragraph>
+
+        </aside>
+
+    </gds-column>
 </gds-row>
+
+@section Footer
+{
+    <div class="govuk-footer app-back-to-top app-back-to-top--fixed app-back-to-top--hidden jsOnly" role="navigation">
+        <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+            <a href="#How-we-handle-information" class="govuk-link app-back-to-top__link">
+                <svg class="app-c-back-to-top__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
+                    <path fill="currentColor" d="M6.5 0L0 6.5 1.4 8l4-4v12.7h2V4l4.3 4L13 6.4z"></path>
+                </svg>
+                Contents
+            </a>
+        </div>
+    </div>
+}
+
+@section Scripts
+{
+    <script>
+        //Function to enable back-to-top link
+        $(window).scroll(function (event) {
+            function footer() {
+                var scroll = $(window).scrollTop();
+                if (scroll > 50) {
+                    $(".app-back-to-top").fadeIn().removeClass("app-back-to-top--hidden");
+                }
+                else {
+                    $(".app-back-to-top").fadeOut().addClass("app-back-to-top--hidden");
+                }
+            }
+            footer();
+        });
+    </script>
+}

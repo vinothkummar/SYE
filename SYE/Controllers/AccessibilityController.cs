@@ -12,7 +12,7 @@ namespace SYE.Controllers
         [Route("accessibility")]
         public IActionResult Index()
         {
-            ViewData["HomeLink"] = true;
+            ViewData["HomeLink"] = false;
             return View();
         }
     }

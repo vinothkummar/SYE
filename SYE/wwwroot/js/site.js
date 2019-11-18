@@ -90,3 +90,14 @@ function getCookie(name) {
     }
     return null;
 }
+
+//Function to show JS-only elements (hidden by default, shown by a script)
+function showJsOnly() {
+    $(".jsOnly").removeClass("jsOnly");
+}
+
+//Function to enable javascript window-close button
+function windowClose() {
+    window.open('', '_parent', '');
+    window.close();
+}
