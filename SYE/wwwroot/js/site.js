@@ -91,9 +91,10 @@ function getCookie(name) {
     return null;
 }
 
-//Function to show JS-only elements (hidden by default, shown by a script)
+//Function to show jsOnly elements (hidden by default, shown by a script) and hide jsDisabled fallback elements (shown by default, hidden by a script)
 function showJsOnly() {
     $(".jsOnly").removeClass("jsOnly");
+    $(".jsDisabled").hide();
 }
 
 //Function to enable javascript window-close button
