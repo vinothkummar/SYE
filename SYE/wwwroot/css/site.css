@@ -229,9 +229,15 @@ label.govuk-label > p.govuk-body {
 
 label.gds-question h1 {
     margin-bottom: 20px;
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 700;
     line-height: 1.04167;
+}
+
+@media (min-width: 48.0526em) {
+    label.gds-question h1 {
+        font-size: 3rem;
+    }
 }
 
 #right-side-bar {
