@@ -253,7 +253,11 @@ label.gds-question h1 {
 
 /*Class to hide items if javascript is disabled (e.g. javascript-only functionality)*/
 .jsOnly {
-    display: none !important;
+    display: none !important
+}
+
+.js-enabled button.jsOnly {
+    display: block !important
 }
 
 .search-button {

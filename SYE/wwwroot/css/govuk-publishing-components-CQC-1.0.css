@@ -232,51 +232,54 @@
 /*Back to top banner*/
 
 .app-back-to-top {
-    margin-top: 20px;
-    margin-bottom: 30px
+    margin-top: 20px;}
+
+/*@media (min-width: 40.0625em) {*/
+.app-back-to-top {
+    position: static;
+    bottom: 0;
+    left: 0;
+    margin-top: auto;
+    width: 100%;
+    padding-top: 15px;
+    padding-bottom: 1px;
 }
 
-@media (min-width: 40.0625em) {
-    .app-back-to-top {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        margin-top: auto;
-        width: 100%
-    }
-
-    .js-enabled .app-back-to-top--fixed {
-        position: fixed;
-        top: calc(100% - 50px) !important;
-        padding-top: 15px !important;
-        bottom: auto;
-        left: auto
-    }
-
-    .js-enabled .app-back-to-top--hidden .app-back-to-top__link {
-        position: absolute !important;
-        width: 1px !important;
-        height: 1px !important;
-        margin: 0 !important;
-        overflow: hidden !important;
-        clip: rect(0 0 0 0) !important;
-        -webkit-clip-path: inset(50%) !important;
-        clip-path: inset(50%) !important;
-        white-space: nowrap !important
-    }
-
-        .js-enabled .app-back-to-top--hidden .app-back-to-top__link:active, .js-enabled .app-back-to-top--hidden .app-back-to-top__link:focus {
-            position: static !important;
-            width: auto !important;
-            height: auto !important;
-            margin: inherit !important;
-            overflow: visible !important;
-            clip: auto !important;
-            -webkit-clip-path: none !important;
-            clip-path: none !important;
-            white-space: inherit !important
-        }
+.js-enabled .app-back-to-top--fixed {
+    position: fixed;
+    top: calc(100% - 50px) !important;
+    bottom: auto;
+    left: auto
 }
+
+.js-enabled .app-back-to-top--hidden {
+    display: none;
+}
+
+.js-enabled .app-back-to-top--hidden .app-back-to-top__link {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    -webkit-clip-path: inset(50%) !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important
+}
+
+    .js-enabled .app-back-to-top--hidden .app-back-to-top__link:active, .js-enabled .app-back-to-top--hidden .app-back-to-top__link:focus {
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        margin: inherit !important;
+        overflow: visible !important;
+        clip: auto !important;
+        -webkit-clip-path: none !important;
+        clip-path: none !important;
+        white-space: inherit !important
+    }
+/*}*/
 
 .app-back-to-top__icon {
     display: inline-block;

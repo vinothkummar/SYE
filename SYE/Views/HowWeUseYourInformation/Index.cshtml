@@ -186,7 +186,7 @@
 
 @section Footer
 {
-    <div class="govuk-footer app-back-to-top app-back-to-top--fixed app-back-to-top--hidden jsOnly" role="navigation">
+    <footer class="govuk-footer app-back-to-top app-back-to-top--fixed app-back-to-top--hidden" role="navigation">
         <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
             <a href="#How-we-handle-information" class="govuk-link app-back-to-top__link">
                 <svg class="app-c-back-to-top__icon" xmlns="http://www.w3.org/2000/svg" width="13" height="17" viewBox="0 0 13 17">
@@ -195,7 +195,7 @@
                 Contents
             </a>
         </div>
-    </div>
+    </footer>
 }
 
 @section Scripts
@@ -206,10 +206,10 @@
             function footer() {
                 var scroll = $(window).scrollTop();
                 if (scroll > 50) {
-                    $(".app-back-to-top").fadeIn().removeClass("app-back-to-top--hidden");
+                    $(".app-back-to-top").removeClass("app-back-to-top--hidden");
                 }
                 else {
-                    $(".app-back-to-top").fadeOut().addClass("app-back-to-top--hidden");
+                    $(".app-back-to-top").addClass("app-back-to-top--hidden");
                 }
             }
             footer();
