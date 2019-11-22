@@ -15,13 +15,10 @@ using SYE.Services;
 using SYE.Services.Wrappers;
 using SYE.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using SYE.MiddlewareExtensions;
+using SYE.Models;
 
 namespace SYE.MiddlewareExtensions
 {
@@ -50,6 +47,36 @@ namespace SYE.MiddlewareExtensions
             }
             services.TryAddSingleton<ICustomSearchIndexClient>(new CustomSearchIndexClient(searchConfiguration.SearchServiceName, searchConfiguration.IndexName, searchConfiguration.SearchApiKey));
             services.TryAddScoped<ISearchService, SearchService>();
+
+
+
+
+
+
+            var locationCosmosConfig = Config.GetSection("ConnectionStrings:LocationCosmosDB").Get<LocationConfiguration>();
+            if (locationCosmosConfig == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(locationCosmosConfig)} from application configuration.");
+            }
+            var locationCosmosPolicy = Config.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
+            services.TryAddSingleton<IDocumentClient>(
+                new DocumentClient(
+                    new Uri(locationCosmosConfig.Endpoint),
+                    locationCosmosConfig.Key,
+                    locationCosmosPolicy
+                )
+            );
+
+            var locationDatabase = Config.GetSection("CosmosDBCollections:LocationSchemaDb").Get<LocationConfig<Location>>();
+            if (locationDatabase == null)
+            {
+                throw new ConfigurationErrorsException($"Failed to load {nameof(locationDatabase)} from application configuration.");
+            }
+            services.TryAddSingleton<ILocationConfig<Location>>(locationDatabase);
+
+
+
+
 
 
             var cosmosDatabaseConnectionConfiguration = Config.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
@@ -124,11 +151,13 @@ namespace SYE.MiddlewareExtensions
             });
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.TryAddScoped(typeof(ILocationRepository<>), typeof(LocationRepository<>));
             services.TryAddScoped<IEsbClient, EsbClient>();
             services.TryAddScoped<IEsbWrapper, EsbWrapper>();
             services.TryAddScoped<IEsbService, EsbService>();
             services.TryAddScoped<IFormService, FormService>();
             services.TryAddScoped<ISubmissionService, SubmissionService>();
+            services.TryAddScoped<ILocationService, LocationService>();
             services.TryAddScoped<IDocumentService, DocumentService>();
            
         }

@@ -20,12 +20,14 @@ namespace SYE.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         public ISessionService _sessionService { get; }
 
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContextAccessor, ISessionService sessionService)
+        public HomeController(ILogger<HomeController> logger, 
+            IHttpContextAccessor httpContextAccessor, ISessionService sessionService)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             _sessionService = sessionService;
-    }
+        }
+
 
         [HttpGet, Route("GFC-Local-Start")]
         public IActionResult Index()
