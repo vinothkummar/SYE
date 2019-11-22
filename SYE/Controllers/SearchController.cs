@@ -23,15 +23,13 @@ namespace SYE.Controllers
         private readonly IOptions<ApplicationSettings> _config;
         private readonly IGdsValidation _gdsValidate;
 
-        private readonly ILocationService _locationService;
-
-        public SearchController(ILocationService locationService, ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, IGdsValidation gdsValidate)
+        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, IGdsValidation gdsValidate)
         {
             _searchService = searchService;
             _sessionService = sessionService;
             _config = config;
             _gdsValidate = gdsValidate;
-            _locationService = locationService;
+            
         }
 
         [HttpGet("search/find-a-service")]

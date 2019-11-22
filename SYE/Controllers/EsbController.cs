@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ESBHelpers.Config;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
-using SYE.EsbWrappers;
+using SYE.Helpers.Extensions;
 using SYE.Helpers.Extensions;
 using SYE.Models.SubmissionSchema;
 using SYE.Services;
@@ -19,8 +20,7 @@ namespace SYE.Controllers
     {
         private readonly string _publicApiKey;
         private readonly ILogger _logger;
-        private IEsbService _esbService;
-        private readonly IEsbConfiguration<EsbConfig> _config;
+        private IEsbService _esbService;        
 
         public EsbController(IEsbService esbService, ILogger<EsbController> logger, IEsbConfiguration<EsbConfig> config)
         {
@@ -168,7 +168,7 @@ namespace SYE.Controllers
                 }
                 else
                 {
-                    var result = await _esbService.PostSubmision(submission);
+                    var result = await _esbService.PostSubmision(submission, _logger);
                     if (!string.IsNullOrWhiteSpace(result))
                     {
                         submissionResult.NumberItemsPosted++;

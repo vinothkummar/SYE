@@ -90,3 +90,9 @@ function getCookie(name) {
     }
     return null;
 }
+
+//Function to enable javascript window-close button
+function windowClose() {
+    window.open('', '_parent', '');
+    window.close();
+}

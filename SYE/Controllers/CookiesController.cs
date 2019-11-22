@@ -9,7 +9,7 @@ namespace SYE.Controllers
         [HttpGet, Route("cookies")]
         public IActionResult Index()
         {
-            ViewData["HomeLink"] = true;
+            ViewData["HomeLink"] = false;
             return View();
         }
     }

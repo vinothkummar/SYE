@@ -1,4 +1,6 @@
-﻿using GDSHelpers;
+﻿using ESBHelpers.Config;
+using ESBHelpers.Models;
+using GDSHelpers;
 using GDSHelpers.Models.FormSchema;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -8,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
 using Notify.Client;
 using Notify.Interfaces;
-using SYE.EsbWrappers;
 using SYE.Models.SubmissionSchema;
 using SYE.Repository;
 using SYE.Services;
@@ -17,11 +18,10 @@ using SYE.ViewModels;
 using System;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Security;
 using Microsoft.AspNetCore.Authorization;
 using SYE.Models;
+using System.Linq;
 
 namespace SYE.MiddlewareExtensions
 {
@@ -146,6 +146,7 @@ namespace SYE.MiddlewareExtensions
                 throw new ConfigurationErrorsException($"Failed to load {nameof(esbConfig)} from application configuration.");
             }
             services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
+            services.TryAddSingleton<ESBHelpers.Models.IEsbWrapper>(new  EsbWrapper(esbConfig));
 
 
 
@@ -182,9 +183,8 @@ namespace SYE.MiddlewareExtensions
 
             services.TryAddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.TryAddScoped(typeof(ILocationRepository<>), typeof(LocationRepository<>));
-            services.TryAddScoped<IEsbClient, EsbClient>();
-            services.TryAddScoped<IEsbWrapper, EsbWrapper>();
             services.TryAddScoped<IEsbService, EsbService>();
+            services.TryAddScoped<IEsbConfiguration<EsbConfig>, EsbConfiguration<EsbConfig>>();
             services.TryAddScoped<IFormService, FormService>();
             services.TryAddScoped<ISubmissionService, SubmissionService>();
             services.TryAddScoped<ILocationService, LocationService>();
