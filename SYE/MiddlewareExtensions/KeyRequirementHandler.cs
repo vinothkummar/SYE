@@ -28,11 +28,11 @@ namespace SYE.MiddlewareExtensions
         {
             if (context.Resource is AuthorizationFilterContext authorizationFilterContext)
             {
-                if (!AllowCrossOrigin(authorizationFilterContext))
-                {
-                    _logger.LogError("Cross Domain Origin Resources Sharing Post Error Occured", EnumStatusCode.CQCIntegrationPayLoadNullError);
-                    context.Fail();
-                }
+                //if (!AllowCrossOrigin(authorizationFilterContext))
+                //{
+                //    _logger.LogError("Cross Domain Origin Resources Sharing Post Error Occured", EnumStatusCode.CQCIntegrationPayLoadNullError);
+                //    context.Fail();
+                //}
 
 
                 //requested data using form-urlencoded

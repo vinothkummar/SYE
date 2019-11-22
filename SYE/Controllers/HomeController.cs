@@ -42,7 +42,7 @@ namespace SYE.Controllers
             return View();
         }
        
-        [Authorize(Policy = "ApiKeyPolicy")]
+        //[Authorize(Policy = "ApiKeyPolicy")]
         [HttpPost, Route("website-redirect")]
         public IActionResult Index([FromForm] ProviderDetailsVM providerDetails)
         {          

@@ -17,6 +17,9 @@ using SYE.ViewModels;
 using System;
 using System.Configuration;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Security;
 using Microsoft.AspNetCore.Authorization;
 using SYE.Models;
 
@@ -32,6 +35,8 @@ namespace SYE.MiddlewareExtensions
 
             services.TryAddSingleton<IGdsValidation, GdsValidation>();
             
+
+
             string notificationApiKey = Config.GetSection("ConnectionStrings:GovUkNotify").GetValue<String>("ApiKey");
             if (string.IsNullOrWhiteSpace(notificationApiKey))
             {
@@ -39,6 +44,9 @@ namespace SYE.MiddlewareExtensions
             }
             services.TryAddSingleton<IAsyncNotificationClient>(_ => new NotificationClient(notificationApiKey));            
             services.TryAddScoped<INotificationService, NotificationService>();
+
+
+
 
             var searchConfiguration = Config.GetSection("ConnectionStrings:SearchDb").Get<SearchConfiguration>();
             if (searchConfiguration == null)
@@ -53,29 +61,37 @@ namespace SYE.MiddlewareExtensions
 
 
 
-            var locationCosmosConfig = Config.GetSection("ConnectionStrings:LocationCosmosDB").Get<LocationConfiguration>();
-            if (locationCosmosConfig == null)
+            var locationDbConfig = Config.GetSection("ConnectionStrings:LocationCosmosDB").Get<LocationConfiguration>();
+            if (locationDbConfig == null)
             {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(locationCosmosConfig)} from application configuration.");
+                throw new ConfigurationErrorsException($"Failed to load {nameof(locationDbConfig)} from application configuration.");
             }
-            var locationCosmosPolicy = Config.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
-            services.TryAddSingleton<IDocumentClient>(
-                new DocumentClient(
-                    new Uri(locationCosmosConfig.Endpoint),
-                    locationCosmosConfig.Key,
-                    locationCosmosPolicy
-                )
-            );
+            var locationDbPolicy = Config.GetSection("CosmosDBConnectionPolicy").Get<ConnectionPolicy>() ?? ConnectionPolicy.Default;
+            //services.TryAddSingleton<IDocumentClient>(new DocumentClient(new Uri(locationDbConfig.Endpoint), locationDbConfig.Key, locationDbPolicy));
+            
+            SecureString secKey = new SecureString();
+            locationDbConfig.Key.ToCharArray().ToList().ForEach(secKey.AppendChar);
+            secKey.MakeReadOnly();
 
-            var locationDatabase = Config.GetSection("CosmosDBCollections:LocationSchemaDb").Get<LocationConfig<Location>>();
-            if (locationDatabase == null)
+            services.TryAddSingleton<IDocClient>(new DocClient { Endpoint = locationDbConfig.Endpoint, Key = secKey, Policy = locationDbConfig.Policy});
+            
+
+
+
+
+            var locationDb = Config.GetSection("CosmosDBCollections:LocationSchemaDb").Get<LocationConfig<Location>>();
+            if (locationDb == null)
             {
-                throw new ConfigurationErrorsException($"Failed to load {nameof(locationDatabase)} from application configuration.");
+                throw new ConfigurationErrorsException($"Failed to load {nameof(locationDb)} from application configuration.");
             }
-            services.TryAddSingleton<ILocationConfig<Location>>(locationDatabase);
-                                          
+            services.TryAddSingleton<ILocationConfig<Location>>(locationDb);
+                             
+            
 
-                                    var cosmosDatabaseConnectionConfiguration = Config.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
+
+            
+
+            var cosmosDatabaseConnectionConfiguration = Config.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
             if (cosmosDatabaseConnectionConfiguration == null)
             {
                 throw new ConfigurationErrorsException($"Failed to load {nameof(cosmosDatabaseConnectionConfiguration)} from application configuration.");
@@ -89,12 +105,18 @@ namespace SYE.MiddlewareExtensions
                 )
             );
 
+
+
+
             var formSchemaDatabase = Config.GetSection("CosmosDBCollections:FormSchemaDb").Get<AppConfiguration<FormVM>>();
             if (formSchemaDatabase == null)
             {
                 throw new ConfigurationErrorsException($"Failed to load {nameof(formSchemaDatabase)} from application configuration.");
             }
             services.TryAddSingleton<IAppConfiguration<FormVM>>(formSchemaDatabase);
+
+
+
 
             var submissionsDatabase = Config.GetSection("CosmosDBCollections:SubmissionsDb").Get<AppConfiguration<SubmissionVM>>();
             if (submissionsDatabase == null)
@@ -103,6 +125,10 @@ namespace SYE.MiddlewareExtensions
             }
             services.TryAddSingleton<IAppConfiguration<SubmissionVM>>(submissionsDatabase);
 
+
+
+
+
             var configDatabase = Config.GetSection("CosmosDBCollections:ConfigDb").Get<AppConfiguration<ConfigVM>>();
             if (configDatabase == null)
             {
@@ -110,12 +136,20 @@ namespace SYE.MiddlewareExtensions
             }
             services.TryAddSingleton<IAppConfiguration<ConfigVM>>(configDatabase);
 
+
+
+
+
             var esbConfig = Config.GetSection("ConnectionStrings:EsbConfig").Get<EsbConfiguration<EsbConfig>>();
             if (esbConfig == null)
             {
                 throw new ConfigurationErrorsException($"Failed to load {nameof(esbConfig)} from application configuration.");
             }
             services.AddSingleton<IEsbConfiguration<EsbConfig>>(esbConfig);
+
+
+
+
 
             IFileProvider physicalProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory());
             services.AddSingleton<IFileProvider>(physicalProvider);

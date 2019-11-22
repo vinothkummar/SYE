@@ -155,7 +155,7 @@ namespace SYE.Controllers
                     var startPage = _config.Value.FormStartPage;
                     return RedirectToAction("Index", "Form", new { id = startPage });
                 }
-                catch
+                catch(Exception ex)
                 {
                     return GetCustomErrorCode(EnumStatusCode.SearchSelectLocationJsonError, "Error selecting location. json form not loaded");
                 }

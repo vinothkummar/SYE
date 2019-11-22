@@ -1,4 +1,8 @@
 ﻿
+using System;
+using System.Security;
+using Microsoft.Azure.Documents.Client;
+
 namespace SYE.Repository
 {
 
@@ -6,12 +10,29 @@ namespace SYE.Repository
     {
         string Endpoint { get; set; }
         string Key { get; set; }
+        ConnectionPolicy Policy { get; set; }
     }
     public class LocationConfiguration : ILocationConfiguration
     {
         public string Endpoint { get; set; }
         public string Key { get; set; }
+        public ConnectionPolicy Policy { get; set; }
     }
+
+    public interface IDocClient
+    {
+        string Endpoint { get; set; }
+        SecureString Key { get; set; }
+        ConnectionPolicy Policy { get; set; }
+    }
+    public class DocClient : IDocClient
+    {
+        public string Endpoint { get; set; }
+        public SecureString Key { get; set; }
+        public ConnectionPolicy Policy { get; set; }
+    }
+
+
 
     public interface ILocationConfig<T> where T : class
     {

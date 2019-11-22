@@ -24,13 +24,15 @@ namespace SYE.Repository
     {
         private readonly string _databaseId;
         private readonly string _collectionId;
-        private readonly IDocumentClient _client;
+        private readonly IDocClient _locConfig;
+        private readonly DocumentClient _client;
 
-        public LocationRepository(ILocationConfig<T> appConfig, IDocumentClient client)
+        public LocationRepository(ILocationConfig<T> appConfig, IDocClient locConfig)
         {
             _databaseId = appConfig?.DatabaseId;
             _collectionId = appConfig?.CollectionId;
-            _client = client;
+            _locConfig = locConfig;
+            _client = new DocumentClient(new Uri(_locConfig.Endpoint), _locConfig.Key, _locConfig.Policy);
         }
 
         public async Task<T> GetByIdAsync(string id)
