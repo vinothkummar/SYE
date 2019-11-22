@@ -104,7 +104,13 @@ namespace SYE.Controllers
                                     $"Message = {message}, " +
                                     $"Path = {statusCodeResult?.OriginalPath}, " +
                                     $"QueryString = {statusCodeResult?.OriginalQueryString}");
-                    return View("CQCIntegrationException");
+                    return View("GenericException");
+                case 577:
+                    _logger.LogCritical($"{statusCode} CQC Redirection Error; provider information not exists in the sytem" +
+                                    $"Message = {message}, " +
+                                    $"Path = {statusCodeResult?.OriginalPath}, " +
+                                    $"QueryString = {statusCodeResult?.OriginalQueryString}");
+                    return View("GenericException");
                 default:
                     _logger.LogError("Other Type of Error Occured. " +
                                      $"The path {exceptionDetails.Path} " +

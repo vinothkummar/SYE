@@ -20,12 +20,15 @@ namespace SYE.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         public ISessionService _sessionService { get; }
 
+        private readonly ILocationService _locationService;
+
         public HomeController(ILogger<HomeController> logger, 
-            IHttpContextAccessor httpContextAccessor, ISessionService sessionService)
+            IHttpContextAccessor httpContextAccessor, ISessionService sessionService, ILocationService locationService)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             _sessionService = sessionService;
+            _locationService = locationService;
         }
 
 
@@ -46,7 +49,15 @@ namespace SYE.Controllers
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
 
             ViewBag.HideSiteTitle = true;
-            
+
+            var result = _locationService.GetByIdAsync("RY7W1").Result;
+
+            if(result == null)
+            {
+                GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNotExist, "Error with CQC PayLoad; Provider Information not exist in the system");
+                _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
+                return RedirectToAction("Index", "Search");
+            }
 
             if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && !string.IsNullOrEmpty(providerDetails.CookieAccepted))
             {

@@ -36,10 +36,7 @@ namespace SYE.Controllers
 
         [HttpGet("search/find-a-service")]
         public IActionResult Index(string errorMessage, string search)
-        {
-            var result = _locationService.GetByIdAsync("RY7W1").Result;
-
-
+        {            
             ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
             //Make Sure we have a clean session
@@ -139,7 +136,7 @@ namespace SYE.Controllers
         public IActionResult SelectLocation(UserSessionVM vm)
         {            
             try
-            {                
+            {
                 //Store the location we are giving feedback about
                 _sessionService.SetUserSessionVars(vm);
 

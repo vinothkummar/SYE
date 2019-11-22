@@ -73,13 +73,9 @@ namespace SYE.MiddlewareExtensions
                 throw new ConfigurationErrorsException($"Failed to load {nameof(locationDatabase)} from application configuration.");
             }
             services.TryAddSingleton<ILocationConfig<Location>>(locationDatabase);
+                                          
 
-
-
-
-
-
-            var cosmosDatabaseConnectionConfiguration = Config.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
+                                    var cosmosDatabaseConnectionConfiguration = Config.GetSection("ConnectionStrings:DefaultCosmosDB").Get<CosmosConnection>();
             if (cosmosDatabaseConnectionConfiguration == null)
             {
                 throw new ConfigurationErrorsException($"Failed to load {nameof(cosmosDatabaseConnectionConfiguration)} from application configuration.");
