@@ -42,25 +42,25 @@ namespace SYE.Controllers
             return View();
         }
        
-        [Authorize]
+        [Authorize(Policy = "ApiKeyPolicy")]
         [HttpPost, Route("website-redirect")]
         public IActionResult Index([FromForm] ProviderDetailsVM providerDetails)
         {          
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
 
-            ViewBag.HideSiteTitle = true;
-
-            var result = _locationService.GetByIdAsync("RY7W1").Result;
-
-            if(result == null)
-            {
-                GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNotExist, "Error with CQC PayLoad; Provider Information not exist in the system");
-                _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
-                return RedirectToAction("Index", "Search");
-            }
+            ViewBag.HideSiteTitle = true;           
 
             if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && !string.IsNullOrEmpty(providerDetails.CookieAccepted))
             {
+                var result = _locationService.GetByIdAsync(providerDetails.LocationId).Result;
+
+                if (result == null)
+                {
+                    GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNotExist, "Error with CQC PayLoad; Provider Information not exist in the system");
+                    _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
+                    return RedirectToAction("Index", "Search");
+                }
+
                 _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
                
                 return RedirectToAction("SelectLocation", "Search", routeValues: providerDetails);

@@ -28,11 +28,11 @@ namespace SYE.MiddlewareExtensions
         {
             if (context.Resource is AuthorizationFilterContext authorizationFilterContext)
             {
-                //if (!AllowCrossOrigin(authorizationFilterContext))
-                //{
-                //    _logger.LogError("Cross Domain Origin Resources Sharing Post Error Occured", EnumStatusCode.CQCIntegrationPayLoadNullError);
-                //    context.Fail();
-                //}
+                if (!AllowCrossOrigin(authorizationFilterContext))
+                {
+                    _logger.LogError("Cross Domain Origin Resources Sharing Post Error Occured", EnumStatusCode.CQCIntegrationPayLoadNullError);
+                    context.Fail();
+                }
 
 
                 //requested data using form-urlencoded
@@ -58,7 +58,7 @@ namespace SYE.MiddlewareExtensions
 
         private bool IsOriginAllowed(Uri origin)
         {
-            string[] allowedDomains = new[] { "www.cqc.org.uk", "dev.cqc.org.uk"};
+            string[] allowedDomains = new[] { "www.cqc.org.uk", "dev.cqc.org.uk", "localhost"};
 
             if (allowedDomains.Contains(origin.Host))
             {
