@@ -1,6 +1,35 @@
 ﻿
 namespace SYE.Repository
 {
+
+    public interface ILocationConfiguration
+    {
+        string Endpoint { get; set; }
+        string Key { get; set; }
+    }
+    public class LocationConfiguration : ILocationConfiguration
+    {
+        public string Endpoint { get; set; }
+        public string Key { get; set; }
+    }
+
+    public interface ILocationConfig<T> where T : class
+    {
+        string DatabaseId { get; set; }
+        string CollectionId { get; set; }
+    }
+    public class LocationConfig<T> : ILocationConfig<T> where T : class
+    {
+        public string DatabaseId { get; set; }
+        public string CollectionId { get; set; }
+    }
+
+
+
+
+
+
+
     public interface ISearchConfiguration
     {
         string SearchServiceName { get; set; }

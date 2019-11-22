@@ -23,17 +23,23 @@ namespace SYE.Controllers
         private readonly IOptions<ApplicationSettings> _config;
         private readonly IGdsValidation _gdsValidate;
 
-        public SearchController(ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, IGdsValidation gdsValidate)
+        private readonly ILocationService _locationService;
+
+        public SearchController(ILocationService locationService, ISearchService searchService, ISessionService sessionService, IOptions<ApplicationSettings> config, IGdsValidation gdsValidate)
         {
             _searchService = searchService;
             _sessionService = sessionService;
             _config = config;
             _gdsValidate = gdsValidate;
+            _locationService = locationService;
         }
 
         [HttpGet("search/find-a-service")]
         public IActionResult Index(string errorMessage, string search)
         {
+            var result = _locationService.GetByIdAsync("RY7W1").Result;
+
+
             ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
             //Make Sure we have a clean session
