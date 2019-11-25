@@ -61,7 +61,7 @@ namespace SYE.MiddlewareExtensions
 
 
 
-            var locationDbConfig = Config.GetSection("ConnectionStrings:LocationCosmosDB").Get<LocationConfiguration>();
+            var locationDbConfig = Config.GetSection("ConnectionStrings:LocationSearchCosmosDB").Get<LocationConfiguration>();
             if (locationDbConfig == null)
             {
                 throw new ConfigurationErrorsException($"Failed to load {nameof(locationDbConfig)} from application configuration.");
