@@ -113,6 +113,8 @@ namespace SYE.Controllers
                 {
                     //Load the Form into Session
                     _sessionService.LoadLatestFormIntoSession(replacements);
+                    var searchUrl = Request.Headers["Referer"].ToString();
+                    _sessionService.SaveSearchUrl(searchUrl);
                 }
                 catch
                 {
