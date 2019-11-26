@@ -11,6 +11,8 @@ using System.IO;
 using System.Text;
 using System;
 using System.Linq;
+using Microsoft.Extensions.Options;
+using SYE.Helpers.Algorithm;
 
 namespace SYE.Controllers
 {
@@ -18,23 +20,33 @@ namespace SYE.Controllers
     {
         private readonly ILogger _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IOptions<ApplicationSettings> _config;
         public ISessionService _sessionService { get; }
 
         private readonly ILocationService _locationService;
 
         public HomeController(ILogger<HomeController> logger, 
-            IHttpContextAccessor httpContextAccessor, ISessionService sessionService, ILocationService locationService)
+            IHttpContextAccessor httpContextAccessor, ISessionService sessionService, ILocationService locationService,
+            IOptions<ApplicationSettings> config)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
             _sessionService = sessionService;
             _locationService = locationService;
+            _config = config;
         }
 
 
-        [HttpGet, Route("GFC-Local-Start")]
+        [HttpGet]
         public IActionResult Index()
         {
+            var redirectUrl = _config.Value.RedirectUrl;
+            if (!string.IsNullOrEmpty(redirectUrl))
+            {
+                Response.Redirect(redirectUrl);
+            }
+            
+            
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
             ViewBag.HideSiteTitle = true;
             if (TempData.ContainsKey("search"))

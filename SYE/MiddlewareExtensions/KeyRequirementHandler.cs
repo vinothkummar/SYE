@@ -6,6 +6,9 @@ using SYE.Helpers.Enums;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Headers;
+using Microsoft.Extensions.Options;
+using SYE.ViewModels;
 
 namespace SYE.MiddlewareExtensions
 {
@@ -15,8 +18,14 @@ namespace SYE.MiddlewareExtensions
         public const int GFC_KEY = 0;
         public const int GFC_PASSWORD = 1;
         private readonly ILogger<KeyRequirementHandler> _logger;
+        private readonly IOptions<ApplicationSettings> _config;
 
-        public KeyRequirementHandler(ILogger<KeyRequirementHandler> logger) => _logger = logger;
+        public KeyRequirementHandler(ILogger<KeyRequirementHandler> logger, IOptions<ApplicationSettings> config)
+        {
+            _logger = logger;
+            _config = config;
+        }
+
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, KeyRequirement requirement)
         {            
@@ -50,15 +59,20 @@ namespace SYE.MiddlewareExtensions
             var context = authorizationFilterContext.HttpContext.Request;
             Uri origin = null;
 
+
             var originHeader = context.Headers["Referer"].FirstOrDefault() ?? context.Headers["Host"].FirstOrDefault();
-            if (!String.IsNullOrEmpty(originHeader) && Uri.TryCreate(originHeader, UriKind.Absolute, out origin))
+            if (!string.IsNullOrEmpty(originHeader) && Uri.TryCreate(originHeader, UriKind.Absolute, out origin))
                 return origin;
             return null;
         }
 
         private bool IsOriginAllowed(Uri origin)
         {
-            string[] allowedDomains = new[] { "www.cqc.org.uk", "dev.cqc.org.uk", "localhost"};
+            var allowedDomains = string.IsNullOrEmpty(_config.Value.AllowedCorsDomains)
+                                        ? new string[] { }
+                                        : _config.Value.AllowedCorsDomains.Split(',');
+
+            //string[] allowedDomains = new[] { "www.cqc.org.uk", "dev.cqc.org.uk", "localhost:44393"};
 
             if (allowedDomains.Contains(origin.Host))
             {
