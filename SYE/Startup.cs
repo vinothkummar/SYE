@@ -1,36 +1,43 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SYE.Helpers;
 using SYE.MiddlewareExtensions;
+using SYE.Models;
 using System;
 
 namespace SYE
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }     
+        public IConfiguration Configuration { get; }        
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;      
-        }       
+        }
 
         public void ConfigureServices(IServiceCollection services)
-        {
+        {   
             services.Configure<CookiePolicyOptions>(options =>
             {
-                options.CheckConsentNeeded = context => false;
+                options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.ConfigureApplicationCookie(options => options.Cookie.SecurePolicy = CookieSecurePolicy.Always);
+            services.ConfigureApplicationCookie(options =>
+            {
+               options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+               
+            });
 
 
-            services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
             {
@@ -39,10 +46,11 @@ namespace SYE
                 options.Cookie.IsEssential = true;
             });
 
+            
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddHttpContextAccessor();
-            services.AddOptions();
-
+            services.AddOptions();            
             services.AddCustomServices(Configuration);            
         }
 
@@ -67,7 +75,7 @@ namespace SYE
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
+            }           
 
             app.UseHttpsRedirection();
 
@@ -75,7 +83,7 @@ namespace SYE
 
             app.UseCookiePolicy();
 
-            app.UseSession();
+            app.UseSession();           
 
             app.UseMvc(routes =>
             {

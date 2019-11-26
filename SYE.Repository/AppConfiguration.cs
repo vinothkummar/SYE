@@ -1,6 +1,56 @@
 ﻿
+using System;
+using System.Security;
+using Microsoft.Azure.Documents.Client;
+
 namespace SYE.Repository
 {
+
+    public interface ILocationConfiguration
+    {
+        string Endpoint { get; set; }
+        string Key { get; set; }
+        ConnectionPolicy Policy { get; set; }
+    }
+    public class LocationConfiguration : ILocationConfiguration
+    {
+        public string Endpoint { get; set; }
+        public string Key { get; set; }
+        public ConnectionPolicy Policy { get; set; }
+    }
+
+    public interface IDocClient
+    {
+        string Endpoint { get; set; }
+        SecureString Key { get; set; }
+        ConnectionPolicy Policy { get; set; }
+    }
+    public class DocClient : IDocClient
+    {
+        public string Endpoint { get; set; }
+        public SecureString Key { get; set; }
+        public ConnectionPolicy Policy { get; set; }
+    }
+
+
+
+    public interface ILocationConfig<T> where T : class
+    {
+        string DatabaseId { get; set; }
+        string CollectionId { get; set; }
+    }
+    public class LocationConfig<T> : ILocationConfig<T> where T : class
+    {
+        public string DatabaseId { get; set; }
+        public string CollectionId { get; set; }
+    }
+
+
+
+
+
+
+
     public interface ISearchConfiguration
     {
         string SearchServiceName { get; set; }

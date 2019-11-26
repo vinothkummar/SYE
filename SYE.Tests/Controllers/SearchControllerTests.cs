@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Castle.Components.DictionaryAdapter;
+﻿using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
 using GDSHelpers;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +14,9 @@ using SYE.Models;
 using SYE.Models.Response;
 using SYE.Services;
 using SYE.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace SYE.Tests.Controllers
@@ -52,6 +52,7 @@ namespace SYE.Tests.Controllers
                 $"{uac.Controller}/{uac.Action}#{uac.Fragment}?" + string.Join("&",
                     new RouteValueDictionary(uac.Values).Select(p => p.Key + "=" + p.Value)));
             mockValidation.Setup(x => x.CleanText(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>>(), It.IsAny<HashSet<char>>())).Returns("abc");
+            
             
             var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
             tempData["search"] = "";
@@ -94,7 +95,7 @@ namespace SYE.Tests.Controllers
             mockValidation.Setup(x => x.CleanText(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>>(), It.IsAny<HashSet<char>>())).Returns("abc");
             mockUrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns((UrlActionContext uac) =>
                 $"{uac.Controller}/{uac.Action}#{uac.Fragment}?" + string.Join("&",
-                    new RouteValueDictionary(uac.Values).Select(p => p.Key + "=" + p.Value)));
+                    new RouteValueDictionary(uac.Values).Select(p => p.Key + "=" + p.Value)));                    
 
             var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
             tempData["search"] = "";          
@@ -129,6 +130,7 @@ namespace SYE.Tests.Controllers
             mockUrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns((UrlActionContext uac) =>
                 $"{uac.Controller}/{uac.Action}#{uac.Fragment}?" + string.Join("&",
                     new RouteValueDictionary(uac.Values).Select(p => p.Key + "=" + p.Value)));
+                 
 
             var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
             tempData["search"] = "";
@@ -151,7 +153,7 @@ namespace SYE.Tests.Controllers
         [Fact]
         public void SearchResults_Should_Return_Internal_Error()
         {
-            //arrange
+            //arrange            
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
@@ -194,6 +196,7 @@ namespace SYE.Tests.Controllers
             mockUrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns((UrlActionContext uac) =>
                 $"{uac.Controller}/{uac.Action}#{uac.Fragment}?" + string.Join("&",
                     new RouteValueDictionary(uac.Values).Select(p => p.Key + "=" + p.Value)));
+                   
 
             var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
             tempData["search"] = "";
@@ -246,6 +249,7 @@ namespace SYE.Tests.Controllers
             mockUrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns((UrlActionContext uac) =>
                 $"{uac.Controller}/{uac.Action}#{uac.Fragment}?" + string.Join("&",
                     new RouteValueDictionary(uac.Values).Select(p => p.Key + "=" + p.Value)));
+                    
 
             var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
             tempData["search"] = "";
@@ -363,6 +367,7 @@ namespace SYE.Tests.Controllers
             mockUrlHelper.Setup(x => x.Action(It.IsAny<UrlActionContext>())).Returns((UrlActionContext uac) =>
                 $"{uac.Controller}/{uac.Action}#{uac.Fragment}?" + string.Join("&",
                     new RouteValueDictionary(uac.Values).Select(p => p.Key + "=" + p.Value)));
+                   
 
             var tempData = new TempDataDictionary(new DefaultHttpContext(), Mock.Of<ITempDataProvider>());
             tempData["search"] = "";
@@ -434,7 +439,7 @@ namespace SYE.Tests.Controllers
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
-            var mockValidation = new Mock<IGdsValidation>();
+            var mockValidation = new Mock<IGdsValidation>();            
 //            mockValidation.Setup(x => x.CleanText(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>>(), It.IsAny<HashSet<char>>())).Returns("abc");
             mockValidation.Setup(x => x.CleanText(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>>(), It.IsAny<HashSet<char>>())).Returns(search);
             var mockUrlHelper = new Mock<IUrlHelper>();
@@ -475,6 +480,8 @@ namespace SYE.Tests.Controllers
             };
             var expectedResult = new List<Models.SearchResult>();
             expectedResult.Add(expectedrecord);
+
+           
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(),
@@ -484,7 +491,7 @@ namespace SYE.Tests.Controllers
             mockValidation.Setup(x => x.CleanText(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>>(), It.IsAny<HashSet<char>>())).Returns("abc");
 
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object, mockValidation.Object);
+            var sut = new SearchController( mockService.Object, mockSession.Object, mockSettings.Object, mockValidation.Object);
             Action act = () => sut.SearchResults("search", 1);
 
             //assert
@@ -494,7 +501,7 @@ namespace SYE.Tests.Controllers
         [Fact]
         public void IndexShouldReturnErrorFlag()
         {
-            //arrange
+            
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
@@ -531,6 +538,7 @@ namespace SYE.Tests.Controllers
                 HttpContext = httpContext,
             };
 
+          
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             ApplicationSettings appSettings = new ApplicationSettings() { FormStartPage = "test" };
@@ -540,7 +548,7 @@ namespace SYE.Tests.Controllers
             mockValidation.Setup(x => x.CleanText(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>>(), It.IsAny<HashSet<char>>())).Returns("abc");
 
             //act
-            var sut = new SearchController(mockService.Object, mockSession.Object, options, mockValidation.Object);
+            var sut = new SearchController( mockService.Object, mockSession.Object, options, mockValidation.Object);
             sut.ControllerContext = controllerContext;
             var result = sut.SelectLocation(new UserSessionVM());
 
@@ -562,7 +570,7 @@ namespace SYE.Tests.Controllers
                 HttpContext = httpContext,
             };
 
-            var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location" };
+            var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location" };           
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             mockSession.Setup(x => x.SetUserSessionVars(userVm)).Verifiable();
@@ -593,7 +601,7 @@ namespace SYE.Tests.Controllers
 
             var locationName = "test location";
             var mockSession = new Mock<ISessionService>();
-            var mockService = new Mock<ISearchService>();
+            var mockService = new Mock<ISearchService>();           
             var replacements = new Dictionary<string, string>
             {
                 {"!!location_name!!", locationName}
@@ -619,7 +627,7 @@ namespace SYE.Tests.Controllers
             //arrange
             var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location" };
             var mockSession = new Mock<ISessionService>();
-            var mockService = new Mock<ISearchService>();
+            var mockService = new Mock<ISearchService>();          
             mockSession.Setup(x => x.SetUserSessionVars(userVm)).Throws(new Exception());
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockValidation = new Mock<IGdsValidation>();
@@ -643,7 +651,7 @@ namespace SYE.Tests.Controllers
 
             var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location" };
             var mockSession = new Mock<ISessionService>();
-            var mockService = new Mock<ISearchService>();
+            var mockService = new Mock<ISearchService>();            
             mockService.Setup(x => x.GetPaginatedResult(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), true)).Throws(new Exception());
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockValidation = new Mock<IGdsValidation>();
@@ -670,6 +678,7 @@ namespace SYE.Tests.Controllers
             var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location" };
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
+            var mockLocationService = new Mock<ILocationService>();
             mockSession.Setup(x => x.LoadLatestFormIntoSession(It.IsAny<Dictionary<string, string>>())).Throws(new Exception());
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockValidation = new Mock<IGdsValidation>();
@@ -695,7 +704,8 @@ namespace SYE.Tests.Controllers
 
             var userVm = new UserSessionVM { ProviderId = "123", LocationId = "234", LocationName = "test location" };
             var mockSession = new Mock<ISessionService>();
-            var mockService = new Mock<ISearchService>();
+            var mockService = new Mock<ISearchService>();            
+
             mockSession.Setup(x => x.LoadLatestFormIntoSession(It.IsAny<Dictionary<string, string>>())).Throws(new Exception());
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
             var mockValidation = new Mock<IGdsValidation>();

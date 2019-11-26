@@ -22,6 +22,10 @@
         CYALocationNullError = 571,
         CYAFeedbackNullError = 572,
         CYASubmissionFormNullError = 573,
-        CYASubmissionReferenceNullError = 574
+        CYASubmissionReferenceNullError = 574,
+        //CQCIntegration errors
+        CQCIntegrationPayLoadNullError = 575,
+        CrossDomainOriginResourcesSharing = 576,
+        CQCIntegrationPayLoadNotExist = 577,
     }
 }

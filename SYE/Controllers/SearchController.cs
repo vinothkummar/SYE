@@ -29,11 +29,12 @@ namespace SYE.Controllers
             _sessionService = sessionService;
             _config = config;
             _gdsValidate = gdsValidate;
+            
         }
 
         [HttpGet("search/find-a-service")]
         public IActionResult Index(string errorMessage, string search)
-        {
+        {            
             ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
 
             //Make Sure we have a clean session
@@ -41,7 +42,7 @@ namespace SYE.Controllers
 
             try
             {
-                ViewBag.Title = "Find a service - Give feedback on care";
+               ViewBag.Title = "Find a service - Give feedback on care";                            
                 return View(new SearchResultsVM { ErrorMessage = errorMessage, ShowIncompletedSearchMessage = (errorMessage != null), Search = TempData.ContainsKey("search") ? TempData["search"].ToString() : search });
             }
             catch (Exception ex)
@@ -129,7 +130,7 @@ namespace SYE.Controllers
             }
         }
 
-        [HttpPost]
+        //[HttpPost]
         public IActionResult SelectLocation(UserSessionVM vm)
         {            
             try
@@ -152,7 +153,7 @@ namespace SYE.Controllers
                     var startPage = _config.Value.FormStartPage;
                     return RedirectToAction("Index", "Form", new { id = startPage });
                 }
-                catch
+                catch(Exception ex)
                 {
                     return GetCustomErrorCode(EnumStatusCode.SearchSelectLocationJsonError, "Error selecting location. json form not loaded");
                 }

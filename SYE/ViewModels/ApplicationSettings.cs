@@ -19,5 +19,7 @@ namespace SYE.ViewModels
         public string ServiceNotFoundPage { get; set; }
         public string DefaultBackLink { get; set; }
         public GetHelp GetHelp { get; set; }
+        public string RedirectUrl { get; set; }
+        public string AllowedCorsDomains { get; set; }
     }
 }
