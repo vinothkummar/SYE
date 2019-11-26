@@ -49,20 +49,20 @@ namespace SYE.Controllers
             ViewBag.Title = "Give feedback on care - Care Quality Commission (CQC)";
 
             ViewBag.HideSiteTitle = true;
-           
-            var result = _locationService.GetByIdAsync(providerDetails.LocationId).Result;
-
-            if (result == null)
-            {
-                    GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNotExist, "Error with CQC PayLoad; Provider Information not exist in the system");
-                    _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
-                    return RedirectToAction("Index", "Search");
-            } 
 
             if (!string.IsNullOrEmpty(providerDetails.LocationId) && !string.IsNullOrEmpty(providerDetails.ProviderId) && !string.IsNullOrEmpty(providerDetails.LocationName) && !string.IsNullOrEmpty(providerDetails.CookieAccepted))
-            {             
+            {
                 _sessionService.SetCookieFlagOnSession(providerDetails.CookieAccepted.ToLower().Trim());
-               
+
+                var result = _locationService.GetByIdAsync(providerDetails.LocationId).Result;
+
+                if (result == null)
+                {
+                    _logger.LogError("Error with CQC PayLoad; Provider Information not exist in the system", EnumStatusCode.CQCIntegrationPayLoadNullError);
+                   
+                    return RedirectToAction("Index", "Search");
+                }     
+                
                 return RedirectToAction("SelectLocation", "Search", routeValues: providerDetails);               
             }
             else if (!string.IsNullOrEmpty(providerDetails.CookieAccepted))
