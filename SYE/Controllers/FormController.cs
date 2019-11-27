@@ -198,7 +198,7 @@ namespace SYE.Controllers
             if (previousPageOptions?.Count == 0)
             {
                 if (serviceNotFound && currentPage.PageId == serviceNotFoundPage)
-                    return Url.Action("Index", "Search");
+                    return searchUrl;
 
                 if (!serviceNotFound && currentPage.PageId == startPage)
                     return searchUrl;
