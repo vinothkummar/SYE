@@ -501,15 +501,18 @@ namespace SYE.Tests.Controllers
         [Fact]
         public void IndexShouldReturnErrorFlag()
         {
-            
+            var appsettings = new ApplicationSettings() { GFCUrls = new GFCUrls() { StartPage = "https://www.cqc.org.uk/give-feedback-on-care" } };
+
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
+            mockSettings.Setup(ap => ap.Value).Returns(appsettings);
             var mockUrlHelper = new Mock<IUrlHelper>();
             var mockValidation = new Mock<IGdsValidation>();
             var mockHttpContext = new Mock<HttpContext>();
             var mockTempDataProvider = new Mock<SessionStateTempDataProvider>();
             mockValidation.Setup(x => x.CleanText(It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<List<string>>(), It.IsAny<HashSet<char>>())).Returns("abc");
+
 
             var sut = new SearchController(mockService.Object, mockSession.Object, mockSettings.Object, mockValidation.Object);
 
@@ -526,7 +529,7 @@ namespace SYE.Tests.Controllers
             model.ShowResults.Should().Be(false);
             model.ShowIncompletedSearchMessage.Should().Be(true);
         }
- 
+
         [Fact]
         public void SelectLocationShouldRedirectToFormIndex()
         {
