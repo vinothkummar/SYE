@@ -40,7 +40,7 @@ namespace SYE.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var redirectUrl = _config.Value.RedirectUrl;
+            var redirectUrl = _config.Value.GFCUrls.RedirectUrl;
             if (!string.IsNullOrEmpty(redirectUrl))
             {
                 Response.Redirect(redirectUrl);

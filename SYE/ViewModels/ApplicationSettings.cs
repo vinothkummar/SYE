@@ -12,6 +12,12 @@ namespace SYE.ViewModels
         public string ContactExcluding { get; set; }
     }
 
+    public class GFCUrls
+    {
+        public string StartPage { get; set; }
+        public string RedirectUrl { get; set; }
+    }
+
     public class ApplicationSettings
     {
         public string AppName { get; set; }
@@ -19,7 +25,7 @@ namespace SYE.ViewModels
         public string ServiceNotFoundPage { get; set; }
         public string DefaultBackLink { get; set; }
         public GetHelp GetHelp { get; set; }
-        public string RedirectUrl { get; set; }
         public string AllowedCorsDomains { get; set; }
+        public GFCUrls GFCUrls { get; set; }
     }
 }

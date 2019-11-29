@@ -5,6 +5,11 @@
 @using Microsoft.CodeAnalysis
 @inject IConfiguration Configuration
 @inject ISessionService SessionService
+@using SYE.ViewModels
+@inject Microsoft.Extensions.Options.IOptions<ApplicationSettings> _config
+@{
+    var config = _config.Value;
+}
 <!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -78,7 +83,7 @@
     @{
         var cookieAccepted = SessionService.GetCookieFlagFromSession() ?? "false";
 
-         if (cookieAccepted != "true")
+        if (cookieAccepted != "true")
         {
             <partial name="_CookieConsentPartial" />
             SessionService.SetCookieFlagOnSession("true");
@@ -104,8 +109,8 @@
             <gds-header-content>
                 @if (ViewBag.HideSiteTitle != true)
                 {
-                    <a href="/" class="govuk-header__link govuk-header__link--service-name">
-                        @(Configuration.GetValue<string>("ApplicationSettings:AppName"))
+                    <a href="@config.GFCUrls.StartPage" class="govuk-header__link govuk-header__link--service-name">
+                        @config.AppName
                     </a>
                 }
             </gds-header-content>
@@ -171,9 +176,9 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     <script src="~/js/govuk-frontend-2.13.0.min.js" asp-append-version="true"></script>
     <script>window.GOVUKFrontend.initAll()</script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-<script>showJsOnly();</script>
-@RenderSection("Scripts", required: false)
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>showJsOnly();</script>
+    @RenderSection("Scripts", required: false)
 
 </body>
 </html>
