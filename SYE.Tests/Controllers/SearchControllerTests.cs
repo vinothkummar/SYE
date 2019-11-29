@@ -501,7 +501,8 @@ namespace SYE.Tests.Controllers
         [Fact]
         public void IndexShouldReturnErrorFlag()
         {
-            
+            var appsettings = new ApplicationSettings() { GFCUrls = new GFCUrls() { StartPage = "https://www.cqc.org.uk/give-feedback-on-care" } };
+
             var mockSession = new Mock<ISessionService>();
             var mockService = new Mock<ISearchService>();
             var mockSettings = new Mock<IOptions<ApplicationSettings>>();
