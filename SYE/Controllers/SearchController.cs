@@ -35,7 +35,7 @@ namespace SYE.Controllers
         [HttpGet("search/find-a-service")]
         public IActionResult Index(string errorMessage, string search)
         {            
-            ViewBag.BackLink = new BackLinkVM { Show = true, Url = Url.Action("Index", "Home"), Text = "Back" };
+            ViewBag.BackLink = new BackLinkVM { Show = true, Url = _config.Value.GFCUrls.StartPage, Text = "Back" };
 
             //Make Sure we have a clean session
             _sessionService.ClearSession();
