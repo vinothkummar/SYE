@@ -39,7 +39,7 @@ namespace SYE.MiddlewareExtensions
             {
                 if (!AllowCrossOrigin(authorizationFilterContext))
                 {
-                    _logger.LogError("Cross Domain Origin Resources Sharing Post Error Occured", EnumStatusCode.CQCIntegrationPayLoadNullError);
+                    _logger.LogError("Cross Domain Origin Resources Sharing Post Error Occured", EnumStatusCode.CrossDomainOriginResourcesSharing);
                     context.Fail();
                 }
 
