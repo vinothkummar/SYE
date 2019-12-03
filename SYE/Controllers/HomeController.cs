@@ -73,8 +73,8 @@ namespace SYE.Controllers
                     _logger.LogError("Error with CQC PayLoad; Provider Information not exist in the system", EnumStatusCode.CQCIntegrationPayLoadNullError);
                    
                     return RedirectToAction("Index", "Search");
-                }     
-                
+                }
+
                 return RedirectToAction("SelectLocation", "Search", routeValues: providerDetails);               
             }
             else if (!string.IsNullOrEmpty(providerDetails.CookieAccepted))
@@ -84,7 +84,8 @@ namespace SYE.Controllers
             }             
             else            
             {
-                return GetCustomErrorCode(EnumStatusCode.CQCIntegrationPayLoadNullError, "Error with CQC PayLoad null on the redirection post request"); 
+                _logger.LogError("Error with CQC PayLoad null on the redirection post request", EnumStatusCode.CQCIntegrationPayLoadNullError);
+                return RedirectToAction("Index", "Search");                
             }            
            
         }       
