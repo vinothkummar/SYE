@@ -70,10 +70,14 @@ namespace SYE.Controllers
 
                 if (result == null)
                 {
-                    _logger.LogError("Error with CQC PayLoad; Provider Information not exist in the system", EnumStatusCode.CQCIntegrationPayLoadNullError);
+                    _logger.LogError("Error with CQC PayLoad; Provider Information not exist in the system", EnumStatusCode.CQCIntegrationPayLoadNotExist);
                    
                     return RedirectToAction("Index", "Search");
                 }
+
+                providerDetails.ProviderId = result.ProviderId;
+
+                providerDetails.LocationName = result.LocationName;
 
                 return RedirectToAction("SelectLocation", "Search", routeValues: providerDetails);               
             }
