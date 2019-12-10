@@ -10,6 +10,7 @@ using SYE.Helpers;
 using SYE.MiddlewareExtensions;
 using SYE.Models;
 using System;
+using Microsoft.AspNetCore.CookiePolicy;
 
 namespace SYE
 {
@@ -33,7 +34,6 @@ namespace SYE
             services.ConfigureApplicationCookie(options =>
             {
                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-               
             });
 
 
@@ -44,6 +44,8 @@ namespace SYE
                 options.Cookie.HttpOnly = true;
                 options.IdleTimeout = TimeSpan.FromMinutes(120);
                 options.Cookie.IsEssential = true;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
             
@@ -81,7 +83,12 @@ namespace SYE
 
             app.UseStaticFiles();
 
-            app.UseCookiePolicy();
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always,
+                MinimumSameSitePolicy = SameSiteMode.Strict
+            });
 
             app.UseSession();           
 
