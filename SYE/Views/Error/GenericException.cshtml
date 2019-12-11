@@ -1,4 +1,7 @@
-﻿@{
+﻿@using SYE.ViewModels
+@inject Microsoft.Extensions.Options.IOptions<ApplicationSettings> _config
+@{
+    var config = _config.Value;
     ViewData["Title"] = "There’s a problem - Give feedback on care";
 }
 
@@ -8,7 +11,7 @@
         <gds-heading heading-type="H1" text="There is a problem with this form"></gds-heading>
 
         <gds-paragraph>
-            We're sorry. You'll need to <gds-link class="govuk-link" link-text=@("go to the start") href="@Url.Action("Index", "Home")"></gds-link> to enter your feedback.        
+            We're sorry. You'll need to <gds-link class="govuk-link" link-text=@("go to the start") href="@config.GFCUrls.StartPage"></gds-link> to enter your feedback.
         </gds-paragraph>
 
         <gds-paragraph>

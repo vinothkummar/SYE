@@ -10,5 +10,6 @@ namespace SYE.Controllers
         {
             return new StatusResult((int)enumStatusCode, message, Response.HttpContext);
         }
+
     }
 }

@@ -1,4 +1,7 @@
-﻿@{
+﻿@using SYE.ViewModels
+@inject Microsoft.Extensions.Options.IOptions<ApplicationSettings> _config
+@{
+    var config = _config.Value;
     ViewData["Title"] = "Page no longer exists - Give feedback on care";
 }
 
@@ -8,12 +11,12 @@
         <gds-heading heading-type="H1" text="This page no longer exists"></gds-heading>
 
         <gds-paragraph>
-            We cannot find the page you’re looking for. 
-            This might be because you’re returning to a form you have not finished or you’re using an old link. You’ll need to 
-            <gds-link class="govuk-link" link-text="go back to the start" href="@Url.Action("Index", "Home")"></gds-link>
-             to enter your feedback.
+            We cannot find the page you’re looking for.
+            This might be because you’re returning to a form you have not finished or you’re using an old link. You’ll need to
+            <gds-link class="govuk-link" link-text="go back to the start" href="@config.GFCUrls.StartPage"></gds-link>
+            to enter your feedback.
         </gds-paragraph>
-        
+
         <gds-heading heading-type="H2" text="Get help with this form"></gds-heading>
 
         <gds-paragraph>
