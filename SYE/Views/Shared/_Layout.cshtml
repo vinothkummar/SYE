@@ -69,9 +69,9 @@
     @if (Configuration.GetValue<bool>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:Enabled") == true)
     {
         <!-- Google Tag Manager (noscript) -->
-        <noscript>
-            <iframe class="gfc-ga-iframe" src="https://www.googletagmanager.com/ns.html?id=@(Configuration.GetValue<string>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))" height="0" width="0"></iframe>
-        </noscript>
+    <noscript>
+        <iframe class="gfc-ga-iframe" src="https://www.googletagmanager.com/ns.html?id=@(Configuration.GetValue<string>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))" height="0" width="0"></iframe>
+    </noscript>
         <!-- End Google Tag Manager (noscript) -->
     }
     <script>

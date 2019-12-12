@@ -6,12 +6,6 @@
     background: #5f2861;
 }
 
-.govuk-header__ellipsis {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .govuk-header__container {
     margin-bottom: 0;
     border-bottom: none;
@@ -110,20 +104,6 @@
     .govuk-tabs__title,
     .govuk-tabs__list {
         display: none;
-    }
-}
-
-@media (min-width:40.0625em) {
-    .govuk-grid-column-one-third {
-        width: 100%;
-        float: left
-    }
-}
-
-@media (min-width:48.0625em) {
-    .govuk-grid-column-one-third {
-        width: 33.3333%;
-        float: left
     }
 }
 
