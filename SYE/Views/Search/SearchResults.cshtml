@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
 @using Microsoft.Azure.Search.Common
 @using SYE.Models
-@using SYE.Helpers
 @model SYE.ViewModels.SearchResultsVM
 
 <gds-row>
@@ -9,9 +8,7 @@
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
 
         <label for="search">
-            @{
-                <gds-heading heading-type="H1" text=@(Model.Data.Count == 0 ? "There are no results matching your search" : "Results for " + Model.Search.Truncate(35))></gds-heading>
-            }
+            <gds-heading heading-type="H1" text=@("Results for " + Model.Search)></gds-heading>
         </label>
 
         <gds-row>
@@ -25,7 +22,7 @@
                                 Please reduce the number of characters in the text field below. (Max 1000)
                             </label>
                         }
-                        <input class="govuk-input gfc-search-button" id="search" name="search" type="text" value="@Model.Search">
+                    <input class="govuk-input gfc-search-button" id="search" name="search" type="text" value="@Model.Search">
                         <input alt="Search For A Service" class="search-button" type="image" name="submit" src="~/images/search.png" />
                     </div>
                 </form>
@@ -38,39 +35,10 @@
 </gds-row>
 
 <gds-row>
-    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
-        @if (Model.Data.Count == 0)
-        {
-            <gds-paragraph>
-                0 results
-            </gds-paragraph>
-            <gds-paragraph>
-                Improve your results by:
-                <gds-ol list-id="Contents" class="govuk-list govuk-list--bullet">
-                    <gds-li>
-                        double-checking your spelling
-                    </gds-li>
-                    <gds-li>
-                        using fewer words
-                    </gds-li>
-                    <gds-li>
-                        trying something less specific
-                    </gds-li>
-                    <gds-li>
-                        if you searched for the service name, try something else - like a postcode
-                    </gds-li>
-                </gds-ol>
-            </gds-paragraph>
-            <gds-paragraph>
-                If you cannot find the service you want to tell us about,<a class="govuk-link" href="/Search/LocationNotFound"> tell us the name you know it by or describe where it is.</a>
-            </gds-paragraph>
-        }
-        else
-        {
-            <gds-paragraph>
-                <a class="govuk-link" href="/Search/LocationNotFound"> I can't find the service I want to tell you about</a>
-            </gds-paragraph>
-        }
+    <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+        <gds-paragraph>
+            <a class="govuk-link" href="/Search/LocationNotFound"> I can't find the service I want to tell you about</a>
+        </gds-paragraph>
     </gds-column>
 </gds-row>
 
