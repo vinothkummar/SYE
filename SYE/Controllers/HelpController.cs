@@ -23,6 +23,11 @@ namespace SYE.Controllers
 		private readonly IConfiguration _configuration;
         private readonly INotificationService _notificationService;
 
+        private readonly HashSet<char> _allowedChars = new HashSet<char>(@"1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,'()?!#&$£%^@*;:+=_-/ ");
+        private readonly List<string> _restrictedWords = new List<string> { "javascript", "onblur", "onchange", "onfocus", "onfocusin", "onfocusout", "oninput", "onmouseenter", "onmouseleave",
+            "onselect", "onclick", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onscroll", "ontouchstart",
+            "ontouchend", "ontouchmove", "ontouchcancel", "onwheel" };
+
         public HelpController(IServiceProvider service)
         {
             this._logger = service?.GetService<ILogger<HelpController>>() as ILogger;
@@ -72,7 +77,7 @@ namespace SYE.Controllers
                     return GetCustomErrorCode(EnumStatusCode.RPSubmissionJsonError, "Error submitting service feedback. Json form not loaded");
                 }
 
-                _gdsValidate.ValidatePage(pageViewModel, Request.Form);
+                _gdsValidate.ValidatePage(pageViewModel, Request.Form, true, _restrictedWords, _allowedChars);
 
                 if (pageViewModel.Questions.Any(m => m.Validation?.IsErrored == true))
                 {

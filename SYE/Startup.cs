@@ -36,6 +36,7 @@ namespace SYE
             services.Configure<MvcOptions>(options =>
             {
                 options.Filters.Add(new RequireHttpsAttribute());
+                options.Filters.Add(new XssReferrerFilter(Configuration));
             });
 
             services.ConfigureApplicationCookie(options =>
