@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Http
 @using Microsoft.Azure.Search.Common
 @using SYE.Models
+@using SYE.Helpers
 @model SYE.ViewModels.SearchResultsVM
 
 <gds-row>
@@ -8,37 +9,68 @@
     <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
 
         <label for="search">
-            <gds-heading heading-type="H1" text=@("Results for " + Model.Search)></gds-heading>
+            @{
+                <gds-heading heading-type="H1" text=@(Model.Data.Count == 0 ? "There are no results matching your search" : "Results for " + Model.Search.Truncate(35))></gds-heading>
+            }
         </label>
 
-            <gds-row>
-                <gds-column desktop-size="TwoThirds" tablet-size="TwoThirds">
+        <gds-row>
+            <gds-column desktop-size="TwoThirds" tablet-size="TwoThirds">
 
-                    <form asp-action="SearchResults" method="get">
-                        <div class="govuk-form-group">
-                            @if (Model.ShowExceededMaxLengthMessage)
-                            {
-                                <label class="govuk-error-message" for="event-name">
-                                    Please reduce the number of characters in the text field below. (Max 1000)
-                                </label>
-                            }
-                            <input class="govuk-input" style="height: 40px; width: 80%; margin: 0; padding: 5px 10px; float: left" id="search" name="search" type="text" value="@Model.Search">
-                            <input alt="Search For A Service" class="search-button" type="image" name="submit" src="~/images/search.png" />
-                        </div>
-                    </form>
+                <form asp-action="SearchResults" method="get">
+                    <div class="govuk-form-group">
+                        @if (Model.ShowExceededMaxLengthMessage)
+                        {
+                            <label class="govuk-error-message" for="event-name">
+                                Please reduce the number of characters in the text field below. (Max 1000)
+                            </label>
+                        }
+                        <input class="govuk-input gfc-search-button" id="search" name="search" type="text" value="@Model.Search">
+                        <input alt="Search For A Service" class="search-button" type="image" name="submit" src="~/images/search.png" />
+                    </div>
+                </form>
 
-                </gds-column>
-            </gds-row>
+            </gds-column>
+        </gds-row>
 
     </gds-column>
 
 </gds-row>
 
 <gds-row>
-    <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-        <gds-paragraph>
-            <a class="govuk-link" href="/Search/LocationNotFound"> I can't find the service I want to tell you about</a>
-        </gds-paragraph>
+    <gds-column desktop-size="TwoThirds" tablet-size="FullWidth">
+        @if (Model.Data.Count == 0)
+        {
+            <gds-paragraph>
+                0 results
+            </gds-paragraph>
+            <gds-paragraph>
+                Improve your results by:
+                <gds-ol list-id="Contents" class="govuk-list govuk-list--bullet">
+                    <gds-li>
+                        double-checking your spelling
+                    </gds-li>
+                    <gds-li>
+                        using fewer words
+                    </gds-li>
+                    <gds-li>
+                        trying something less specific
+                    </gds-li>
+                    <gds-li>
+                        if you searched for the service name, try something else - like a postcode
+                    </gds-li>
+                </gds-ol>
+            </gds-paragraph>
+            <gds-paragraph>
+                If you cannot find the service you want to tell us about,<a class="govuk-link" href="/Search/LocationNotFound"> tell us the name you know it by or describe where it is.</a>
+            </gds-paragraph>
+        }
+        else
+        {
+            <gds-paragraph>
+                <a class="govuk-link" href="/Search/LocationNotFound"> I can't find the service I want to tell you about</a>
+            </gds-paragraph>
+        }
     </gds-column>
 </gds-row>
 
@@ -49,10 +81,10 @@
             <details class="govuk-details">
                 <summary class="govuk-details__summary govuk-details__summaryboarder">
                     <span>
-                        <label class="govuk-input" style="color: black; border: none; width: auto; float: left">
+                        <label class="govuk-input gfc-filter-title">
                             Type of service
                         </label>
-                        <img alt="Select Type Of Service" src="~/images/select.png" style="height: 40px; width: 40px; vertical-align: middle; float: right" />
+                        <img class="gfc-filter-title-arrow" alt="Select Type Of Service" src="~/images/select.png" />
                     </span>
                 </summary>
                 @if (Model.Facets.Count > 0)
@@ -62,20 +94,20 @@
                             <form id="frm_facets" asp-action="SearchResults" method="post">
                                 @for (var index = 0; index < Model.Facets.Count; index++)
                                 {
-                                <div class="govuk-checkboxes__item">
-                                    
-                                    <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
-                                    <label class="govuk-label govuk-checkboxes__label" asp-for="@Model.Facets[index].Selected" style="font-size: 18px">
-                                        @Model.Facets[index].Text
-                                    </label>
-                                    <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
-                                    <input asp-for="@Model.Facets[index].Text" type="hidden" />
+                                    <div class="govuk-checkboxes__item">
 
-                                </div>
+                                        <input class="govuk-checkboxes__input" asp-for="@Model.Facets[index].Selected" type="checkbox">
+                                        <label class="govuk-label govuk-checkboxes__label gfc-filter-item" asp-for="@Model.Facets[index].Selected">
+                                            @Model.Facets[index].Text
+                                        </label>
+                                        <input asp-for="@Model.Facets[index].Selected" value="false" type="hidden" />
+                                        <input asp-for="@Model.Facets[index].Text" type="hidden" />
+
+                                    </div>
                                 }
                                 <input type="hidden" asp-for="Search" />
                                 <br />
-                                <button type="submit" id="btn--filter" class="govuk-button link-button" style="color: black; border: none; width: auto; float: left; text-decoration: underline;">
+                                <button type="submit" id="btn--filter" class="govuk-button link-button gfc-filter-apply-button">
                                     Apply filter
                                 </button>
                             </form>
@@ -95,29 +127,29 @@
 
                 @foreach (var result in Model.Data)
                 {
-                <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
-                    <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
-                    <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
-                    <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
-                    <input id="page-@result.Page-page-pos-@result.Index" name="SelectedPosition" value="page-@result.Page-page-pos-@result.Index" type="hidden" />
-                    <gds-row>
-                        <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
-                            <button type="submit" id="btn-@result.Id" class="govuk-button link-button">
-                                <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
-                            </button>
-                            <p class="govuk-body">
-                                @result.Address<br />
-                                @if (!string.IsNullOrWhiteSpace(result.Address2))
-                                {
-                                    @result.Address2<br />
-                                }
-                                @result.Town<br />
-                                @result.PostCode<br />
-                            </p>
-                            <p class="govuk-body-s">@result.Category</p>
-                        </gds-column>
-                    </gds-row>
-                </form>
+                    <form id="frm_@result.Id" asp-action="SelectLocation" method="post">
+                        <input id="ProviderId" name="ProviderId" value="@result.ProviderId" type="hidden" />
+                        <input id="LocationId" name="LocationId" value="@result.Id" type="hidden" />
+                        <input id="LocationName" name="LocationName" value="@result.Name" type="hidden" />
+                        <input id="page-@result.Page-page-pos-@result.Index" name="SelectedPosition" value="page-@result.Page-page-pos-@result.Index" type="hidden" />
+                        <gds-row>
+                            <gds-column desktop-size="FullWidth" tablet-size="FullWidth">
+                                <button type="submit" id="btn-@result.Id" class="govuk-button link-button">
+                                    <gds-heading heading-type="H4" text="@result.Name"></gds-heading>
+                                </button>
+                                <p class="govuk-body">
+                                    @result.Address<br />
+                                    @if (!string.IsNullOrWhiteSpace(result.Address2))
+                                    {
+                                        @result.Address2<br />
+                                    }
+                                    @result.Town<br />
+                                    @result.PostCode<br />
+                                </p>
+                                <p class="govuk-body-s">@result.Category</p>
+                            </gds-column>
+                        </gds-row>
+                    </form>
                 }
 
             </div>

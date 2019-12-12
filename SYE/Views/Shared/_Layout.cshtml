@@ -70,7 +70,7 @@
     {
         <!-- Google Tag Manager (noscript) -->
         <noscript>
-            <iframe src="https://www.googletagmanager.com/ns.html?id=@(Configuration.GetValue<string>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+            <iframe class="gfc-ga-iframe" src="https://www.googletagmanager.com/ns.html?id=@(Configuration.GetValue<string>("AnalyticsConfiguration:GoogleAnalytics:SiteTag:GA_MEASUREMENT_ID"))" height="0" width="0"></iframe>
         </noscript>
         <!-- End Google Tag Manager (noscript) -->
     }
@@ -121,8 +121,10 @@
 
 
     <gds-container>
-
-        <gds-phase-banner phase="Beta" text="This is a new form. If you find something wrong with it, {0}" url-text="tell us and help us improve it." url="@Url.Action("Feedback", "Help")"></gds-phase-banner>
+        @if (ViewBag.HideHelpLink != true)
+        {
+            <gds-phase-banner phase="Beta" text="This is a new form. If you find something wrong with it, {0}" url-text="tell us and help us improve it." url="@Url.Action("Feedback", "Help")"></gds-phase-banner>
+        }
 
         <partial name="_BackLink" />
 
@@ -177,7 +179,6 @@
     <script src="~/js/govuk-frontend-2.13.0.min.js" asp-append-version="true"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script>showJsOnly();</script>
     @RenderSection("Scripts", required: false)
 
 </body>
