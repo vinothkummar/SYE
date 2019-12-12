@@ -55,7 +55,7 @@ namespace SYE
                 options.Cookie.Name = "GFC-Session-Cookie";
                 options.IdleTimeout = TimeSpan.FromMinutes(120);
                 options.Cookie.IsEssential = true;
-                options.Cookie.SameSite = SameSiteMode.Lax;
+                //options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
 
@@ -79,17 +79,16 @@ namespace SYE
 
             app.UseCsp(opts => opts
                 .BlockAllMixedContent()
-                .StyleSources(s => s.Self())
-                .StyleSources(s => s.Self())
+                .StyleSources(s => s.Self().UnsafeInline())
                 .FontSources(s => s.Self())
                 .FormActions(s => s.Self())
                 .FrameAncestors(s => s.Self())
-                .ImageSources(s => s.Self())
-                .ScriptSources(s => s.UnsafeInline().Self())
+            //.ImageSources(s => s.Self())
+            //.ScriptSources(s => s.UnsafeInline().Self().CustomSources())
             );
 
             app.UseHsts(h => h.MaxAge(365).IncludeSubdomains().Preload());
-            app.UseReferrerPolicy(opts => opts.NoReferrer());
+            app.UseReferrerPolicy(opts => opts.SameOrigin());
             app.UseXXssProtection(options => options.EnabledWithBlockMode());
             app.UseXfo(options => options.SameOrigin());
             app.UseXContentTypeOptions();
@@ -116,8 +115,8 @@ namespace SYE
             app.UseCookiePolicy(new CookiePolicyOptions
             {
                 HttpOnly = HttpOnlyPolicy.Always,
-                Secure = CookieSecurePolicy.Always,
-                MinimumSameSitePolicy = SameSiteMode.Lax
+                Secure = CookieSecurePolicy.Always
+                //MinimumSameSitePolicy = SameSiteMode.None
             });
 
             app.UseSession();
