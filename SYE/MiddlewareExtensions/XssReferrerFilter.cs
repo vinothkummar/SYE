@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
 using GDSHelpers;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SYE.Helpers;
@@ -14,37 +15,26 @@ namespace SYE.MiddlewareExtensions
     {
         private string _refererUrl;
         private string _filteredUrl;
-        private IConfiguration _config;
 
+        private IConfiguration _config;
+        private string _replacementReferer;
 
         private static readonly HashSet<char> _disallowedChars = new HashSet<char>(@"\<>'\""&");
         private static readonly List<string> _restrictedWords = new List<string> { "javascript", "onblur", "onchange", "onfocus", "onfocusin", "onfocusout", "oninput", "onmouseenter", "onmouseleave",
             "onselect", "onclick", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onscroll", "ontouchstart",
-            "ontouchend", "ontouchmove", "ontouchcancel", "onwheel" };
+            "ontouchend", "ontouchmove", "ontouchcancel", "onwheel"};
 
         public XssReferrerFilter(IConfiguration Config)
         {
             _config = Config;
+            _replacementReferer = "http://dev.cqc.org.uk/give-feedback-on-care";
         }
 
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
-            _filteredUrl = _refererUrl = context.HttpContext.Request.Headers["Referer"].ToString();
-            //_filteredUrl = _refererUrl = "http://localhost:60045/\"<a onmouseover=\"alert(33)\">";
+            _refererUrl = context.HttpContext.Request.Headers["Referer"].ToString();
 
-            _filteredUrl = _filteredUrl.StripHtml();
-
-            if (_restrictedWords != null)
-                foreach (var word in _restrictedWords.Where(word => _filteredUrl.Contains(word)))
-                {
-                    _filteredUrl = "https://gfc-test-app.azurewebsites.net/";
-                }
-
-            if (_disallowedChars != null)
-                foreach (var character in _disallowedChars.Where(character => _filteredUrl.Contains(character)))
-                {
-                    _filteredUrl = "https://gfc-test-app.azurewebsites.net/";
-                }
+            _filteredUrl = CheckForXssInHeader(_refererUrl, _replacementReferer, _disallowedChars, _restrictedWords);
 
             context.HttpContext.Request.Headers["Referer"] = _filteredUrl;
         }
@@ -53,6 +43,29 @@ namespace SYE.MiddlewareExtensions
         {
             //do nothing
             //throw new NotImplementedException();
+        }
+
+        public string CheckForXssInHeader(string RefererUrl, string ReplacementReferrer, HashSet<char> DisallowedChars, List<string> RestrictedWords)
+        {
+            HashSet<char> disallowedChars = DisallowedChars;
+            List<string> restrictedWords = RestrictedWords;
+            string refererUrl = RefererUrl;
+
+            refererUrl = refererUrl.StripHtml();
+
+            if (_restrictedWords != null)
+                foreach (var word in _restrictedWords.Where(word => _filteredUrl.Contains(word)))
+                {
+                    return ReplacementReferrer;
+                }
+
+            if (_disallowedChars != null)
+                foreach (var character in _disallowedChars.Where(character => _filteredUrl.Contains(character)))
+                {
+                    return ReplacementReferrer;
+                }
+
+            return refererUrl;
         }
     }
 }
