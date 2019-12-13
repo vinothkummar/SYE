@@ -17,7 +17,7 @@ namespace SYE.MiddlewareExtensions
         private IConfiguration _config;
 
 
-        private static readonly HashSet<char> _allowedChars = new HashSet<char>(@"1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,'()?!#&$£%^@*;:+=_-/ ");
+        private static readonly HashSet<char> _disallowedChars = new HashSet<char>(@"\<>'\""&");
         private static readonly List<string> _restrictedWords = new List<string> { "javascript", "onblur", "onchange", "onfocus", "onfocusin", "onfocusout", "oninput", "onmouseenter", "onmouseleave",
             "onselect", "onclick", "ondblclick", "onkeydown", "onkeypress", "onkeyup", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onscroll", "ontouchstart",
             "ontouchend", "ontouchmove", "ontouchcancel", "onwheel" };
@@ -29,25 +29,24 @@ namespace SYE.MiddlewareExtensions
 
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
-            //_filteredUrl = _refererUrl = context.HttpContext.Request.Headers["Referer"].ToString();
+            _filteredUrl = _refererUrl = context.HttpContext.Request.Headers["Referer"].ToString();
             //_filteredUrl = _refererUrl = "http://localhost:60045/\"<a onmouseover=\"alert(33)\">";
 
-            //if (string.IsNullOrEmpty(_refererUrl))
-            //    _filteredUrl = string.Empty;
+            _filteredUrl = _filteredUrl.StripHtml();
 
-            //if (_restrictedWords != null)
-            //    foreach (var word in _restrictedWords.Where(word => _filteredUrl.Contains(word)))
-            //    {
-            //        _filteredUrl.Replace(word, "");
-            //        //_filteredUrl = _config.GetSection("ApplicationSettings").GetValue<String>("LandingPage");
-            //    }
+            if (_restrictedWords != null)
+                foreach (var word in _restrictedWords.Where(word => _filteredUrl.Contains(word)))
+                {
+                    _filteredUrl = "https://gfc-test-app.azurewebsites.net/";
+                }
 
-            //if (_allowedChars != null)
-            //    _filteredUrl = string.Concat(_filteredUrl.Where(c => _allowedChars.Contains(c)));
+            if (_disallowedChars != null)
+                foreach (var character in _disallowedChars.Where(character => _filteredUrl.Contains(character)))
+                {
+                    _filteredUrl = "https://gfc-test-app.azurewebsites.net/";
+                }
 
-            //_filteredUrl.StripHtml();
-
-            //context.HttpContext.Request.Headers["Referer"] = _filteredUrl;
+            context.HttpContext.Request.Headers["Referer"] = _filteredUrl;
         }
 
         public void OnResourceExecuted(ResourceExecutedContext context)
