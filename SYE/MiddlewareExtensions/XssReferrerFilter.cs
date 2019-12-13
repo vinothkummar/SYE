@@ -13,9 +13,6 @@ namespace SYE.MiddlewareExtensions
 {
     public class XssReferrerFilter : IResourceFilter
     {
-        private string _refererUrl;
-        private string _filteredUrl;
-
         private IConfiguration _config;
         private string _replacementReferer;
 
@@ -32,11 +29,11 @@ namespace SYE.MiddlewareExtensions
 
         public void OnResourceExecuting(ResourceExecutingContext context)
         {
-            _refererUrl = context.HttpContext.Request.Headers["Referer"].ToString();
+            var refererUrl = context.HttpContext.Request.Headers["Referer"].ToString();
 
-            _filteredUrl = CheckForXssInHeader(_refererUrl, _replacementReferer, _disallowedChars, _restrictedWords);
+            var filteredUrl = CheckForXssInHeader(refererUrl, _replacementReferer);
 
-            context.HttpContext.Request.Headers["Referer"] = _filteredUrl;
+            context.HttpContext.Request.Headers["Referer"] = filteredUrl;
         }
 
         public void OnResourceExecuted(ResourceExecutedContext context)
@@ -45,27 +42,23 @@ namespace SYE.MiddlewareExtensions
             //throw new NotImplementedException();
         }
 
-        public string CheckForXssInHeader(string RefererUrl, string ReplacementReferrer, HashSet<char> DisallowedChars, List<string> RestrictedWords)
+        public string CheckForXssInHeader(string refererUrl, string replacementReferrer)
         {
-            HashSet<char> disallowedChars = DisallowedChars;
-            List<string> restrictedWords = RestrictedWords;
-            string refererUrl = RefererUrl;
-
-            refererUrl = refererUrl.StripHtml();
+            string cleanRefererUrl = refererUrl.StripHtml();
 
             if (_restrictedWords != null)
-                foreach (var word in _restrictedWords.Where(word => _filteredUrl.Contains(word)))
+                foreach (var word in _restrictedWords.Where(word => cleanRefererUrl.Contains(word)))
                 {
-                    return ReplacementReferrer;
+                    return replacementReferrer;
                 }
 
             if (_disallowedChars != null)
-                foreach (var character in _disallowedChars.Where(character => _filteredUrl.Contains(character)))
+                foreach (var character in _disallowedChars.Where(character => cleanRefererUrl.Contains(character)))
                 {
-                    return ReplacementReferrer;
+                    return replacementReferrer;
                 }
 
-            return refererUrl;
+            return cleanRefererUrl;
         }
     }
 }
