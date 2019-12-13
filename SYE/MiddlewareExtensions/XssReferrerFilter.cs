@@ -53,14 +53,14 @@ namespace SYE.MiddlewareExtensions
 
             refererUrl = refererUrl.StripHtml();
 
-            if (_restrictedWords != null)
-                foreach (var word in _restrictedWords.Where(word => _filteredUrl.Contains(word)))
+            if (restrictedWords != null)
+                foreach (var word in restrictedWords.Where(word => refererUrl.Contains(word)))
                 {
                     return ReplacementReferrer;
                 }
 
-            if (_disallowedChars != null)
-                foreach (var character in _disallowedChars.Where(character => _filteredUrl.Contains(character)))
+            if (disallowedChars != null)
+                foreach (var character in disallowedChars.Where(character => refererUrl.Contains(character)))
                 {
                     return ReplacementReferrer;
                 }
